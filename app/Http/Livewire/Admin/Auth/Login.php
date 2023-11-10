@@ -31,7 +31,7 @@ class Login extends Component
                 session()->flash('in_active_message', trans('site.your_account_do_not_have_roles'));
                 return redirect()->to(route('admin.login_form'));
             }
-
+            $admin->update(['last_login_at' => now()]);
             return redirect()->to(route('admin.dashboard'));
         } else {
             $this->error_message = __('messages.Wrong_credential');

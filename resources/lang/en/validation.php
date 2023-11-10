@@ -134,7 +134,13 @@ return [
     */
 
     'attributes' => [
-        'mobile' => 'Mobile start with 5',
+        'mobile' => 'Mobile',
+        'company_name' => 'Company name',
+        'owner_name' => 'Owner name',
+        'telephone' => 'Telephone',
+        'contact_name' => 'Contact name ',
+        'finance_no' => 'Finance No',
+        '' => '',
         'salary' => 'Salary',
         'type_ads' => 'advertisement duration',
         'user_bank_id' => 'user account',
@@ -306,7 +312,8 @@ return [
         'brief_ar' => "Brief in arabic",
         'brief_en' => 'Brief in english',
         'customer_service_number' => 'Customer service number',
-        'video_url' => 'Video url'
+        'video_url' => 'Video url',
+        'company_name ' => 'Company name'
     ],
 
 ];

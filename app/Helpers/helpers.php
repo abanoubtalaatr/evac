@@ -2,7 +2,9 @@
 
 namespace App\Helpers;
 
+use App\Models\DayOffice;
 use App\Models\Opinion;
+use Carbon\Carbon;
 
 if (!function_exists('sendSms')) {
     function sendSms($mobile, $message, $mediaUrl)
@@ -101,5 +103,92 @@ if (!function_exists('userRateServiceBefore')) {
         return Opinion::query()->where('user_id', $user)->where('order_id', $order)->exists();
     }
 }
+
+
+if (!function_exists('checkDayStart')) {
+    function checkDayStart($officeId)
+    {
+        return DayOffice::where('admin_id', auth('admin')->id())
+            ->where('office_id', $officeId)
+            ->where('day_start', Carbon::today())
+            ->where('day_status', "1")
+            ->where('day_status', '!=', "0")
+            ->exists();
+    }
+}
+
+if (!function_exists('checkDayRestart')) {
+    function checkDayRestart($officeId)
+    {
+        return DayOffice::where('admin_id', auth('admin')->id())
+            ->where('office_id', $officeId)
+            ->where('day_start', Carbon::today())
+            ->where('day_status', "2")
+            ->exists();
+    }
+}
+
+if (!function_exists('checkDayClosed')) {
+    function checkDayClosed($officeId)
+    {
+        return DayOffice::where('admin_id', auth('admin')->id())
+            ->where('office_id', $officeId)
+            ->where('day_start', Carbon::today())
+            ->where('day_status', "0")
+
+            ->exists();
+    }
+}
+
+if (!function_exists('currentDayForOffice')) {
+    function currentDayForOffice($officeId)
+    {
+        return DayOffice::where('admin_id', auth('admin')->id())
+            ->where('office_id', $officeId)
+            ->where('day_start', Carbon::today())
+            ->first();
+    }
+}
+
+
+if (!function_exists('displayTextInNavbarForOfficeTime')) {
+    function displayTextInNavbarForOfficeTime($officeId)
+    {
+        $officeDay = currentDayForOffice($officeId);
+        $data = [];
+
+        if($officeDay){
+            if($officeDay->day_status == "0") {
+                $data['prefix'] = "Day closed by";
+                $data['day'] = $officeDay->day_start;
+                $data['time'] = $officeDay->end_time;
+
+                return $data;
+            }
+
+            if($officeDay->day_status == "1") {
+                $data['prefix'] = "Day opened by";
+                $data['day'] = $officeDay->day_start;
+                $data['time'] = $officeDay->start_time;
+
+                return $data;
+            }
+            if($officeDay->day_status == "2") {
+                $data['prefix'] = "Day reopened by";
+                $data['day'] = $officeDay->day_start;
+                $data['time'] = $officeDay->restart_at;
+
+                return $data;
+            }
+        }
+
+        $data['prefix'] = "";
+        $data['day'] = "";
+        $data['time'] = "";
+        return $data;
+    }
+}
+
+
 
 

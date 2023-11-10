@@ -61,61 +61,8 @@ Route::group([
             Route::get('users/{user}/edit', \App\Http\Livewire\Admin\Users\Edit::class)->middleware("can:Manage users")->name('users.edit');
             Route::get('/users/create',\App\Http\Livewire\Admin\Users\Create::class )->name('create_user');
 
-            //Car brands
-            Route::get('car-brands', \App\Http\Livewire\Admin\CarBrand\Index::class)->middleware('can:Manage car brands')->name('car_brands');
-            Route::get('car-brands/create', \App\Http\Livewire\Admin\CarBrand\Create::class)->middleware('can:Manage car brands')->name('create_car_brands');
-            Route::get('car-brands/{carBrand}/edit', \App\Http\Livewire\Admin\CarBrand\Edit::class)->middleware('can:Manage car brands')->name('edit_car_brands');
-
-            //car modules
-            Route::get('car-modules', \App\Http\Livewire\Admin\CarModule\Index::class)->middleware('can:Manage car modules')->name('car_modules');
-            Route::get('car-modules/create', \App\Http\Livewire\Admin\CarModule\Create::class)->middleware('can:Manage car modules')->name('create_car_modules');
-            Route::get('car-modules/{carModule}/edit', \App\Http\Livewire\Admin\CarModule\Edit::class)->middleware('can:Manage car modules')->name('edit_car_modules');
-
-            //car cylinder
-            Route::get('car-cylinders', \App\Http\Livewire\Admin\CarCylinder\Index::class)->middleware('can:Manage car cylinders')->name('car_cylinders');
-            Route::get('car-cylinders/create', \App\Http\Livewire\Admin\CarCylinder\Create::class)->middleware('can:Manage car cylinders')->name('create_car_cylinders');
-            Route::get('car-cylinders/{carCylinder}/edit', \App\Http\Livewire\Admin\CarCylinder\Edit::class)->middleware('can:Manage car cylinders')->name('edit_car_cylinders');
-
-            //oil brand
-            Route::get('oil-brands', \App\Http\Livewire\Admin\OilBrand\Index::class)->middleware('can:Manage oil brands')->name('oil_brands');
-            Route::get('oil-brands/create', \App\Http\Livewire\Admin\OilBrand\Create::class)->middleware('can:Manage oil brands')->name('create_oil_brands');
-            Route::get('oil-brands/{oilBrand}/edit', \App\Http\Livewire\Admin\OilBrand\Edit::class)->middleware('can:Manage oil brands')->name('edit_oil_brands');
-
-            //oils
-            Route::get('oils', \App\Http\Livewire\Admin\Oil\Index::class)->middleware('can:Manage oils')->name('oils');
-            Route::get('oils/create', \App\Http\Livewire\Admin\Oil\Create::class)->middleware('can:Manage oils')->name('create_oils');
-            Route::get('oils/{oil}/edit', \App\Http\Livewire\Admin\Oil\Edit::class)->middleware('can:Manage oils')->name('edit_oils');
-
-            //sub services
-            Route::get('sub-services', \App\Http\Livewire\Admin\SubService\Index::class)->middleware('can:Manage sub services')->name('sub_services');
-            Route::get('sub-services/create', \App\Http\Livewire\Admin\SubService\Create::class)->middleware('can:Manage sub services')->name('create_sub_services');
-            Route::get('sub-services/{subService}/edit', \App\Http\Livewire\Admin\SubService\Edit::class)->middleware('can:Manage sub services')->name('edit_sub_services');
-
-            Route::get('orders', \App\Http\Livewire\Admin\Order\Index::class)->middleware('can:Manage orders')->name('orders');
-            Route::get('orders/{order}', \App\Http\Livewire\Admin\Order\Show::class)->middleware('can:Manage orders')->name('order_details');
-            Route::post('orders/{order}/reject', \App\Http\Livewire\Admin\Order\Reject::class)->middleware('can:Manage order details')->name('order.reject');
-            //services
-            Route::get('services', \App\Http\Livewire\Admin\Service\Index::class)->middleware('can:Manage services')->name('services');
-            Route::get('services/create', \App\Http\Livewire\Admin\Service\Create::class)->middleware('can:Manage services')->name('create_services');
-            Route::get('services/{service}/edit', \App\Http\Livewire\Admin\Service\Edit::class)->middleware('can:Manage services')->name('edit_services');
-
-            Route::get('contact', App\Http\Livewire\Admin\Contact\Index::class)->name('contacts');
-            Route::get('contact/{contact}', \App\Http\Livewire\Admin\Contact\Show::class)->name('contact.show');
-
-            Route::get('slider/index', SliderIndex::class)->name('slider');
-            Route::get('slider/create', SliderCreate::class)->name('create_slider');
-            Route::get('slider/{slider}/edit', SliderEdit::class)->name('edit_slider');
-            Route::get('slider/{slider}/delete', SliderDelete::class)->name('delete_slider');
-
-            Route::get('page/index', PagesIndex::class)->name('pages.index');
-            Route::get('page/create', PagesCreate::class)->name('pages.create');
-            Route::get('page/{page}/edit', PagesEdit::class)->name('pages.edit');
-            Route::get('page/{page}/delete', PagesDelete::class)->name('pages.delete');
-
-            Route::get('opinions', \App\Http\Livewire\Admin\Opinion\Index::class)->middleware('can:Manage services')->name('opinions');
-            Route::get('opinions/create', \App\Http\Livewire\Admin\Opinion\Create::class)->middleware('can:Manage services')->name('create_opinions');
-            Route::get('opinions/{opinion}/edit', \App\Http\Livewire\Admin\Opinion\Edit::class)->middleware('can:Manage services')->name('edit_opinions');
-
+            Route::get('day-office', \App\Http\Livewire\Admin\DayOffice::class)->name('day_office');
+            Route::get('travel-agents', App\Http\Livewire\Admin\TravelAgent\Index::class)->name('travel_agents');
 
             Route::get('settings', SettingsIndex::class)->name('settings');
 

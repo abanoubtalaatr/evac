@@ -12,21 +12,22 @@ class VerifyForgetPasswordCode extends Component
     use ValidationTrait;
 
     public $code, $show_new_password_form, $new_password, $new_password_confirmation, $error_message;
-    public $redis_code;
+    public $database_code;
     public $admin;
 
     public function mount(Admin $admin)
     {
         $this->admin = $admin;
         $this->show_new_password_form = 0;
-        $this->redis_code = Redis::get('reset_password_code_value.' . $this->admin->id);
+//        $this->database_code = Redis::get('reset_password_code_value.' . $this->admin->id);
+        $this->database_code = $admin->otp;
     }
 
     public function store()
     {
         $this->validate();
-        if ($this->redis_code == $this->code) {
-            $this->admin->update(['password' => bcrypt($this->new_password)]);
+        if ($this->database_code == $this->code) {
+            $this->admin->update(['password' => bcrypt($this->new_password), 'otp' => null]);
             return redirect()->to(route('admin.login_form'));
         }
     }
@@ -58,7 +59,7 @@ class VerifyForgetPasswordCode extends Component
         if(is_null($this->code) || empty($this->code)){
             $this->error_message = __('site.field_is_empty');
         }
-        elseif ($this->code != Redis::get('reset_password_code_value.' . $this->admin->id)) {
+        elseif ($this->code != $this->database_code) {
             $this->error_message = __('site.code_is_wrong');
         } else {
             $this->show_new_password_form = 1;

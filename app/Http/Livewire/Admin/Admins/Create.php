@@ -58,7 +58,7 @@ class Create extends Component
         return [
             'form.email' => 'required|email|unique:admins,email',
             'form.name' => 'required|min:3|max:100|unique:admins,name',
-            'form.phone' => 'nullable|integer|digits:9|bail|unique:admins,phone',
+            'form.phone' => 'nullable|integer|bail|unique:admins,phone',
             'form.password' =>[
                 'required',
                 'string',

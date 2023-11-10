@@ -14,8 +14,3 @@
 </script>
 <script src="{{asset('website/assets/js/bootstrap.bundle.js')}}"></script>
 <script src="{{asset('website/assets/js/jquery.js')}}"></script>
-<script src="{{asset('website/assets/js/slick.min.js')}}"></script>
-
-<script src="{{asset('website/assets/js/jquery-steps.min.js')}}"></script>
-
-<script src="{{asset('website/'.app()->getLocale() . '/assets/js/code.js')}}"></script>

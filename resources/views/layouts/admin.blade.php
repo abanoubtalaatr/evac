@@ -38,171 +38,126 @@
             <div class="logo-wrap bg-white mb-5">
                 <x-logo />
             </div>
-            @can('Manage dashboard')
-                <li>
-                    <a href="{{route('admin.dashboard')}}">
-                        <img src="{{asset('frontAssets')}}/assets_{{app()->getLocale()}}/imgs/home/dashboard.svg"
-                             alt="">
-                        @lang('site.dashboard')
-                    </a>
-                </li>
-            @endcan
 
-            @can('Manage orders')
+                @if(auth('admin')->user()->hasRole('super admin'))
+                    <li>
+                        <a href="{{route('admin.dashboard')}}" class="text-white">
+                            <img src="{{asset('frontAssets')}}/assets_{{app()->getLocale()}}/imgs/home/dashboard.svg"
+                                 alt="">
+                            @lang('site.dashboard')
+                        </a>
+                    </li>
+                @else
+                    @can('Manage dashboard')
+                        <li>
+                            <a href="{{route('admin.dashboard')}}" class="text-white">
+                                <img src="{{asset('frontAssets')}}/assets_{{app()->getLocale()}}/imgs/home/dashboard.svg"
+                                     alt="">
+                                @lang('site.dashboard')
+                            </a>
+                        </li>
+                    @endcan
+               @endif
+            @if(auth('admin')->user()->hasRole('super admin'))
                 <li>
-                    <a href="{{route('admin.orders')}}">
-                        <img src="{{asset('frontAssets')}}/assets_{{app()->getLocale()}}/imgs/home/tasks.svg" alt="">
-                        @lang('site.orders')
-                    </a>
-                </li>
-            @endcan
-            @can('Manage admins')
-                <li>
-                    <a href="{{route('admin.admins.index')}}">
+                    <a href="{{route('admin.admins.index')}}" class="text-white">
                         <img src="{{asset('frontAssets')}}/assets_{{app()->getLocale()}}/imgs/home/tasks.svg" alt="">
                         @lang('site.admins')
                     </a>
                 </li>
-            @endcan
-            @can('Manage roles')
+            @else
+                @can('Manage admins')
+                    <li>
+                        <a href="{{route('admin.admins.index')}}" class="text-white">
+                            <img src="{{asset('frontAssets')}}/assets_{{app()->getLocale()}}/imgs/home/tasks.svg" alt="">
+                            @lang('site.admins')
+                        </a>
+                    </li>
+                @endcan
+            @endif
+            @if(auth('admin')->user()->hasRole('super admin'))
                 <li>
-                    <a href="{{route('admin.role')}}">
+                    <a href="{{route('admin.role')}}"  class="text-white">
                         <img src="{{asset('frontAssets')}}/assets_{{app()->getLocale()}}/imgs/home/tasks.svg" alt="">
                         @lang('site.roles')
                     </a>
                 </li>
-            @endcan
-            @can('Manage users')
+            @else
+                @can('Manage roles')
+                    <li>
+                        <a href="{{route('admin.role')}}" class="text-white">
+                            <img src="{{asset('frontAssets')}}/assets_{{app()->getLocale()}}/imgs/home/tasks.svg" alt="">
+                            @lang('site.roles')
+                        </a>
+                    </li>
+                @endcan
+            @endif
+
+            @if(auth('admin')->user()->hasRole('super admin'))
                 <li>
-                    <a href="{{route('admin.users.index')}}">
-                        <img src="{{asset('frontAssets')}}/assets_{{app()->getLocale()}}/imgs/home/tasks.svg" alt="">
-                        @lang('site.users')
+                    <a href="{{route('admin.day_office')}}" class="text-white">
+                        <img src="{{asset('frontAssets')}}/assets_{{app()->getLocale()}}/imgs/home/tasks.svg" alt="">@lang('admin.day_office')
                     </a>
                 </li>
-            @endcan
 
-            @can('Manage car brands')
+            @else
+                @can('Manage day office')
+                    <li>
+                        <a href="{{route('admin.day_office')}}" class="text-white">
+                            <img src="{{asset('frontAssets')}}/assets_{{app()->getLocale()}}/imgs/home/tasks.svg" alt="">
+                            @lang('admin.day_office')
+                        </a>
+                    </li>
+                @endcan
+            @endif
+
+            @if(auth('admin')->user()->hasRole('super admin'))
                 <li>
-                    <a href="{{route('admin.car_brands')}}">
-                        <img src="{{asset('frontAssets')}}/assets_{{app()->getLocale()}}/imgs/home/tasks.svg" alt="">
-                        @lang('site.car_brands')
+                    <a href="{{route('admin.travel_agents')}}" class="text-white">
+                        <img src="{{asset('frontAssets')}}/assets_{{app()->getLocale()}}/imgs/home/tasks.svg" alt="">@lang('admin.agents')
                     </a>
                 </li>
-            @endcan
 
-            @can('Manage car modules')
+            @else
+                @can('Manage day office')
+                    <li>
+                        <a href="{{route('admin.travel_agents')}}" class="text-white">
+                            <img src="{{asset('frontAssets')}}/assets_{{app()->getLocale()}}/imgs/home/tasks.svg" alt="">
+                            @lang('admin.agents')
+                        </a>
+                    </li>
+                @endcan
+            @endif
+
+            @if(auth('admin')->user()->hasRole('super admin'))
                 <li>
-                    <a href="{{route('admin.car_modules')}}">
-                        <img src="{{asset('frontAssets')}}/assets_{{app()->getLocale()}}/imgs/home/tasks.svg" alt="">
-                        @lang('site.car_modules')
-                    </a>
-                </li>
-            @endcan
-
-{{--            @can('Manage car cylinders')--}}
-{{--                <li>--}}
-{{--                    <a href="{{route('admin.car_cylinders')}}">--}}
-{{--                        <img src="{{asset('frontAssets')}}/assets_{{app()->getLocale()}}/imgs/home/tasks.svg" alt="">--}}
-{{--                        @lang('site.car_cylinders')--}}
-{{--                    </a>--}}
-{{--                </li>--}}
-{{--            @endcan--}}
-
-            @can('Manage oil brands')
-                <li>
-                    <a href="{{route('admin.oil_brands')}}">
-                        <img src="{{asset('frontAssets')}}/assets_{{app()->getLocale()}}/imgs/home/tasks.svg" alt="">
-                        @lang('site.oil_brands')
-                    </a>
-                </li>
-            @endcan
-
-            @can('Manage oils')
-                <li>
-                    <a href="{{route('admin.oils')}}">
-                        <img src="{{asset('frontAssets')}}/assets_{{app()->getLocale()}}/imgs/home/tasks.svg" alt="">
-                        @lang('site.oils')
-                    </a>
-                </li>
-            @endcan
-            @can('Manage services')
-                <li>
-                    <a href="{{route('admin.services')}}">
-                        <img src="{{asset('frontAssets')}}/assets_{{app()->getLocale()}}/imgs/home/tasks.svg" alt="">
-                        @lang('site.services')
-                    </a>
-                </li>
-            @endcan
-
-            @can('Manage sub services')
-                <li>
-                    <a href="{{route('admin.sub_services')}}">
-                        <img src="{{asset('frontAssets')}}/assets_{{app()->getLocale()}}/imgs/home/tasks.svg" alt="">
-                        @lang('site.sub_services')
-                    </a>
-                </li>
-            @endcan
-
-        @can('Manage contact_us')
-                <li>
-                    <a href="{{route('admin.contacts')}}">
-                        <img src="{{asset('frontAssets')}}/assets_{{app()->getLocale()}}/imgs/home/contact.svg" alt="">
-                        @lang('site.contact_us')
-                    </a>
-                </li>
-            @endcan
-
-            @can('Manage pages')
-                <li>
-                    <a href="{{route('admin.pages.index')}}">
-                        <img src="{{asset('frontAssets')}}/assets_{{app()->getLocale()}}/imgs/home/tasks.svg" alt="">
-                        @lang('messages.pages')
-                    </a>
-                </li>
-            @endcan
-
-            @can('Manage sliders')
-                <li>
-                    <a href="{{route('admin.slider')}}">
-                        <img src="{{asset('frontAssets')}}/assets_{{app()->getLocale()}}/imgs/home/tasks.svg" alt="">
-                        @lang('general.slider')
-                    </a>
-                </li>
-            @endcan
-
-
-{{--            @can('Manage partners')--}}
-{{--                <li>--}}
-{{--                    <a href="{{route('admin.partner')}}">--}}
-{{--                        <img src="{{asset('frontAssets')}}/assets_{{app()->getLocale()}}/imgs/home/tasks.svg" alt="">--}}
-{{--                        @lang('site.partners')--}}
-{{--                    </a>--}}
-{{--                </li>--}}
-{{--            @endcan--}}
-
-
-            @can('Manage settings')
-                <li>
-                    <a href="{{route('admin.settings')}}">
+                    <a href="{{route('admin.settings')}}" class="text-white">
                         <img src="{{asset('frontAssets')}}/assets_{{app()->getLocale()}}/imgs/home/tasks.svg" alt="">
                         @lang('messages.settings')
                     </a>
                 </li>
-            @endcan
-            @can('Manage opinions')
-                <li>
-                    <a href="{{route('admin.opinions')}}">
-                        <img src="{{asset('frontAssets')}}/assets_{{app()->getLocale()}}/imgs/home/tasks.svg" alt="">
-                        @lang('site.opinions')
-                    </a>
-                </li>
-            @endcan
-            <li><a href="{{route('admin.profile')}}"><img
-                        src="{{asset('frontAssets')}}/assets_{{app()->getLocale()}}/imgs/home/tasks.svg"
-                        alt="">@lang('site.profile')</a></li>
-            <li><a href="{{route('admin.logout')}}"><img
-                        src="{{asset('frontAssets')}}/assets_{{app()->getLocale()}}/imgs/home/logout.svg"
-                        alt="">@lang('messages.logout')</a></li>
+            @else
+                @can('Manage settings')
+                    <li>
+                        <a href="{{route('admin.settings')}}" class="text-white">
+                            <img src="{{asset('frontAssets')}}/assets_{{app()->getLocale()}}/imgs/home/tasks.svg" alt="">
+                            @lang('messages.settings')
+                        </a>
+                    </li>
+                @endcan
+            @endif
+
+
+            <li>
+                <a href="{{route('admin.profile')}}" class="text-white">
+                    <img src="{{asset('frontAssets')}}/assets_{{app()->getLocale()}}/imgs/home/tasks.svg" alt="">@lang('site.profile')
+                </a>
+            </li>
+            <li>
+                <a href="{{route('admin.logout')}}" class="text-white">
+                    <img src="{{asset('frontAssets')}}/assets_{{app()->getLocale()}}/imgs/home/logout.svg" alt="">@lang('messages.logout')
+                </a>
+            </li>
         </div>
     </div>
     <div id="page-content-wrapper">

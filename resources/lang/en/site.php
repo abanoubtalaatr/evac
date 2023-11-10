@@ -1,6 +1,6 @@
 <?php
 return [
-    'site_title' => 'Bogi',
+    'site_title' => 'Evac',
     'title_ar' => 'Name in Arabic',
     'title_en' => 'Name in English',
     'status' => 'Status',
@@ -607,5 +607,6 @@ return [
     'rate_successfully' => "Rate has been send successfully",
     'you_rate_the_service_before' => "You rate the service before",
     'location_on_map' => 'Location on map',
-
+    'please_enter_your_email' => 'Please enter your email',
+    'new_application' => 'New application'
 ];

@@ -217,7 +217,7 @@ input:-webkit-autofill {
     background-color: #fff; }
 
 #wrapper {
-  background: linear-gradient(0deg, #1e2229 0%, #3a3a3a 100%); }
+  background: darkblue; }
 
 #wrapper {
   padding-right: 1.25rem;
@@ -308,7 +308,7 @@ input:-webkit-autofill {
   text-decoration: none;
   color: #5E6774;
   font-size: 1.125rem;
-  text-transform: uppercase; }
+   }
 
 .sidebar-nav li a:hover, .sidebar-nav li.active a:hover {
   text-decoration: none; }
@@ -328,7 +328,7 @@ footer {
 
 .head-notifi {
   display: flex;
-  flex-direction: row;
+  flex-direction: column;
   justify-content: space-between; }
   .head-notifi .notifi-head {
     padding: 0;
@@ -1065,7 +1065,8 @@ table.dataTable thead th, table.dataTable tfoot th {
 }
 
 #wrapper #sidebar-wrapper{
-    background-image: linear-gradient(0deg, rgb(30, 34, 41) 0%, rgb(58, 58, 58) 100%);
+    background-color: darkblue;
+    color: white;
 }
 #search-input {
     margin-bottom: 0px !important;

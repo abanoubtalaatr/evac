@@ -606,5 +606,6 @@ return [
     'write_opinion' => 'أكتب تقييم الخدمة',
     'rate_successfully' => 'تم التقييم بنجاح',
     'you_rate_the_service_before' => "لقد قمت بتقييم الخدمة من قبل",
-    'location_on_map' => 'الموقع علي الخريطة'
+    'location_on_map' => 'الموقع علي الخريطة',
+    'please_enter_your_email' => 'برجاء ادخال بريدك الاكتروني'
 ];
