@@ -1,0 +1,12 @@
+truncate `notifications`;
+truncate `jobs`;
+truncate `failed_jobs`;
+UPDATE `ads` set `total_clicks`=0, `status`='active' where `id`=47;
+TRUNCATE `stats_sessions_soldier`;
+truncate `stats_gender_soldier`;
+TRUNCATE `stats_country_soldier`;
+TRUNCATE `stats_city_soldier`;
+TRUNCATE `stats_audience_soldier`;
+TRUNCATE `stats_age_soldier`;
+TRUNCATE `wallets`;
+TRUNCATE `ad_profits`;

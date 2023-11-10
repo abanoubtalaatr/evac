@@ -1,0 +1,28 @@
+<?php
+
+return [
+    'customer_service_number' => 'Customer service number',
+    'brief' => "Brief",
+    'brief_ar' => 'The brief in arabic',
+    'brief_en' => 'The brief in english',
+    'mission_ar' => "Mission in arabic",
+    'mission_en' => "Mission in english",
+    'objective_ar' => 'Objective in arabic',
+    'objective_en' => 'Objective in english',
+    'vision_ar' => 'Vision in arabic',
+    'vision_en' => "Vision in english",
+    'objective' => "Objective",
+    'number_of_experience' => 'Number of experience',
+    'video' => 'Video',
+    'video_title_ar' => 'Video title in arabic',
+    'video_title_en' => 'Video title in english',
+    'video_description_ar' => 'Video description in arabic',
+    'video_description_en' => 'Video description in english',
+    'video_url' => 'Video url',
+    'your_order_has_been_reject' => 'Your order has been rejected',
+    '0' => 'Not paid',
+    '1' => 'Paid',
+    'edit_successfully' => 'Edit successfully',
+    'create_successfully' => 'Create successfully',
+    'delete_successfully' => 'Delete successfully',
+];

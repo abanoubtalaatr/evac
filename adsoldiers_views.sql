@@ -1,0 +1,2 @@
+CREATE VIEW `soldier_top_audiences_v` AS select `audience_id`,`user_id` ,SUM(`visitors_number`) as `visitors_number` FROM `stats_audience_soldier` GROUP BY `audience_id`,`user_id` ORDER BY SUM(`stats_audience_soldier`.`visitors_number`) DESC LIMIT 5;
+CREATE VIEW `soldier_top_cities_v` AS select `city_id`,`user_id` ,SUM(`visitors_number`) as `visitors_number` FROM `stats_city_soldier` GROUP BY `city_id`,`user_id` ORDER BY SUM(`visitors_number`) DESC LIMIT 5;

@@ -1,0 +1,107 @@
+body {
+  direction: rtl; }
+
+#wrapper {
+  padding-left: 1.25rem;
+  padding-right: 15.625rem; }
+
+#sidebar-wrapper {
+  right: 15.625rem;
+  left: auto;
+  margin-right: -15.625rem;
+  margin-left: 0; }
+
+.sidebar-nav li img {
+  margin-left: 0.9375rem;
+  margin-right: 0; }
+
+.head-notifi .notifi-head li:not(:last-child) {
+  margin-left: 10px;
+  margin-right: 0; }
+
+.dash .last img {
+  margin-right: 10px;
+  margin-left: 0;
+  transform: rotate(180deg); }
+
+table.dataTable thead th, table.dataTable thead td, table.dataTable tbody th, table.dataTable tbody td {
+  padding: 12px 0 12px 20px; }
+
+table.dataTable thead .sorting, table.dataTable thead .sorting_asc, table.dataTable thead .sorting_desc, table.dataTable thead .sorting_asc_disabled, table.dataTable thead .sorting_desc_disabled {
+  background-position: center left;
+  background-repeat: no-repeat; }
+
+.ad-det .h6 img {
+  margin-left: 10px;
+  margin-right: 0; }
+
+.icon-det .icon-img {
+  margin-left: 0.9375rem;
+  margin-right: 0; }
+
+.flex-div img {
+  margin-left: 10px;
+  margin-right: 0; }
+
+.profile-img > div:first-child {
+  margin-left: 15px;
+  margin-right: 0; }
+
+.btns button:not(:last-child) {
+  margin-left: 5px;
+  margin-right: 0; }
+
+select.contact-input {
+  background: url("../imgs/wallet/arrow-d.svg") 2% 48% no-repeat transparent; }
+
+.back img {
+  margin-left: 10px;
+  margin-right: 0;
+  transform: rotate(180deg); }
+
+.actions > *:not(:last-child) {
+  border-right: 0;
+  padding-left: 10px;
+  padding-right: 0;
+  margin-left: 10px;
+  border-left: 1px solid #809FB8; }
+
+.table-page-wrap .dataTables_length {
+  left: 0; }
+
+.paginate_button .fa-chevron-right, .paginate_button .fa-chevron-left {
+  transform: rotate(180deg); }
+
+.contact-det .more-det > .row > div:not(:last-child)::after {
+  left: 0;
+  right: auto; }
+
+.button img {
+  margin-left: 5px;
+  margin-right: 0; }
+
+.login .login-img {
+  clip-path: polygon(0% 0, 100% 0, 85% 100%, 2% 100%); }
+
+.floating-label-group .floating-label {
+  left: auto;
+  right: 1.875rem; }
+
+.floating-label-group input:focus ~ .floating-label, .floating-label-group input:not(:focus):valid ~ .floating-label {
+  right: 0;
+  left: auto; }
+
+.back-login img {
+  margin-left: 10px;
+  margin-right: 0;
+  transform: rotate(180deg); }
+
+
+@media only screen and (max-width: 600px) {
+    #wrapper {
+        padding:15px;
+    }
+    #sidebar-wrapper{
+        width:0px;
+    }
+}
