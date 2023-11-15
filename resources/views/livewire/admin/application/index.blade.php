@@ -5,24 +5,25 @@
     <div class="border-div">
         <div class="b-btm flex-div-2">
             <h4>{{$page_title}}</h4>
-            <a style='text-align:center;cursor:pointer' class="button btn-red big"
-               id="addAgentButton">@lang('site.create_new')</a>
+            <a style='text-align:center;cursor:pointer' class="button btn-red big" href="{{route('admin.applications.store')}}">@lang('site.create_new')</a>
 
         </div>
         <div class="table-page-wrap">
 
             <div class="row d-flex align-items-center my-3 border p-2 rounded">
 
+
                 <div class="form-group col-3">
                     <label for="status-select">@lang('admin.search')</label>
                     <input wire:model='search' type="text" class="form-control contact-input">
                 </div>
                 <div class="form-group col-3">
-                    <label for="status-select">@lang('admin.is_active')</label>
+                    <label for="status-select">@lang('admin.status')</label>
                     <select wire:model='is_active' id='status-select' class="form-control border  contact-input">
                         <option value>@lang('admin.choose')</option>
-                        <option value="1">@lang('admin.active')</option>
-                        <option value="not_active">@lang('admin.not_active')</option>
+                        <option value="appraisal">@lang('admin.appraisal')</option>
+                        <option value="appraised">@lang('admin.appraised')</option>
+                        <option value="canceled">@lang('admin.canceled')</option>
                     </select>
                 </div>
 
@@ -68,8 +69,8 @@
                                         <i class="fas @if($record->is_active) fa-lock red @else fa-unlock green @endif"></i>
                                     </button>
 
-                                    @include('livewire.admin.travel-agent.edit', ['agent' => $record])
-                                    <a style="cursor:pointer;" wire:click="showAgent({{$record->id}})" class="no-btn"><i
+                                    @include('livewire.admin.application.edit', ['agent' => $record])
+                                    <a style="cursor:pointer;" wire:click="showApplication({{$record->id}})" class="no-btn"><i
                                             class="far fa-edit blue"></i></a>
 
                                 </div>
@@ -87,19 +88,19 @@
             @endif
         </div>
 
-        @include('livewire.admin.travel-agent.add')
+        @include('livewire.admin.application.add')
 
     </div>
 </main>
 
 <script>
-    document.getElementById('addAgentButton').addEventListener('click', function() {
-        $('#agentModal').modal('show');
+    document.getElementById('addApplicationButton').addEventListener('click', function() {
+        $('#applicationModal').modal('show');
     });
 
     document.addEventListener('livewire:load', function () {
-        Livewire.on('showAgentModal', function (agentId) {
-            $('#agentModal' + agentId).modal('show');
+        Livewire.on('showApplicationModal', function (applicationId) {
+            $('#applicationModal' + applicationId).modal('show');
         });
     });
 </script>

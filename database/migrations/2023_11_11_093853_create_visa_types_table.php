@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-return new class extends Migration
+class CreateVisaTypesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,11 +13,12 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('oil_brands', function (Blueprint $table) {
+        Schema::create('visa_types', function (Blueprint $table) {
             $table->id();
-            $table->string('name_ar');
-            $table->string('name_en');
-            $table->boolean('is_active')->default(true);
+            $table->string('name')->nullable();
+            $table->float('dubai_fee')->nullable();
+            $table->float('service_fee')->nullable();
+            $table->float('total')->nullable()->comment('dubai fee + service fee');
             $table->timestamps();
         });
     }
@@ -29,6 +30,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('oil_brands');
+        Schema::dropIfExists('visa_types');
     }
-};
+}

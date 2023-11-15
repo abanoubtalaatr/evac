@@ -1,11 +1,11 @@
 
-    <section class="login bg-dark">
+    <section class="login">
         <div class="row">
             <div class="col-md-5">
             <div class="login-back">
                 <div class="row justify-content-center">
                 <div class="col-md-8">
-                    <x-langselect/>
+{{--                    <x-langselect/>--}}
 
                     <div class="login-form ">
                         @if($error_message)

@@ -686,7 +686,7 @@ table.dataTable thead th, table.dataTable tfoot th {
 .login {
   min-height: 100vh;
   /*background: linear-gradient(0deg, #1e2229 0%, #3a3a3a 100%);*/
-    background: #f19e07;
+    background: darkblue;
     color:black;
   width: 100%;
   overflow-x: hidden; }

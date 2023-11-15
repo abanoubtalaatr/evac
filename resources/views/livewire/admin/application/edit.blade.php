@@ -1,9 +1,9 @@
-<div wire:ignore.self  class="modal fade" id="agentModal{{$agent->id}}" tabindex="-1" role="dialog" aria-labelledby="agentModalLabel" aria-hidden="true">
+<div wire:ignore.self  class="modal fade" id="agentModal{{$agent->id}}" tabindex="-1" role="dialog" aria-labelledby="agentModalLabel{{$agent->id}}" aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <!-- Add your modal content here -->
             <div class="modal-header">
-                <h5 class="modal-title" id="agentModalLabel">Edit Agent</h5>
+                <h5 class="modal-title" id="agentModalLabel{{$agent->id}}">Edit Agent</h5>
                 <button type="button" onclick="$('#agentModal{{$agent->id}}').modal('hide');" class="close btn" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
@@ -74,7 +74,7 @@
             </div>
 
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" onclick="$('#agentModal').modal('hide');" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-secondary" onclick="$('#agentModal{{$agent->id}}').modal('hide');" data-dismiss="modal">Close</button>
                     <button type="submit" class="btn btn-primary" wire:click="update">Update</button>
 
                 </div>
@@ -82,14 +82,3 @@
         </div>
     </div>
 </div>
-
-<script>
-    document.getElementById('addAgentButton').addEventListener('click', function() {
-        $('#agentModal').modal('show');
-    });
-   document.addEventListener('livewire:load', function () {
-        Livewire.on('showAgentModal', function (agentId) {
-            $('#agentModal' + agentId).modal('show');
-        });
-    });
-</script>

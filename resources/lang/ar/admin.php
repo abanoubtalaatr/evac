@@ -23,5 +23,6 @@ return [
     '0' => 'لم يتم الدفع بعد',
     'edit_successfully' => 'تم التعديل بنجاح',
     'create_successfully' => 'تم الاضافة بنجاح',
-    'delete_successfully' => 'تم الحذف بنجاح'
+    'delete_successfully' => 'تم الحذف بنجاح',
+
 ];

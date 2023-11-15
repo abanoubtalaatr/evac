@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class AddNumberOfExperienceToSettingsTable extends Migration
+class CreateVisaProvidersTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,8 +13,10 @@ class AddNumberOfExperienceToSettingsTable extends Migration
      */
     public function up()
     {
-        Schema::table('settings', function (Blueprint $table) {
-            $table->integer('number_of_experience')->default(10);
+        Schema::create('visa_providers', function (Blueprint $table) {
+            $table->id();
+            $table->string('name')->nullable();
+            $table->timestamps();
         });
     }
 
@@ -25,8 +27,6 @@ class AddNumberOfExperienceToSettingsTable extends Migration
      */
     public function down()
     {
-        Schema::table('settings', function (Blueprint $table) {
-            //
-        });
+        Schema::dropIfExists('visa_providers');
     }
 }

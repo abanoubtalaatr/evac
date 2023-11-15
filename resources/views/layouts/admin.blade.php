@@ -35,7 +35,7 @@
     <!--Sidebar-->
     <div id="sidebar-wrapper">
         <div class="sidebar-nav">
-            <div class="logo-wrap bg-white mb-5">
+            <div class="logo-wrap bg-white mb-5 ">
                 <x-logo />
             </div>
 
@@ -119,11 +119,72 @@
                 </li>
 
             @else
-                @can('Manage day office')
+                @can('Manage travel agents')
                     <li>
                         <a href="{{route('admin.travel_agents')}}" class="text-white">
                             <img src="{{asset('frontAssets')}}/assets_{{app()->getLocale()}}/imgs/home/tasks.svg" alt="">
                             @lang('admin.agents')
+                        </a>
+                    </li>
+                @endcan
+            @endif
+
+            @if(auth('admin')->user()->hasRole('super admin'))
+                <li>
+                    <a href="{{route('admin.visa_types')}}" class="text-white">
+                        <img src="{{asset('frontAssets')}}/assets_{{app()->getLocale()}}/imgs/home/tasks.svg" alt="">@lang('admin.visa_types')
+                    </a>
+                </li>
+
+            @else
+                @can('Manage visa types')
+                    <li>
+                        <a href="{{route('admin.visa_types')}}" class="text-white">
+                            <img src="{{asset('frontAssets')}}/assets_{{app()->getLocale()}}/imgs/home/tasks.svg" alt="">
+                            @lang('admin.visa_types')
+                        </a>
+                    </li>
+                @endcan
+            @endif
+            @if(auth('admin')->user()->hasRole('super admin'))
+                <li>
+                    <a href="{{route('admin.visa_providers')}}" class="text-white">
+                        <img src="{{asset('frontAssets')}}/assets_{{app()->getLocale()}}/imgs/home/tasks.svg" alt="">@lang('admin.visa_providers')
+                    </a>
+                </li>
+
+            @else
+                @can('Manage visa providers')
+                    <li>
+                        <a href="{{route('admin.visa_providers')}}" class="text-white">
+                            <img src="{{asset('frontAssets')}}/assets_{{app()->getLocale()}}/imgs/home/tasks.svg" alt="">
+                            @lang('admin.visa_providers')
+                        </a>
+                    </li>
+                @endcan
+            @endif
+
+            @if(auth('admin')->user()->hasRole('super admin'))
+
+                    <li>
+                        <img src="{{asset('frontAssets')}}/assets_{{app()->getLocale()}}/imgs/home/tasks.svg" alt="">@lang('admin.applications')
+                    </li>
+                    <li class="ml-5">
+                        <a href="{{route('admin.applications.store')}}" class="text-white">
+                            @lang('admin.new_applications')
+                        </a>
+                    </li>
+                    <li class="ml-5">
+                        <a href="{{route('admin.applications.appraisal')}}" class="text-white">
+                            @lang('admin.appraisal')
+                        </a>
+                    </li>
+            @else
+                @can('Manage visa applications')
+                    <li>
+                        <a href="{{route('admin.applications')}}" class="text-white">
+                            <img src="{{asset('frontAssets')}}/assets_{{app()->getLocale()}}/imgs/home/tasks.svg" alt="">
+                            @lang('admin.applications')
                         </a>
                     </li>
                 @endcan
@@ -167,7 +228,7 @@
     <!-- End Main Content-->
         <!-- Main footer-->
         <footer class="main-footer">
-            <p>All rights reserved {{date('Y')}} - Bogi</p>
+            <p>All rights reserved {{date('Y')}} - Evac system</p>
         </footer>
         <!-- End Main footer-->
     </div>

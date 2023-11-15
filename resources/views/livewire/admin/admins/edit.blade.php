@@ -94,8 +94,6 @@
     </div>
 </main>
 @push('scripts')
-    {{-- <script src='{{asset('frontAssets/js/multiselect.js')}}'></script> --}}
-
     <script src="{{asset('js/select2.min.js')}}"></script>
     <script>
         window.addEventListener('onContentChanged', () => {

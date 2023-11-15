@@ -61,11 +61,26 @@ Route::group([
             Route::get('users/{user}/edit', \App\Http\Livewire\Admin\Users\Edit::class)->middleware("can:Manage users")->name('users.edit');
             Route::get('/users/create',\App\Http\Livewire\Admin\Users\Create::class )->name('create_user');
 
+            //day office
             Route::get('day-office', \App\Http\Livewire\Admin\DayOffice::class)->name('day_office');
+
+            //travel agents
             Route::get('travel-agents', App\Http\Livewire\Admin\TravelAgent\Index::class)->name('travel_agents');
 
+            //visa types
+            Route::get('visa-types', App\Http\Livewire\Admin\VisaType\Index::class)->name('visa_types');
+
+            //visa providers
+            Route::get('visa-providers', App\Http\Livewire\Admin\VisaProvider\Index::class)->name('visa_providers');
+
+            //applications
+            Route::get('applications', App\Http\Livewire\Admin\Application\Index::class)->name('applications');
+            Route::get('applications/create', App\Http\Livewire\Admin\Application\Create::class)->name('applications.store');
+            Route::get('application-appraisal',\App\Http\Livewire\Admin\Application\Appraisal::class)->name('applications.appraisal');
+            //settings
             Route::get('settings', SettingsIndex::class)->name('settings');
 
+            //notifications
             Route::get('notifications', \App\Http\Livewire\Admin\Notifications::class )->name('notifications');
         });
     });
@@ -73,38 +88,3 @@ Route::group([
 
 
 require __DIR__ . '/website.php';
-Route::get('send-sms', function (){
-    $data = [
-        "userName" => env('MESGAT_USER_NAME'),
-        "password" => env('MESGAT_PASSWORD'),
-        "userSender" => env('MESGAT_SENDER_NAME'),
-        "numbers" => "503185050",
-        "apiKey" => env('MESGAT_KEY'),
-        "msg" => "Verification Code:1234 ",
-        "msgEncoding" => "UTF8",
-    ];
-    $client = new \GuzzleHttp\Client();
-    $res = $client->request('POST', 'https://www.msegat.com/gw/sendsms.php', [
-        'headers' => [
-            'Accept' => 'application/json',
-            'Content-Type' => 'application/json',
-            'Accept-Language' => app()->getLocale() == 'ar' ? 'ar-Sa' : 'en-Uk',
-        ],
-        'body' => json_encode($data),
-    ]);
-
-    if ($res) {
-        $data = json_decode($res->getBody()->getContents());
-        dd($data);
-        if (isset($data->code)) {
-            //----- if code == 1 => Success, otherwise failed.
-            $code = $data->code;
-            $message = $data->message;
-
-            return $code == 1 ? 1 : $code;
-            // return response()->json(['code'=> $code,'message' => __($message)]);
-        }
-        return 0;
-    }
-    return 0;
-});
