@@ -35,8 +35,8 @@
     <!--Sidebar-->
     <div id="sidebar-wrapper">
         <div class="sidebar-nav">
-            <div class="logo-wrap bg-white mb-5 ">
-                <x-logo />
+            <div class="logo-wrap bg-white mb-5 " style="height: 100px">
+                <x-logo  />
             </div>
 
                 @if(auth('admin')->user()->hasRole('super admin'))
@@ -146,6 +146,58 @@
                     </li>
                 @endcan
             @endif
+
+            @if(auth('admin')->user()->hasRole('super admin'))
+                <li>
+                    <a href="{{route('admin.applicants')}}" class="text-white">
+                        <img src="{{asset('frontAssets')}}/assets_{{app()->getLocale()}}/imgs/home/tasks.svg" alt="">@lang('admin.applicants')
+                    </a>
+                </li>
+
+            @else
+                @can('Manage applicants')
+                    <li>
+                        <a href="{{route('admin.applicants')}}" class="text-white">
+                            <img src="{{asset('frontAssets')}}/assets_{{app()->getLocale()}}/imgs/home/tasks.svg" alt="">
+                            @lang('admin.applicants')
+                        </a>
+                    </li>
+                @endcan
+            @endif
+            @if(auth('admin')->user()->hasRole('super admin'))
+                <li>
+                    <a href="{{route('admin.services')}}" class="text-white">
+                        <img src="{{asset('frontAssets')}}/assets_{{app()->getLocale()}}/imgs/home/tasks.svg" alt="">@lang('admin.services')
+                    </a>
+                </li>
+
+            @else
+                @can('Manage services')
+                    <li>
+                        <a href="{{route('admin.services')}}" class="text-white">
+                            <img src="{{asset('frontAssets')}}/assets_{{app()->getLocale()}}/imgs/home/tasks.svg" alt="">
+                            @lang('admin.services')
+                        </a>
+                    </li>
+                @endcan
+            @endif
+            @if(auth('admin')->user()->hasRole('super admin'))
+                <li>
+                    <a href="{{route('admin.service_transactions')}}" class="text-white">
+                        <img src="{{asset('frontAssets')}}/assets_{{app()->getLocale()}}/imgs/home/tasks.svg" alt="">@lang('admin.service_transactions')
+                    </a>
+                </li>
+
+            @else
+                @can('Manage service transactions')
+                    <li>
+                        <a href="{{route('admin.service_transactions')}}" class="text-white">
+                            <img src="{{asset('frontAssets')}}/assets_{{app()->getLocale()}}/imgs/home/tasks.svg" alt="">
+                            @lang('admin.service_transactions')
+                        </a>
+                    </li>
+                @endcan
+            @endif
             @if(auth('admin')->user()->hasRole('super admin'))
                 <li>
                     <a href="{{route('admin.visa_providers')}}" class="text-white">
@@ -164,21 +216,32 @@
                 @endcan
             @endif
 
+
             @if(auth('admin')->user()->hasRole('super admin'))
 
                     <li>
                         <img src="{{asset('frontAssets')}}/assets_{{app()->getLocale()}}/imgs/home/tasks.svg" alt="">@lang('admin.applications')
                     </li>
-                    <li class="ml-5">
+                <li style="line-height: 20px;margin-left: 55px;padding-left: 0px;text-indent: 0" class="border-bottom pb-2">
                         <a href="{{route('admin.applications.store')}}" class="text-white">
                             @lang('admin.new_applications')
                         </a>
                     </li>
-                    <li class="ml-5">
+                <li style="line-height: 20px;margin-left: 55px;padding-left: 0px;text-indent: 0" class="border-bottom pb-2">
                         <a href="{{route('admin.applications.appraisal')}}" class="text-white">
                             @lang('admin.appraisal')
                         </a>
                     </li>
+                <li style="line-height: 20px;margin-left: 55px;padding-left: 0px;text-indent: 0" class="border-bottom pb-2">
+                    <a href="{{ route('admin.applications.appraised') }}" class="text-white">
+                        @lang('admin.appraised')
+                    </a>
+                </li>
+                <li style="line-height: 20px;margin-left: 55px;padding-left: 0px;text-indent: 0" class="border-bottom pb-2">
+                    <a href="{{route('admin.applications.revise')}}" class="text-white">
+                        @lang('admin.revise')
+                    </a>
+                </li>
             @else
                 @can('Manage visa applications')
                     <li>

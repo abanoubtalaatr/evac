@@ -28,7 +28,9 @@ Route::group([
     'middleware' => ['localeSessionRedirect', 'localizationRedirect', 'localeViewPath'],
 ], function () {
 
-//    Route::get('/', [HomeController::class, 'index'])->name('homepage');
+    Route::get('/', function (){
+        return redirect()->to(\route('admin.login_form'));
+    })->name('homepage');
     Route::get('contact-us', ContactUs::class)->name('contact_us');
     Route::get('page/{page}', [HomeController::class, 'showPage'])->name('show_page');
 
@@ -76,15 +78,26 @@ Route::group([
             //applications
             Route::get('applications', App\Http\Livewire\Admin\Application\Index::class)->name('applications');
             Route::get('applications/create', App\Http\Livewire\Admin\Application\Create::class)->name('applications.store');
-            Route::get('application-appraisal',\App\Http\Livewire\Admin\Application\Appraisal::class)->name('applications.appraisal');
+            Route::get('applications/edit', \App\Http\Livewire\Admin\Application\Edit::class)->name('applications.update');
+
+            Route::get('applications-appraisal',\App\Http\Livewire\Admin\Application\Appraisal::class)->name('applications.appraisal');
+            Route::get('applications-appraised',\App\Http\Livewire\Admin\Application\Appraised::class)->name('applications.appraised');
+
+            Route::get('applications-receipt', \App\Http\Livewire\Admin\Application\Receipt::class)->name('applications.receipt');
+            Route::get('applications-revise', \App\Http\Livewire\Admin\Application\Revise::class)->name('applications.revise');
             //settings
             Route::get('settings', SettingsIndex::class)->name('settings');
 
+            //applicant
+            Route::get('applicants', \App\Http\Livewire\Admin\Applicant\Index::class)->name('applicants');
+
+            // service
+            Route::get('services', \App\Http\Livewire\Admin\Service\Index::class)->name('services');
+
+            //service Transaction
+            Route::get('service-transaction', \App\Http\Livewire\Admin\ServiceTransaction\Index::class)->name('service_transactions');
             //notifications
             Route::get('notifications', \App\Http\Livewire\Admin\Notifications::class )->name('notifications');
         });
     });
 });
-
-
-require __DIR__ . '/website.php';

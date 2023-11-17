@@ -10,9 +10,10 @@ use App\Models\Setting;
 use App\Models\VisaProvider;
 use App\Models\VisaType;
 use Carbon\Carbon;
+use Illuminate\Support\Arr;
 use Livewire\Component;
 
-class Create extends Component
+class Edit extends Component
 {
     use ValidationTrait;
     public $name;
@@ -26,16 +27,29 @@ class Create extends Component
     public $passportNumber = [];
     public $passportApplications;
     public $numberOfDaysToCheckVisa=90;
+    public $isEdit = false;
     protected $paginationTheme = 'bootstrap';
 
     protected $listeners = ['showApplication'];
 
-    public function mount()
+    public function mount(Application $application)
     {
         $this->page_title = __('admin.applications');
         $this->visaTypes = VisaType::query()->get();
         $this->visaProviders = VisaProvider::query()->get();
         $this->travelAgents = Agent::query()->where('is_active', 1)->get();
+
+        $application = Application::query()->find(request()->application);
+        $this->form = $application->toArray();
+        $this->passportNumber = $application->passport_no;
+        $this->form['expiry_date'] = Carbon::parse($application->expiry_date)->format('Y-m-d');
+        $this->application = $application;
+        $this->page_title = __('admin.applications_edit');
+        if($application->travel_agent_id){
+
+            $this->isChecked = true;
+            $this->isEdit = true;
+        }
     }
 
 
@@ -114,16 +128,12 @@ class Create extends Component
         $this->validate();
         $data = $this->form;
 
-        $today = Carbon::now()->format('dmY');
-        $currentSerial = Application::where('application_ref', 'like', 'EVLB/' . $today . '/%')
-            ->max('application_ref');
-        $nextSerial = $currentSerial ? (int)substr($currentSerial, -4) + 1 : 1;
-        $applicationReference = 'EVLB/' . $today . '/' . str_pad($nextSerial, 4, '0', STR_PAD_LEFT);
-
-        $data['application_ref'] = $applicationReference;
-
-        $application = Application::query()->create($data);
-        session()->flash('success',__('admin.create_successfully'));
+        if(isset($data['agent_id'])) {
+            $data['travel_agent_id'] = $data['agent_id'];
+            unset($data['agent_id']);
+        }
+        $this->application->update(Arr::except($data, ['created_at', 'updated_at']));
+        session()->flash('success',__('admin.edit_successfully'));
 
         return redirect()->to(route('admin.applications.appraisal'));
     }
@@ -199,6 +209,6 @@ class Create extends Component
 
     public function render()
     {
-        return view('livewire.admin.application.create')->layout('layouts.admin');
+        return view('livewire.admin.application.edit')->layout('layouts.admin');
     }
 }

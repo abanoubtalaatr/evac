@@ -9,38 +9,56 @@
         <div class="row">
             <div class="col-4 text-center">
                 <div class="dash box-shad" onclick='window.location.href="{{route('admin.users.index')}}'>
-                    <h4>{{$client_count}}</h4>
-                    <p class="grey">@lang('site.new_application')</p>
+                    <h4>{{$new_applications}}</h4>
+                    <p class="grey">@lang('admin.new_applications')</p>
+                </div>
+            </div>
+            <div class="col-4 text-center">
+                <div class="dash box-shad" onclick='window.location.href="{{route('admin.users.index')}}'>
+                    <h4>{{$appraised_applications}}</h4>
+                    <p class="grey">@lang('admin.appraised_application')</p>
                 </div>
             </div>
 
-{{--            <div class="col-4 text-center">--}}
-{{--                <div class="dash box-shad" onclick='window.location.href="{{route('admin.oil_brands')}}'>--}}
-{{--                    <h4>{{$oil_brand}}</h4>--}}
-{{--                    <p class="grey"></p>--}}
-{{--                </div>--}}
-{{--            </div>--}}
-
-{{--            <div class="col-4 text-center">--}}
-{{--                <div class="dash box-shad" onclick='window.location.href="{{route('admin.services')}}'>--}}
-{{--                    <h4>{{$services_count}}</h4>--}}
-{{--                    <p class="grey">@lang('site.services')</p>--}}
-{{--                </div>--}}
-{{--            </div>--}}
-{{--            <div class="col-4 text-center">--}}
-{{--                <div class="dash box-shad" onclick='window.location.href="{{route('admin.orders')}}'>--}}
-{{--                    <h4>{{$orders_count}}</h4>--}}
-{{--                    <p class="grey">@lang('site.orders')</p>--}}
-{{--                </div>--}}
-{{--            </div>--}}
-{{--            <div class="col-4 text-center">--}}
-{{--                <div class="dash box-shad" >--}}
-{{--                    <h4>{{$total_money}}</h4>--}}
-{{--                    <p class="grey">@lang('site.return_orders')</p>--}}
-{{--                </div>--}}
-{{--            </div>--}}
+            <div class="col-4 text-center">
+                <div class="dash box-shad" onclick='window.location.href="{{route('admin.users.index')}}'>
+                    <h4>{{$agent_count}}</h4>
+                    <p class="grey">@lang('admin.agents')</p>
+                </div>
+            </div>
 
 
+            <div class="col-4 text-center">
+                <div class="dash box-shad" onclick='window.location.href="{{route('admin.users.index')}}'>
+                    <h4>{{$services}}</h4>
+                    <p class="grey">@lang('admin.services')</p>
+                </div>
+            </div>
+
+            <div class="col-4 text-center">
+                <div class="dash box-shad" onclick='window.location.href="{{route('admin.users.index')}}'>
+                    <h4>{{$serviceTransactions}}</h4>
+                    <p class="grey">@lang('admin.service_transactions')</p>
+                </div>
+            </div>
+            <div class="col-4 text-center">
+                <div class="dash box-shad" onclick='window.location.href="{{route('admin.users.index')}}'>
+                    <h4>{{$visaProviders}}</h4>
+                    <p class="grey">@lang('admin.visa_providers')</p>
+                </div>
+            </div>
+            <div class="col-4 text-center">
+                <div class="dash box-shad" onclick='window.location.href="{{route('admin.users.index')}}'>
+                    <h4>{{$visaTypes}}</h4>
+                    <p class="grey">@lang('admin.visa_types')</p>
+                </div>
+            </div>
+            <div class="col-4 text-center">
+                <div class="dash box-shad" onclick='window.location.href="{{route('admin.users.index')}}'>
+                    <h4>{{$applicants}}</h4>
+                    <p class="grey">@lang('admin.applicants')</p>
+                </div>
+            </div>
         </div>
 
 

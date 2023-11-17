@@ -1,9 +1,6 @@
 
 <main class="main-content">
     <x-admin.head/>
-    @include('livewire.admin.application.popup.blackListPassport')
-    @include('livewire.admin.application.popup.expiryPassport')
-    @include('livewire.admin.application.popup.passportHasMoreThanOne')
     <!--campaign-->
     <div class="border-div">
         <div class="b-btm">
@@ -13,26 +10,15 @@
 
             <div class="col-6">
                 <div class="form-group my-2 ">
-                    <label class="" for="visaType">Visa Type:</label>
-                    <select wire:model="form.visa_type_id" class="form-control" id="visaType">
-                        <option value="">Select Visa Type</option>
-                        @foreach ($visaTypes as $visaType)
-                            <option value="{{ $visaType->id }}">{{ $visaType->name }}</option>
-                        @endforeach
-                    </select>
+                    <label class="" for="visaType">Receipt No:</label>
+                    <input type="text" value="{{$application->application_ref}}" disabled>
                 </div>
-                @error('form.visa_type_id')<p style="color: red;">{{ $message }}</p>@enderror
             </div>
             <div class="col-6">
                 <div class="form-group my-2">
                     <label for="visaProvider">Visa Provider:</label>
                     <div>
-                        @foreach ($visaProviders as $visaProvider)
-                            <label>
-                                <input type="radio" wire:model="form.visa_provider_id" value="{{ $visaProvider->id }}" id="visaProvider{{ $visaProvider->id }}">
-                                {{ $visaProvider->name }}
-                            </label>
-                        @endforeach
+
                     </div>
                     @error('form.visa_provider_id')<p style="color: red;">{{ $message }}</p>@enderror
                 </div>
@@ -43,18 +29,7 @@
                     <div class="">
                         <label for="travelAgent">Travel Agent:</label>
                         <input class="" type="checkbox" wire:click="chooseTravelAgent">
-                        @if ($isChecked)
-                            <div class="form-group " wire:ignore style="width: 50%">
 
-                                <select id='agent_id' wire:model='form.travel_agent_id' class="@error('form.agent_id') is-invalid @enderror form-control contact-input">
-                                    <option value="" >Select Option</option>
-
-                                    @foreach($travelAgents as $travelAgent)
-                                        <option selected value="{{$travelAgent->id}}">{{$travelAgent->name}}</option>
-                                    @endforeach
-                                </select>
-                            </div>
-                        @endif
                     </div>
                 </div>
                 @error('form.travel_agent_id')<p style="color: red;">{{ $message }}</p>@enderror

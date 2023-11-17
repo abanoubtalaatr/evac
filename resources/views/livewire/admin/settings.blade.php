@@ -10,6 +10,23 @@
             <form wire:submit.prevent='update'>
                 <div class="row">
                     <div class="col-6">
+                        <div class="custom-file-upload w-25">
+                            @if($logo)
+                                <img  style='max-width:100%'  src="{{$logo->temporaryUrl()}}" alt="">
+                            @else
+                                @isset($settings)
+                                    <img style='max-width:100%' src="{{$form['logo']??""}}" alt="">
+                                @endisset
+                            @endif
+                            <img src="{{asset('frontAssets')}}/imgs/wallet/upload.svg" alt="">
+                            <span>@lang('validation.attributes.image')</span>
+                            <input wire:model='logo' class='form-control @error('logo') is-invalid @enderror' type="file"/>
+                            @error('logo') <p class="text-danger">{{$message}}</p> @enderror
+                        </div>
+                        <div wire:loading wire:target="logo">    <i class="fas fa-spinner fa-spin"></i> </div>
+
+                    </div>
+                    <div class="col-6">
                         <label for="">@lang('admin.office_id')</label>
                         <input wire:model='form.office_id' placeholder="@lang('admin.office_id')"
                                class="@error('form.office_id') is-invalid @enderror form-control contact-input"

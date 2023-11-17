@@ -57,22 +57,22 @@
                                     @endif
 
 
-                                        @if($record->status == 'submitted' || $record->status == 'appraised')
-                                            <button wire:click="showCancelConfirmation({{$record->id}})" class="btn btn-warning">
-                                                Cancel
-                                            </button>
+                                    @if($record->status == 'submitted' || $record->status == 'appraised')
+                                        <button wire:click="showCancelConfirmation({{$record->id}})" class="btn btn-warning">
+                                            Cancel
+                                        </button>
 
-                                            <button wire:click="showDeleteConfirmation({{$record->id}})" class="btn btn-danger">
-                                                Delete
-                                            </button>
+                                        <button wire:click="showDeleteConfirmation({{$record->id}})" class="btn btn-danger">
+                                            Delete
+                                        </button>
 
-                                            <a href="{{route('admin.applications.receipt')}}" class="btn btn-info">
-                                                Receipt
-                                            </a>
-                                        @endif
+                                        <a href="{{route('admin.applications.receipt')}}" class="btn btn-info">
+                                            Receipt
+                                        </a>
+                                    @endif
 
 
-                                        @include('livewire.admin.application.show',  ['application' => $record])
+                                    @include('livewire.admin.application.show',  ['application' => $record])
                                     <a style="cursor:pointer;" wire:click="showApplicationModal({{$record->id}})" class="no-btn"><i
                                             class="far fa-eye blue"></i></a>
                                     <a style="cursor:pointer;" href="{{route('admin.applications.update', ['application' => $record])}}" class="no-btn"><i

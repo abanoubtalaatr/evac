@@ -281,7 +281,7 @@ input:-webkit-autofill {
     cursor: pointer; }
   .sidebar-nav .logo-wrap {
     text-align: center;
-    padding: 15px 0; }
+     }
   .sidebar-nav > ul > li:not(:last-child) {
     border-bottom: 1px solid rgba(255, 255, 255, 0.25); }
   .sidebar-nav ul {

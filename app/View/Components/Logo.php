@@ -2,6 +2,7 @@
 
 namespace App\View\Components;
 
+use App\Models\Setting;
 use Illuminate\View\Component;
 
 class Logo extends Component
@@ -10,7 +11,13 @@ class Logo extends Component
 
     public function __construct($src = 'default-logo.png')
     {
-        $src = asset('assets_'.app()->getLocale())."/imgs/logo/logo.svg";
+        $settings = Setting::query()->first();
+        if($settings){
+            $src = asset('uploads/pics/'. $settings->logo);
+        }else{
+            $src = asset('assets_'.app()->getLocale())."/imgs/logo/logo.svg";
+        }
+
         $this->src = $src ;
     }
 

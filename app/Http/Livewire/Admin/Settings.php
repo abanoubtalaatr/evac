@@ -14,7 +14,7 @@ class Settings extends Component
     use ValidationTrait;
     use WithFileUploads;
 
-    public $form, $page_title, $settings, $pay_cash, $pay_online, $mission_image, $objective_image, $vision_image, $video_url;
+    public $form, $page_title, $settings, $logo;
     public $progress = 0, $latitude, $longitude;
 
     public function mount()
@@ -22,10 +22,18 @@ class Settings extends Component
         $this->page_title = __('messages.settings');
         $this->settings = Setting::first();
         $this->form = Arr::except($this->settings->toArray(), ['id', 'created_at', 'updated_at']);
+        if($this->settings->logo){
+            $this->form['logo'] = url('uploads/pics/'. $this->settings->logo);
+        }
+
     }
     public function update()
     {
         $this->validate();
+
+        $this->form['logo'] =
+            $this->logo?
+                $this->logo->storeAs(date('Y/m/d'),Str::random(50).'.'.$this->logo->extension(),'public') : $this->settings->logo;
 
         $this->settings->update($this->form);
 

@@ -9,7 +9,7 @@ use App\Models\VisaType;
 use Illuminate\Http\Request;
 use Livewire\Component;
 
-class Appraisal extends Component
+class Appraised extends Component
 {
     use CancelTrait;
     use DeleteTrait;
@@ -18,7 +18,7 @@ class Appraisal extends Component
 
     public function mount(Request $request)
     {
-        $this->page_title = __('admin.appraisal');
+        $this->page_title = __('admin.appraised');
 
         $this->visaTypes = VisaType::query()->get();
     }
@@ -29,7 +29,7 @@ class Appraisal extends Component
             ->when(!empty($this->visaType), function ($query) {
                 return  $query->where('visa_type_id', $this->visaType);
             })
-            ->where('status', 'submitted')
+            ->where('status', 'appraised')
             ->latest()
             ->paginate();
     }
@@ -51,6 +51,6 @@ class Appraisal extends Component
     public function render()
     {
         $records = $this->getRecords();
-        return view('livewire.admin.application.appraisal', compact('records'))->layout('layouts.admin');
+        return view('livewire.admin.application.appraised', compact('records'))->layout('layouts.admin');
     }
 }

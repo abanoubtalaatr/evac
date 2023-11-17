@@ -16,7 +16,7 @@
 
                     <form wire:submit.prevent="attempt" method='post'>
 {{--                        <div class="login-logo"><img src="{{asset('frontAssets')}}/assets_{{app()->getLocale()}}/imgs/home/logo.svg" alt=""></div>--}}
-                   <div class="login-logo bg-white p-3 mb-3 rounded">
+                   <div class="login-logo bg-white mb-3 rounded" style="height: 100px">
                        <x-logo />
                    </div>
 
