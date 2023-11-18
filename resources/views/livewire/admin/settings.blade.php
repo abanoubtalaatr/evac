@@ -91,6 +91,23 @@
                         @error('form.vat_rate') <p class="text-danger">{{$message}}</p> @enderror
                         <hr/>
                     </div>
+
+                    <div class="col-6">
+                        <label for="">@lang('admin.color')</label>
+                        <input wire:model='form.color' placeholder="@lang('admin.color')"
+                               class="@error('form.color') is-invalid @enderror form-control contact-input"
+                               type="text"/>
+                        @error('form.color') <p class="text-danger">{{$message}}</p> @enderror
+                        <hr/>
+                    </div>
+                    <div class="col-6">
+                        <label for="">@lang('admin.background')</label>
+                        <input wire:model='form.background' placeholder="@lang('admin.background')"
+                               class="@error('form.background') is-invalid @enderror form-control contact-input"
+                               type="text"/>
+                        @error('form.background') <p class="text-danger">{{$message}}</p> @enderror
+                        <hr/>
+                    </div>
                 </div>
 
 

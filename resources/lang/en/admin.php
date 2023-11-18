@@ -85,5 +85,7 @@ return [
     'vat' => 'Vat',
     'appraised_application' => 'Appraised application',
     'deleted_applications' => "Deleted applications",
-    'deleted_date' => 'Deletion date'
+    'deleted_date' => 'Deletion date',
+    'color' => 'Color',
+    'background' => 'Background',
 ];
