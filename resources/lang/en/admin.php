@@ -56,7 +56,7 @@ return [
     'no_of_vissas_issued_this_month' => 'No of vissas issued this month',
     'total_number_of_visas_issued' => "total number of visas issued",
     "applications" => "Applications",
-    'new_applications' => "new applications",
+    'new_applications' => "New applications",
     'appraisal' => "Appraisal",
     'visa_type' => 'Visa type',
     'applicants' => "Applicants",

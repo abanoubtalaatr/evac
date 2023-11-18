@@ -61,6 +61,10 @@ class Index extends Component
             ->paginate();
     }
 
+    public function emptyForm()
+    {
+        $this->form =[];
+    }
     public function resetData()
     {
         $this->reset(['is_active', 'search']);
