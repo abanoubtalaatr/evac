@@ -31,9 +31,17 @@
 
 <body class="home-page" x-data x-on:saved="toastr.success($event.detail.message);">
 
-<div id="wrapper">
+@php
+    $settings  = \App\Models\Setting::query()->first();
+    $background = "darkblue";
+    if(isset($settings->background)){
+        $background = $settings->background;
+    }
+@endphp
+<div id="wrapper" style="background: {{$background}}">
     <!--Sidebar-->
-    <div id="sidebar-wrapper">
+
+    <div id="sidebar-wrapper" style="background: {{$background}}">
         <div class="sidebar-nav">
             <div class="logo-wrap bg-white mb-5 " style="height: 100px;padding-right: 7px">
                 <x-logo  />
