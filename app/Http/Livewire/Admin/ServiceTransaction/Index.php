@@ -8,27 +8,28 @@ use App\Models\Application;
 use App\Models\Service;
 use App\Models\ServiceTransaction;
 use App\Models\Setting;
-use App\Models\VisaType;
+use Barryvdh\DomPDF\Facade\Pdf;
+use Carbon\Carbon;
 use Illuminate\Support\Arr;
 use Livewire\Component;
 use Livewire\WithPagination;
+use Spatie\Browsershot\Browsershot;
 
 class Index extends Component
 {
     use WithPagination;
     use ValidationTrait;
 
-    public $name;
+    public $name, $surname, $agent,$service,$from,$to, $passport;
     public $form;
     public $is_active;
     public $perPage =10;
-    public $search;
     public $services, $agents;
-    public $serviceTransaction;
+    public $serviceTransaction, $formInvoice;
 
     protected $paginationTheme = 'bootstrap';
 
-    protected $listeners = ['showServiceTransaction'];
+    protected $listeners = ['showServiceTransaction', 'showServiceTransactionInvoice'];
 
     public function mount()
     {
@@ -52,6 +53,13 @@ class Index extends Component
             $this->form['vat'] = $vat;
         }
     }
+    public function printInvoice()
+    {
+        $pdf = Pdf::loadView('print-service-transaction');
+
+        // Output the PDF directly to the browser
+        return $pdf->stream('invoice.pdf');
+    }
     public function updatedFormPassportNo()
     {
         if ($this->form['passport_no'] !== '') {
@@ -74,23 +82,56 @@ class Index extends Component
 
         $this->emit("showServiceTransactionModal", $id);
     }
+    public function showServiceTransactionInvoice($id)
+    {
+        $this->serviceTransaction = ServiceTransaction::query()->find($id);
+        $this->formInvoice['payment_method'] = $this->serviceTransaction->payment_method;
+        $this->formInvoice['amount'] = $this->serviceTransaction->amount;
 
+        $this->emit("showServiceTransactionInvoiceModal", $id);
+    }
+
+    public function destroy(ServiceTransaction $serviceTransaction)
+    {
+        $serviceTransaction->update(['status' => 'deleted']);
+    }
+    public function updateInvoice()
+    {
+        $this->serviceTransaction->update([
+            'payment_method' => $this->formInvoice['payment_method'],
+            'amount' => $this->formInvoice['amount'],
+        ]);
+
+        session()->flash('success',__('admin.edit_successfully'));
+
+        return redirect()->to(route('admin.service_transactions'));
+
+    }
     public function resetData()
     {
-        $this->reset(['search']);
+        $this->reset(['agent', 'service', 'name', 'surname', 'from', 'to']);
     }
     public function getRecords()
     {
         return ServiceTransaction::query()
-            ->when($this->search, function ($query) {
-                $query->whereHas('agent',function ($query){
-                    $query->where('name', 'like', '%'.$this->search.'%');
-                })->orWhereHas('service', function ($query){
-                    $query->where('name', 'like', '%'.$this->search.'%');
-                })->orWhere('passport_no', 'like', '%'.$this->search.'%')
-                    ->orWhere('name', 'like', '%'.$this->search.'%')
-                    ->orWhere('surname', 'like', '%'.$this->search.'%');
+            ->when(!empty($this->name), function ($query) {
+                $query->where('name', 'like', '%'.$this->name.'%');
+            })->when(!empty($this->surname), function ($query){
+                $query->where('surname', 'like', '%'.$this->surname.'%');
+            })->when(!empty($this->passport), function ($query){
+                $query->where('passport_no', 'like', '%'.$this->passport.'%');
+            })->when(!empty($this->agent), function ($query){
+                $query->whereHas('agent', function ($query){
+                    $query->where('name', 'like', '%'.$this->agent.'%');
+                });
+            })->when(!empty($this->service), function ($query){
+                $query->whereHas('service', function ($query){
+                    $query->where('name', 'like', '%'.$this->service.'%');
+                });
+            })->when(!empty($this->from) && !empty($this->to), function ($query) {
+                $query->whereBetween('created_at', [$this->from, $this->to]);
             })
+
             ->latest()
             ->paginate();
     }
@@ -111,7 +152,15 @@ class Index extends Component
     public function store()
     {
         $this->validate();
+        $today = Carbon::now()->format('dmY');
+        $currentSerial = ServiceTransaction::where('service_ref', 'like', 'EVLB/' . $today . '/%')
+            ->max('service_ref');
+        $nextSerial = $currentSerial ? (int)substr($currentSerial, -4) + 1 : 1;
+        $applicationReference = 'EVLB/' . $today . '/' . str_pad($nextSerial, 4, '0', STR_PAD_LEFT);
+        $this->form['service_ref'] = $applicationReference;
+
         ServiceTransaction::query()->create($this->form);
+
         session()->flash('success',__('admin.create_successfully'));
 
         return redirect()->to(route('admin.service_transactions'));

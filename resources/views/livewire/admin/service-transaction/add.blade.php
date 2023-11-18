@@ -24,7 +24,7 @@
 
                 <div class="form-group my-2 ">
                     <label class="" for="agent_id">Travel agent : </label>
-                    <select wire:model="form.agent_id" class="form-control" id="agent_id">
+                    <select wire:model="form.agent_id" class="form-control my-select-2" id="agent_id">
                         <option value="">Select Travel agent</option>
                         @foreach ($agents as $agent)
                             <option value="{{ $agent->id }}">{{ $agent->name }}</option>

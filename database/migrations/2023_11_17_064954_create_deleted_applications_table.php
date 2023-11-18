@@ -15,7 +15,8 @@ class CreateDeletedApplicationsTable extends Migration
     {
         Schema::create('deleted_applications', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('application_id');
+            $table->foreignId('agent_id')->nullable();
+            $table->string('passport_no');
             $table->string('reference_no');
             $table->string('applicant_name');
             $table->dateTime('application_create_date');

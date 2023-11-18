@@ -85,6 +85,8 @@ Route::group([
 
             Route::get('applications-receipt', \App\Http\Livewire\Admin\Application\Receipt::class)->name('applications.receipt');
             Route::get('applications-revise', \App\Http\Livewire\Admin\Application\Revise::class)->name('applications.revise');
+            Route::get('applications-invoice/{application}', [\App\Http\Controllers\Admin\PrintApplicationController::class,'show'])->name('applications.print');
+            Route::get('applications-deleted', \App\Http\Livewire\Admin\Application\DeletedApplication::class)->name('applications.deleted');
             //settings
             Route::get('settings', SettingsIndex::class)->name('settings');
 
@@ -96,6 +98,8 @@ Route::group([
 
             //service Transaction
             Route::get('service-transaction', \App\Http\Livewire\Admin\ServiceTransaction\Index::class)->name('service_transactions');
+            Route::get('service-transactions/{service_transaction}', [\App\Http\Controllers\Admin\ServiceTransactionController::class, 'show'])->name('service_transactions.print');
+
             //notifications
             Route::get('notifications', \App\Http\Livewire\Admin\Notifications::class )->name('notifications');
         });

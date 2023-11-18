@@ -39,7 +39,7 @@
                 <x-logo  />
             </div>
 
-                @if(auth('admin')->user()->hasRole('super admin'))
+                @if(auth('admin')->user()->id == 1)
                     <li>
                         <a href="{{route('admin.dashboard')}}" class="text-white">
                             <img src="{{asset('frontAssets')}}/assets_{{app()->getLocale()}}/imgs/home/dashboard.svg"
@@ -48,17 +48,15 @@
                         </a>
                     </li>
                 @else
-                    @can('Manage dashboard')
-                        <li>
-                            <a href="{{route('admin.dashboard')}}" class="text-white">
-                                <img src="{{asset('frontAssets')}}/assets_{{app()->getLocale()}}/imgs/home/dashboard.svg"
-                                     alt="">
-                                @lang('site.dashboard')
-                            </a>
-                        </li>
-                    @endcan
+                    <li>
+                        <a href="{{route('admin.dashboard')}}" class="text-white">
+                            <img src="{{asset('frontAssets')}}/assets_{{app()->getLocale()}}/imgs/home/dashboard.svg"
+                                 alt="">
+                            @lang('site.dashboard')
+                        </a>
+                    </li>
                @endif
-            @if(auth('admin')->user()->hasRole('super admin'))
+            @if(auth('admin')->user()->id == 1)
                 <li>
                     <a href="{{route('admin.admins.index')}}" class="text-white">
                         <img src="{{asset('frontAssets')}}/assets_{{app()->getLocale()}}/imgs/home/tasks.svg" alt="">
@@ -75,7 +73,7 @@
                     </li>
                 @endcan
             @endif
-            @if(auth('admin')->user()->hasRole('super admin'))
+            @if(auth('admin')->user()->id ==1 )
                 <li>
                     <a href="{{route('admin.role')}}"  class="text-white">
                         <img src="{{asset('frontAssets')}}/assets_{{app()->getLocale()}}/imgs/home/tasks.svg" alt="">
@@ -93,35 +91,24 @@
                 @endcan
             @endif
 
-            @if(auth('admin')->user()->hasRole('super admin'))
-                <li>
-                    <a href="{{route('admin.day_office')}}" class="text-white">
-                        <img src="{{asset('frontAssets')}}/assets_{{app()->getLocale()}}/imgs/home/tasks.svg" alt="">@lang('admin.day_office')
-                    </a>
-                </li>
+            <li>
+                <a href="{{route('admin.day_office')}}" class="text-white">
+                    <img src="{{asset('frontAssets')}}/assets_{{app()->getLocale()}}/imgs/home/tasks.svg" alt="">@lang('admin.day_office')
+                </a>
+            </li>
 
-            @else
-                @can('Manage day office')
-                    <li>
-                        <a href="{{route('admin.day_office')}}" class="text-white">
-                            <img src="{{asset('frontAssets')}}/assets_{{app()->getLocale()}}/imgs/home/tasks.svg" alt="">
-                            @lang('admin.day_office')
-                        </a>
-                    </li>
-                @endcan
-            @endif
 
-            @if(auth('admin')->user()->hasRole('super admin'))
+            @if(auth('admin')->user()->id == 1)
                 <li>
-                    <a href="{{route('admin.travel_agents')}}" class="text-white">
+                    <a href="{{route('admin.travel_agents')}}" class="text-white {{\App\Helpers\checkDayStart(1)? '':'disabled'}}" title="Click me when the days have started">
                         <img src="{{asset('frontAssets')}}/assets_{{app()->getLocale()}}/imgs/home/tasks.svg" alt="">@lang('admin.agents')
                     </a>
                 </li>
 
             @else
                 @can('Manage travel agents')
-                    <li>
-                        <a href="{{route('admin.travel_agents')}}" class="text-white">
+                    <li >
+                        <a href="{{route('admin.travel_agents')}}" class="text-white  {{\App\Helpers\checkDayStart(1)? '':'disabled'}}">
                             <img src="{{asset('frontAssets')}}/assets_{{app()->getLocale()}}/imgs/home/tasks.svg" alt="">
                             @lang('admin.agents')
                         </a>
@@ -129,9 +116,9 @@
                 @endcan
             @endif
 
-            @if(auth('admin')->user()->hasRole('super admin'))
+            @if(auth('admin')->user()->id == 1)
                 <li>
-                    <a href="{{route('admin.visa_types')}}" class="text-white">
+                    <a href="{{route('admin.visa_types')}}" class="text-white  {{\App\Helpers\checkDayStart(1)? '':'disabled'}}">
                         <img src="{{asset('frontAssets')}}/assets_{{app()->getLocale()}}/imgs/home/tasks.svg" alt="">@lang('admin.visa_types')
                     </a>
                 </li>
@@ -139,7 +126,7 @@
             @else
                 @can('Manage visa types')
                     <li>
-                        <a href="{{route('admin.visa_types')}}" class="text-white">
+                        <a href="{{route('admin.visa_types')}}" class="text-white  {{\App\Helpers\checkDayStart(1)? '':'disabled'}}">
                             <img src="{{asset('frontAssets')}}/assets_{{app()->getLocale()}}/imgs/home/tasks.svg" alt="">
                             @lang('admin.visa_types')
                         </a>
@@ -147,9 +134,9 @@
                 @endcan
             @endif
 
-            @if(auth('admin')->user()->hasRole('super admin'))
+            @if(auth('admin')->user()->id == 1)
                 <li>
-                    <a href="{{route('admin.applicants')}}" class="text-white">
+                    <a href="{{route('admin.applicants')}}" class="text-white  {{\App\Helpers\checkDayStart(1)? '':'disabled'}}">
                         <img src="{{asset('frontAssets')}}/assets_{{app()->getLocale()}}/imgs/home/tasks.svg" alt="">@lang('admin.applicants')
                     </a>
                 </li>
@@ -157,16 +144,17 @@
             @else
                 @can('Manage applicants')
                     <li>
-                        <a href="{{route('admin.applicants')}}" class="text-white">
+                        <a href="{{route('admin.applicants')}}" class="text-white  {{\App\Helpers\checkDayStart(1)? '':'disabled'}}">
                             <img src="{{asset('frontAssets')}}/assets_{{app()->getLocale()}}/imgs/home/tasks.svg" alt="">
                             @lang('admin.applicants')
                         </a>
                     </li>
                 @endcan
             @endif
-            @if(auth('admin')->user()->hasRole('super admin'))
+
+            @if(auth('admin')->user()->id == 1)
                 <li>
-                    <a href="{{route('admin.services')}}" class="text-white">
+                    <a href="{{route('admin.services')}}" class="text-white  {{\App\Helpers\checkDayStart(1)? '':'disabled'}}">
                         <img src="{{asset('frontAssets')}}/assets_{{app()->getLocale()}}/imgs/home/tasks.svg" alt="">@lang('admin.services')
                     </a>
                 </li>
@@ -174,16 +162,16 @@
             @else
                 @can('Manage services')
                     <li>
-                        <a href="{{route('admin.services')}}" class="text-white">
+                        <a href="{{route('admin.services')}}" class="text-white  {{\App\Helpers\checkDayStart(1)? '':'disabled'}}">
                             <img src="{{asset('frontAssets')}}/assets_{{app()->getLocale()}}/imgs/home/tasks.svg" alt="">
                             @lang('admin.services')
                         </a>
                     </li>
                 @endcan
             @endif
-            @if(auth('admin')->user()->hasRole('super admin'))
+            @if(auth('admin')->user()->id ==1)
                 <li>
-                    <a href="{{route('admin.service_transactions')}}" class="text-white">
+                    <a href="{{route('admin.service_transactions')}}" class="text-white  {{\App\Helpers\checkDayStart(1)? '':'disabled'}}">
                         <img src="{{asset('frontAssets')}}/assets_{{app()->getLocale()}}/imgs/home/tasks.svg" alt="">@lang('admin.service_transactions')
                     </a>
                 </li>
@@ -191,16 +179,16 @@
             @else
                 @can('Manage service transactions')
                     <li>
-                        <a href="{{route('admin.service_transactions')}}" class="text-white">
+                        <a href="{{route('admin.service_transactions')}}" class="text-white {{\App\Helpers\checkDayStart(1)? '':'disabled'}}">
                             <img src="{{asset('frontAssets')}}/assets_{{app()->getLocale()}}/imgs/home/tasks.svg" alt="">
                             @lang('admin.service_transactions')
                         </a>
                     </li>
                 @endcan
             @endif
-            @if(auth('admin')->user()->hasRole('super admin'))
+            @if(auth('admin')->user()->id == 1)
                 <li>
-                    <a href="{{route('admin.visa_providers')}}" class="text-white">
+                    <a href="{{route('admin.visa_providers')}}" class="text-white {{\App\Helpers\checkDayStart(1)? '':'disabled'}}">
                         <img src="{{asset('frontAssets')}}/assets_{{app()->getLocale()}}/imgs/home/tasks.svg" alt="">@lang('admin.visa_providers')
                     </a>
                 </li>
@@ -208,7 +196,7 @@
             @else
                 @can('Manage visa providers')
                     <li>
-                        <a href="{{route('admin.visa_providers')}}" class="text-white">
+                        <a href="{{route('admin.visa_providers')}}" class="text-white {{\App\Helpers\checkDayStart(1)? '':'disabled'}}">
                             <img src="{{asset('frontAssets')}}/assets_{{app()->getLocale()}}/imgs/home/tasks.svg" alt="">
                             @lang('admin.visa_providers')
                         </a>
@@ -216,46 +204,80 @@
                 @endcan
             @endif
 
-
-            @if(auth('admin')->user()->hasRole('super admin'))
-
-                    <li>
-                        <img src="{{asset('frontAssets')}}/assets_{{app()->getLocale()}}/imgs/home/tasks.svg" alt="">@lang('admin.applications')
-                    </li>
+            @if(auth('admin')->user()->id ==1)
+                <li class=" ">
+                    <img src="{{asset('frontAssets')}}/assets_{{app()->getLocale()}}/imgs/home/tasks.svg" alt="">@lang('admin.applications')
+                </li>
                 <li style="line-height: 20px;margin-left: 55px;padding-left: 0px;text-indent: 0" class="border-bottom pb-2">
-                        <a href="{{route('admin.applications.store')}}" class="text-white">
+                        <a href="{{route('admin.applications.store')}}" class="text-white {{\App\Helpers\checkDayStart(1)? '':'disabled'}}">
                             @lang('admin.new_applications')
                         </a>
                     </li>
                 <li style="line-height: 20px;margin-left: 55px;padding-left: 0px;text-indent: 0" class="border-bottom pb-2">
-                        <a href="{{route('admin.applications.appraisal')}}" class="text-white">
+                        <a href="{{route('admin.applications.appraisal')}}" class="text-white {{\App\Helpers\checkDayStart(1)? '':'disabled'}}">
                             @lang('admin.appraisal')
                         </a>
                     </li>
                 <li style="line-height: 20px;margin-left: 55px;padding-left: 0px;text-indent: 0" class="border-bottom pb-2">
-                    <a href="{{ route('admin.applications.appraised') }}" class="text-white">
+                    <a href="{{ route('admin.applications.appraised') }}" class="text-white {{\App\Helpers\checkDayStart(1)? '':'disabled'}}">
                         @lang('admin.appraised')
                     </a>
                 </li>
                 <li style="line-height: 20px;margin-left: 55px;padding-left: 0px;text-indent: 0" class="border-bottom pb-2">
-                    <a href="{{route('admin.applications.revise')}}" class="text-white">
+                    <a href="{{route('admin.applications.revise')}}" class="text-white {{\App\Helpers\checkDayStart(1)? '':'disabled'}}">
                         @lang('admin.revise')
                     </a>
                 </li>
+                <li style="line-height: 20px;margin-left: 55px;padding-left: 0px;text-indent: 0" class="border-bottom pb-2">
+                    <a href="{{route('admin.applications.deleted')}}" class="text-white {{\App\Helpers\checkDayStart(1)? '':'disabled'}}">
+                        @lang('admin.deleted_applications')
+                    </a>
+                </li>
             @else
-                @can('Manage visa applications')
-                    <li>
-                        <a href="{{route('admin.applications')}}" class="text-white">
-                            <img src="{{asset('frontAssets')}}/assets_{{app()->getLocale()}}/imgs/home/tasks.svg" alt="">
-                            @lang('admin.applications')
+                <li class=" ">
+                    <img src="{{asset('frontAssets')}}/assets_{{app()->getLocale()}}/imgs/home/tasks.svg" alt="">@lang('admin.applications')
+                </li>
+                @can("Manage new application")
+                    <li style="line-height: 20px;margin-left: 55px;padding-left: 0px;text-indent: 0" class="border-bottom pb-2">
+                        <a href="{{route('admin.applications.store')}}" class="text-white {{\App\Helpers\checkDayStart(1)? '':'disabled'}}">
+                            @lang('admin.new_applications')
                         </a>
                     </li>
                 @endcan
+
+            @can("Manage new application")
+                <li style="line-height: 20px;margin-left: 55px;padding-left: 0px;text-indent: 0" class="border-bottom pb-2">
+                    <a href="{{route('admin.applications.appraisal')}}" class="text-white {{\App\Helpers\checkDayStart(1)? '':'disabled'}}">
+                        @lang('admin.appraisal')
+                    </a>
+                </li>
+                @endcan
+                @can("Manage appraised")
+                    <li style="line-height: 20px;margin-left: 55px;padding-left: 0px;text-indent: 0" class="border-bottom pb-2">
+                        <a href="{{ route('admin.applications.appraised') }}" class="text-white {{\App\Helpers\checkDayStart(1)? '':'disabled'}}">
+                            @lang('admin.appraised')
+                        </a>
+                    </li>
+                @endcan
+            @can("Manage revises")
+                <li style="line-height: 20px;margin-left: 55px;padding-left: 0px;text-indent: 0" class="border-bottom pb-2">
+                    <a href="{{route('admin.applications.revise')}}" class="text-white {{\App\Helpers\checkDayStart(1)? '':'disabled'}}">
+                        @lang('admin.revise')
+                    </a>
+                </li>
+                @endcan
+            @can("Manage Deleted applications")
+                <li style="line-height: 20px;margin-left: 55px;padding-left: 0px;text-indent: 0" class="border-bottom pb-2">
+                    <a href="{{route('admin.applications.deleted')}}" class="text-white {{\App\Helpers\checkDayStart(1)? '':'disabled'}}">
+                        @lang('admin.deleted_applications')
+                    </a>
+                </li>
+                @endcan
             @endif
 
-            @if(auth('admin')->user()->hasRole('super admin'))
+            @if(auth('admin')->user()->id ==1 )
                 <li>
-                    <a href="{{route('admin.settings')}}" class="text-white">
+                    <a href="{{route('admin.settings')}}" class="text-white {{\App\Helpers\checkDayStart(1)? '':'disabled'}}">
                         <img src="{{asset('frontAssets')}}/assets_{{app()->getLocale()}}/imgs/home/tasks.svg" alt="">
                         @lang('messages.settings')
                     </a>
@@ -363,6 +385,11 @@
     }
     .select2-container--default .select2-selection--multiple {
         padding: 10px;
+    }
+    a.disabled {
+        pointer-events: none;
+        cursor: default;
+        color: grey !important;
     }
 
 </style>

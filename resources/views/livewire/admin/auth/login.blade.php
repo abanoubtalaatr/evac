@@ -36,7 +36,7 @@
                             <div class="input-group-prepend"><img src="{{asset('frontAssets')}}/assets_{{app()->getLocale()}}/imgs/login/lock.svg" alt=""></div>
                             <input wire:model.defer='password' class="form-control text-white" type="password" id="password" autocomplete="chrome-off">
                             <label class="floating-label text-white">@lang('validation.attributes.password')</label>
-                            <div class="input-group-prepend check text-white"><i class="fas fa-eye-slash text-white"></i></div>
+{{--                            <div class="input-group-prepend check text-white"><i class="fas fa-eye-slash text-white"></i></div>--}}
                             @error('password') {{$message}} @enderror
                         </div>
 {{--                        <div class="flex-div-2"><a class="grey" href="#">@lang('site.remember_me')</a>--}}
@@ -44,7 +44,7 @@
 {{--                            <input type="checkbox "><span class="slider"></span>--}}
 {{--                        </label>--}}
                         </div>
-                        <a class="red" href="{{route('admin.forgot_password')}}">@lang('site.i_forgot_my_password')</a>
+{{--                        <a class="red" href="{{route('admin.forgot_password')}}">@lang('site.i_forgot_my_password')</a>--}}
                         <div class="login-btns">
                             <button type='button' wire:click='attempt' class="button btn-red full">@lang('messages.Login')</button>
                         </div>

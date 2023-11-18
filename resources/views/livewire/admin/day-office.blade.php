@@ -9,6 +9,10 @@
                 <div class="border bg-white rounded p-lg-5 p-3 mb-3">
                     <h5 class="head-term">{{$page_title}}</h5>
                     <hr>
+                    @if(!empty($message))
+                        <div class="alert alert-danger"> {{$message}}</div>
+                    @endif
+
                     <div class="d-flex gap-5">
 
                         <button class="btn btn-primary" wire:click="startDay" @if($disabledButtonDayStart) disabled @endif>Start day</button>

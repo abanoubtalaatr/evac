@@ -4,6 +4,7 @@ namespace App\Http\Livewire\Admin;
 
 use Carbon\Carbon;
 use Livewire\Component;
+use function App\Helpers\canCloseDay;
 use function App\Helpers\checkDayClosed;
 use function App\Helpers\checkDayRestart;
 use function App\Helpers\checkDayStart;
@@ -16,6 +17,7 @@ class DayOffice extends Component
     public $disabledButtonDayStart = false;
     public $disabledButtonDayEnd = false;
     public $disabledButtonDayRestartDay = false;
+    public $message = '';
 
     public function mount()
     {
@@ -59,12 +61,18 @@ class DayOffice extends Component
     {
         $officeDay = currentDayForOffice(1);
 
-        $officeDay->update([
-            'end_time' => Carbon::now()->format('H:i:s'),
-            'day_status' => "0",
-        ]);
-
-        return redirect()->to(route('admin.day_office'));
+        if(!checkDayStart(1)){
+            $this->message = 'Please start your day first';
+            return ;
+        }
+        if(canCloseDay(1)){
+            $officeDay->update([
+                'end_time' => Carbon::now()->format('H:i:s'),
+                'day_status' => "0",
+            ]);
+            return redirect()->to(route('admin.day_office'));
+        }
+        $this->message = "You can not close the day because still exist appraisal applications";
     }
 
     public function restartDay()

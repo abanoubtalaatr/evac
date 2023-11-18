@@ -36,7 +36,8 @@ trait DeleteTrait
         ]);
 
         $deleteApplication = DeletedApplication::query()->create([
-            'application_id' => $application->id,
+            'agent_id' => $application->travel_agent_id,
+            'passport_no' => $application->passport_no,
             'reference_no' => $application->application_ref,
             'applicant_name' => $application->first_name . " ". $application->last_name,
             'application_create_date' => $application->created_at,

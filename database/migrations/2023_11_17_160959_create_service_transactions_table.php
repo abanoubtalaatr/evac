@@ -17,12 +17,15 @@ class CreateServiceTransactionsTable extends Migration
             $table->id();
             $table->foreignId('service_id');
             $table->foreignId('agent_id')->nullable();
+            $table->string('service_ref');
             $table->string('passport_no')->nullable();
             $table->string('name');
             $table->string('surname');
             $table->text('notes')->nullable();
             $table->float('amount')->nullable();
             $table->float('vat');
+            $table->string('payment_method')->default('invoice');
+            $table->string('status')->nullable();
             $table->timestamps();
         });
     }

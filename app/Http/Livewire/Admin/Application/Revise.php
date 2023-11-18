@@ -2,18 +2,63 @@
 
 namespace App\Http\Livewire\Admin\Application;
 
+use App\Http\Livewire\Traits\Admin\Application\DeleteTrait;
 use App\Models\Application;
+use App\Models\Setting;
 use App\Models\VisaType;
 use Livewire\Component;
+use function App\Helpers\vatRate;
 
 class Revise extends Component
 {
-    public $passport, $search, $visaTypes, $visaType, $status, $fullName, $referenceNo, $from, $to;
+    use DeleteTrait;
+
+    public $passport, $search, $visaTypes, $visaType, $status, $fullName, $referenceNo, $from, $to, $formInvoice,$application;
+    protected $listeners = [ 'showApplicationInvoice'];
 
     public function mount()
     {
         $this->page_title = __('admin.revise');
         $this->visaTypes = VisaType::query()->get();
+    }
+
+    public function showApplicationModal($id)
+    {
+        $this->emit("showApplicationModal", $id);
+    }
+    public function showApplicationInvoice($id)
+    {
+        $this->application = Application::query()->find($id);
+        $this->formInvoice['payment_method'] = $this->application->payment_method;
+        $this->formInvoice['amount'] = $this->application->amount;
+        $this->formInvoice['vat'] = $this->application->vat;
+
+        $this->emit("showApplicationInvoiceModal", $id);
+    }
+
+    public function updateInvoice()
+    {
+        $vat = $this->formInvoice['vat'];
+        $vatRAte = vatRate($this->application->visaType->id);
+
+        if($this->application->amount != $this->formInvoice['amount']) {
+            if(($this->formInvoice['amount'] - $this->application->visaType->dubai_fee) > 0) {
+                $vat = $this->formInvoice['amount'] -  $this->application->visaType->dubai_fee * $vatRAte;
+            }else{
+                $vat = 0;
+            }
+        }
+
+        $this->application->update([
+            'payment_method' => $this->formInvoice['payment_method'],
+            'amount' => $this->formInvoice['amount'],
+            'vat' => $vat,
+        ]);
+
+        session()->flash('success',__('admin.edit_successfully'));
+
+        return redirect()->to(route('admin.applications.revise'));
+
     }
 
     public function getRecords()

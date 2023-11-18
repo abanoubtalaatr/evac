@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Agent;
 use App\Models\Applicant;
 use App\Models\Application;
+use App\Models\DeletedApplication;
 use App\Models\Service;
 use App\Models\ServiceTransaction;
 use App\Models\User;
@@ -15,14 +16,15 @@ use App\Models\VisaType;
 class DashboardController extends Controller{
     public function index(){
         $agent_count = Agent::query()->count();
-        $new_applications = Application::query()->where('status', 'submitted')->count();
+        $new_applications = Application::query()->where('status', 'new')->count();
         $appraised_applications = Application::query()->where('status', 'appraised')->count();
         $services = Service::query()->count();
         $serviceTransactions = ServiceTransaction::query()->count();
         $visaProviders= VisaProvider::query()->count();
         $visaTypes = VisaType::query()->count();
         $applicants = Applicant::query()->count();
+        $deletedApplications = DeletedApplication::query()->count();
         return view('admin.dashboard.home',
-            compact( 'agent_count', 'new_applications', 'appraised_applications', 'services', 'serviceTransactions', 'visaProviders', 'visaTypes', 'applicants'));
+            compact( 'agent_count', 'new_applications', 'appraised_applications', 'services', 'serviceTransactions', 'visaProviders', 'visaTypes', 'applicants', 'deletedApplications'));
     }
 }

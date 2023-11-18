@@ -84,5 +84,6 @@ return [
     'service' => 'Service',
     'vat' => 'Vat',
     'appraised_application' => 'Appraised application',
-
+    'deleted_applications' => "Deleted applications",
+    'deleted_date' => 'Deletion date'
 ];

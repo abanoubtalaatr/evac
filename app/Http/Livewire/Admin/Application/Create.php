@@ -2,6 +2,7 @@
 
 namespace App\Http\Livewire\Admin\Application;
 
+use App\Http\Livewire\Traits\Admin\Application\ApplicationChecks;
 use App\Http\Livewire\Traits\ValidationTrait;
 use App\Models\Agent;
 use App\Models\Application;
@@ -11,10 +12,13 @@ use App\Models\VisaProvider;
 use App\Models\VisaType;
 use Carbon\Carbon;
 use Livewire\Component;
+use function App\Helpers\vatRate;
 
 class Create extends Component
 {
     use ValidationTrait;
+    use ApplicationChecks;
+
     public $name;
     public $form;
     public $is_active;
@@ -38,7 +42,6 @@ class Create extends Component
         $this->travelAgents = Agent::query()->where('is_active', 1)->get();
     }
 
-
     public function chooseTravelAgent()
     {
 
@@ -47,15 +50,14 @@ class Create extends Component
 
     public function updatedFormVisaTypeId()
     {
-        $setting = Setting::query()->first();
-
-        $value = (int) filter_var($setting->vat_rate, FILTER_SANITIZE_NUMBER_INT);
-
+        $vatRate = vatRate($this->form['visa_type_id']);
         $visaType = VisaType::query()->find($this->form['visa_type_id']);
-        $amount = $visaType->dubai_fee + $visaType->service_fee + ($value / 100 * $visaType->service_fee);
+        $amount = $visaType->dubai_fee + $visaType->service_fee + $vatRate;
+        $this->form['vat'] = $vatRate;
 
         $this->form['amount'] = $amount;
     }
+
     public function store()
     {
         $this->validate();
@@ -78,36 +80,6 @@ class Create extends Component
         $this->save();
     }
 
-    public function checkPassportHasMoreThanOneApplication()
-    {
-        $settings = Setting::query()->first();
-        $numberOfDaysToCheckVisa = 90;
-        if($settings) {
-            $numberOfDaysToCheckVisa = $settings->no_of_days_to_check_visa;
-        }
-        $this->numberOfDaysToCheckVisa =$numberOfDaysToCheckVisa;
-
-        $previousApplications = Application::where('passport_no', $this->form['passport_no'])
-            ->where('created_at', '>', now()->subDays($numberOfDaysToCheckVisa))
-            ->get();
-
-
-        if ($previousApplications->count() > 1) {
-            $this->passportApplications = $previousApplications;
-            return true;
-        }
-        return false;
-    }
-    public function checkExpiryPassport()
-    {
-        $expiryDateTime = new \DateTime($this->form['expiry_date']);
-        $difference = now()->diff($expiryDateTime)->days;
-
-        if ($difference < 180) {
-            return true;
-        }
-        return false;
-    }
 
     public function save()
     {
@@ -128,16 +100,6 @@ class Create extends Component
         return redirect()->to(route('admin.applications.appraisal'));
     }
 
-    public function checkPassportInBlackList()
-    {
-        $blackList = BlackListPassport::query()->where('passport_number', $this->form['passport_no'])->first();
-
-        if($blackList) {
-            return true;
-        }
-        return false;
-    }
-
     public function checkPassportNumber()
     {
         $existingPassport = Application::where('passport_no', $this->passportNumber)->first();
@@ -150,7 +112,6 @@ class Create extends Component
         }else{
             $this->form['passport_no'] = $this->passportNumber;
         }
-
     }
 
     public function getRules(){

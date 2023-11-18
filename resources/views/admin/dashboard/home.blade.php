@@ -59,6 +59,12 @@
                     <p class="grey">@lang('admin.applicants')</p>
                 </div>
             </div>
+            <div class="col-4 text-center">
+                <div class="dash box-shad" onclick='window.location.href="{{route('admin.users.index')}}'>
+                    <h4>{{$deletedApplications}}</h4>
+                    <p class="grey">@lang('admin.deleted_applications')</p>
+                </div>
+            </div>
         </div>
 
 

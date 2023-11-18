@@ -26,7 +26,10 @@ class CreateApplicationsTable extends Migration
             $table->string('last_name')->nullable();
             $table->string('notes')->nullable();
             $table->float('amount')->nullable();
-            $table->string('status')->default('submitted');
+            $table->string('status')->default('new');
+            $table->float('vat')->nullable();
+            $table->enum('payment_method',['invoice', 'cash'])->default('invoice');
+            $table->boolean('is_print')->default(0);
             $table->timestamps();
         });
     }

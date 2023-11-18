@@ -35,7 +35,7 @@
                     <label for="status-select">@lang('admin.status')</label>
                     <select wire:model='status' id='status-select' class="form-control border  contact-input">
                         <option value>@lang('admin.choose')</option>
-                        <option value="submitted">Submitted</option>
+                        <option value="new">New</option>
                         <option value="appraised">Appraised</option>
                         <option value="canceled">Canceled</option>
                     </select>
@@ -50,7 +50,7 @@
                     <input class="form-control border  contact-input" type="date" wire:model="to">
                 </div>
 
-                <div class="form-group col-2 mt-2">
+                <div class="form-group col-2 mt-4">
                     <button wire:click="resetData()"
                             class="btn btn-primary form-control contact-input">@lang('site.reset')</button>
                 </div>
@@ -80,9 +80,24 @@
                             <td class='text-center'>{{\Carbon\Carbon::parse($record->created_at)->format('Y-m-d h:m')}}</td>
                             <td class='text-center'>{{$record->travelAgent ? $record->travelAgent->name :''}}</td>
                             <td class='text-center'>{{$record->visaProvider ? $record->visaProvider->name :''}}</td>
-                            <td class='text-center'><button class="btn btn-info">{{$record->status}}</button></td>
+                            <td class='text-center'><button class="border-0">{{$record->status}}</button></td>
                             <td>
                                 <div class="actions">
+                                    @include('livewire.admin.application.popup.invoice', ['application' => $record])
+                                    <button  style="cursor:pointer;" wire:click="showApplicationInvoice({{$record->id}})" class="btn btn-info">Edit invoice</button>
+                                    <button class="btn btn-primary" onclick="printPage('{{route('admin.applications.print', ['application' => $record->id])}}')">Print</button>
+                                    @include('livewire.admin.application.show',  ['application' => $record])
+
+
+
+                                    <button wire:click="showDeleteConfirmation({{$record->id}})" class="btn btn-danger">
+                                        Delete
+                                    </button>
+                                    <a style="cursor:pointer;" wire:click="showApplicationModal({{$record->id}})" class="no-btn"><i
+                                            class="far fa-eye blue"></i></a>
+                                    <a style="cursor:pointer;" href="{{route('admin.applications.update', ['application' => $record])}}" class="no-btn"><i
+                                            class="far fa-edit blue"></i></a>
+
                                 </div>
                             </td>
                             @endforeach
@@ -98,8 +113,46 @@
             @endif
         </div>
 
-
+        @include('livewire.admin.application.popup.delete-confirmation')
     </div>
 </main>
+<script>
+    document.addEventListener('livewire:load', function () {
+       Livewire.on('showApplicationInvoiceModal', function (application) {
+           $('#showApplicationInvoiceModal' + application).modal('show');
+       });
+   });
+    document.addEventListener('livewire:load', function () {
+        Livewire.on('showApplicationModal', function (applicationId) {
+            $('#applicationModal' + applicationId).modal('show');
+        });
+    });
+</script>
 
+<script>
+    // Function to load content into an iframe and trigger printing
+    function printPage(url) {
+        // Create an iframe element
+        var iframe = document.createElement('iframe');
+
+        // Set the source URL of the iframe
+        iframe.src = url;
+
+        // Set styles to hide the iframe
+        iframe.style.position = 'absolute';
+        iframe.style.top = '-9999px';
+        iframe.style.left = '-9999px';
+        iframe.style.width = '0';
+        iframe.style.height = '0';
+
+        // Append the iframe to the document body
+        document.body.appendChild(iframe);
+
+        // Wait for the iframe to load
+        iframe.onload = function() {
+            // Print the content of the iframe
+            iframe.contentWindow.print();
+        };
+    }
+</script>
 

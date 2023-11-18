@@ -50,33 +50,19 @@
 
                             <td>
                                 <div class="actions">
-                                    @if($record->status == 'submitted')
+                                    @if($record->status == 'new')
                                         <button wire:click='appraisal({{$record->id}})' class="btn btn-primary">
                                             Appraised
                                         </button>
                                     @endif
 
-
-                                        @if($record->status == 'submitted' || $record->status == 'appraised')
+                                        @if($record->status == 'new' || $record->status == 'appraised')
                                             <button wire:click="showCancelConfirmation({{$record->id}})" class="btn btn-warning">
                                                 Cancel
                                             </button>
 
-                                            <button wire:click="showDeleteConfirmation({{$record->id}})" class="btn btn-danger">
-                                                Delete
-                                            </button>
-
-                                            <a href="{{route('admin.applications.receipt')}}" class="btn btn-info">
-                                                Receipt
-                                            </a>
                                         @endif
 
-
-                                        @include('livewire.admin.application.show',  ['application' => $record])
-                                    <a style="cursor:pointer;" wire:click="showApplicationModal({{$record->id}})" class="no-btn"><i
-                                            class="far fa-eye blue"></i></a>
-                                    <a style="cursor:pointer;" href="{{route('admin.applications.update', ['application' => $record])}}" class="no-btn"><i
-                                            class="far fa-edit blue"></i></a>
 
                                 </div>
                             </td>
@@ -93,18 +79,9 @@
             @endif
         </div>
         @include('livewire.admin.application.popup.cancel-confirmation')
-        @include('livewire.admin.application.popup.delete-confirmation')
+
 
     </div>
 </main>
 
-<script>
-
-
-    document.addEventListener('livewire:load', function () {
-        Livewire.on('showApplicationModal', function (applicationId) {
-            $('#applicationModal' + applicationId).modal('show');
-        });
-    });
-</script>
 

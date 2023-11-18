@@ -16,15 +16,22 @@ class PermissionSeeder extends Seeder
     public function run()
     {
         $crudPermissionNames = [
+            'Manage dashboard' => 'ادارة لوحة التحكم',
             'Manage admins' => ' أدراة المدراء',
             'Manage roles' => ' أدراة الأدوار والصلاحيات',
-            'Manage dashboard' => 'ادارة لوحة التحكم',
-            'Manage users' => 'أدراة المستخدمين',
-            'New application' => 'أنشاء فيزا جديدة',
-            'appraise' => 'أدراة الصفحات',
-            'search' => 'البحث',
-            'edit' => 'التعديل',
-            'Manage settings' => 'أدراة الاعدات'
+            'Manage travel agents' =>'',
+            'Manage visa types' => '',
+            'Manage applicants' =>'',
+            'Manage services'=>'',
+            'Manage service transactions' => '',
+            'Manage visa providers' =>'',
+            'Manage new application' => 'أنشاء فيزا جديدة',
+            'Manage appraised' => '',
+            "Manage revises" => '',
+            'Manage Deleted applications' =>'',
+            'Manage search' => '',
+            'Manage edit' => '',
+            'Manage settings' => 'أدراة الاعدات',
         ];
 
         foreach ($crudPermissionNames as $en_permission => $ar_permission) {
