@@ -5,7 +5,7 @@
             <!-- Add your modal content here -->
             <div class="modal-header">
                 <h5 class="modal-title" id="showApplicantModalLabel{{$applicant->id}}">Edit Applicant</h5>
-                <button type="button" onclick="$('#applicantModal{{$applicant->id}}').modal('hide');" class="close btn" data-dismiss="modal" aria-label="Close">
+                <button type="button" onclick="$('#showApplicantModal{{$applicant->id}}').modal('hide');"  wire:click="emptyForm"  class="close btn" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
@@ -53,7 +53,7 @@
             </div>
 
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" onclick="$('#applicantModal{{$applicant->id}}').modal('hide');" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-secondary" onclick="$('#showApplicantModal{{$applicant->id}}').modal('hide');"  wire:click="emptyForm"  data-dismiss="modal">Close</button>
                 <button type="submit" class="btn btn-primary" wire:click="update">Save</button>
 
             </div>
