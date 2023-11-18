@@ -1,7 +1,7 @@
 
     <section class="login">
         <div class="row">
-            <div class="col-md-5">
+            <div class="col-md-5 mx-auto">
             <div class="login-back">
                 <div class="row justify-content-center">
                 <div class="col-md-8">
@@ -25,18 +25,18 @@
                                 {{session()->get('in_active_message')}}
                             </div>
                         @endif
-                        <p class="text-white">@lang('site.enter_login_data')<span> @lang('site.to_continue')</span></p>
+                        <p class="text-dark">@lang('site.enter_login_data')<span> @lang('site.to_continue')</span></p>
                         <div class="input-group login-group floating-label-group">
-                            <div class="input-group-prepend text-white"><img src="{{asset('frontAssets')}}/assets_{{app()->getLocale()}}/imgs/login/user.svg" alt=""></div>
-                            <input wire:model.defer='email' class="form-control text-white" type="text" autocomplete="flase" autofocus>
-                            <label class="floating-label text-white">@lang('validation.attributes.email')</label>
+                            <div class="input-group-prepend text-dark"><img src="{{asset('frontAssets')}}/assets_{{app()->getLocale()}}/imgs/login/user.svg" alt=""></div>
+                            <input wire:model.defer='email' class="form-control text-dark" type="text" autocomplete="flase" autofocus>
+                            <label class="floating-label text-dark">@lang('validation.attributes.email')</label>
                             @error('email') {{$message}} @enderror
                         </div>
                         <div class="input-group login-group floating-label-group">
                             <div class="input-group-prepend"><img src="{{asset('frontAssets')}}/assets_{{app()->getLocale()}}/imgs/login/lock.svg" alt=""></div>
-                            <input wire:model.defer='password' class="form-control text-white" type="password" id="password" autocomplete="chrome-off">
-                            <label class="floating-label text-white">@lang('validation.attributes.password')</label>
-{{--                            <div class="input-group-prepend check text-white"><i class="fas fa-eye-slash text-white"></i></div>--}}
+                            <input wire:model.defer='password' class="form-control text-dark" type="password" id="password" autocomplete="chrome-off">
+                            <label class="floating-label text-dark">@lang('validation.attributes.password')</label>
+{{--                            <div class="input-group-prepend check text-dark"><i class="fas fa-eye-slash text-dark"></i></div>--}}
                             @error('password') {{$message}} @enderror
                         </div>
 {{--                        <div class="flex-div-2"><a class="grey" href="#">@lang('site.remember_me')</a>--}}
@@ -55,8 +55,6 @@
                 </div>
             </div>
             </div>
-            <div class="col-md-7 d-none">
-            <div class="login-img"><img src="{{asset('frontAssets')}}/assets_{{app()->getLocale()}}/imgs/login/login-img@2x.png" alt=""></div>
-            </div>
+
         </div>
     </section>

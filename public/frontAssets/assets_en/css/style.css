@@ -217,7 +217,7 @@ input:-webkit-autofill {
     background-color: #fff; }
 
 #wrapper {
-  background: darkblue; }
+  background:  #1686fa  ; }
 
 #wrapper {
   padding-right: 1.25rem;
@@ -686,7 +686,7 @@ table.dataTable thead th, table.dataTable tfoot th {
 .login {
   min-height: 100vh;
   /*background: linear-gradient(0deg, #1e2229 0%, #3a3a3a 100%);*/
-    background: darkblue;
+    background: white;
     color:black;
   width: 100%;
   overflow-x: hidden; }
@@ -1065,7 +1065,7 @@ table.dataTable thead th, table.dataTable tfoot th {
 }
 
 #wrapper #sidebar-wrapper{
-    background-color: darkblue;
+    background-color:  #1686fa;
     color: white;
 }
 #search-input {
