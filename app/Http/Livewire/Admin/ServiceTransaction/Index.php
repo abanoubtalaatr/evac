@@ -91,6 +91,10 @@ class Index extends Component
         $this->emit("showServiceTransactionInvoiceModal", $id);
     }
 
+    public function emptyForm()
+    {
+        $this->form =[];
+    }
     public function destroy(ServiceTransaction $serviceTransaction)
     {
         $serviceTransaction->update(['status' => 'deleted']);

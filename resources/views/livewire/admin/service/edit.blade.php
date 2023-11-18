@@ -5,7 +5,7 @@
             <!-- Add your modal content here -->
             <div class="modal-header">
                 <h5 class="modal-title" id="serviceModalLabel">Edit Service</h5>
-                <button type="button" onclick="$('#showServiceModal{{$service->id}}').modal('hide');" class="close btn" data-dismiss="modal" aria-label="Close">
+                <button type="button" onclick="$('#showServiceModal{{$service->id}}').modal('hide');" wire:click="emptyForm" class="close btn" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
@@ -34,7 +34,7 @@
             </div>
 
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" onclick="$('#serviceModal{{$service->id}}').modal('hide');" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-secondary" onclick="$('#showServiceModal{{$service->id}}').modal('hide');" wire:click="emptyForm" data-dismiss="modal">Close</button>
                 <button type="submit" class="btn btn-primary" wire:click="update">Save</button>
             </div>
         </div>
