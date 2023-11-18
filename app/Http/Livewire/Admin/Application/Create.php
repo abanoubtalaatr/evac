@@ -93,6 +93,8 @@ class Create extends Component
         $applicationReference = 'EVLB/' . $today . '/' . str_pad($nextSerial, 4, '0', STR_PAD_LEFT);
 
         $data['application_ref'] = $applicationReference;
+        $data['travel_agent_id'] = $this->form['agent_id'];
+        unset($data['agent_id']);
 
         $application = Application::query()->create($data);
         session()->flash('success',__('admin.create_successfully'));

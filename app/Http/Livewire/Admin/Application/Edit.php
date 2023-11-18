@@ -135,7 +135,7 @@ class Edit extends Component
         $this->application->update(Arr::except($data, ['created_at', 'updated_at']));
         session()->flash('success',__('admin.edit_successfully'));
 
-        return redirect()->to(route('admin.applications.appraisal'));
+        return redirect()->to(route('admin.applications.revise'));
     }
 
     public function checkPassportInBlackList()
