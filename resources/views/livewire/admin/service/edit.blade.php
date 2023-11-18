@@ -26,11 +26,11 @@
                     <input type="text" wire:model="form.service_fee" class="form-control" id="service_fee">
                     @error('form.service_fee')<p style='color:red'> {{$message}} </p>@enderror
                 </div>
-                <div class="form-group my-2">
-                    <label for="amount">Amount:</label>
-                    <input type="text" wire:model="form.amount" class="form-control" id="amount">
-                    @error('form.amount')<p style='color:red'> {{$message}} </p>@enderror
-                </div>
+{{--                <div class="form-group my-2 hidden" >--}}
+{{--                    <label for="amount">Amount:</label>--}}
+{{--                    <input type="text" wire:model="form.amount" class="form-control" id="amount">--}}
+{{--                    @error('form.amount')<p style='color:red'> {{$message}} </p>@enderror--}}
+{{--                </div>--}}
             </div>
 
             <div class="modal-footer">

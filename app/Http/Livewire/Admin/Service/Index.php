@@ -69,6 +69,7 @@ class Index extends Component
     {
         $this->validate();
         $data = Arr::except($this->form,['id', 'updated_at', 'created_at']);
+        $data['amount'] = intval($this->form['dubai_fee']) + intval($this->form['service_fee']);
 
         Service::query()->find($this->form['id'])->update($data);
 
@@ -81,6 +82,7 @@ class Index extends Component
     public function store()
     {
         $this->validate();
+        $this->form['amount'] = intval($this->form['dubai_fee']) + intval($this->form['service_fee']);
         Service::query()->create($this->form);
         session()->flash('success',__('admin.create_successfully'));
 
@@ -90,8 +92,8 @@ class Index extends Component
     public function getRules(){
         return [
             'form.name'=>'required|max:500',
-            'form.dubai_fee' => ['nullable'],
-            'form.service_fee' => ['nullable'],
+            'form.dubai_fee' => ['required'],
+            'form.service_fee' => ['required'],
             'form.amount' => ['nullable'],
         ];
     }
