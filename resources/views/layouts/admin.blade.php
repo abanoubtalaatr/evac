@@ -35,7 +35,7 @@
     <!--Sidebar-->
     <div id="sidebar-wrapper">
         <div class="sidebar-nav">
-            <div class="logo-wrap bg-white mb-5 " style="height: 100px">
+            <div class="logo-wrap bg-white mb-5 " style="height: 100px;padding-left: 7px">
                 <x-logo  />
             </div>
 
