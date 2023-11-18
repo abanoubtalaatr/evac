@@ -4,8 +4,8 @@
         <div class="modal-content">
             <!-- Add your modal content here -->
             <div class="modal-header">
-                <h5 class="modal-title" id="visaTypeModalLabel{{$visaType->id}}">Edit Visa type</h5>
-                <button type="button" onclick="$('#visaTypeModal{{$visaType->id}}').modal('hide');" class="close btn" data-dismiss="modal" aria-label="Close">
+                <h5 class="modal-title" id="showVisaTypeModalLabel{{$visaType->id}}">Edit Visa type</h5>
+                <button type="button" onclick="$('#showVisaTypeModal{{$visaType->id}}').modal('hide');" wire:click="emptyForm" class="close btn" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
@@ -35,7 +35,7 @@
             </div>
 
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" onclick="$('#visaTypeModal{{$visaType->id}}').modal('hide');" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-secondary" onclick="$('#showVisaTypeModal{{$visaType->id}}').modal('hide');" wire:click="emptyForm" data-dismiss="modal">Close</button>
                 <button type="submit" class="btn btn-primary" wire:click="update">Save</button>
 
             </div>
