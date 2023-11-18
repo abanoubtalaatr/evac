@@ -51,10 +51,10 @@ class Index extends Component
             ->when($this->search, function ($query) {
                 $query->where(function ($query) {
                     $query->where('contact_name', 'like', '%'.$this->search.'%')
-                        ->orWhere('owner_name', 'like', '%'.$this->search.'%')
+
                         ->orWhere('name', 'like', '%'.$this->search.'%')
                         ->orWhere('telephone', 'like', '%'.$this->search.'%')
-                        ->orWhere('mobile', 'like', '%'.$this->search.'%');
+                        ;
                 });
             })
             ->latest()
