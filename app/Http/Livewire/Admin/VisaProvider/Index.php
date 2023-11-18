@@ -44,6 +44,10 @@ class Index extends Component
         $this->emit("showVisaProviderModal", $id);
     }
 
+    public function emptyForm()
+    {
+        $this->form =[];
+    }
     public function getRecords()
     {
         return VisaProvider::query()
