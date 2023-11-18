@@ -39,36 +39,30 @@
                 <x-logo  />
             </div>
 
-                @if(auth('admin')->user()->id == 1)
-                    <li>
-                        <a href="{{route('admin.dashboard')}}" class="text-white">
-                            <img src="{{asset('frontAssets')}}/assets_{{app()->getLocale()}}/imgs/home/dashboard.svg"
-                                 alt="">
-                            @lang('site.dashboard')
-                        </a>
-                    </li>
-                @else
-                    <li>
-                        <a href="{{route('admin.dashboard')}}" class="text-white">
-                            <img src="{{asset('frontAssets')}}/assets_{{app()->getLocale()}}/imgs/home/dashboard.svg"
-                                 alt="">
-                            @lang('site.dashboard')
-                        </a>
-                    </li>
-               @endif
+
+            <li>
+                <a href="{{route('admin.dashboard')}}" class="text-white">
+                    <img src="{{asset('frontAssets')}}/assets_{{app()->getLocale()}}/imgs/home/dashboard.svg"
+                         alt="">
+
+                    @lang('site.dashboard')
+
+                </a>
+            </li>
+
             @if(auth('admin')->user()->id == 1)
                 <li>
                     <a href="{{route('admin.admins.index')}}" class="text-white">
-                        <img src="{{asset('frontAssets')}}/assets_{{app()->getLocale()}}/imgs/home/tasks.svg" alt="">
-                        @lang('site.admins')
+                        <i class="fa fa-suitcase mr-5"></i>
+                        <span class="ml-2">@lang('site.admins')</span>
                     </a>
                 </li>
             @else
                 @can('Manage admins')
                     <li>
                         <a href="{{route('admin.admins.index')}}" class="text-white">
-                            <img src="{{asset('frontAssets')}}/assets_{{app()->getLocale()}}/imgs/home/tasks.svg" alt="">
-                            @lang('site.admins')
+                            <i class="fa fa-suitcase mr-5"></i>
+                            <span class="ml-2">@lang('site.admins')</span>
                         </a>
                     </li>
                 @endcan
@@ -76,16 +70,17 @@
             @if(auth('admin')->user()->id ==1 )
                 <li>
                     <a href="{{route('admin.role')}}"  class="text-white">
-                        <img src="{{asset('frontAssets')}}/assets_{{app()->getLocale()}}/imgs/home/tasks.svg" alt="">
-                        @lang('site.roles')
+                        <i class="fa fa-suitcase mr-5"></i>
+                        <span class="ml-2">@lang('site.roles')</span>
                     </a>
                 </li>
             @else
                 @can('Manage roles')
                     <li>
                         <a href="{{route('admin.role')}}" class="text-white">
-                            <img src="{{asset('frontAssets')}}/assets_{{app()->getLocale()}}/imgs/home/tasks.svg" alt="">
-                            @lang('site.roles')
+
+                            <i class="fa fa-suitcase mr-5"></i>
+                            <span class="ml-2">@lang('site.roles')</span>
                         </a>
                     </li>
                 @endcan
@@ -93,7 +88,8 @@
 
             <li>
                 <a href="{{route('admin.day_office')}}" class="text-white">
-                    <img src="{{asset('frontAssets')}}/assets_{{app()->getLocale()}}/imgs/home/tasks.svg" alt="">@lang('admin.day_office')
+                    <i class="fa fa-suitcase mr-5"></i>
+                    <span class="ml-2">@lang('admin.day_office')</span>
                 </a>
             </li>
 
@@ -101,7 +97,8 @@
             @if(auth('admin')->user()->id == 1)
                 <li>
                     <a href="{{route('admin.travel_agents')}}" class="text-white {{\App\Helpers\checkDayStart(1)? '':'disabled'}}" title="Click me when the days have started">
-                        <img src="{{asset('frontAssets')}}/assets_{{app()->getLocale()}}/imgs/home/tasks.svg" alt="">@lang('admin.agents')
+                        <i class="fa fa-suitcase mr-5"></i>
+                        <span class="ml-2">@lang('admin.agents')</span>
                     </a>
                 </li>
 
@@ -109,8 +106,8 @@
                 @can('Manage travel agents')
                     <li >
                         <a href="{{route('admin.travel_agents')}}" class="text-white  {{\App\Helpers\checkDayStart(1)? '':'disabled'}}">
-                            <img src="{{asset('frontAssets')}}/assets_{{app()->getLocale()}}/imgs/home/tasks.svg" alt="">
-                            @lang('admin.agents')
+                            <i class="fa fa-suitcase mr-5"></i>
+                            <span class="ml-2">@lang('admin.agents')</span>
                         </a>
                     </li>
                 @endcan
@@ -119,7 +116,8 @@
             @if(auth('admin')->user()->id == 1)
                 <li>
                     <a href="{{route('admin.visa_types')}}" class="text-white  {{\App\Helpers\checkDayStart(1)? '':'disabled'}}">
-                        <img src="{{asset('frontAssets')}}/assets_{{app()->getLocale()}}/imgs/home/tasks.svg" alt="">@lang('admin.visa_types')
+                        <i class="fa fa-suitcase mr-5"></i>
+                        <span class="ml-2">@lang('admin.visa_types')</span>
                     </a>
                 </li>
 
@@ -127,8 +125,8 @@
                 @can('Manage visa types')
                     <li>
                         <a href="{{route('admin.visa_types')}}" class="text-white  {{\App\Helpers\checkDayStart(1)? '':'disabled'}}">
-                            <img src="{{asset('frontAssets')}}/assets_{{app()->getLocale()}}/imgs/home/tasks.svg" alt="">
-                            @lang('admin.visa_types')
+                            <i class="fa fa-suitcase mr-5"></i>
+                            <span class="ml-2">@lang('admin.visa_types')</span>
                         </a>
                     </li>
                 @endcan
@@ -137,7 +135,8 @@
             @if(auth('admin')->user()->id == 1)
                 <li>
                     <a href="{{route('admin.applicants')}}" class="text-white  {{\App\Helpers\checkDayStart(1)? '':'disabled'}}">
-                        <img src="{{asset('frontAssets')}}/assets_{{app()->getLocale()}}/imgs/home/tasks.svg" alt="">@lang('admin.applicants')
+                        <i class="fa fa-suitcase mr-5"></i>
+                        <span class="ml-2">@lang('admin.applicants')</span>
                     </a>
                 </li>
 
@@ -145,8 +144,8 @@
                 @can('Manage applicants')
                     <li>
                         <a href="{{route('admin.applicants')}}" class="text-white  {{\App\Helpers\checkDayStart(1)? '':'disabled'}}">
-                            <img src="{{asset('frontAssets')}}/assets_{{app()->getLocale()}}/imgs/home/tasks.svg" alt="">
-                            @lang('admin.applicants')
+                            <i class="fa fa-suitcase mr-5"></i>
+                            <span class="ml-2">@lang('admin.applicants')</span>
                         </a>
                     </li>
                 @endcan
@@ -155,7 +154,8 @@
             @if(auth('admin')->user()->id == 1)
                 <li>
                     <a href="{{route('admin.services')}}" class="text-white  {{\App\Helpers\checkDayStart(1)? '':'disabled'}}">
-                        <img src="{{asset('frontAssets')}}/assets_{{app()->getLocale()}}/imgs/home/tasks.svg" alt="">@lang('admin.services')
+                        <i class="fa fa-suitcase mr-5"></i>
+                        <span class="ml-2">@lang('admin.services')</span>
                     </a>
                 </li>
 
@@ -163,8 +163,8 @@
                 @can('Manage services')
                     <li>
                         <a href="{{route('admin.services')}}" class="text-white  {{\App\Helpers\checkDayStart(1)? '':'disabled'}}">
-                            <img src="{{asset('frontAssets')}}/assets_{{app()->getLocale()}}/imgs/home/tasks.svg" alt="">
-                            @lang('admin.services')
+                            <i class="fa fa-suitcase mr-5"></i>
+                            <span class="ml-2">@lang('admin.services')</span>
                         </a>
                     </li>
                 @endcan
@@ -172,7 +172,8 @@
             @if(auth('admin')->user()->id ==1)
                 <li>
                     <a href="{{route('admin.service_transactions')}}" class="text-white  {{\App\Helpers\checkDayStart(1)? '':'disabled'}}">
-                        <img src="{{asset('frontAssets')}}/assets_{{app()->getLocale()}}/imgs/home/tasks.svg" alt="">@lang('admin.service_transactions')
+                        <i class="fa fa-suitcase mr-5"></i>
+                        <span class="ml-2">@lang('admin.service_transactions')</span>
                     </a>
                 </li>
 
@@ -180,8 +181,8 @@
                 @can('Manage service transactions')
                     <li>
                         <a href="{{route('admin.service_transactions')}}" class="text-white {{\App\Helpers\checkDayStart(1)? '':'disabled'}}">
-                            <img src="{{asset('frontAssets')}}/assets_{{app()->getLocale()}}/imgs/home/tasks.svg" alt="">
-                            @lang('admin.service_transactions')
+                            <i class="fa fa-suitcase mr-5"></i>
+                            <span class="ml-2">@lang('admin.service_transactions')</span>
                         </a>
                     </li>
                 @endcan
@@ -189,7 +190,8 @@
             @if(auth('admin')->user()->id == 1)
                 <li>
                     <a href="{{route('admin.visa_providers')}}" class="text-white {{\App\Helpers\checkDayStart(1)? '':'disabled'}}">
-                        <img src="{{asset('frontAssets')}}/assets_{{app()->getLocale()}}/imgs/home/tasks.svg" alt="">@lang('admin.visa_providers')
+                        <i class="fa fa-suitcase mr-5"></i>
+                        <span class="ml-2">@lang('admin.visa_providers')</span>
                     </a>
                 </li>
 
@@ -197,8 +199,8 @@
                 @can('Manage visa providers')
                     <li>
                         <a href="{{route('admin.visa_providers')}}" class="text-white {{\App\Helpers\checkDayStart(1)? '':'disabled'}}">
-                            <img src="{{asset('frontAssets')}}/assets_{{app()->getLocale()}}/imgs/home/tasks.svg" alt="">
-                            @lang('admin.visa_providers')
+                            <i class="fa fa-suitcase mr-5"></i>
+                            <span class="ml-2">@lang('admin.visa_providers')</span>
                         </a>
                     </li>
                 @endcan
@@ -206,39 +208,41 @@
 
             @if(auth('admin')->user()->id ==1)
                 <li class=" ">
-                    <img src="{{asset('frontAssets')}}/assets_{{app()->getLocale()}}/imgs/home/tasks.svg" alt="">@lang('admin.applications')
+                    <i class="fa fa-suitcase mr-5"></i>
+                    <span class="ml-2">@lang('admin.applications')</span>
                 </li>
-                <li style="line-height: 20px;margin-left: 55px;padding-left: 0px;text-indent: 0" class="border-bottom pb-2">
+                <li style="line-height: 20px;margin-left: 18px;padding-left: 0px;text-indent: 0" class="border-bottom pb-2">
                         <a href="{{route('admin.applications.store')}}" class="text-white {{\App\Helpers\checkDayStart(1)? '':'disabled'}}">
                             @lang('admin.new_applications')
                         </a>
                     </li>
-                <li style="line-height: 20px;margin-left: 55px;padding-left: 0px;text-indent: 0" class="border-bottom pb-2">
+                <li style="line-height: 20px;margin-left: 18px;padding-left: 0px;text-indent: 0" class="border-bottom pb-2">
                         <a href="{{route('admin.applications.appraisal')}}" class="text-white {{\App\Helpers\checkDayStart(1)? '':'disabled'}}">
                             @lang('admin.appraisal')
                         </a>
                     </li>
-                <li style="line-height: 20px;margin-left: 55px;padding-left: 0px;text-indent: 0" class="border-bottom pb-2">
+                <li style="line-height: 20px;margin-left: 18px;padding-left: 0px;text-indent: 0" class="border-bottom pb-2">
                     <a href="{{ route('admin.applications.appraised') }}" class="text-white {{\App\Helpers\checkDayStart(1)? '':'disabled'}}">
                         @lang('admin.appraised')
                     </a>
                 </li>
-                <li style="line-height: 20px;margin-left: 55px;padding-left: 0px;text-indent: 0" class="border-bottom pb-2">
+                <li style="line-height: 20px;margin-left: 18px;padding-left: 0px;text-indent: 0" class="border-bottom pb-2">
                     <a href="{{route('admin.applications.revise')}}" class="text-white {{\App\Helpers\checkDayStart(1)? '':'disabled'}}">
                         @lang('admin.revise')
                     </a>
                 </li>
-                <li style="line-height: 20px;margin-left: 55px;padding-left: 0px;text-indent: 0" class="border-bottom pb-2">
+                <li style="line-height: 20px;margin-left: 18px;padding-left: 0px;text-indent: 0" class="border-bottom pb-2">
                     <a href="{{route('admin.applications.deleted')}}" class="text-white {{\App\Helpers\checkDayStart(1)? '':'disabled'}}">
                         @lang('admin.deleted_applications')
                     </a>
                 </li>
             @else
                 <li class=" ">
-                    <img src="{{asset('frontAssets')}}/assets_{{app()->getLocale()}}/imgs/home/tasks.svg" alt="">@lang('admin.applications')
+                    <i class="fa fa-suitcase mr-5"></i>
+                    <span class="ml-2">@lang('admin.applications')</span>
                 </li>
                 @can("Manage new application")
-                    <li style="line-height: 20px;margin-left: 55px;padding-left: 0px;text-indent: 0" class="border-bottom pb-2">
+                    <li style="line-height: 20px;margin-left: 18px;padding-left: 0px;text-indent: 0" class="border-bottom pb-2">
                         <a href="{{route('admin.applications.store')}}" class="text-white {{\App\Helpers\checkDayStart(1)? '':'disabled'}}">
                             @lang('admin.new_applications')
                         </a>
@@ -246,28 +250,28 @@
                 @endcan
 
             @can("Manage new application")
-                <li style="line-height: 20px;margin-left: 55px;padding-left: 0px;text-indent: 0" class="border-bottom pb-2">
+                <li style="line-height: 20px;margin-left: 18px;padding-left: 0px;text-indent: 0" class="border-bottom pb-2">
                     <a href="{{route('admin.applications.appraisal')}}" class="text-white {{\App\Helpers\checkDayStart(1)? '':'disabled'}}">
                         @lang('admin.appraisal')
                     </a>
                 </li>
                 @endcan
                 @can("Manage appraised")
-                    <li style="line-height: 20px;margin-left: 55px;padding-left: 0px;text-indent: 0" class="border-bottom pb-2">
+                    <li style="line-height: 20px;margin-left: 18px;padding-left: 0px;text-indent: 0" class="border-bottom pb-2">
                         <a href="{{ route('admin.applications.appraised') }}" class="text-white {{\App\Helpers\checkDayStart(1)? '':'disabled'}}">
                             @lang('admin.appraised')
                         </a>
                     </li>
                 @endcan
             @can("Manage revises")
-                <li style="line-height: 20px;margin-left: 55px;padding-left: 0px;text-indent: 0" class="border-bottom pb-2">
+                <li style="line-height: 20px;margin-left: 18px;padding-left: 0px;text-indent: 0" class="border-bottom pb-2">
                     <a href="{{route('admin.applications.revise')}}" class="text-white {{\App\Helpers\checkDayStart(1)? '':'disabled'}}">
                         @lang('admin.revise')
                     </a>
                 </li>
                 @endcan
             @can("Manage Deleted applications")
-                <li style="line-height: 20px;margin-left: 55px;padding-left: 0px;text-indent: 0" class="border-bottom pb-2">
+                <li style="line-height: 20px;margin-left: 18px;padding-left: 0px;text-indent: 0" class="border-bottom pb-2">
                     <a href="{{route('admin.applications.deleted')}}" class="text-white {{\App\Helpers\checkDayStart(1)? '':'disabled'}}">
                         @lang('admin.deleted_applications')
                     </a>
@@ -278,16 +282,16 @@
             @if(auth('admin')->user()->id ==1 )
                 <li>
                     <a href="{{route('admin.settings')}}" class="text-white {{\App\Helpers\checkDayStart(1)? '':'disabled'}}">
-                        <img src="{{asset('frontAssets')}}/assets_{{app()->getLocale()}}/imgs/home/tasks.svg" alt="">
-                        @lang('messages.settings')
+                        <i class="fa fa-suitcase mr-5"></i>
+                        <span class="ml-2">@lang('messages.settings')</span>
                     </a>
                 </li>
             @else
                 @can('Manage settings')
                     <li>
                         <a href="{{route('admin.settings')}}" class="text-white">
-                            <img src="{{asset('frontAssets')}}/assets_{{app()->getLocale()}}/imgs/home/tasks.svg" alt="">
-                            @lang('messages.settings')
+                            <i class="fa fa-suitcase mr-5"></i>
+                            <span class="ml-2">@lang('messages.settings')</span>
                         </a>
                     </li>
                 @endcan
@@ -296,12 +300,14 @@
 
             <li>
                 <a href="{{route('admin.profile')}}" class="text-white">
-                    <img src="{{asset('frontAssets')}}/assets_{{app()->getLocale()}}/imgs/home/tasks.svg" alt="">@lang('site.profile')
+                    <i class="fa fa-suitcase mr-5"></i>
+                    <span class="ml-2">@lang('site.profile')</span>
                 </a>
             </li>
             <li>
                 <a href="{{route('admin.logout')}}" class="text-white">
-                    <img src="{{asset('frontAssets')}}/assets_{{app()->getLocale()}}/imgs/home/logout.svg" alt="">@lang('messages.logout')
+                    <i class="fas fa-sign-out-alt"></i>
+                    <span class="ml-2">@lang('messages.logout')</span>
                 </a>
             </li>
         </div>
