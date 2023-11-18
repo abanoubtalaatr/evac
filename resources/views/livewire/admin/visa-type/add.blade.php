@@ -27,11 +27,11 @@
                     @error('form.service_fee')<p style='color:red'> {{$message}} </p>@enderror
                 </div>
 
-                <div class="form-group my-2">
-                    <label for="mobile">Total : </label>
-                    <input type="text" wire:model="form.total" class="form-control" id="total">
-                    @error('form.total')<p style='color:red'> {{$message}} </p>@enderror
-                </div>
+{{--                <div class="form-group my-2">--}}
+{{--                    <label for="mobile">Total : </label>--}}
+{{--                    <input type="text" wire:model="form.total" class="form-control" id="total">--}}
+{{--                    @error('form.total')<p style='color:red'> {{$message}} </p>@enderror--}}
+{{--                </div>--}}
             </div>
 
             <div class="modal-footer">

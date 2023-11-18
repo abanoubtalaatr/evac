@@ -65,7 +65,7 @@ class Index extends Component
     {
         $this->validate();
         $data = Arr::except($this->form,['id', 'updated_at', 'created_at']);
-
+        $data['total'] = intval($this->form['dubai_fee']) + intval($this->form['service_fee']);
         VisaType::query()->find($this->form['id'])->update($data);
 
         $this->form = [];
@@ -77,7 +77,9 @@ class Index extends Component
     public function store()
     {
         $this->validate();
+        $this->form['total'] = intval($this->form['dubai_fee']) + intval($this->form['service_fee']);
         VisaType::query()->create($this->form);
+
         session()->flash('success',__('admin.create_successfully'));
 
         return redirect()->to(route('admin.visa_types'));
@@ -88,7 +90,7 @@ class Index extends Component
             'form.name'=>'required|max:500',
             'form.service_fee'=>'required|max:500',
             'form.dubai_fee'=>'required|max:500',
-            'form.total'=>'required|max:500',
+            'form.total'=>'nullable',
         ];
     }
     public function render()
