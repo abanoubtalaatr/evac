@@ -65,6 +65,11 @@ class Index extends Component
             ->paginate();
     }
 
+    public function emptyForm()
+    {
+        $this->form =[];
+    }
+
     public function update()
     {
         $this->validate();
