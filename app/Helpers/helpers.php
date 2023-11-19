@@ -253,3 +253,27 @@ if (!function_exists('canCloseDay')) {
         return  true;
     }
 }
+if (!function_exists('formatCurrency')) {
+    function formatCurrency($amount)
+    {
+        return '$ ' . number_format($amount, 2);
+    }
+}
+
+if (!function_exists('recalculateVat')) {
+    function recalculateVat($visaTypeId,$oldAmount,$newAmount, $oldVat)
+    {
+        $vatRAte = vatRate($visaTypeId);
+        $visaType = VisaType::query()->find($visaTypeId);
+        if($oldAmount != $newAmount) {
+            if(($newAmount - $visaType->dubai_fee) > 0) {
+              return $newAmount -  $visaType->dubai_fee * $vatRAte;
+            }else{
+                return 0;
+            }
+        }
+        return $oldVat;
+    }
+}
+
+

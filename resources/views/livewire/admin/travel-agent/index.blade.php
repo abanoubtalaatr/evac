@@ -5,9 +5,9 @@
     <div class="border-div">
         <div class="b-btm flex-div-2">
             <h4>{{$page_title}}</h4>
-            <a style='text-align:center;cursor:pointer' class="button btn-red big"
-               id="addAgentButton">@lang('site.create_new')</a>
-
+                <button style='text-align:center;cursor:pointer' wire:click="emptyForm" wire:loading.attr="disabled" class="button btn-red big" id="addAgentButton">
+                @lang('site.create_new')
+            </button>
         </div>
         <div class="table-page-wrap">
 
@@ -48,7 +48,8 @@
                     <tbody>
                     @foreach($records as $record)
                         <tr>
-                            <td>#{{$loop->index + 1}}</td>
+                            <td>#{{ ($records->currentPage() - 1) * $records->perPage() + $loop->index + 1 }}</td>
+
                             <td class='text-center'>{{$record->name}}</td>
                             <td class='text-center'>{{$record->telephone}}</td>
                             <td class='text-center'>{{$record->contact_name}}</td>
@@ -102,5 +103,13 @@
             $('#agentModal' + agentId).modal('show');
         });
     });
+     function performEmptyFormFirst() {
+            Livewire.emit('emptyForm');
+
+            // Introduce a delay (e.g., 100 milliseconds) before triggering the click event
+            setTimeout(() => {
+                document.getElementById('addAgentButton').click();
+            }, 1000);
+        }
 </script>
 

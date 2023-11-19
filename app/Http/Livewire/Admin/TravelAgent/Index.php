@@ -18,7 +18,7 @@ class Index extends Component
     public $is_active;
     public $perPage =10;
     public $search;
-    public $agent;
+    public $agent,$rowNumber;
 
     protected $paginationTheme = 'bootstrap';
 
@@ -58,7 +58,7 @@ class Index extends Component
                 });
             })
             ->latest()
-            ->paginate();
+            ->paginate(50);
     }
 
     public function emptyForm()

@@ -61,6 +61,21 @@
                     <input type="text" wire:model="form.amount" class="form-control" id="amount">
                     @error('form.amount')<p style='color:red'> {{$message}} </p>@enderror
                 </div>
+                <div class="form-group my-2 d-flex gap-5">
+                    <label>Payment method:</label>
+
+                    <div class="">
+                        <input class="form-check-input" type="radio" id="invoice" wire:model="form.payment_method" checked value="invoice">
+                        <label class="form-check-label" for="invoice">Invoice</label>
+                    </div>
+
+                    <div class="">
+                        <input class="form-check-input" type="radio" id="cash" wire:model="form.payment_method" value="cash">
+                        <label class="form-check-label" for="cash">Cash</label>
+                    </div>
+
+                    @error('form.payment_method') <span class="text-danger">{{ $message }}</span> @enderror
+                </div>
 
             </div>
 

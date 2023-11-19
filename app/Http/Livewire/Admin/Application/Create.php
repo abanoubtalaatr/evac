@@ -29,7 +29,8 @@ class Create extends Component
     public $isChecked = false, $showAlertBlackList = false;
     public $passportNumber = [];
     public $passportApplications;
-    public $numberOfDaysToCheckVisa=90;
+    public $numberOfDaysToCheckVisa = 90;
+    public $defaultVisaTypeId;
     protected $paginationTheme = 'bootstrap';
 
     protected $listeners = ['showApplication'];
@@ -40,11 +41,15 @@ class Create extends Component
         $this->visaTypes = VisaType::query()->get();
         $this->visaProviders = VisaProvider::query()->get();
         $this->travelAgents = Agent::query()->where('is_active', 1)->get();
+        $defaultVisaType = VisaType::query()->where('is_default', 1)->first();
+        if($defaultVisaType){
+            $this->defaultVisaTypeId =$defaultVisaType->id;
+            $this->form['visa_type_id'] = $defaultVisaType->id;
+        }
     }
 
     public function chooseTravelAgent()
     {
-
         $this->isChecked = !$this->isChecked;
     }
 
@@ -79,8 +84,6 @@ class Create extends Component
 
         $this->save();
     }
-
-
     public function save()
     {
         $this->validate();
@@ -93,8 +96,11 @@ class Create extends Component
         $applicationReference = 'EVLB/' . $today . '/' . str_pad($nextSerial, 4, '0', STR_PAD_LEFT);
 
         $data['application_ref'] = $applicationReference;
-        $data['travel_agent_id'] = $this->form['agent_id'];
-        unset($data['agent_id']);
+        if(isset($this->form['agent_id'])) {
+            $data['travel_agent_id'] = $this->form['agent_id'];
+            unset($data['agent_id']);
+        }
+
 
         $application = Application::query()->create($data);
         session()->flash('success',__('admin.create_successfully'));
@@ -103,7 +109,7 @@ class Create extends Component
     }
 
     public function checkPassportNumber()
-    {
+        {
         $existingPassport = Application::where('passport_no', $this->passportNumber)->first();
 
         if ($existingPassport) {
@@ -125,12 +131,11 @@ class Create extends Component
             'form.travel_agent_id' => 'nullable',
             'form.first_name' => 'required',
             'form.last_name' => 'required',
-            'form.title' => ['required', 'in:Mr,Mrs,Ms'],
+            'form.title' => ['nullable', 'in:Mr,Mrs,Ms'],
             'form.notes' => 'required|max:500',
             'form.amount' => 'required|numeric|max:500',
         ];
     }
-
     public function showAgent($id)
     {
         $this->form = [];

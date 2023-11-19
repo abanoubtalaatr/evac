@@ -35,7 +35,10 @@ class Index extends Component
     {
         $this->page_title = __('admin.service_transactions');
         $this->services = Service::query()->get();
-        $this->agents = Agent::query()->get();
+        $this->agents = Agent::query()->orderBy('name')->get();
+        if(!$this->serviceTransaction){
+            $this->form['payment_method'] = 'invoice';
+        }
     }
 
     public function updatedFormServiceId()
@@ -53,13 +56,7 @@ class Index extends Component
             $this->form['vat'] = $vat;
         }
     }
-    public function printInvoice()
-    {
-        $pdf = Pdf::loadView('print-service-transaction');
 
-        // Output the PDF directly to the browser
-        return $pdf->stream('invoice.pdf');
-    }
     public function updatedFormPassportNo()
     {
         if ($this->form['passport_no'] !== '') {
@@ -106,6 +103,7 @@ class Index extends Component
             'amount' => $this->formInvoice['amount'],
         ]);
 
+
         session()->flash('success',__('admin.edit_successfully'));
 
         return redirect()->to(route('admin.service_transactions'));
@@ -137,7 +135,7 @@ class Index extends Component
             })
 
             ->latest()
-            ->paginate();
+            ->paginate(50);
     }
 
     public function update()

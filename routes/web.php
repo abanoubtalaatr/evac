@@ -3,15 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Livewire\Front\ContactUs;
 use App\Http\Controllers\HomeController;
-use App\Http\Livewire\Admin\Pages\Edit as PagesEdit;
-use App\Http\Livewire\Admin\Pages\Index as PagesIndex;
 use App\Http\Livewire\Admin\Settings as SettingsIndex;
-use App\Http\Livewire\Admin\Slider\Edit as SliderEdit;
-use App\Http\Livewire\Admin\Pages\Create as PagesCreate;
-use App\Http\Livewire\Admin\Pages\Delete as PagesDelete;
-use App\Http\Livewire\Admin\Slider\Index as SliderIndex;
-use App\Http\Livewire\Admin\Slider\Create as SliderCreate;
-use App\Http\Livewire\Admin\Slider\Delete as SliderDelete;
 use App\Http\Livewire\Admin\Role\Index as RoleIndex;
 use App\Http\Livewire\Admin\Role\Edit as RoleEdit;
 use App\Http\Livewire\Admin\Role\Create as RoleCreate;

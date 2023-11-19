@@ -12,6 +12,7 @@ use Livewire\Component;
 class Appraised extends Component
 {
     use CancelTrait;
+    use DeleteTrait;
 
     public $visaTypes = [], $visaType;
 

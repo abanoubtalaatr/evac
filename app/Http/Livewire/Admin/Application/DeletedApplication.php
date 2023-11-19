@@ -36,7 +36,7 @@ class DeletedApplication extends Component
                 $query->whereBetween('created_at', [$this->from, $this->to]);
             })
             ->latest()
-            ->paginate();
+            ->paginate(50);
     }
 
     public function resetData()

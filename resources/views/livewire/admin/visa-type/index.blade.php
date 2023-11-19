@@ -5,7 +5,7 @@
     <div class="border-div">
         <div class="b-btm flex-div-2">
             <h4>{{$page_title}}</h4>
-            <a style='text-align:center;cursor:pointer' class="button btn-red big" id="addVisaTypeButton">@lang('site.create_new')</a>
+            <a style='text-align:center;cursor:pointer' class="button btn-red big"  wire:click="emptyForm"  id="addVisaTypeButton">@lang('site.create_new')</a>
 
         </div>
         <div class="table-page-wrap">
@@ -31,6 +31,7 @@
                         <th class="text-center">@lang('admin.dubai_fee')</th>
                         <th class="text-center">@lang('admin.service_fee')</th>
                         <th class="text-center">@lang('admin.total')</th>
+                        <th class="text-center">@lang('admin.default')</th>
                         <th>@lang('site.actions')</th>
                     </tr>
                     </thead>
@@ -42,13 +43,21 @@
                             <td class='text-center'>{{$record->dubai_fee}}</td>
                             <td class='text-center'>{{$record->service_fee}}</td>
                             <td class='text-center'>{{$record->total}}</td>
-
+                            <td class='text-center'>
+                                @if ($record->is_default)
+                                    <i class="fas fa-check text-green circle"></i>
+                                @else
+                                    <i class="fas fa-times text-red circle"></i>
+                                @endif
+                            </td>
                             <td>
                                 <div class="actions">
 
                                     @include('livewire.admin.visa-type.edit', ['visaType' => $record])
                                     <a style="cursor:pointer;" wire:click="showVisaType({{$record->id}})" class="no-btn"><i
                                             class="far fa-edit blue"></i></a>
+                                    <button  wire:click="makeDefault({{$record->id}})" class="btn btn-primary">Make default</button>
+
 
                                 </div>
                             </td>
@@ -69,7 +78,15 @@
 
     </div>
 </main>
-
+<style>
+    .circle{
+        width: 25px;
+        background: black;
+        color: white;
+        padding: 4px;
+        border-radius: 50%;
+    }
+</style>
 <script>
 
     document.getElementById('addVisaTypeButton').addEventListener('click', function() {

@@ -15,7 +15,8 @@
                 <div class="form-group my-2 ">
                     <label class="" for="visaType">Visa Type:</label>
                     <select wire:model="form.visa_type_id" class="form-control" id="visaType">
-                        <option value="">Select Visa Type</option>
+{{--                        <option value="">Select Visa Type</option>--}}
+
                         @foreach ($visaTypes as $visaType)
                             <option value="{{ $visaType->id }}">{{ $visaType->name }}</option>
                         @endforeach
@@ -62,21 +63,21 @@
 
             <div class="col-6">
                 <label for="passport_no" class="">Passport no:</label>
-                <input type="text" class="form-control" wire:model.lazy="passportNumber" wire:blur="checkPassportNumber">
+                <input type="text" class="form-control" wire:model.lazy="passportNumber" wire:keydown="checkPassportNumber">
                 @error('form.passport_no')<p style="color: red;">{{ $message }}</p>@enderror
             </div>
-            <div class="col-6 my-2">
-                <div class="form-group my-2 ">
-                    <label for="title">Title:</label>
-                    <select wire:model="form.title" class="form-control" id="title">
-                        <option value="">Select Title</option>
-                        <option value="Mr">Mr.</option>
-                        <option value="Mrs">Mrs.</option>
-                        <option value="Ms">Ms.</option>
-                    </select>
-                </div>
-                @error('form.title')<p style="color: red;">{{ $message }}</p>@enderror
-            </div>
+{{--            <div class="col-6 my-2">--}}
+{{--                <div class="form-group my-2 ">--}}
+{{--                    <label for="title">Title:</label>--}}
+{{--                    <select wire:model="form.title" class="form-control" id="title">--}}
+{{--                        <option value="">Select Title</option>--}}
+{{--                        <option value="Mr">Mr.</option>--}}
+{{--                        <option value="Mrs">Mrs.</option>--}}
+{{--                        <option value="Ms">Ms.</option>--}}
+{{--                    </select>--}}
+{{--                </div>--}}
+{{--                @error('form.title')<p style="color: red;">{{ $message }}</p>@enderror--}}
+{{--            </div>--}}
 
 
                 <div class="col-6">
