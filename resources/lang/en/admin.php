@@ -93,5 +93,6 @@ return [
     'roles' => "Roles",
     'general_settings' => 'General settings',
     'profile' => 'Profile',
-    'settings' => 'Settings'
+    'settings' => 'Settings',
+    'default' => "Default"
 ];

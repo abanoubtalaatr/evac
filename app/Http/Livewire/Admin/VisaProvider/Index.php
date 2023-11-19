@@ -48,6 +48,13 @@ class Index extends Component
     {
         $this->form =[];
     }
+
+    public function makeDefault(VisaProvider $visaProvider)
+    {
+        VisaProvider::where('is_default', 1)->update(['is_default' => 0]);
+
+        $visaProvider->update(['is_default' => 1]);
+    }
     public function getRecords()
     {
         return VisaProvider::query()
@@ -76,7 +83,12 @@ class Index extends Component
     public function store()
     {
         $this->validate();
-        VisaProvider::query()->create($this->form);
+        $visaProvider = VisaProvider::query()->create($this->form);
+
+        if(VisaProvider::query()->count() == 1){
+            $visaProvider->update(['is_default' => 1]);
+        }
+
         session()->flash('success',__('admin.create_successfully'));
 
         return redirect()->to(route('admin.visa_providers'));

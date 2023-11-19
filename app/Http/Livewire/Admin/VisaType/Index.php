@@ -4,6 +4,7 @@ namespace App\Http\Livewire\Admin\VisaType;
 
 use App\Http\Livewire\Traits\ValidationTrait;
 use App\Models\Agent;
+use App\Models\VisaProvider;
 use App\Models\VisaType;
 use Illuminate\Support\Arr;
 use Livewire\Component;
@@ -43,6 +44,12 @@ class Index extends Component
         $this->emit("showVisaTypeModal", $id);
     }
 
+    public function makeDefault(VisaType $visaType)
+    {
+        VisaType::where('is_default', 1)->update(['is_default' => 0]);
+
+        $visaType->update(['is_default' => 1]);
+    }
     public function getRecords()
     {
         return VisaType::query()
@@ -78,7 +85,11 @@ class Index extends Component
     {
         $this->validate();
         $this->form['total'] = intval($this->form['dubai_fee']) + intval($this->form['service_fee']);
-        VisaType::query()->create($this->form);
+        $visaType = VisaType::query()->create($this->form);
+
+        if(VisaType::query()->count() == 1){
+            $visaType->update(['is_default' => 1]);
+        }
 
         session()->flash('success',__('admin.create_successfully'));
 
