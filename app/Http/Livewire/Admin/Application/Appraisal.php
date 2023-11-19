@@ -31,7 +31,7 @@ class Appraisal extends Component
             })
             ->where('status', 'new')
             ->latest()
-            ->paginate();
+            ->paginate(50);
     }
 
     public function showApplicationModal($id)

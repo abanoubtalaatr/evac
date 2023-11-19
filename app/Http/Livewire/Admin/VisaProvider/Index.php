@@ -57,7 +57,7 @@ class Index extends Component
                 });
             })
             ->latest()
-            ->paginate();
+            ->paginate(50);
     }
 
     public function update()

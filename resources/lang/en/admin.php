@@ -25,7 +25,7 @@ return [
     'edit_successfully' => 'Edit successfully',
     'create_successfully' => 'Create successfully',
     'delete_successfully' => 'Delete successfully',
-    'day_office' => 'Office Management',
+    'day_office' => 'Day Management',
     'agents' => 'Travel Agents',
     'company_name' => 'Company name',
     'address' => 'Address',
@@ -88,4 +88,10 @@ return [
     'deleted_date' => 'Deletion date',
     'color' => 'Color',
     'background' => 'Background',
+    'users' => "Users",
+    'reports' => "Reports",
+    'roles' => "Roles",
+    'general_settings' => 'General settings',
+    'profile' => 'Profile',
+    'settings' => 'Settings'
 ];

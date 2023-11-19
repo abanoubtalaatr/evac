@@ -41,12 +41,12 @@
         @else
             Direct
         @endif
-        <div>Amount : </div>
+        <div> Amount : {{$serviceTransaction->amount}} USD ({{$serviceTransaction->payment_method}})</div>
         @if($serviceTransaction->vat >0)
-            <div>VAT : {{$serviceTransaction->vat}} </div>
+            <div>VAT : {{\App\Helpers\formatCurrency($serviceTransaction->vat)}} </div>
         @endif
 
-        <div>Total amount : {{$serviceTransaction->amount}} USD ({{$serviceTransaction->payment_method}})</div>
+
         <div>Service fee and sales tax included</div>
         <div>Fees in words : {{\App\Helpers\convertNumberToWorldsInUsd($serviceTransaction->amount)}} </div>
     </div>

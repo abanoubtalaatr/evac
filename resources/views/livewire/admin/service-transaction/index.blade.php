@@ -75,12 +75,12 @@
 
                                     <button class="btn btn-primary" onclick="printPage('{{route('admin.service_transactions.print', ['service_transaction' => $record->id])}}')">Print</button>
                                     @include('livewire.admin.service-transaction.edit', ['transaction' => $record])
-                                    @include('livewire.admin.service-transaction.invoice', ['transaction' => $record])
+{{--                                    @include('livewire.admin.service-transaction.invoice', ['transaction' => $record])--}}
 
                                     <button  style="cursor:pointer;" wire:click="showServiceTransaction({{$record->id}})" class="btn btn-primary"><i
                                             class="far fa-edit blue"></i></button>
 
-                                    <button  style="cursor:pointer;" wire:click="showServiceTransactionInvoice({{$record->id}})" class="btn btn-info">Edit invoice</button>
+{{--                                    <button  style="cursor:pointer;" wire:click="showServiceTransactionInvoice({{$record->id}})" class="btn btn-info">Edit invoice</button>--}}
                                     <button  style="cursor:pointer;" wire:click="destroy({{$record->id}})" class="btn btn-danger">Delete</button>
 
                                 </div>
