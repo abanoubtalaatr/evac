@@ -108,6 +108,14 @@
                         @error('form.background') <p class="text-danger">{{$message}}</p> @enderror
                         <hr/>
                     </div>
+                    <div class="col-6">
+                        <label for="">@lang('admin.email')</label>
+                        <input wire:model='form.email' placeholder="@lang('admin.email')"
+                               class="@error('form.email') is-invalid @enderror form-control contact-input"
+                               type="text"/>
+                        @error('form.email') <p class="text-danger">{{$message}}</p> @enderror
+                        <hr/>
+                    </div>
                 </div>
 
 

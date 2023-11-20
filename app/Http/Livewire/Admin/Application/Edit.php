@@ -172,9 +172,9 @@ class Edit extends Component
             'form.travel_agent_id' => 'nullable',
             'form.first_name' => 'required',
             'form.last_name' => 'required',
-            'form.title' => ['required', 'in:Mr,Mrs,Ms'],
-            'form.notes' => 'required|max:500',
-            'form.amount' => 'required|numeric|max:500',
+            'form.title' => ['nullable', 'in:Mr,Mrs,Ms'],
+            'form.notes' => 'nullable|max:500',
+            'form.amount' => 'nullable|numeric|max:500',
         ];
     }
 

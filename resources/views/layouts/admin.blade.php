@@ -80,18 +80,18 @@
                         @lang('admin.appraisal')
                     </a>
                 </li>
+{{--                <li style="line-height: 20px;margin-left: 18px;padding-left: 0px;text-indent: 0" class="border-bottom pb-2">--}}
+{{--                    <a href="{{ route('admin.applications.appraised') }}" class="text-white ">--}}
+{{--                        @lang('admin.appraised')--}}
+{{--                    </a>--}}
+{{--                </li>--}}
                 <li style="line-height: 20px;margin-left: 18px;padding-left: 0px;text-indent: 0" class="border-bottom pb-2">
-                    <a href="{{ route('admin.applications.appraised') }}" class="text-white {{\App\Helpers\checkDayStart(1)? '':'disabled'}}">
-                        @lang('admin.appraised')
-                    </a>
-                </li>
-                <li style="line-height: 20px;margin-left: 18px;padding-left: 0px;text-indent: 0" class="border-bottom pb-2">
-                    <a href="{{route('admin.applications.revise')}}" class="text-white {{\App\Helpers\checkDayStart(1)? '':'disabled'}}">
+                    <a href="{{route('admin.applications.revise')}}" class="text-white ">
                         @lang('admin.revise')
                     </a>
                 </li>
                 <li style="line-height: 20px;margin-left: 18px;padding-left: 0px;text-indent: 0" class="border-bottom pb-2">
-                    <a href="{{route('admin.applications.deleted')}}" class="text-white {{\App\Helpers\checkDayStart(1)? '':'disabled'}}">
+                    <a href="{{route('admin.applications.deleted')}}" class="text-white ">
                         @lang('admin.deleted_applications')
                     </a>
                 </li>
@@ -115,23 +115,23 @@
                         </a>
                     </li>
                 @endcan
-                @can("Manage appraised")
-                    <li style="line-height: 20px;margin-left: 18px;padding-left: 0px;text-indent: 0" class="border-bottom pb-2">
-                        <a href="{{ route('admin.applications.appraised') }}" class="text-white {{\App\Helpers\checkDayStart(1)? '':'disabled'}}">
-                            @lang('admin.appraised')
-                        </a>
-                    </li>
-                @endcan
+{{--                @can("Manage appraised")--}}
+{{--                    <li style="line-height: 20px;margin-left: 18px;padding-left: 0px;text-indent: 0" class="border-bottom pb-2">--}}
+{{--                        <a href="{{ route('admin.applications.appraised') }}" class="text-white ">--}}
+{{--                            @lang('admin.appraised')--}}
+{{--                        </a>--}}
+{{--                    </li>--}}
+{{--                @endcan--}}
                 @can("Manage revises")
                     <li style="line-height: 20px;margin-left: 18px;padding-left: 0px;text-indent: 0" class="border-bottom pb-2">
-                        <a href="{{route('admin.applications.revise')}}" class="text-white {{\App\Helpers\checkDayStart(1)? '':'disabled'}}">
+                        <a href="{{route('admin.applications.revise')}}" class="text-white ">
                             @lang('admin.revise')
                         </a>
                     </li>
                 @endcan
                 @can("Manage Deleted applications")
                     <li style="line-height: 20px;margin-left: 18px;padding-left: 0px;text-indent: 0" class="border-bottom pb-2">
-                        <a href="{{route('admin.applications.deleted')}}" class="text-white {{\App\Helpers\checkDayStart(1)? '':'disabled'}}">
+                        <a href="{{route('admin.applications.deleted')}}" class="text-white ">
                             @lang('admin.deleted_applications')
                         </a>
                     </li>
@@ -139,7 +139,7 @@
             @endif
             @if(auth('admin')->user()->id ==1)
                 <li>
-                    <a href="{{route('admin.service_transactions')}}" class="text-white  {{\App\Helpers\checkDayStart(1)? '':'disabled'}}">
+                    <a href="{{route('admin.service_transactions')}}" class="text-white  ">
                         <i class="fa fa-suitcase mr-5"></i>
                         <span class="ml-2">@lang('admin.service_transactions')</span>
                     </a>
@@ -147,7 +147,7 @@
             @else
                 @can('Manage service transactions')
                     <li>
-                        <a href="{{route('admin.service_transactions')}}" class="text-white {{\App\Helpers\checkDayStart(1)? '':'disabled'}}">
+                        <a href="{{route('admin.service_transactions')}}" class="text-white ">
                             <i class="fa fa-suitcase mr-5"></i>
                             <span class="ml-2">@lang('admin.service_transactions')</span>
                         </a>
@@ -157,7 +157,7 @@
 
             @if(auth('admin')->user()->id ==1)
                 <li>
-                    <a  class="text-white  {{\App\Helpers\checkDayStart(1)? '':'disabled'}}">
+                    <a  class="text-white  ">
                         <i class="fa fa-suitcase mr-5"></i>
                         <span class="ml-2">@lang('admin.reports')</span>
                     </a>
@@ -165,7 +165,7 @@
             @else
                 @can('Manage reports')
                     <li>
-                        <a  class="text-white {{\App\Helpers\checkDayStart(1)? '':'disabled'}}">
+                        <a  class="text-white ">
                             <i class="fa fa-suitcase mr-5"></i>
                             <span class="ml-2">@lang('admin.reports')</span>
                         </a>
@@ -176,7 +176,7 @@
 
             @if(auth('admin')->user()->id == 1)
                 <li>
-                    <a href="{{route('admin.travel_agents')}}" class="text-white {{\App\Helpers\checkDayStart(1)? '':'disabled'}}" title="Click me when the days have started">
+                    <a href="{{route('admin.travel_agents')}}" class="text-white " title="Click me when the days have started">
                         <i class="fa fa-suitcase mr-5"></i>
                         <span class="ml-2">@lang('admin.agents')</span>
                     </a>
@@ -185,7 +185,7 @@
             @else
                 @can('Manage travel agents')
                     <li >
-                        <a href="{{route('admin.travel_agents')}}" class="text-white  {{\App\Helpers\checkDayStart(1)? '':'disabled'}}">
+                        <a href="{{route('admin.travel_agents')}}" class="text-white  ">
                             <i class="fa fa-suitcase mr-5"></i>
                             <span class="ml-2">@lang('admin.agents')</span>
                         </a>
@@ -195,7 +195,7 @@
 
             @if(auth('admin')->user()->id == 1)
                 <li>
-                    <a href="{{route('admin.visa_types')}}" class="text-white  {{\App\Helpers\checkDayStart(1)? '':'disabled'}}">
+                    <a href="{{route('admin.visa_types')}}" class="text-white  ">
                         <i class="fa fa-suitcase mr-5"></i>
                         <span class="ml-2">@lang('admin.visa_types')</span>
                     </a>
@@ -204,7 +204,7 @@
             @else
                 @can('Manage visa types')
                     <li>
-                        <a href="{{route('admin.visa_types')}}" class="text-white  {{\App\Helpers\checkDayStart(1)? '':'disabled'}}">
+                        <a href="{{route('admin.visa_types')}}" class="text-white  ">
                             <i class="fa fa-suitcase mr-5"></i>
                             <span class="ml-2">@lang('admin.visa_types')</span>
                         </a>
@@ -213,7 +213,7 @@
             @endif
             @if(auth('admin')->user()->id == 1)
                 <li>
-                    <a href="{{route('admin.visa_providers')}}" class="text-white {{\App\Helpers\checkDayStart(1)? '':'disabled'}}">
+                    <a href="{{route('admin.visa_providers')}}" class="text-white ">
                         <i class="fa fa-suitcase mr-5"></i>
                         <span class="ml-2">@lang('admin.visa_providers')</span>
                     </a>
@@ -222,7 +222,7 @@
             @else
                 @can('Manage visa providers')
                     <li>
-                        <a href="{{route('admin.visa_providers')}}" class="text-white {{\App\Helpers\checkDayStart(1)? '':'disabled'}}">
+                        <a href="{{route('admin.visa_providers')}}" class="text-white ">
                             <i class="fa fa-suitcase mr-5"></i>
                             <span class="ml-2">@lang('admin.visa_providers')</span>
                         </a>
@@ -231,7 +231,7 @@
             @endif
             @if(auth('admin')->user()->id == 1)
                 <li>
-                    <a href="{{route('admin.services')}}" class="text-white  {{\App\Helpers\checkDayStart(1)? '':'disabled'}}">
+                    <a href="{{route('admin.services')}}" class="text-white  ">
                         <i class="fa fa-suitcase mr-5"></i>
                         <span class="ml-2">@lang('admin.services')</span>
                     </a>
@@ -240,7 +240,7 @@
             @else
                 @can('Manage services')
                     <li>
-                        <a href="{{route('admin.services')}}" class="text-white  {{\App\Helpers\checkDayStart(1)? '':'disabled'}}">
+                        <a href="{{route('admin.services')}}" class="text-white  ">
                             <i class="fa fa-suitcase mr-5"></i>
                             <span class="ml-2">@lang('admin.services')</span>
                         </a>
@@ -250,7 +250,7 @@
 
             @if(auth('admin')->user()->id == 1)
                 <li>
-                    <a href="{{route('admin.applicants')}}" class="text-white  {{\App\Helpers\checkDayStart(1)? '':'disabled'}}">
+                    <a href="{{route('admin.applicants')}}" class="text-white  ">
                         <i class="fa fa-suitcase mr-5"></i>
                         <span class="ml-2">@lang('admin.applicants')</span>
                     </a>
@@ -259,7 +259,7 @@
             @else
                 @can('Manage applicants')
                     <li>
-                        <a href="{{route('admin.applicants')}}" class="text-white  {{\App\Helpers\checkDayStart(1)? '':'disabled'}}">
+                        <a href="{{route('admin.applicants')}}" class="text-white  ">
                             <i class="fa fa-suitcase mr-5"></i>
                             <span class="ml-2">@lang('admin.applicants')</span>
                         </a>
@@ -274,12 +274,12 @@
                     <span class="ml-2">@lang('admin.users')</span>
                 </li>
                 <li style="line-height: 20px;margin-left: 18px;padding-left: 0px;text-indent: 0" class="border-bottom pb-2">
-                    <a href="{{route('admin.admins.index')}}" class="text-white {{\App\Helpers\checkDayStart(1)? '':'disabled'}}">
+                    <a href="{{route('admin.admins.index')}}" class="text-white ">
                         @lang('admin.users')
                     </a>
                 </li>
                 <li style="line-height: 20px;margin-left: 18px;padding-left: 0px;text-indent: 0" class="border-bottom pb-2">
-                    <a href="{{route('admin.role')}}" class="text-white {{\App\Helpers\checkDayStart(1)? '':'disabled'}}">
+                    <a href="{{route('admin.role')}}" class="text-white ">
                         @lang('admin.roles')
                     </a>
                 </li>
@@ -290,12 +290,12 @@
                         <span class="ml-2">@lang('admin.users')</span>
                     </li>
                     <li style="line-height: 20px;margin-left: 18px;padding-left: 0px;text-indent: 0" class="border-bottom pb-2">
-                        <a href="{{route('admin.admins.index')}}" class="text-white {{\App\Helpers\checkDayStart(1)? '':'disabled'}}">
+                        <a href="{{route('admin.admins.index')}}" class="text-white ">
                             @lang('admin.users')
                         </a>
                     </li>
                     <li style="line-height: 20px;margin-left: 18px;padding-left: 0px;text-indent: 0" class="border-bottom pb-2">
-                        <a href="{{route('admin.role')}}" class="text-white {{\App\Helpers\checkDayStart(1)? '':'disabled'}}">
+                        <a href="{{route('admin.role')}}" class="text-white ">
                             @lang('admin.role')
                         </a>
                     </li>
@@ -308,12 +308,12 @@
                     <span class="ml-2">@lang('admin.settings')</span>
                 </li>
                 <li style="line-height: 20px;margin-left: 18px;padding-left: 0px;text-indent: 0" class="border-bottom pb-2">
-                    <a href="{{route('admin.settings')}}" class="text-white {{\App\Helpers\checkDayStart(1)? '':'disabled'}}">
+                    <a href="{{route('admin.settings')}}" class="text-white ">
                         @lang('admin.general_settings')
                     </a>
                 </li>
                 <li style="line-height: 20px;margin-left: 18px;padding-left: 0px;text-indent: 0" class="border-bottom pb-2">
-                    <a href="{{route('admin.profile')}}" class="text-white {{\App\Helpers\checkDayStart(1)? '':'disabled'}}">
+                    <a href="{{route('admin.profile')}}" class="text-white ">
                         @lang('admin.profile')
                     </a>
                 </li>
@@ -324,12 +324,12 @@
                         <span class="ml-2">@lang('admin.settings')</span>
                     </li>
                     <li style="line-height: 20px;margin-left: 18px;padding-left: 0px;text-indent: 0" class="border-bottom pb-2">
-                        <a href="{{route('admin.settings')}}" class="text-white {{\App\Helpers\checkDayStart(1)? '':'disabled'}}">
+                        <a href="{{route('admin.settings')}}" class="text-white ">
                             @lang('admin.general_settings')
                         </a>
                     </li>
                     <li style="line-height: 20px;margin-left: 18px;padding-left: 0px;text-indent: 0" class="border-bottom pb-2">
-                        <a href="{{route('admin.profile')}}" class="text-white {{\App\Helpers\checkDayStart(1)? '':'disabled'}}">
+                        <a href="{{route('admin.profile')}}" class="text-white ">
                             @lang('admin.profile')
                         </a>
                     </li>

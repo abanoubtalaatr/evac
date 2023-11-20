@@ -13,21 +13,21 @@
 
                 <div class="row">
                     <div class="col-12">
-                        <div class="form-group my-2 ">
+                        <div class="form-group  ">
                             <label class="" for="visaType">Visa Type:</label>
                             <input class="border-0" value="{{$application->visaType->name}}" />
                         </div>
                     </div>
 
                     <div class="col-12">
-                        <div class="form-group my-2">
+                        <div class="form-group ">
                             <label for="visaProvider">Visa Provider:</label>
                             <input class="border-0" value="{{$application->visaProvider->name}}" />
                         </div>
                     </div>
 
                     <div class="col-12">
-                        <div class="form-group my-2">
+                        <div class="form-group ">
                             <div class="">
                                 <label for="travelAgent">Travel Agent:</label>
                                 <input class="border-0" value="{{$application->travelAgent?$application->travelAgent->name:""}}" />
@@ -40,37 +40,37 @@
                         <input type="text" class="border-0" value="{{$application->passport_no}}">
                     </div>
 
-                    <div class="col-12 my-2">
-                        <div class="form-group my-2 ">
+                    <div class="col-12 ">
+                        <div class="form-group  ">
                             <label for="title">Title:</label>
                             <input type="text" class="border-0" value="{{$application->title}}">
                         </div>
                     </div>
 
                     <div>
-                        <div class="col-12 my-2">
+                        <div class="col-12 ">
                             <label for="first_name" class="">First name:</label>
                             <input type="text" value="{{$application->first_name}}" class="border-0">
                         </div>
-                        <div class="col-12 my-2">
+                        <div class="col-12 ">
                             <label for="last_name">Last name:</label>
                             <input type="text" value="{{$application->last_name}}" class="border-0">
                         </div>
                     </div>
 
-                    <div class="col-12 my-2">
+                    <div class="col-12 ">
                         <div class="form-group ">
                             <label for="expiry_date"> Expiry date:</label>
                             <input class="border-0" type="text" value="{{\Carbon\Carbon::parse($application->expiry_date)->format('Y-m-d')}}">
                         </div>
                     </div>
 
-                    <div class="col-12 my-2">
+                    <div class="col-12 ">
                         <label for="notes" class="">Note:</label>
                         <p class="d-inline-block">{{$application->notes}}</p>
                     </div>
 
-                    <div class="col-12 my-2">
+                    <div class="col-12 ">
                         <label for="amount" class="">Amount:</label>
                         <input class="border-0" value="{{$application->amount}}">
                     </div>

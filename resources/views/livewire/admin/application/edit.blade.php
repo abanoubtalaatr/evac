@@ -65,18 +65,18 @@
                 <input type="text" class="form-control" wire:model.lazy="passportNumber" wire:blur="checkPassportNumber">
                 @error('form.passport_no')<p style="color: red;">{{ $message }}</p>@enderror
             </div>
-            <div class="col-6 my-2">
-                <div class="form-group my-2 ">
-                    <label for="title">Title:</label>
-                    <select wire:model="form.title" class="form-control" id="title">
-                        <option value="">Select Title</option>
-                        <option value="Mr">Mr.</option>
-                        <option value="Mrs">Mrs.</option>
-                        <option value="Ms">Ms.</option>
-                    </select>
-                </div>
-                @error('form.title')<p style="color: red;">{{ $message }}</p>@enderror
-            </div>
+{{--            <div class="col-6 my-2">--}}
+{{--                <div class="form-group my-2 ">--}}
+{{--                    <label for="title">Title:</label>--}}
+{{--                    <select wire:model="form.title" class="form-control" id="title">--}}
+{{--                        <option value="">Select Title</option>--}}
+{{--                        <option value="Mr">Mr.</option>--}}
+{{--                        <option value="Mrs">Mrs.</option>--}}
+{{--                        <option value="Ms">Ms.</option>--}}
+{{--                    </select>--}}
+{{--                </div>--}}
+{{--                @error('form.title')<p style="color: red;">{{ $message }}</p>@enderror--}}
+{{--            </div>--}}
 
 
             <div class="col-6">
@@ -109,11 +109,45 @@
                 <textarea class="form-control" wire:model="form.notes"></textarea>
                 @error('form.notes')<p style="color: red;">{{ $message }}</p>@enderror
             </div>
+            <div class="col-6 my-2 d-flex gap-5">
+                <label>Payment method:</label>
+
+                <div class="">
+                    <input class="form-check-input" type="radio" id="invoice" wire:model="form.payment_method" checked value="invoice">
+                    <label class="form-check-label" for="invoice">Invoice</label>
+                </div>
+
+                <div class="">
+                    <input class="form-check-input" type="radio" id="cash" wire:model="form.payment_method" value="cash">
+                    <label class="form-check-label" for="cash">Cash</label>
+                </div>
+
+                @error('form.payment_method') <span class="text-danger">{{ $message }}</span> @enderror
+            </div>
             <div class="col-6">
+                <div class="form-group my-2 ">
+                    <label class="" for="visaType">Status : </label>
+                    <select wire:model="form.status" class="form-control" id="status">
+                        <option value="new">New</option>
+                        <option value="appraised">appraised</option>
+                        <option value="canceled">Canceled</option>
+                    </select>
+                </div>
+                @error('form.status')<p style="color: red;">{{ $message }}</p>@enderror
+            </div>
+            <div class="col-6" wire:ignore>
                 <label for="amount" class="">Amount:</label>
-                <input class="form-control" wire:model="form.amount">
+                <div class="input-group">
+                    <input class="form-control" disabled wire:model="form.amount" id="amount">
+                    <div class="input-group-append">
+                    <span class="input-group-text bg-warning" id="editIcon" style="cursor: pointer; height: 38px;" onclick="enableInput()">
+                        <i class="fas fa-pencil-alt"></i>
+                    </span>
+                    </div>
+                </div>
                 @error('form.amount')<p style="color: red;">{{ $message }}</p>@enderror
             </div>
+
 
             <div class="col-12 text-center my-2">
                 <button type="submit" class="btn btn-primary" wire:click="store">Save</button>
@@ -152,74 +186,11 @@
         Livewire.on('showMultipleApplicationsPopup', function () {
           $('#passportHasMoreThanOneModal').modal('show');
         });
+        function enableInput() {
+            document.getElementById('amount').removeAttribute('disabled');
+        }
     </script>
 @endpush
 @push('styles')
     <link href="{{asset('css/select2.min.css')}}" rel="stylesheet"/>
-    {{-- <link rel="stylesheet" href="{{asset('frontAssets/css/multiselect.css')}}"> --}}
-    <style>
-        .whats-p {
-            /* background: url('whats-app-b.png'); */
-            width: 100%;
-            float: right;
-            padding-bottom: 15px;
-        }
-
-        .w-det {
-            background: rgb(0, 0, 0, .05);
-            border-radius: 5px;
-            overflow: hidden;
-        }
-
-        .chat {
-            background: #dbf8c7;
-            /* margin: 10px 25px 3px 0px; */
-            padding: 10px;
-            background: #DCF8C6;
-
-            width: 100%;
-
-            display: block;
-            border-radius: 5px;
-            position: relative;
-            box-shadow: 0px 2px 1px rgb(0 0 0 / 20%);
-        }
-
-        .chat p, .chat h5, .chat h4 {
-            color: rgb(89, 89, 89);
-            text-decoration: none;
-        }
-
-        .chat a {
-            text-decoration: none;
-        }
-
-        .chat .bubble-arrow.alt {
-            position: absolute;
-            bottom: 20px;
-            left: auto;
-            right: 4px;
-            float: right;
-            top: 0;
-        }
-
-        .chat .bubble-arrow:after {
-            content: "";
-            position: absolute;
-            border-top: 15px solid #DCF8C6;
-            transform: scaleX(-1);
-            border-left: 15px solid transparent;
-            border-radius: 4px 0 0 0px;
-            width: 0;
-
-        }
-
-        .chat a {
-            color: #4285f3;
-        }
-
-        .chat img {
-            max-width: 100%;
-        }
-    </style>
 @endpush

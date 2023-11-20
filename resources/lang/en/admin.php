@@ -94,5 +94,6 @@ return [
     'general_settings' => 'General settings',
     'profile' => 'Profile',
     'settings' => 'Settings',
-    'default' => "Default"
+    'default' => "Default",
+    "application_ref" => "Application Ref"
 ];

@@ -34,9 +34,7 @@ class DayOffice extends Component
             $this->disabledButtonDayEnd = false;
         }
 
-        if(currentDayForOffice(1) && checkDayClosed(1)) {
-            $this->disabledButtonDayRestartDay = true;
-        }
+
     }
 
     public function startDay()

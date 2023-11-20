@@ -12,6 +12,7 @@ use App\Models\VisaProvider;
 use App\Models\VisaType;
 use Carbon\Carbon;
 use Livewire\Component;
+use function App\Helpers\createApplicant;
 use function App\Helpers\vatRate;
 
 class Create extends Component
@@ -32,6 +33,10 @@ class Create extends Component
     public $numberOfDaysToCheckVisa = 90;
     public $defaultVisaTypeId;
     protected $paginationTheme = 'bootstrap';
+    public $showPrint = false;
+    public $record;
+    public $searchResults=[];
+
 
     protected $listeners = ['showApplication'];
 
@@ -42,9 +47,15 @@ class Create extends Component
         $this->visaProviders = VisaProvider::query()->get();
         $this->travelAgents = Agent::query()->where('is_active', 1)->get();
         $defaultVisaType = VisaType::query()->where('is_default', 1)->first();
+        $defaultVisaProvider = VisaProvider::query()->where('is_default', 1)->first();
+        $this->form['payment_method'] ="invoice";
         if($defaultVisaType){
             $this->defaultVisaTypeId =$defaultVisaType->id;
             $this->form['visa_type_id'] = $defaultVisaType->id;
+            $this->updateAmount();
+        }
+        if($defaultVisaProvider){
+            $this->form['visa_provider_id'] = $defaultVisaProvider->id;
         }
     }
 
@@ -53,7 +64,7 @@ class Create extends Component
         $this->isChecked = !$this->isChecked;
     }
 
-    public function updatedFormVisaTypeId()
+    public function updateAmount()
     {
         $vatRate = vatRate($this->form['visa_type_id']);
         $visaType = VisaType::query()->find($this->form['visa_type_id']);
@@ -61,6 +72,11 @@ class Create extends Component
         $this->form['vat'] = $vatRate;
 
         $this->form['amount'] = $amount;
+    }
+
+    public function updatedFormVisaTypeId()
+    {
+        $this->updateAmount();
     }
 
     public function store()
@@ -101,12 +117,28 @@ class Create extends Component
             unset($data['agent_id']);
         }
 
+        createApplicant($data);
 
         $application = Application::query()->create($data);
-        session()->flash('success',__('admin.create_successfully'));
 
-        return redirect()->to(route('admin.applications.appraisal'));
+        $this->showPrint = true;
+        $this->record = $application;
+
+        $this->resetData();
+        $this->updateAmount();
+        $this->emit('closePopups');
     }
+
+    public function resetData()
+    {
+        $this->form['notes'] = null;
+        $this->passportNumber = null;
+        $this->form['first_name'] = null;
+        $this->form['last_name'] = null;
+        $this->form['expiry_date'] = null;
+        $this->form['travel_agent_id'] =null;
+    }
+
 
     public function checkPassportNumber()
         {
@@ -132,8 +164,8 @@ class Create extends Component
             'form.first_name' => 'required',
             'form.last_name' => 'required',
             'form.title' => ['nullable', 'in:Mr,Mrs,Ms'],
-            'form.notes' => 'required|max:500',
-            'form.amount' => 'required|numeric|max:500',
+            'form.notes' => 'nullable|max:500',
+            'form.amount' => 'nullable|numeric|max:500',
         ];
     }
     public function showAgent($id)
@@ -165,8 +197,24 @@ class Create extends Component
     }
 
 
+    public function selectTravelAgent($agentId)
+    {
+        $this->form['travel_agent_id'] = $agentId;
+        $agentName = Agent::query()->find($agentId)->name;
+        $this->search = ''; // Clear the search input
+        $this->emit('agentSelected', $agentId, $agentName);
+    }
+
     public function render()
     {
-        return view('livewire.admin.application.create')->layout('layouts.admin');
+        $this->searchResults = [];
+
+        if (!empty($this->search)) {
+
+            $this->searchResults = Agent::where('name', 'like', '%' . $this->search . '%')->get();
+        }
+        return view('livewire.admin.application.create' ,[
+        'searchResults' => $this->searchResults,
+        ])->layout('layouts.admin');
     }
 }

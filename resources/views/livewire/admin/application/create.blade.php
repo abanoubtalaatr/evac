@@ -41,24 +41,29 @@
 
             <div class="col-6">
                 <div class="form-group my-2">
-                    <div class="d-flex gap-2">
-                        <label for="travelAgent">Travel Agent:</label>
-{{--                        <input class="" type="checkbox" wire:click="chooseTravelAgent">--}}
+                    <label for="travelAgent" class="mb-2">Travel Agent:</label>
+                    <div class="input-group" >
+                        <input
+                            id="agent_search"
+                            type="text"
+                            class="form-control contact-input"
+                            wire:model="search"
+                            placeholder="Search Travel Agent"
+                            autocomplete="off"
+                            wire:key="search_{{ time() }}"
+                        />
+                        <ul class="autocomplete-results list-group position-absolute w-100" style="padding-left: 0px;margin-top: 51px;">
 
-                            <div class="form-group " wire:ignore style="width: 50%">
+                                @foreach($searchResults as $result)
+                                    <li class="list-group-item border-top-0 rounded-0" wire:click="selectTravelAgent('{{ $result->id }}')">
+                                        {{ $result->name }}
+                                    </li>
+                                @endforeach
 
-                                <select id='agent_id' wire:model='form.travel_agent_id' class="@error('form.agent_id') is-invalid @enderror form-control contact-input">
-                                    <option value="" >Select Option</option>
-
-                                    @foreach($travelAgents as $travelAgent)
-                                        <option selected value="{{$travelAgent->id}}">{{$travelAgent->name}}</option>
-                                    @endforeach
-                                </select>
-                            </div>
-
+                        </ul>
                     </div>
+                    @error('form.travel_agent_id')<p class="mt-2" style="color: red;">{{ $message }}</p>@enderror
                 </div>
-                @error('form.travel_agent_id')<p style="color: red;">{{ $message }}</p>@enderror
             </div>
 
             <div class="col-6">
@@ -110,18 +115,86 @@
                 <textarea class="form-control" wire:model="form.notes"></textarea>
                 @error('form.notes')<p style="color: red;">{{ $message }}</p>@enderror
             </div>
-            <div class="col-6">
+            <div class="col-6 my-2 d-flex gap-5">
+                <label>Payment method:</label>
+                <div class="">
+                    <input class="form-check-input" type="radio" id="invoice" wire:model="form.payment_method" checked value="invoice">
+                    <label class="form-check-label" for="invoice">Invoice</label>
+                </div>
+
+                <div class="">
+                    <input class="form-check-input" type="radio" id="cash" wire:model="form.payment_method" value="cash">
+                    <label class="form-check-label" for="cash">Cash</label>
+                </div>
+
+                @error('form.payment_method') <span class="text-danger">{{ $message }}</span> @enderror
+            </div>
+
+            <div class="col-6" wire:ignore>
                 <label for="amount" class="">Amount:</label>
-                <input class="form-control" wire:model="form.amount">
+                <div class="input-group">
+                    <input class="form-control" disabled wire:model="form.amount" id="amount">
+                    <div class="input-group-append">
+                    <span class="input-group-text bg-warning" id="editIcon" style="cursor: pointer; height: 38px;" onclick="enableInput()">
+                        <i class="fas fa-pencil-alt"></i>
+                    </span>
+                    </div>
+                </div>
                 @error('form.amount')<p style="color: red;">{{ $message }}</p>@enderror
             </div>
+
+
 
             <div class="col-12 text-center my-2">
                 <button type="submit" class="btn btn-primary" wire:click="store">Save</button>
             </div>
+            <hr>
+
+            @if($showPrint)
+                <div class="col-12 text-center my-2">
+                    <button class="btn btn-success mt-2"> Application created successfully you can print </button>     <button class="btn btn-primary mt-2" onclick="printPage('{{route('admin.applications.print', ['application' => $record->id])}}')">Print</button>
+                </div>
+            @endif
+
         </div>
     </div>
 </main>
+
+<script>
+    document.addEventListener('livewire:load', function () {
+      Livewire.on('closePopups', function () {
+          $('#expiryPassportModal').modal('hide');
+          $('#passportHasMoreThanOneModal').modal('hide');
+          $('#blackListModal').modal('hide');
+      });
+  });
+  // Function to load content into an iframe and trigger printing
+  function printPage(url) {
+      // Create an iframe element
+      var iframe = document.createElement('iframe');
+
+      // Set the source URL of the iframe
+      iframe.src = url;
+
+      // Set styles to hide the iframe
+      iframe.style.position = 'absolute';
+      iframe.style.top = '-9999px';
+      iframe.style.left = '-9999px';
+      iframe.style.width = '0';
+      iframe.style.height = '0';
+
+      // Append the iframe to the document body
+      document.body.appendChild(iframe);
+
+      // Wait for the iframe to load
+      iframe.onload = function() {
+          // Print the content of the iframe
+          iframe.contentWindow.print();
+      };
+  }
+</script>
+
+
 
 
 
@@ -130,30 +203,42 @@
 
     <script src="{{asset('js/select2.min.js')}}"></script>
     <script>
-        window.addEventListener('onContentChanged', () => {
-            $('#agent_id').select2();
-        });
+        document.addEventListener('livewire:load', function () {
+          Livewire.on('agentSelected', (agentId, agentName) => {
+              // Populate the input field with the selected agent's name
+              document.getElementById('agent_search').value = agentName;
+              // Close the results dropdown
+              document.querySelector('.autocomplete-results').innerHTML = '';
+          });
+      });
+      window.addEventListener('onContentChanged', () => {
+          $('#agent_id').select2();
+      });
 
-        $(document).ready(()=>{
-           $('#agent_id').select2();
-            $('#agent_id').change(e=>{
-                @this.set('form.agent_id', $('#agent_id').select2('val'));
-            });
+      $(document).ready(()=>{
+         $('#agent_id').select2();
+          $('#agent_id').change(e=>{
+              @this.set('form.agent_id', $('#agent_id').select2('val'));
+          });
 
-        });
+      });
 
-        Livewire.on('openBlackListModal', function () {
-            $('#blackListModal').modal('show');
-        });
+      Livewire.on('openBlackListModal', function () {
+          $('#blackListModal').modal('show');
+      });
 
-        Livewire.on('showExpiryPopup', function () {
-          $('#expiryPassportModal').modal('show');
-        });
+      Livewire.on('showExpiryPopup', function () {
+        $('#expiryPassportModal').modal('show');
+      });
 
-        Livewire.on('showMultipleApplicationsPopup', function () {
-          $('#passportHasMoreThanOneModal').modal('show');
-        });
+      Livewire.on('showMultipleApplicationsPopup', function () {
+        $('#passportHasMoreThanOneModal').modal('show');
+      });
+      function enableInput() {
+          document.getElementById('amount').removeAttribute('disabled');
+      }
     </script>
+
 @endpush
 @push('styles')
     <link href="{{asset('css/select2.min.css')}}" rel="stylesheet"/>
