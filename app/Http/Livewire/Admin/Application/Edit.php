@@ -28,6 +28,7 @@ class Edit extends Component
     public $passportApplications;
     public $numberOfDaysToCheckVisa=90;
     public $isEdit = false;
+    public $agentName='';
     protected $paginationTheme = 'bootstrap';
 
     protected $listeners = ['showApplication'];
@@ -46,7 +47,8 @@ class Edit extends Component
         $this->application = $application;
         $this->page_title = __('admin.applications_edit');
         if($application->travel_agent_id){
-
+            $agent= Agent::query()->find($application->travel_agent_id);
+            $this->agentName= $agent->name;
             $this->isChecked = true;
             $this->isEdit = true;
         }
@@ -55,9 +57,9 @@ class Edit extends Component
 
     public function chooseTravelAgent()
     {
-
         $this->isChecked = !$this->isChecked;
     }
+
 
     public function updatedFormVisaTypeId()
     {
@@ -132,10 +134,15 @@ class Edit extends Component
             $data['travel_agent_id'] = $data['agent_id'];
             unset($data['agent_id']);
         }
+
+        if(isset($data['agent_id']) && is_null($data['agent_id'])){
+            unset($data['agent_id']);
+            $data['travel_agent_id'] = null;
+        }
         $this->application->update(Arr::except($data, ['created_at', 'updated_at']));
         session()->flash('success',__('admin.edit_successfully'));
 
-        return redirect()->to(route('admin.applications.revise'));
+        return redirect()->to(route('admin.applications.appraisal'));
     }
 
     public function checkPassportInBlackList()

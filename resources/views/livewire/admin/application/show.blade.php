@@ -40,12 +40,12 @@
                         <input type="text" class="border-0" value="{{$application->passport_no}}">
                     </div>
 
-                    <div class="col-12 ">
+                    {{-- <div class="col-12 ">
                         <div class="form-group  ">
                             <label for="title">Title:</label>
                             <input type="text" class="border-0" value="{{$application->title}}">
                         </div>
-                    </div>
+                    </div> --}}
 
                     <div>
                         <div class="col-12 ">

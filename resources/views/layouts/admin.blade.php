@@ -175,21 +175,38 @@
 
 
             @if(auth('admin')->user()->id == 1)
-                <li>
-                    <a href="{{route('admin.travel_agents')}}" class="text-white " title="Click me when the days have started">
-                        <i class="fa fa-suitcase mr-5"></i>
-                        <span class="ml-2">@lang('admin.agents')</span>
+                <li class=" ">
+                    <i class="fa fa-suitcase mr-5"></i>
+                    <span class="ml-2">@lang('admin.travel_agent')</span>
+                </li>
+                <li style="line-height: 20px;margin-left: 18px;padding-left: 0px;text-indent: 0" class="border-bottom pb-2">
+                    <a href="{{route('admin.travel_agents')}}" class="text-white ">
+                        @lang('admin.travel_agent')
+                    </a>
+                </li>
+                <li style="line-height: 20px;margin-left: 18px;padding-left: 0px;text-indent: 0" class="border-bottom pb-2">
+                    <a href="{{route('admin.travel_agent_applications')}}" class="text-white ">
+                        @lang('admin.agent_applications')
                     </a>
                 </li>
 
             @else
                 @can('Manage travel agents')
-                    <li >
-                        <a href="{{route('admin.travel_agents')}}" class="text-white  ">
-                            <i class="fa fa-suitcase mr-5"></i>
-                            <span class="ml-2">@lang('admin.agents')</span>
-                        </a>
-                    </li>
+
+                <li class=" ">
+                    <i class="fa fa-suitcase mr-5"></i>
+                    <span class="ml-2">@lang('admin.travel_agents')</span>
+                </li>
+                <li style="line-height: 20px;margin-left: 18px;padding-left: 0px;text-indent: 0" class="border-bottom pb-2">
+                    <a href="{{route('admin.travel_agents')}}" class="text-white ">
+                        @lang('admin.travel_agents')
+                    </a>
+                </li>
+                <li style="line-height: 20px;margin-left: 18px;padding-left: 0px;text-indent: 0" class="border-bottom pb-2">
+                    <a href="{{route('admin.agent_applications')}}" class="text-white ">
+                        @lang('admin.agent_applications')
+                    </a>
+                </li>
                 @endcan
             @endif
 

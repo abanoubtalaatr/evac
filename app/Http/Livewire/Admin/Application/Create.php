@@ -28,14 +28,15 @@ class Create extends Component
     public $application;
     public $visaTypes, $visaProviders, $travelAgents ;
     public $isChecked = false, $showAlertBlackList = false;
-    public $passportNumber = [];
+    public $passportNumber;
     public $passportApplications;
     public $numberOfDaysToCheckVisa = 90;
     public $defaultVisaTypeId;
     protected $paginationTheme = 'bootstrap';
     public $showPrint = false;
     public $record;
-    public $searchResults=[];
+    public $searchResults = [];
+
 
 
     protected $listeners = ['showApplication'];
@@ -141,17 +142,24 @@ class Create extends Component
 
 
     public function checkPassportNumber()
-        {
-        $existingPassport = Application::where('passport_no', $this->passportNumber)->first();
+    {
+
+        // Convert the input passport number to uppercase for case-insensitive search
+        $passportNumber = $this->passportNumber;
+
+        $existingPassport = Application::where('passport_no', $passportNumber)->first();
 
         if ($existingPassport) {
-            $this->form['passport_no'] = $existingPassport->passport_no??$this->passportNumber;
+            $this->form['passport_no'] = $existingPassport->passport_no ?? $passportNumber;
             $this->form['expiry_date'] = Carbon::parse($existingPassport->expiry_date)->format('Y-m-d');
             $this->form['first_name'] = $existingPassport->first_name;
             $this->form['last_name'] = $existingPassport->last_name;
-        }else{
+
+        } else {
+
             $this->form['passport_no'] = $this->passportNumber;
         }
+
     }
 
     public function getRules(){
@@ -185,13 +193,23 @@ class Create extends Component
     }
     public function updatedFormPassportNo()
     {
+
         $this->searchResults = []; // Clear previous search results
 
         if ($this->form['passport_no'] !== '') {
-            $foundUser = Application::where('passport_no', $this->form['passport_no'])->first();
-            if ($foundUser) {
-                $this->form['first_name'] = $foundUser->first_name;
-                $this->form['last_name'] = $foundUser->last_name;
+
+        $existingPassport = Application::where('passport_no', strtolower($this->form['passport_no']))->first();
+
+            if ($existingPassport) {
+
+                $this->form['expiry_date'] = Carbon::parse($existingPassport->expiry_date)->format('Y-m-d');
+                $this->form['first_name'] = $existingPassport->first_name;
+                $this->form['last_name'] = $existingPassport->last_name;
+
+            }else{
+                $this->form['expiry_date'] =null;
+                $this->form['first_name'] = null;
+                $this->form['last_name']= null;
             }
         }
     }
@@ -207,14 +225,6 @@ class Create extends Component
 
     public function render()
     {
-        $this->searchResults = [];
-
-        if (!empty($this->search)) {
-
-            $this->searchResults = Agent::where('name', 'like', '%' . $this->search . '%')->get();
-        }
-        return view('livewire.admin.application.create' ,[
-        'searchResults' => $this->searchResults,
-        ])->layout('layouts.admin');
+        return view('livewire.admin.application.create')->layout('layouts.admin');
     }
 }

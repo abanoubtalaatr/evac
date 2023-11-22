@@ -10,7 +10,11 @@
             <h4>{{$page_title}}</h4>
         </div>
         <div class="row mt-30">
-
+            @if($showPrint)
+            <div class="col-12 text-center my-2">
+                <button class="btn btn-success mt-2"> Application created successfully you can print </button>     <button class="btn btn-primary mt-2" onclick="printPage('{{route('admin.applications.print', ['application' => $record->id])}}')">Print</button>
+            </div>
+        @endif
             <div class="col-6">
                 <div class="form-group my-2 ">
                     <label class="" for="visaType">Visa Type:</label>
@@ -24,6 +28,26 @@
                 </div>
                 @error('form.visa_type_id')<p style="color: red;">{{ $message }}</p>@enderror
             </div>
+            <div class="col-6 mt-3">
+                <input type="checkbox" onclick="toggleShowTravelAgent()"> Show Travel Agent
+
+                <div class="col-12 form-group my-2 hidden" wire:ignore  id="travelAgentContainer">
+                    <div class="input-group">
+                        <input
+                            id="agent_search"
+                            type="text"
+                            class="form-control contact-input"
+                            placeholder="Search Travel Agent"
+                            autocomplete="off"
+
+                        />
+                        <ul class="autocomplete-results list-group position-absolute w-100" style="padding-left: 0px; margin-top: 51px;z-index: 200; display: none;">
+                        </ul>
+                    </div>
+                    @error('form.travel_agent_id')<p class="mt-2" style="color: red;">{{ $message }}</p>@enderror
+                </div>
+            </div>
+
             <div class="col-6">
                 <div class="form-group my-2">
                     <label for="visaProvider">Visa Provider:</label>
@@ -39,38 +63,21 @@
                 </div>
             </div>
 
-            <div class="col-6">
-                <div class="form-group my-2">
-                    <label for="travelAgent" class="mb-2">Travel Agent:</label>
-                    <div class="input-group" >
-                        <input
-                            id="agent_search"
-                            type="text"
-                            class="form-control contact-input"
-                            wire:model="search"
-                            placeholder="Search Travel Agent"
-                            autocomplete="off"
-                            wire:key="search_{{ time() }}"
-                        />
-                        <ul class="autocomplete-results list-group position-absolute w-100" style="padding-left: 0px;margin-top: 51px;">
 
-                                @foreach($searchResults as $result)
-                                    <li class="list-group-item border-top-0 rounded-0" wire:click="selectTravelAgent('{{ $result->id }}')">
-                                        {{ $result->name }}
-                                    </li>
-                                @endforeach
+            <script>
+                function toggleShowTravelAgent() {
+                    var container = document.getElementById('travelAgentContainer');
+                    container.classList.toggle('hidden');
+                }
+            </script>
 
-                        </ul>
-                    </div>
-                    @error('form.travel_agent_id')<p class="mt-2" style="color: red;">{{ $message }}</p>@enderror
-                </div>
-            </div>
 
             <div class="col-6">
                 <label for="passport_no" class="">Passport no:</label>
-                <input type="text" class="form-control" wire:model.lazy="passportNumber" wire:keydown="checkPassportNumber">
+                <input type="text" class="form-control" wire:model="form.passport_no" >
                 @error('form.passport_no')<p style="color: red;">{{ $message }}</p>@enderror
             </div>
+
 {{--            <div class="col-6 my-2">--}}
 {{--                <div class="form-group my-2 ">--}}
 {{--                    <label for="title">Title:</label>--}}
@@ -150,11 +157,7 @@
             </div>
             <hr>
 
-            @if($showPrint)
-                <div class="col-12 text-center my-2">
-                    <button class="btn btn-success mt-2"> Application created successfully you can print </button>     <button class="btn btn-primary mt-2" onclick="printPage('{{route('admin.applications.print', ['application' => $record->id])}}')">Print</button>
-                </div>
-            @endif
+
 
         </div>
     </div>
@@ -193,9 +196,62 @@
       };
   }
 </script>
+@push('scripts')
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            $('#agent_search').on('input', function () {
+                var query = $(this).val();
+                if (query.length >= 0) {
+                    // Make an AJAX request to get search results
+                    $.ajax({
+                        url: '/api/agents/search', // Replace with your actual endpoint
+                        method: 'GET',
+                        data: { query: query },
+                        success: function (data) {
+                            // Update the search results dynamically
+                            var resultsContainer = $('.autocomplete-results');
+                            resultsContainer.empty();
 
+                            if (data.length > 0) {
+                                resultsContainer.show();
+                                data.forEach(function (result) {
+                                    resultsContainer.append('<li class="list-group-item border-top-0 rounded-0" data-id="' + result.id + '">' + result.name + '</li>')
+                                        .css('cursor', 'pointer');
+                                });
+                            } else {
+                                resultsContainer.hide();
+                            }
+                        }
+                    });
+                } else {
+                    // Hide the results if the search query is less than 2 characters
+                    $('.autocomplete-results').hide();
+                }
+            });
 
+            // Handle click on search result
+            $('.autocomplete-results').on('click', 'li', function () {
+                var selectedName = $(this).text();
+                $('#agent_search').val(selectedName);  // Set the selected result in the input field
 
+                var travelAgentId = $(this).data('id');
+                // Perform the necessary action with the selected travel agent ID
+                // e.g., update a hidden input field or trigger a Livewire method
+                @this.set('form.agent_id', travelAgentId)
+                // Hide the results container after selecting
+                $('.autocomplete-results').hide();
+            });
+
+            // Hide results when clicking outside the input and results container
+            $(document).on('click', function (event) {
+                if (!$(event.target).closest('.input-group').length) {
+                    $('.autocomplete-results').hide();
+                }
+            });
+        });
+    </script>
+@endpush
 
 
 @push('scripts')
@@ -207,6 +263,8 @@
           Livewire.on('agentSelected', (agentId, agentName) => {
               // Populate the input field with the selected agent's name
               document.getElementById('agent_search').value = agentName;
+
+
               // Close the results dropdown
               document.querySelector('.autocomplete-results').innerHTML = '';
           });
@@ -237,9 +295,19 @@
       function enableInput() {
           document.getElementById('amount').removeAttribute('disabled');
       }
+      function toggleShowTravelAgent() {
+        var container = document.getElementById('travelAgentContainer');
+        container.classList.toggle('hidden');
+    }
     </script>
 
 @endpush
 @push('styles')
     <link href="{{asset('css/select2.min.css')}}" rel="stylesheet"/>
+    <style>
+        .hidden {
+    visibility: hidden;;
+}
+
+        </style>
 @endpush

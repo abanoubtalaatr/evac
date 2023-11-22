@@ -95,5 +95,6 @@ return [
     'profile' => 'Profile',
     'settings' => 'Settings',
     'default' => "Default",
-    "application_ref" => "Application Ref"
+    "application_ref" => "Application Ref",
+    "agent_applications" => "Agent applications",
 ];
