@@ -61,11 +61,7 @@
                     <input type="text" wire:model="form.amount" class="form-control" id="amount">
                     @error('form.amount')<p style='color:red'> {{$message}} </p>@enderror
                 </div>
-                <div class="form-group my-2">
-                    <label for="vat">Vat $: </label>
-                    <input type="text" readonly wire:model="form.vat" class="form-control" id="vat">
 
-                </div>
                 <div class="form-group my-2 d-flex gap-5">
                     <label>Payment method:</label>
 

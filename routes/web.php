@@ -60,7 +60,7 @@ Route::group([
 
             //travel agents
             Route::get('travel-agents', App\Http\Livewire\Admin\TravelAgent\Index::class)->name('travel_agents');
-
+            Route::get('travel-agents-applications', App\Http\Livewire\Admin\TravelAgent\Application::class )->name('travel_agent_applications');
             //visa types
             Route::get('visa-types', App\Http\Livewire\Admin\VisaType\Index::class)->name('visa_types');
 
@@ -79,6 +79,7 @@ Route::group([
             Route::get('applications-revise', \App\Http\Livewire\Admin\Application\Revise::class)->name('applications.revise');
             Route::get('applications-invoice/{application}', [\App\Http\Controllers\Admin\PrintApplicationController::class,'show'])->name('applications.print');
             Route::get('applications-deleted', \App\Http\Livewire\Admin\Application\DeletedApplication::class)->name('applications.deleted');
+            Route::get('applications-un-paid', \App\Http\Livewire\Admin\Application\UnPaidApplication::class)->name('applications.un_paid');
             //settings
             Route::get('settings', SettingsIndex::class)->name('settings');
 
@@ -91,9 +92,14 @@ Route::group([
             //service Transaction
             Route::get('service-transaction', \App\Http\Livewire\Admin\ServiceTransaction\Index::class)->name('service_transactions');
             Route::get('service-transactions/{service_transaction}', [\App\Http\Controllers\Admin\ServiceTransactionController::class, 'show'])->name('service_transactions.print');
+            Route::get('service-transactions-invoices', App\Http\Livewire\Admin\ServiceTransaction\Invoice::class)->name('service_transactions.invoices');
 
             //notifications
             Route::get('notifications', \App\Http\Livewire\Admin\Notifications::class )->name('notifications');
+
+            Route::get('table', function (){
+               return view('emails.TravelAgent.agent-applications-email');
+            });
         });
     });
 });

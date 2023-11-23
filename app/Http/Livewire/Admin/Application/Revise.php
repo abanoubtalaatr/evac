@@ -95,7 +95,6 @@ class Revise extends Component
         $this->reset(['visaType', 'passport', 'status', 'fullName', 'from', 'to']);
     }
 
-
     public function render()
     {
         $records = $this->getRecords();

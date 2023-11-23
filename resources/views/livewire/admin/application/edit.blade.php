@@ -23,6 +23,27 @@
                 </div>
                 @error('form.visa_type_id')<p style="color: red;">{{ $message }}</p>@enderror
             </div>
+            <div class="col-6 mt-3">
+                <input type="checkbox" onclick="toggleShowTravelAgent()" @if($isChecked) checked @endif> Show Travel Agent
+
+                <div class="col-12 form-group my-2 {{$isChecked?'':'hidden'}}" wire:ignore id="travelAgentContainer">
+                    {{-- <label for="travelAgent" class="mb-2">Travel Agent:</label> --}}
+                    <div class="input-group">
+                        <input
+                            id="agent_search"
+                            type="text"
+                            class="form-control contact-input"
+                            placeholder="Search Travel Agent"
+                            autocomplete="off"
+                            value="{{$agentName}}"
+                        />
+                        <ul class="autocomplete-results list-group position-absolute w-100" style="padding-left: 0px; margin-top: 51px; display: none;z-index: 200">
+                            <!-- Search results will be populated dynamically with jQuery -->
+                        </ul>
+                    </div>
+                    @error('form.travel_agent_id')<p class="mt-2" style="color: red;">{{ $message }}</p>@enderror
+                </div>
+            </div>
             <div class="col-6">
                 <div class="form-group my-2">
                     <label for="visaProvider">Visa Provider:</label>
@@ -38,45 +59,24 @@
                 </div>
             </div>
 
-            <div class="col-6">
-                <div class="form-group my-2">
-                    <div class="">
-                        <label for="travelAgent">Travel Agent:</label>
-                        <input class="" type="checkbox" wire:click="chooseTravelAgent">
-                        @if ($isChecked)
-                            <div class="form-group " wire:ignore style="width: 50%">
-
-                                <select id='agent_id' wire:model='form.travel_agent_id' class="@error('form.agent_id') is-invalid @enderror form-control contact-input">
-                                    <option value="" >Select Option</option>
-
-                                    @foreach($travelAgents as $travelAgent)
-                                        <option selected value="{{$travelAgent->id}}">{{$travelAgent->name}}</option>
-                                    @endforeach
-                                </select>
-                            </div>
-                        @endif
-                    </div>
-                </div>
-                @error('form.travel_agent_id')<p style="color: red;">{{ $message }}</p>@enderror
-            </div>
 
             <div class="col-6">
                 <label for="passport_no" class="">Passport no:</label>
                 <input type="text" class="form-control" wire:model.lazy="passportNumber" wire:blur="checkPassportNumber">
                 @error('form.passport_no')<p style="color: red;">{{ $message }}</p>@enderror
             </div>
-            <div class="col-6 my-2">
-                <div class="form-group my-2 ">
-                    <label for="title">Title:</label>
-                    <select wire:model="form.title" class="form-control" id="title">
-                        <option value="">Select Title</option>
-                        <option value="Mr">Mr.</option>
-                        <option value="Mrs">Mrs.</option>
-                        <option value="Ms">Ms.</option>
-                    </select>
-                </div>
-                @error('form.title')<p style="color: red;">{{ $message }}</p>@enderror
-            </div>
+{{--            <div class="col-6 my-2">--}}
+{{--                <div class="form-group my-2 ">--}}
+{{--                    <label for="title">Title:</label>--}}
+{{--                    <select wire:model="form.title" class="form-control" id="title">--}}
+{{--                        <option value="">Select Title</option>--}}
+{{--                        <option value="Mr">Mr.</option>--}}
+{{--                        <option value="Mrs">Mrs.</option>--}}
+{{--                        <option value="Ms">Ms.</option>--}}
+{{--                    </select>--}}
+{{--                </div>--}}
+{{--                @error('form.title')<p style="color: red;">{{ $message }}</p>@enderror--}}
+{{--            </div>--}}
 
 
             <div class="col-6">
@@ -109,11 +109,45 @@
                 <textarea class="form-control" wire:model="form.notes"></textarea>
                 @error('form.notes')<p style="color: red;">{{ $message }}</p>@enderror
             </div>
+            <div class="col-6 my-2 d-flex gap-5">
+                <label>Payment method:</label>
+
+                <div class="">
+                    <input class="form-check-input" type="radio" id="invoice" wire:model="form.payment_method" checked value="invoice">
+                    <label class="form-check-label" for="invoice">Invoice</label>
+                </div>
+
+                <div class="">
+                    <input class="form-check-input" type="radio" id="cash" wire:model="form.payment_method" value="cash">
+                    <label class="form-check-label" for="cash">Cash</label>
+                </div>
+
+                @error('form.payment_method') <span class="text-danger">{{ $message }}</span> @enderror
+            </div>
             <div class="col-6">
+                <div class="form-group my-2 ">
+                    <label class="" for="visaType">Status : </label>
+                    <select wire:model="form.status" class="form-control" id="status">
+                        <option value="new">New</option>
+                        <option value="appraised">appraised</option>
+                        <option value="canceled">Canceled</option>
+                    </select>
+                </div>
+                @error('form.status')<p style="color: red;">{{ $message }}</p>@enderror
+            </div>
+            <div class="col-6" wire:ignore>
                 <label for="amount" class="">Amount:</label>
-                <input class="form-control" wire:model="form.amount">
+                <div class="input-group">
+                    <input class="form-control" disabled wire:model="form.amount" id="amount">
+                    <div class="input-group-append">
+                    <span class="input-group-text bg-warning" id="editIcon" style="cursor: pointer; height: 38px;" onclick="enableInput()">
+                        <i class="fas fa-pencil-alt"></i>
+                    </span>
+                    </div>
+                </div>
                 @error('form.amount')<p style="color: red;">{{ $message }}</p>@enderror
             </div>
+
 
             <div class="col-12 text-center my-2">
                 <button type="submit" class="btn btn-primary" wire:click="store">Save</button>
@@ -122,25 +156,83 @@
     </div>
 </main>
 
+@push('scripts')
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            $('#agent_search').on('input', function () {
+                var query = $(this).val();
+                if (query.length >= 0) {
+                    // Make an AJAX request to get search results
+                    $.ajax({
+                        url: '/api/agents/search', // Replace with your actual endpoint
+                        method: 'GET',
+                        data: { query: query },
+                        success: function (data) {
+                            // Update the search results dynamically
+                            var resultsContainer = $('.autocomplete-results');
+                            resultsContainer.empty();
 
+                            if (data.length > 0) {
+                                resultsContainer.show();
+                                data.forEach(function (result) {
+                                    resultsContainer.append('<li class="list-group-item border-top-0 rounded-0" data-id="' + result.id + '">' + result.name + '</li>')
+                                        .css('cursor', 'pointer');
+                                });
+                            } else {
+                                resultsContainer.hide();
+                            }
+                        }
+                    });
+                } else {
+                    // Hide the results if the search query is less than 2 characters
+                    $('.autocomplete-results').hide();
+                }
+            });
 
+            // Handle click on search result
+            $('.autocomplete-results').on('click', 'li', function () {
+                var selectedName = $(this).text();
+                $('#agent_search').val(selectedName); // Set the selected result in the input field
+
+                var travelAgentId = $(this).data('id');
+                // Perform the necessary action with the selected travel agent ID
+                // e.g., update a hidden input field or trigger a Livewire method
+            @this.set('form.agent_id', travelAgentId)
+                // Hide the results container after selecting
+                $('.autocomplete-results').hide();
+            });
+
+            // Hide results when clicking outside the input and results container
+            $(document).on('click', function (event) {
+                if (!$(event.target).closest('.input-group').length) {
+                    $('.autocomplete-results').hide();
+                }
+            });
+
+            // Watch for changes to the checkbox state
+            $('input[type="checkbox"]').on('change', function () {
+                if (!$(this).is(':checked')) {
+                    // If the checkbox is unchecked, set form.agent_id to null
+                @this.set('form.agent_id', null);
+                }
+            });
+
+            // Watch for changes to the input search value
+            $('#agent_search').on('change', function () {
+                if ($(this).val() === '') {
+                    // If the search input is empty, set form.agent_id to null
+                @this.set('form.agent_id', null);
+                }
+            });
+        });
+    </script>
+@endpush
 @push('scripts')
     <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
 
     <script src="{{asset('js/select2.min.js')}}"></script>
     <script>
-        window.addEventListener('onContentChanged', () => {
-            $('#agent_id').select2();
-        });
-
-        $(document).ready(()=>{
-           $('#agent_id').select2();
-            $('#agent_id').change(e=>{
-                @this.set('form.agent_id', $('#agent_id').select2('val'));
-            });
-
-        });
-
         Livewire.on('openBlackListModal', function () {
             $('#blackListModal').modal('show');
         });
@@ -152,74 +244,21 @@
         Livewire.on('showMultipleApplicationsPopup', function () {
           $('#passportHasMoreThanOneModal').modal('show');
         });
+        function enableInput() {
+            document.getElementById('amount').removeAttribute('disabled');
+        }
+        function toggleShowTravelAgent() {
+        var container = document.getElementById('travelAgentContainer');
+        container.classList.toggle('hidden');
+    }
     </script>
 @endpush
 @push('styles')
     <link href="{{asset('css/select2.min.css')}}" rel="stylesheet"/>
-    {{-- <link rel="stylesheet" href="{{asset('frontAssets/css/multiselect.css')}}"> --}}
     <style>
-        .whats-p {
-            /* background: url('whats-app-b.png'); */
-            width: 100%;
-            float: right;
-            padding-bottom: 15px;
-        }
+    .hidden {
+        visibility: hidden;;
+    }
 
-        .w-det {
-            background: rgb(0, 0, 0, .05);
-            border-radius: 5px;
-            overflow: hidden;
-        }
-
-        .chat {
-            background: #dbf8c7;
-            /* margin: 10px 25px 3px 0px; */
-            padding: 10px;
-            background: #DCF8C6;
-
-            width: 100%;
-
-            display: block;
-            border-radius: 5px;
-            position: relative;
-            box-shadow: 0px 2px 1px rgb(0 0 0 / 20%);
-        }
-
-        .chat p, .chat h5, .chat h4 {
-            color: rgb(89, 89, 89);
-            text-decoration: none;
-        }
-
-        .chat a {
-            text-decoration: none;
-        }
-
-        .chat .bubble-arrow.alt {
-            position: absolute;
-            bottom: 20px;
-            left: auto;
-            right: 4px;
-            float: right;
-            top: 0;
-        }
-
-        .chat .bubble-arrow:after {
-            content: "";
-            position: absolute;
-            border-top: 15px solid #DCF8C6;
-            transform: scaleX(-1);
-            border-left: 15px solid transparent;
-            border-radius: 4px 0 0 0px;
-            width: 0;
-
-        }
-
-        .chat a {
-            color: #4285f3;
-        }
-
-        .chat img {
-            max-width: 100%;
-        }
-    </style>
+            </style>
 @endpush

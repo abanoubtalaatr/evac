@@ -64,9 +64,10 @@
                         <th class="text-center">#</th>
                         <th class="text-center">@lang('admin.passport')</th>
                         <th class="text-center">@lang('admin.applicant')</th>
-                        <th class="text-center">@lang('admin.submit_date')</th>
+                        <th class="text-center">@lang('admin.application_ref')</th>
                         <th class="text-center">@lang('admin.travel_agent')</th>
                         <th class="text-center">@lang('admin.visa_provider')</th>
+                        <th class="text-center">@lang('admin.visa_type')</th>
                         <th class="text-center">@lang('admin.status')</th>
                         <th>@lang('site.actions')</th>
                     </tr>
@@ -77,27 +78,31 @@
                             <td>#{{$loop->index + 1}}</td>
                             <td class='text-center'>{{$record->passport_no}}</td>
                             <td class='text-center'>{{$record->first_name . ' ' . $record->last_name}}</td>
-                            <td class='text-center'>{{\Carbon\Carbon::parse($record->created_at)->format('Y-m-d h:m')}}</td>
+                            <td class='text-center'>{{$record->application_ref}}</td>
                             <td class='text-center'>{{$record->travelAgent ? $record->travelAgent->name :''}}</td>
                             <td class='text-center'>{{$record->visaProvider ? $record->visaProvider->name :''}}</td>
+                            <td class='text-center'>{{$record->visaType ? $record->visaType->name :''}}</td>
                             <td class='text-center'><button class="border-0">{{$record->status}}</button></td>
                             <td>
                                 <div class="actions">
                                     @include('livewire.admin.application.popup.invoice', ['application' => $record])
-                                    <button  style="cursor:pointer;" wire:click="showApplicationInvoice({{$record->id}})" class="btn btn-info">Edit invoice</button>
-                                    <button class="btn btn-primary" onclick="printPage('{{route('admin.applications.print', ['application' => $record->id])}}')">Print</button>
+                                    <button  style="cursor:pointer;" wire:click="showApplicationInvoice({{$record->id}})" class="btn btn-info mt-2">Edit invoice</button>
+
+                                    <button class="btn btn-primary mt-2" onclick="printPage('{{route('admin.applications.print', ['application' => $record->id])}}')">Print</button>
+
                                     @include('livewire.admin.application.show',  ['application' => $record])
 
-
-
-                                    <button wire:click="showDeleteConfirmation({{$record->id}})" class="btn btn-danger">
+                                    <button wire:click="showDeleteConfirmation({{$record->id}})" class="btn btn-danger mt-2">
                                         Delete
                                     </button>
-                                    <a style="cursor:pointer;" wire:click="showApplicationModal({{$record->id}})" class="no-btn"><i
-                                            class="far fa-eye blue"></i></a>
-                                    <a style="cursor:pointer;" href="{{route('admin.applications.update', ['application' => $record])}}" class="no-btn"><i
-                                            class="far fa-edit blue"></i></a>
 
+                                    <a style="cursor:pointer;" wire:click="showApplicationModal({{$record->id}})" class="no-btn mt-2">
+                                        <i class="far fa-eye blue"></i>
+                                    </a>
+
+                                    <a style="cursor:pointer;" href="{{route('admin.applications.update', ['application' => $record])}}" class="no-btn mt-2">
+                                        <i class="far fa-edit blue"></i>
+                                    </a>
                                 </div>
                             </td>
                             @endforeach
@@ -122,6 +127,7 @@
            $('#showApplicationInvoiceModal' + application).modal('show');
        });
    });
+
     document.addEventListener('livewire:load', function () {
         Livewire.on('showApplicationModal', function (applicationId) {
             $('#applicationModal' + applicationId).modal('show');

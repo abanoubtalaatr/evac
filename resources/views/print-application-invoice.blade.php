@@ -42,10 +42,10 @@
             Direct
         @endif
         <div>Passport No : {{$application->passport_no}} </div>
-        <div>Visa fees  : {{$application->visaType->dubai_fee}}</div>
-        <div>Service fees  : {{$application->visaType->service_fee}}</div>
+        <div>Visa fees  : {{\App\Helpers\formatCurrency($application->visaType->dubai_fee)}}</div>
+        <div>Service fees  : {{\App\Helpers\formatCurrency($application->visaType->service_fee)}}</div>
         @if($application->vat > 0)
-            <div>VAT : {{$application->vat}} </div>
+            <div>VAT : {{\App\Helpers\formatCurrency($application->vat)}} </div>
         @endif
 
         <div>Total Fees : {{$application->amount}} USD ({{$application->payment_method}})</div>
