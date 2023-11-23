@@ -97,4 +97,11 @@ return [
     'default' => "Default",
     "application_ref" => "Application Ref",
     "agent_applications" => "Agent applications",
+    'payment_applications' => "Payment applications",
+    "first_name" => "First name",
+    "payment_method" => "Payment method",
+    'type' => "Type",
+    'direct_client_applications' => "Direct client payment",
+    'payment_services' => "Payment services",
+    "service_transaction_invoices" => "Service transaction invoices",
 ];

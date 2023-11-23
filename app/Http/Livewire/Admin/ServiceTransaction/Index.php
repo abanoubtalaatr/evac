@@ -8,12 +8,15 @@ use App\Models\Application;
 use App\Models\Service;
 use App\Models\ServiceTransaction;
 use App\Models\Setting;
+use App\Models\VisaType;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Carbon\Carbon;
 use Illuminate\Support\Arr;
 use Livewire\Component;
 use Livewire\WithPagination;
 use Spatie\Browsershot\Browsershot;
+use function App\Helpers\recalculateVat;
+use function App\Helpers\recalculateVatInServiceTransaction;
 
 class Index extends Component
 {
@@ -57,6 +60,14 @@ class Index extends Component
         }
     }
 
+    public function updatedFormAmount()
+    {
+        if(isset($this->form['service_id'])) {
+            $service = Service::query()->find($this->form['service_id']);
+            $vat =  recalculateVatInServiceTransaction($service->service_fee,$this->form['amount'], $service->dubai_fee,$this->form['vat']);
+            $this->form['vat'] = $vat;
+        }
+    }
     public function updatedFormPassportNo()
     {
         if ($this->form['passport_no'] !== '') {

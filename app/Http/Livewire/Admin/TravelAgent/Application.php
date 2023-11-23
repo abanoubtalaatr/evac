@@ -2,17 +2,44 @@
 
 namespace App\Http\Livewire\Admin\TravelAgent;
 
+use App\Mail\AgentApplicationsMail;
+use App\Models\Agent;
 use App\Models\VisaType;
+use Illuminate\Support\Facades\Mail;
 use Livewire\Component;
 
 class Application extends Component
 {
-    public $page_title, $visaTypes, $from, $to, $visaType, $status, $agent_id, $email;
+    public $page_title,
+        $visaTypes,
+        $from,
+        $to,
+        $visaType,
+        $status,
+        $agent_id,
+        $email,
+        $showSendEmail = false,
+        $showSendEmailButton= false,
+        $message= null;
 
     public function mount()
     {
-        $this->page_title = __('agent_applications');
+        $this->page_title = __('admin.agent_applications');
         $this->visaTypes = VisaType::query()->get();
+    }
+
+    public function updatedAgentId()
+    {
+        if(!is_null($this->agent_id)) {
+            $this->showSendEmailButton = true;
+        }else{
+            $this->showSendEmailButton = false;
+        }
+    }
+    public function toggleShowModal()
+    {
+        $this->email = null;
+        $this->showSendEmail = !$this->showSendEmail;
     }
 
     public function getRecords()
@@ -44,7 +71,21 @@ class Application extends Component
     public function send()
     {
         $this->validate();
-        dd('send your now for this now ');
+
+        if(is_null($this->agent_id)) {
+            $this->message = "You must choose travel agent";
+            $this->toggleShowModal();
+            return;
+        }
+
+        $records = $this->getRecords()->groupBy('visa_type_id');
+        $agent = Agent::query()->find($this->agent_id);
+        Mail::to($this->email)->send(new AgentApplicationsMail($records, $agent, $this->from, $this->to));
+        $this->email = null;
+        $this->message = null;
+        $this->agent_id = null;
+        $this->toggleShowModal();
+
     }
     public function getRules()
     {

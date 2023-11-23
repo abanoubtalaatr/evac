@@ -9,8 +9,7 @@
         <div class="table-page-wrap">
 
             <div class="row d-flex align-items-center my-3 border p-2 rounded alig">
-
-                <div class="col-3 form-group" wire:ignore  id="travelAgentContainer">
+                <div class="col-3 form-group" wire:ignore id="travelAgentContainer">
                     <label for="status-select">@lang('admin.travel_agent')</label>
 
                     <div class="input-group">
@@ -22,7 +21,7 @@
                             autocomplete="off"
 
                         />
-                        <ul class="autocomplete-results list-group position-absolute w-100" style="padding-left: 0px;z-index: 200; margin-top: 51px; display: none;">
+                        <ul class="autocomplete-results list-group position-absolute w-100" style="padding-left: 0px; margin-top: 51px; display: none;z-index: 200">
                         </ul>
                     </div>
                     @error('form.travel_agent_id')<p class="mt-2" style="color: red;">{{ $message }}</p>@enderror
@@ -57,15 +56,20 @@
                 </div>
 
 
-                @include('livewire.admin.travel-agent.popup.send-email')
                 <div class="form-group col-2 mt-4">
                     <button wire:click="resetData()"
                             class="btn btn-primary form-control contact-input">@lang('site.reset')</button>
                 </div>
 
+                @include('livewire.admin.travel-agent.popup.send-email')
                 <div class="form-group col-3 mt-4">
-                    <button class="btn btn-secondary form-control contact-input" onclick="$('#sendEmailModal').modal('show');">Send email</button>
+                    <button class="btn btn-secondary form-control contact-input" wire:click="toggleShowModal">Send email</button>
                 </div>
+                @if(isset($message) && !empty($message) && !is_null($message))
+                <div class="form-group col-3 mt-4">
+                    <div class="btn btn-danger form-control contact-">You must choose travel agent </div>
+                </div>
+                @endif
 
             </div>
 
@@ -142,6 +146,20 @@
             iframe.contentWindow.print();
         };
     }
+
+    document.addEventListener('livewire:load', function () {
+    Livewire.on('show-message', function () {
+        var errorMessage = document.getElementById('error-message');
+
+        // Show the message
+        errorMessage.style.display = 'block';
+
+        // Hide the message after 1000 milliseconds (1 second)
+        setTimeout(function () {
+            errorMessage.style.display = 'none';
+        }, 1000);
+    });
+    });
 </script>
 @push('scripts')
     <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
@@ -180,7 +198,7 @@
             // Handle click on search result
             $('.autocomplete-results').on('click', 'li', function () {
                 var selectedName = $(this).text();
-                $('#agent_search').val(selectedName);  // Set the selected result in the input field
+                $('#agent_search').val(selectedName); // Set the selected result in the input field
 
                 var travelAgentId = $(this).data('id');
                 // Perform the necessary action with the selected travel agent ID
@@ -194,6 +212,26 @@
             $(document).on('click', function (event) {
                 if (!$(event.target).closest('.input-group').length) {
                     $('.autocomplete-results').hide();
+                }
+            });
+
+            // Watch for changes to the checkbox state
+            $('input[type="checkbox"]').on('change', function () {
+                if (!$(this).is(':checked')) {
+                    // If the checkbox is unchecked, set form.agent_id to null
+                @this.set('agent_id', null);
+                @this.set('message', null);
+
+                }
+            });
+
+            // Watch for changes to the input search value
+            $('#agent_search').on('change', function () {
+                if ($(this).val() === '') {
+                    // If the search input is empty, set form.agent_id to null
+                @this.set('agent_id', null);
+                @this.set('message', null);
+
                 }
             });
         });

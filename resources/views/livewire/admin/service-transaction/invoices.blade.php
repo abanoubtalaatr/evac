@@ -5,13 +5,14 @@
     <div class="border-div">
         <div class="b-btm flex-div-2">
             <h4>{{$page_title}}</h4>
-            <a style='text-align:center;cursor:pointer' class="button btn-red big" id="addServiceTransactionButton">@lang('site.create_new')</a>
-
         </div>
         <div class="table-page-wrap">
 
             <div class="row d-flex align-items-center my-3 border p-2 rounded">
-
+                <div class="form-group col-3">
+                    <label for="status-select">@lang('admin.passport_no')</label>
+                    <input wire:model='passportNo' type="text" class="form-control contact-input">
+                </div>
                 <div class="form-group col-3">
                     <label for="status-select">@lang('admin.name')</label>
                     <input wire:model='name' type="text" class="form-control contact-input">
@@ -41,7 +42,6 @@
                 </div>
 
             </div>
-
             @if(count($records))
                 <table class="table-page table">
                     <thead>
@@ -72,15 +72,7 @@
                             </td>
                             <td>
                                 <div class="actions">
-
-                                    <button class="btn btn-primary" onclick="printPage('{{route('admin.service_transactions.print', ['service_transaction' => $record->id])}}')">Print</button>
-                                    @include('livewire.admin.service-transaction.edit', ['transaction' => $record])
-
-                                    <button  style="cursor:pointer;" wire:click="showServiceTransaction({{$record->id}})" class="btn btn-primary"><i
-                                            class="far fa-edit blue"></i></button>
-
-                                    <button  style="cursor:pointer;" wire:click="destroy({{$record->id}})" class="btn btn-danger">Delete</button>
-
+                                    <button class="btn btn-primary mt-2" wire:click="showPayInvoiceConfirmation({{$record->id}})">Pay invoice</button>
                                 </div>
                             </td>
                             @endforeach
@@ -95,8 +87,7 @@
                 </div>
             @endif
         </div>
-
-        @include('livewire.admin.service-transaction.add')
+        @include('livewire.admin.service-transaction.popup.pay-invoice')
 
     </div>
 </main>
@@ -110,9 +101,9 @@
         });
 
         $(document).ready(()=>{
-           $('#agent_id').select2();
+            $('#agent_id').select2();
             $('#agent_id').change(e=>{
-                @this.set('form.agent_id', $('#agent_id').select2('val'));
+            @this.set('form.agent_id', $('#agent_id').select2('val'));
             });
 
         });
@@ -129,16 +120,16 @@
         $('#serviceTransactionModal').modal('show');
     });
     document.addEventListener('livewire:load', function () {
-         Livewire.on('showServiceTransactionModal', function (transaction) {
-             $('#showServiceTransactionModal' + transaction).modal('show');
-         });
-     });
+        Livewire.on('showServiceTransactionModal', function (transaction) {
+            $('#showServiceTransactionModal' + transaction).modal('show');
+        });
+    });
 
-     document.addEventListener('livewire:load', function () {
-         Livewire.on('showServiceTransactionInvoiceModal', function (transaction) {
-             $('#showServiceTransactionInvoiceModal' + transaction).modal('show');
-         });
-     });
+    document.addEventListener('livewire:load', function () {
+        Livewire.on('showServiceTransactionInvoiceModal', function (transaction) {
+            $('#showServiceTransactionInvoiceModal' + transaction).modal('show');
+        });
+    });
 </script>
 
 <script>

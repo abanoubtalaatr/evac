@@ -211,6 +211,40 @@
             @endif
 
             @if(auth('admin')->user()->id == 1)
+                <li class=" ">
+                    <i class="fa fa-suitcase mr-5"></i>
+                    <span class="ml-2">@lang('admin.direct_client_applications')</span>
+                </li>
+                <li style="line-height: 20px;margin-left: 18px;padding-left: 0px;text-indent: 0" class="border-bottom pb-2">
+                    <a href="{{route('admin.applications.un_paid')}}" class="text-white ">
+                        @lang('admin.payment_applications')
+                    </a>
+                </li>
+                <li style="line-height: 20px;margin-left: 18px;padding-left: 0px;text-indent: 0" class="border-bottom pb-2">
+                    <a href="{{route('admin.service_transactions.invoices')}}" class="text-white ">
+                        @lang('admin.payment_services')
+                    </a>
+                </li>
+
+            @else
+                @can('Manage travel agents')
+                    <li class=" ">
+                        <i class="fa fa-suitcase mr-5"></i>
+                        <span class="ml-2">@lang('admin.direct_client_applications')</span>
+                    </li>
+                    <li style="line-height: 20px;margin-left: 18px;padding-left: 0px;text-indent: 0" class="border-bottom pb-2">
+                        <a href="{{route('admin.applications.un_paid')}}" class="text-white ">
+                            @lang('admin.payment_applications')
+                        </a>
+                    </li>
+                    <li style="line-height: 20px;margin-left: 18px;padding-left: 0px;text-indent: 0" class="border-bottom pb-2">
+                        <a href="{{route('admin.service_transactions.invoices')}}" class="text-white ">
+                            @lang('admin.payment_services')
+                        </a>
+                    </li>
+                @endcan
+            @endif
+            @if(auth('admin')->user()->id == 1)
                 <li>
                     <a href="{{route('admin.visa_types')}}" class="text-white  ">
                         <i class="fa fa-suitcase mr-5"></i>

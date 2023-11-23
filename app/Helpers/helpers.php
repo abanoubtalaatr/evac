@@ -178,6 +178,54 @@ if (!function_exists('recalculateVat')) {
     }
 }
 
+
+if (!function_exists('vatRatePercentage')) {
+    function vatRatePercentage($visaTypeId)
+    {
+        $setting = Setting::query()->first();
+
+        $value = (int) filter_var($setting->vat_rate, FILTER_SANITIZE_NUMBER_INT);
+
+        $visaType = VisaType::query()->find($visaTypeId);
+
+        return ($value / 100 * $visaType->service_fee);
+    }
+}
+
+if (!function_exists('recalculateVatInServiceTransaction')) {
+    function recalculateVatInServiceTransaction($serviceFee, $newAmount, $dubaiFee, $oldVat)
+    {
+        $setting = Setting::query()->first();
+
+        $value = (int) filter_var($setting->vat_rate, FILTER_SANITIZE_NUMBER_INT);
+        $vatRate = $value / 100;
+
+
+        if((intval($newAmount) - $dubaiFee) > 0) {
+            return ($newAmount -  $dubaiFee) * $vatRate;
+        }else{
+            return 0;
+        }
+
+        return $oldVat;
+    }
+}
+
+
+if (!function_exists('vatForServiceFee')) {
+    function vatForServiceFee($serviceFee)
+    {
+        $setting = Setting::query()->first();
+
+        $value = (int) filter_var($setting->vat_rate, FILTER_SANITIZE_NUMBER_INT);
+
+        return ($value / 100 * $serviceFee);
+    }
+}
+
+
+
+
 if (!function_exists('createApplicant')) {
     function createApplicant($data)
     {
