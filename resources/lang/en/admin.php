@@ -104,4 +104,5 @@ return [
     'direct_client_applications' => "Direct client payment",
     'payment_services' => "Payment services",
     "service_transaction_invoices" => "Service transaction invoices",
+    "travel_agents" => "Travel agents"
 ];

@@ -10,11 +10,30 @@
             </div>
 
             <div class="modal-body">
+                @if(auth()->user()->is_owner)
+                    <div class="form-group my-2 d-flex gap-5">
+                        <label>Visible for all :</label>
+
+                        <div class="">
+                            <input class="form-check-input" type="radio" id="no" checked wire:model="form.is_visible" value="0" >
+                            <label class="form-check-label" for="no">No</label>
+                        </div>
+
+                        <div class="">
+                            <input class="form-check-input" type="radio" id="yes" wire:model="form.is_visible" value="1">
+                            <label class="form-check-label" for="yes">Yes</label>
+                        </div>
+
+                        @error('form.is_visible') <span class="text-danger">{{ $message }}</span> @enderror
+                    </div>
+                @endif
+
                 <div class="form-group my-2">
                     <label for="companyName">Name:</label>
                     <input type="text" wire:model="form.name" class="form-control" id="name">
                     @error('form.name')<p style='color:red'> {{$message}} </p>@enderror
                 </div>
+
                 <div class="form-group my-2">
                     <label for="companyName">Company Name:</label>
                     <input type="text" wire:model="form.company_name" class="form-control" id="companyName">
