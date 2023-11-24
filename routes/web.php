@@ -13,13 +13,15 @@ use App\Http\Livewire\Admin\Admins\Create as AdminCreate;
 use Mcamara\LaravelLocalization\Facades\LaravelLocalization;
 use App\Http\Controllers\Admin\AuthController as AdminAuthController;
 use App\Http\Controllers\Admin\DashboardController as AdminDashboardController;
+use Illuminate\Http\Request;
+use App\Models\Agent;
+
 
 
 Route::group([
     'prefix' => LaravelLocalization::setLocale(),
     'middleware' => ['localeSessionRedirect', 'localizationRedirect', 'localeViewPath'],
 ], function () {
-
     Route::get('/', function (){
         return redirect()->to(\route('admin.login_form'));
     })->name('homepage');
@@ -99,6 +101,13 @@ Route::group([
 
             Route::get('table', function (){
                return view('emails.TravelAgent.agent-applications-email');
+            });
+
+            Route::get('/agents/search', function(Request $request){
+                $query = $request->input('query');
+                $searchResults = Agent::where('name', 'like', '%' . $query . '%')->get();
+
+                return response()->json($searchResults);
             });
         });
     });

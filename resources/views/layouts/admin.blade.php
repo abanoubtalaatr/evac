@@ -177,11 +177,11 @@
             @if(auth('admin')->user()->id == 1)
                 <li class=" ">
                     <i class="fa fa-suitcase mr-5"></i>
-                    <span class="ml-2">@lang('admin.travel_agent')</span>
+                    <span class="ml-2">@lang('admin.travel_agents')</span>
                 </li>
                 <li style="line-height: 20px;margin-left: 18px;padding-left: 0px;text-indent: 0" class="border-bottom pb-2">
                     <a href="{{route('admin.travel_agents')}}" class="text-white ">
-                        @lang('admin.travel_agent')
+                        @lang('admin.travel_agents')
                     </a>
                 </li>
                 <li style="line-height: 20px;margin-left: 18px;padding-left: 0px;text-indent: 0" class="border-bottom pb-2">
@@ -203,7 +203,7 @@
                     </a>
                 </li>
                 <li style="line-height: 20px;margin-left: 18px;padding-left: 0px;text-indent: 0" class="border-bottom pb-2">
-                    <a href="{{route('admin.agent_applications')}}" class="text-white ">
+                    <a href="{{route('admin.travel_agent_applications')}}" class="text-white ">
                         @lang('admin.agent_applications')
                     </a>
                 </li>

@@ -4,12 +4,31 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Auth;
 
 class Application extends Model
 {
     use HasFactory;
 
     protected $guarded=[];
+
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::addGlobalScope('visibleApplications', function ($builder) {
+
+            if (Auth::check() && Auth::user()->is_owner) {
+                return;
+            }
+
+            $builder->where(function ($query) {
+                $query->whereHas('travelAgent', function ($query) {
+                    $query->where('is_visible', true);
+                });
+            });
+        });
+    }
 
     public function travelAgent()
     {

@@ -4,6 +4,7 @@ namespace App\Http\Livewire\Admin\TravelAgent;
 
 use App\Http\Livewire\Traits\ValidationTrait;
 use App\Models\Agent;
+use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
 use Livewire\Component;
 use Livewire\WithPagination;
@@ -14,7 +15,7 @@ class Index extends Component
     use ValidationTrait;
 
     public $name;
-    public $form;
+
     public $is_active;
     public $perPage =10;
     public $search;
@@ -71,7 +72,7 @@ class Index extends Component
     }
 
 
-    public function store()
+    public function store(Request $request)
     {
         $this->validate();
 

@@ -23,6 +23,7 @@ class Index extends Component
     public function getRecords()
     {
         return Admin::query()
+            ->where('is_owner', 0)
             ->when(!empty($this->status), function ($query) {
                 return $this->status == 'active' ? $query->where('is_active', 1) : $query->where('is_active', 0);
             })
@@ -38,6 +39,7 @@ class Index extends Component
 
     public function toggleStatus(Admin $admin)
     {
+
         if ($admin->is_active == 1) {
             $admin->update(['is_active' => '0']);
         } else {
