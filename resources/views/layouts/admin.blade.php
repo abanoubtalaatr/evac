@@ -347,7 +347,7 @@
                     </li>
                     <li style="line-height: 20px;margin-left: 18px;padding-left: 0px;text-indent: 0" class="border-bottom pb-2">
                         <a href="{{route('admin.role')}}" class="text-white ">
-                            @lang('admin.role')
+                            @lang('admin.roles')
                         </a>
                     </li>
                 @endcan
