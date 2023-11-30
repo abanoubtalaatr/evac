@@ -165,7 +165,7 @@
                 if (query.length >= 0) {
                     // Make an AJAX request to get search results
                     $.ajax({
-                        url: '/api/agents/search', // Replace with your actual endpoint
+                        url: '/admin/agents/search', // Replace with your actual endpoint
                         method: 'GET',
                         data: { query: query },
                         success: function (data) {
