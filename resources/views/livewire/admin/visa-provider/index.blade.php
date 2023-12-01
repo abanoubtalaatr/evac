@@ -39,8 +39,8 @@
                         <tr>
                             <td>#{{$loop->index + 1}}</td>
                             <td class='text-center'>{{$record->name}}</td>
-                            <td class='text-center'>0</td>
-                            <td class='text-center'>0</td>
+                            <td class='text-center'>{{(new \App\Services\VisaProviderService())->totalNumberOfVisasInCurrentMonth($record->id)}}</td>
+                            <td class='text-center'>{{(new \App\Services\VisaProviderService())->totalNumberOfVisas($record->id)}}</td>
                             <td class='text-center'>
                                 @if ($record->is_default)
                                     <i class="fas fa-check text-green circle"></i>

@@ -9,6 +9,8 @@ use App\Models\BlackListPassport;
 use App\Models\Setting;
 use App\Models\VisaProvider;
 use App\Models\VisaType;
+use App\Services\ApplicantService;
+use App\Services\InvoiceService;
 use Carbon\Carbon;
 use Illuminate\Support\Arr;
 use Livewire\Component;
@@ -29,9 +31,11 @@ class Edit extends Component
     public $numberOfDaysToCheckVisa=90;
     public $isEdit = false;
     public $agentName='';
+    public $previousPage;
     protected $paginationTheme = 'bootstrap';
 
     protected $listeners = ['showApplication'];
+
 
     public function mount(Application $application)
     {
@@ -52,6 +56,8 @@ class Edit extends Component
             $this->isChecked = true;
             $this->isEdit = true;
         }
+        $this->previousPage = url()->previous();
+
     }
 
 
@@ -130,6 +136,13 @@ class Edit extends Component
         $this->validate();
         $data = $this->form;
 
+        if(isset($this->form['agent_id']) && ($this->form['agent_id'] == 'nr' || $this->form['agent_id'] == 'no_result')) {
+            $this->addError('form.agent_id', 'Must enter a valid agent');
+            $this->emit('closePopups');
+
+            return;
+        }
+
         if(isset($data['agent_id'])) {
             $data['travel_agent_id'] = $data['agent_id'];
             unset($data['agent_id']);
@@ -139,10 +152,12 @@ class Edit extends Component
             unset($data['agent_id']);
             $data['travel_agent_id'] = null;
         }
+
+        (new ApplicantService())->update($data);
         $this->application->update(Arr::except($data, ['created_at', 'updated_at']));
         session()->flash('success',__('admin.edit_successfully'));
 
-        return redirect()->to(route('admin.applications.appraisal'));
+        $this->redirect($this->previousPage);
     }
 
     public function checkPassportInBlackList()
@@ -155,17 +170,18 @@ class Edit extends Component
         return false;
     }
 
-    public function checkPassportNumber()
+    public function updatedFormPassportNo()
     {
-        $existingPassport = Application::where('passport_no', $this->passportNumber)->first();
+        $existingPassport = Application::where('passport_no', $this->form['passport_no'])->latest()->first();
 
         if ($existingPassport) {
-            $this->form['passport_no'] = $existingPassport->passport_no??$this->passportNumber;
             $this->form['expiry_date'] = Carbon::parse($existingPassport->expiry_date)->format('Y-m-d');
             $this->form['first_name'] = $existingPassport->first_name;
             $this->form['last_name'] = $existingPassport->last_name;
         }else{
-            $this->form['passport_no'] = $this->passportNumber;
+            $this->form['expiry_date'] = null;
+            $this->form['first_name'] = null;
+            $this->form['last_name'] = null;
         }
 
     }
@@ -181,7 +197,7 @@ class Edit extends Component
             'form.last_name' => 'required',
             'form.title' => ['nullable', 'in:Mr,Mrs,Ms'],
             'form.notes' => 'nullable|max:500',
-            'form.amount' => 'nullable|numeric|max:500',
+            'form.amount' => 'nullable|numeric',
         ];
     }
 
@@ -200,19 +216,14 @@ class Edit extends Component
     {
         return redirect()->to(route('admin.applications.store'));
     }
-    public function updatedFormPassportNo()
+
+    public function updatedFormAmount()
     {
-        $this->searchResults = []; // Clear previous search results
-
-        if ($this->form['passport_no'] !== '') {
-            $foundUser = Application::where('passport_no', $this->form['passport_no'])->first();
-            if ($foundUser) {
-                $this->form['first_name'] = $foundUser->first_name;
-                $this->form['last_name'] = $foundUser->last_name;
-            }
-        }
+        $visaType = VisaType::query()->find($this->form['visa_type_id']);
+        $newServiceFee = (new InvoiceService())->recalculateServiceFee($this->form['amount'], $visaType->dubai_fee);
+        $this->form['vat'] = (new InvoiceService())->recalculateVat($this->form['amount'], $visaType->dubai_fee);
+        $this->form['service_fee'] = $newServiceFee;
     }
-
 
     public function render()
     {

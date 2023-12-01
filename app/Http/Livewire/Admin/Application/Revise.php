@@ -6,6 +6,7 @@ use App\Http\Livewire\Traits\Admin\Application\DeleteTrait;
 use App\Models\Application;
 use App\Models\Setting;
 use App\Models\VisaType;
+use App\Services\InvoiceService;
 use Livewire\Component;
 use function App\Helpers\vatRate;
 
@@ -38,21 +39,14 @@ class Revise extends Component
 
     public function updateInvoice()
     {
-        $vat = $this->formInvoice['vat'];
-        $vatRAte = vatRate($this->application->visaType->id);
-
-        if($this->application->amount != $this->formInvoice['amount']) {
-            if(($this->formInvoice['amount'] - $this->application->visaType->dubai_fee) > 0) {
-                $vat = $this->formInvoice['amount'] -  $this->application->visaType->dubai_fee * $vatRAte;
-            }else{
-                $vat = 0;
-            }
-        }
+        $serviceFee = (new InvoiceService())->recalculateServiceFee($this->formInvoice['amount'], $this->application->dubai_fee);
+        $vat = (new InvoiceService())->recalculateVat($this->formInvoice['amount'], $this->application->dubai_fee);
 
         $this->application->update([
             'payment_method' => $this->formInvoice['payment_method'],
             'amount' => $this->formInvoice['amount'],
             'vat' => $vat,
+            'service_fee' => $serviceFee,
         ]);
 
         session()->flash('success',__('admin.edit_successfully'));

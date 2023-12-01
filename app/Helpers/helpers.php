@@ -2,6 +2,7 @@
 
 namespace App\Helpers;
 
+use App\Models\Admin;
 use App\Models\Applicant;
 use App\Models\Application;
 use App\Models\DayOffice;
@@ -13,10 +14,8 @@ use Carbon\Carbon;
 if (!function_exists('checkDayStart')) {
     function checkDayStart($officeId)
     {
-        return DayOffice::where('admin_id', auth('admin')->id())
-            ->where('office_id', $officeId)
+        return DayOffice::where('office_id', $officeId)
             ->where('day_start', Carbon::today())
-
             ->where('day_status', '!=', "0")
             ->exists();
     }
@@ -25,8 +24,7 @@ if (!function_exists('checkDayStart')) {
 if (!function_exists('checkDayRestart')) {
     function checkDayRestart($officeId)
     {
-        return DayOffice::where('admin_id', auth('admin')->id())
-            ->where('office_id', $officeId)
+        return DayOffice::where('office_id', $officeId)
             ->where('day_start', Carbon::today())
             ->where('day_status', "2")
             ->exists();
@@ -36,8 +34,7 @@ if (!function_exists('checkDayRestart')) {
 if (!function_exists('checkDayClosed')) {
     function checkDayClosed($officeId)
     {
-        return DayOffice::where('admin_id', auth('admin')->id())
-            ->where('office_id', $officeId)
+        return DayOffice::where('office_id', $officeId)
             ->where('day_start', Carbon::today())
             ->where('day_status', "0")
 
@@ -48,8 +45,7 @@ if (!function_exists('checkDayClosed')) {
 if (!function_exists('currentDayForOffice')) {
     function currentDayForOffice($officeId)
     {
-        return DayOffice::where('admin_id', auth('admin')->id())
-            ->where('office_id', $officeId)
+        return DayOffice::where('office_id', $officeId)
             ->where('day_start', Carbon::today())
             ->first();
     }
@@ -59,9 +55,11 @@ if (!function_exists('displayTextInNavbarForOfficeTime')) {
     function displayTextInNavbarForOfficeTime($officeId)
     {
         $officeDay = currentDayForOffice($officeId);
-        $data = [];
 
+        $data = [];
         if($officeDay){
+            $data['user'] = Admin::find($officeDay['admin_id'])->name;
+
             if($officeDay->day_status == "0") {
                 $data['prefix'] = "Day closed by";
                 $data['day'] = $officeDay->day_start;
@@ -89,6 +87,7 @@ if (!function_exists('displayTextInNavbarForOfficeTime')) {
         $data['prefix'] = "";
         $data['day'] = "";
         $data['time'] = "";
+        $data['user']= '';
         return $data;
     }
 }
@@ -148,7 +147,7 @@ if (!function_exists('vatRate')) {
 if (!function_exists('canCloseDay')) {
     function canCloseDay($officeId)
     {
-        $newApplications = Application::query()->where('status', 'new')->count();
+        $newApplications = Application::query()->withoutGlobalScope('visibleApplications')->where('status', 'new')->count();
         if($newApplications > 0) {
             return false;
         }
@@ -223,25 +222,3 @@ if (!function_exists('vatForServiceFee')) {
     }
 }
 
-
-
-
-if (!function_exists('createApplicant')) {
-    function createApplicant($data)
-    {
-        $applicant = Applicant::query()
-            ->where('name', $data['first_name'])
-            ->where('surname', $data['last_name'])
-            ->exists();
-
-        if(!$applicant){
-            Applicant::query()->create([
-                'name' => $data['first_name'],
-                'surname' => $data['last_name'],
-                'agent_id' => $data['agent_id']??null,
-                'passport_no' => $data['passport_no'],
-                'passport_expiry' => $data['expiry_date']
-            ]);
-        }
-    }
-}

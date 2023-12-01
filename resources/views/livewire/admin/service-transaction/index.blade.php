@@ -5,7 +5,7 @@
     <div class="border-div">
         <div class="b-btm flex-div-2">
             <h4>{{$page_title}}</h4>
-            <a style='text-align:center;cursor:pointer' class="button btn-red big" id="addServiceTransactionButton">@lang('site.create_new')</a>
+            <a style='text-align:center;cursor:pointer' class="button btn-red big" wire:click="emptyForm" id="addServiceTransactionButton">@lang('site.create_new')</a>
 
         </div>
         <div class="table-page-wrap">
@@ -36,6 +36,15 @@
                     <label for="status-select">@lang('admin.to')</label>
                     <input class="form-control border  contact-input" type="date" wire:model="to">
                 </div>
+                <div class="form-group col-3">
+                    <label for="status-select">@lang('admin.status')</label>
+                    <select wire:model='status' id='status-select' class="form-control border  contact-input">
+                        <option value>@lang('admin.choose')</option>
+                        <option value="all">All</option>
+
+                        <option value="deleted">Deleted</option>
+                    </select>
+                </div>
                 <div class="form-group col-2 mt-4">
                     <button wire:click="resetData()" class="btn btn-primary form-control contact-input">@lang('site.reset')</button>
                 </div>
@@ -52,8 +61,8 @@
                         <th class="text-center">@lang('admin.passport_no')</th>
                         <th class="text-center">@lang('admin.name')</th>
                         <th class="text-center">@lang('admin.surname')</th>
-                        <th class="text-center">@lang('admin.vat')</th>
-                        <th class="text-center">@lang('admin.status')</th>
+                        <th class="text-center">@lang('admin.created_at')</th>
+{{--                        <th class="text-center">@lang('admin.status')</th>--}}
                         <th>@lang('site.actions')</th>
                     </tr>
                     </thead>
@@ -66,10 +75,8 @@
                             <td class='text-center'>{{$record->passport_no}}</td>
                             <td class='text-center'>{{$record->name}}</td>
                             <td class='text-center'>{{$record->surname}}</td>
-                            <td class='text-center'>{{$record->vat}}</td>
-                            <td class='text-center'>
-                                <button class="border-0">{{$record->status}}</button>
-                            </td>
+                            <td class='text-center'>{{\Carbon\Carbon::parse($record->created_at)->format('Y-m-d')}}</td>
+
                             <td>
                                 <div class="actions">
 
@@ -79,8 +86,11 @@
                                     <button  style="cursor:pointer;" wire:click="showServiceTransaction({{$record->id}})" class="btn btn-primary"><i
                                             class="far fa-edit blue"></i></button>
 
-                                    <button  style="cursor:pointer;" wire:click="destroy({{$record->id}})" class="btn btn-danger">Delete</button>
-
+                                    @if($record->status =='deleted')
+                                        <button  style="cursor:pointer;" wire:click="unDestroy({{$record->id}})" class="btn btn-warning">Undelete</button>
+                                    @else
+                                        <button  style="cursor:pointer;" wire:click="destroy({{$record->id}})" class="btn btn-danger">Delete</button>
+                                    @endif
                                 </div>
                             </td>
                             @endforeach

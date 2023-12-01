@@ -27,7 +27,6 @@
                 <input type="checkbox" onclick="toggleShowTravelAgent()" @if($isChecked) checked @endif> Show Travel Agent
 
                 <div class="col-12 form-group my-2 {{$isChecked?'':'hidden'}}" wire:ignore id="travelAgentContainer">
-                    {{-- <label for="travelAgent" class="mb-2">Travel Agent:</label> --}}
                     <div class="input-group">
                         <input
                             id="agent_search"
@@ -41,8 +40,8 @@
                             <!-- Search results will be populated dynamically with jQuery -->
                         </ul>
                     </div>
-                    @error('form.travel_agent_id')<p class="mt-2" style="color: red;">{{ $message }}</p>@enderror
                 </div>
+                @error('form.agent_id')<p class="mt-2" style="color: red;">{{ $message }}</p>@enderror
             </div>
             <div class="col-6">
                 <div class="form-group my-2">
@@ -62,7 +61,7 @@
 
             <div class="col-6">
                 <label for="passport_no" class="">Passport no:</label>
-                <input type="text" class="form-control" wire:model.lazy="passportNumber" wire:blur="checkPassportNumber">
+                <input type="text" class="form-control" wire:model="form.passport_no" >
                 @error('form.passport_no')<p style="color: red;">{{ $message }}</p>@enderror
             </div>
 {{--            <div class="col-6 my-2">--}}
@@ -180,7 +179,10 @@
                                         .css('cursor', 'pointer');
                                 });
                             } else {
-                                resultsContainer.hide();
+                            @this.set('form.agent_id', "no_result")
+
+                                resultsContainer.append('<li class="list-group-item border-top-0 rounded-0" data-id="nr">No results found</li>');
+                                resultsContainer.show();
                             }
                         }
                     });
@@ -193,7 +195,7 @@
             // Handle click on search result
             $('.autocomplete-results').on('click', 'li', function () {
                 var selectedName = $(this).text();
-                $('#agent_search').val(selectedName); // Set the selected result in the input field
+                $('#agent_search').val(selectedName);  // Set the selected result in the input field
 
                 var travelAgentId = $(this).data('id');
                 // Perform the necessary action with the selected travel agent ID
@@ -209,22 +211,6 @@
                     $('.autocomplete-results').hide();
                 }
             });
-
-            // Watch for changes to the checkbox state
-            $('input[type="checkbox"]').on('change', function () {
-                if (!$(this).is(':checked')) {
-                    // If the checkbox is unchecked, set form.agent_id to null
-                @this.set('form.agent_id', null);
-                }
-            });
-
-            // Watch for changes to the input search value
-            $('#agent_search').on('change', function () {
-                if ($(this).val() === '') {
-                    // If the search input is empty, set form.agent_id to null
-                @this.set('form.agent_id', null);
-                }
-            });
         });
     </script>
 @endpush
@@ -232,7 +218,18 @@
     <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
 
     <script src="{{asset('js/select2.min.js')}}"></script>
+
     <script>
+        document.addEventListener('livewire:load', function () {
+            Livewire.on('closePopups', function () {
+                $('#expiryPassportModal').modal('hide');
+                $('#passportHasMoreThanOneModal').modal('hide');
+                $('#blackListModal').modal('hide');
+            @this.set('form.agent_id', null)
+                $("#agent_search").val(null)
+                $('#showTravelAgent').prop('checked', true);
+            });
+        });
         Livewire.on('openBlackListModal', function () {
             $('#blackListModal').modal('show');
         });

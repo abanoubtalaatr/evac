@@ -9,6 +9,12 @@
         <div class="b-btm">
             <h4>{{$page_title}}</h4>
         </div>
+        <div>
+            <!-- Your form fields -->
+
+
+        </div>
+
         <div class="row mt-30">
             @if($showPrint)
             <div class="col-12 text-center my-2">
@@ -29,7 +35,7 @@
                 @error('form.visa_type_id')<p style="color: red;">{{ $message }}</p>@enderror
             </div>
             <div class="col-6 mt-3">
-                <input type="checkbox" onclick="toggleShowTravelAgent()"> Show Travel Agent
+                <input type="checkbox" id="showTravelAgent" onclick="toggleShowTravelAgent()"> Show Travel Agent
 
                 <div class="col-12 form-group my-2 hidden" wire:ignore  id="travelAgentContainer">
                     <div class="input-group">
@@ -44,8 +50,10 @@
                         <ul class="autocomplete-results list-group position-absolute w-100" style="padding-left: 0px; margin-top: 51px;z-index: 200; display: none;">
                         </ul>
                     </div>
-                    @error('form.travel_agent_id')<p class="mt-2" style="color: red;">{{ $message }}</p>@enderror
                 </div>
+                @error('form.agent_id')
+                <p style="color: red;">{{ $message }}</p>
+                @enderror
             </div>
 
             <div class="col-6">
@@ -156,7 +164,7 @@
                 <button type="submit" class="btn btn-primary" wire:click="store">Save</button>
             </div>
             <hr>
-
+@include('livewire.admin.application.popup.passportHasMoreThanOne')
 
 
         </div>
@@ -169,6 +177,9 @@
           $('#expiryPassportModal').modal('hide');
           $('#passportHasMoreThanOneModal').modal('hide');
           $('#blackListModal').modal('hide');
+          @this.set('form.agent_id', null)
+          $("#agent_search").val(null)
+          $('#showTravelAgent').prop('checked', true);
       });
   });
   // Function to load content into an iframe and trigger printing
@@ -220,7 +231,10 @@
                                         .css('cursor', 'pointer');
                                 });
                             } else {
-                                resultsContainer.hide();
+                                    @this.set('form.agent_id', "no_result")
+
+                                resultsContainer.append('<li class="list-group-item border-top-0 rounded-0" data-id="nr">No results found</li>');
+                                resultsContainer.show();
                             }
                         }
                     });
@@ -238,7 +252,7 @@
                 var travelAgentId = $(this).data('id');
                 // Perform the necessary action with the selected travel agent ID
                 // e.g., update a hidden input field or trigger a Livewire method
-                @this.set('form.agent_id', travelAgentId)
+            @this.set('form.agent_id', travelAgentId)
                 // Hide the results container after selecting
                 $('.autocomplete-results').hide();
             });
