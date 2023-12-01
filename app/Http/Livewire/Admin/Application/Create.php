@@ -10,6 +10,8 @@ use App\Models\BlackListPassport;
 use App\Models\Setting;
 use App\Models\VisaProvider;
 use App\Models\VisaType;
+use App\Services\ApplicantService;
+use App\Services\InvoiceService;
 use Carbon\Carbon;
 use Livewire\Component;
 use function App\Helpers\createApplicant;
@@ -53,6 +55,8 @@ class Create extends Component
         if($defaultVisaType){
             $this->defaultVisaTypeId =$defaultVisaType->id;
             $this->form['visa_type_id'] = $defaultVisaType->id;
+            $this->form['service_fee'] = $defaultVisaType->service_fee;
+            $this->form['dubai_fee'] = $defaultVisaType->dubai_fee;
             $this->updateAmount();
         }
         if($defaultVisaProvider){
@@ -70,8 +74,8 @@ class Create extends Component
         $vatRate = vatRate($this->form['visa_type_id']);
         $visaType = VisaType::query()->find($this->form['visa_type_id']);
         $amount = $visaType->dubai_fee + $visaType->service_fee + $vatRate;
-        $this->form['vat'] = $vatRate;
 
+        $this->form['vat'] = $vatRate;
         $this->form['amount'] = $amount;
     }
 
@@ -106,6 +110,13 @@ class Create extends Component
         $this->validate();
         $data = $this->form;
 
+        if(isset($this->form['agent_id']) && ($this->form['agent_id'] == 'nr' || $this->form['agent_id'] == 'no_result')) {
+            $this->addError('form.agent_id', 'Must enter a valid agent');
+            $this->emit('closePopups');
+
+            return;
+        }
+
         $today = Carbon::now()->format('dmY');
         $currentSerial = Application::where('application_ref', 'like', 'EVLB/' . $today . '/%')
             ->max('application_ref');
@@ -118,7 +129,10 @@ class Create extends Component
             unset($data['agent_id']);
         }
 
-        createApplicant($data);
+       $applicant = (new ApplicantService())->create($data);
+
+        $visaType = VisaType::query()->find($this->form['visa_type_id']);
+        $data['applicant_id'] = $applicant->id;
 
         $application = Application::query()->create($data);
 
@@ -133,13 +147,13 @@ class Create extends Component
     public function resetData()
     {
         $this->form['notes'] = null;
-        $this->passportNumber = null;
+        $this->form['passport_no'] = null;
         $this->form['first_name'] = null;
         $this->form['last_name'] = null;
         $this->form['expiry_date'] = null;
         $this->form['travel_agent_id'] =null;
+        $this->form['agent_id'] = null;
     }
-
 
     public function checkPassportNumber()
     {
@@ -191,6 +205,14 @@ class Create extends Component
     {
         return redirect()->to(route('admin.applications.store'));
     }
+
+    public function updatedFormAmount()
+    {
+        $visaType = VisaType::query()->find($this->form['visa_type_id']);
+        $newServiceFee = (new InvoiceService())->recalculateServiceFee($this->form['amount'], $visaType->dubai_fee);
+        $this->form['vat'] = (new InvoiceService())->recalculateVat($this->form['amount'], $visaType->dubai_fee);
+        $this->form['service_fee'] = $newServiceFee;
+    }
     public function updatedFormPassportNo()
     {
 
@@ -198,7 +220,7 @@ class Create extends Component
 
         if ($this->form['passport_no'] !== '') {
 
-        $existingPassport = Application::where('passport_no', strtolower($this->form['passport_no']))->first();
+        $existingPassport = Application::where('passport_no', strtolower($this->form['passport_no']))->latest()->first();
 
             if ($existingPassport) {
 

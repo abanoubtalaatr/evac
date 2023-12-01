@@ -81,6 +81,7 @@
                         <th class="text-center" >@lang('admin.applicant')</th>
                         <th class="text-center">@lang('admin.submit_date')</th>
                         <th class="text-center">@lang('admin.visa_type')</th>
+                        <th class="text-center">@lang('admin.agent')</th>
 
                         <th class="text-center">@lang('admin.status')</th>
                     </tr>
@@ -92,6 +93,8 @@
                             <td class='text-center'>{{$record->application_ref . ' - '. $record->first_name . ' ' . $record->last_name}}</td>
                             <td class='text-center'>{{ \Illuminate\Support\Carbon::parse($record->created_at)->format('Y-m-d h:m')}}</td>
                             <td class='text-center'><button class="border-0">{{$record->visaType->name}}</button></td>
+                            <td class='text-center'><button class="border-0">{{$record->travelAgent?$record->travelAgent->name:""}}</button></td>
+
                             <td class='text-center'><button class="border-0">{{$record->status}}</button></td>
                             @endforeach
                         </tr>
@@ -170,7 +173,7 @@
                 if (query.length >= 0) {
                     // Make an AJAX request to get search results
                     $.ajax({
-                        url: '/api/agents/search', // Replace with your actual endpoint
+                        url: '/admin/agents/search', // Replace with your actual endpoint
                         method: 'GET',
                         data: { query: query },
                         success: function (data) {

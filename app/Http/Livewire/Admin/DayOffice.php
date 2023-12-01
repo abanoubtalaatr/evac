@@ -70,7 +70,7 @@ class DayOffice extends Component
             ]);
             return redirect()->to(route('admin.day_office'));
         }
-        $this->message = "You can not close the day because still exist appraisal applications";
+        $this->message = "There is nothing in appraise";
     }
 
     public function restartDay()

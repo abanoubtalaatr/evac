@@ -4,11 +4,13 @@ namespace App\Http\Livewire\Admin\ServiceTransaction;
 
 use App\Http\Livewire\Traits\ValidationTrait;
 use App\Models\Agent;
+use App\Models\Applicant;
 use App\Models\Application;
 use App\Models\Service;
 use App\Models\ServiceTransaction;
 use App\Models\Setting;
 use App\Models\VisaType;
+use App\Services\InvoiceService;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Carbon\Carbon;
 use Illuminate\Support\Arr;
@@ -29,6 +31,7 @@ class Index extends Component
     public $perPage =10;
     public $services, $agents;
     public $serviceTransaction, $formInvoice;
+    public $status = null;
 
     protected $paginationTheme = 'bootstrap';
 
@@ -60,21 +63,32 @@ class Index extends Component
         }
     }
 
+    public function emptyForm()
+    {
+        $this->form = [];
+    }
+
     public function updatedFormAmount()
     {
         if(isset($this->form['service_id'])) {
             $service = Service::query()->find($this->form['service_id']);
-            $vat =  recalculateVatInServiceTransaction($service->service_fee,$this->form['amount'], $service->dubai_fee,$this->form['vat']);
+            $vat = (new InvoiceService())->recalculateVat($this->form['amount'], $service->dubai_fee);
+            $serviceFee = (new InvoiceService())->recalculateServiceFee($this->form['amount'], $service->dubai_fee);
+
             $this->form['vat'] = $vat;
+            $this->form['service_fee'] = $serviceFee;
         }
     }
     public function updatedFormPassportNo()
     {
         if ($this->form['passport_no'] !== '') {
-            $serviceTransaction = ServiceTransaction::where('passport_no', $this->form['passport_no'])->first();
-            if ($serviceTransaction) {
-                $this->form['name'] = $serviceTransaction->name;
-                $this->form['surname'] = $serviceTransaction->surname;
+            $applicant = Applicant::where('passport_no', $this->form['passport_no'])->first();
+            if ($applicant) {
+                $this->form['name'] = $applicant->name;
+                $this->form['surname'] = $applicant->surname;
+            }else{
+                $this->form['name'] = null;
+                $this->form['surname'] = null;
             }
         }
     }
@@ -99,10 +113,6 @@ class Index extends Component
         $this->emit("showServiceTransactionInvoiceModal", $id);
     }
 
-    public function emptyForm()
-    {
-        $this->form =[];
-    }
     public function destroy(ServiceTransaction $serviceTransaction)
     {
         $serviceTransaction->update(['status' => 'deleted']);
@@ -144,9 +154,23 @@ class Index extends Component
             })->when(!empty($this->from) && !empty($this->to), function ($query) {
                 $query->whereBetween('created_at', [$this->from, $this->to]);
             })
-
+            ->when(is_null($this->status), function ($query){
+                $query->where('status', null);
+            })
+            ->when(!is_null($this->status), function ($query){
+                if($this->status =='deleted'){
+                    $query->where('status', 'deleted');
+                }else{
+                    $query->where('status', null);
+                }
+            })
             ->latest()
             ->paginate(50);
+    }
+
+    public function unDestroy(ServiceTransaction $serviceTransaction)
+    {
+        $serviceTransaction->update(['status' => null]);
     }
 
     public function update()
@@ -172,12 +196,17 @@ class Index extends Component
         $applicationReference = 'EVLB/' . $today . '/' . str_pad($nextSerial, 4, '0', STR_PAD_LEFT);
         $this->form['service_ref'] = $applicationReference;
 
+        $service = Service::query()->find($this->form['service_id']);
+        $this->form['dubai_fee'] = $service->dubai_fee;
+        $this->form['service_fee'] = $service->service_fee;
+
         ServiceTransaction::query()->create($this->form);
 
         session()->flash('success',__('admin.create_successfully'));
 
         return redirect()->to(route('admin.service_transactions'));
     }
+
 
     public function getRules(){
         return [

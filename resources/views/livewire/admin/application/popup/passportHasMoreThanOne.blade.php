@@ -16,7 +16,23 @@
                         @endif
                             <div class="text-dark d-flex gap-5">
                                 <p class="">{{\Carbon\Carbon::parse($passportApplication->created_at)->format('Y-m-d h:m')}}</p>
-                                <p class="">{{$passportApplication->travel_agent_id?\App\Models\Agent::query()->find($passportApplication->travel_agent_id)->name:'Direct'}}</p>
+                                @if(auth('admin')->user()->is_owner)
+                                    <p class="">{{$passportApplication->travelAgent?$passportApplication->travelAgent->name:'Direct'}}</p>
+                                @endif
+
+                                @if(auth('admin')->user()->is_owner != 1)
+                                    <p class="">
+                                        @if($passportApplication->travelAgent)
+                                            @if($passportApplication->travelAgent->is_visible == 0 )
+                                                <button class="btn btn-warning">Direct</button>
+                                            @else
+                                                {{$passportApplication->travelAgent->name}}
+                                            @endif
+                                        @else
+                                            Direct
+                                        @endif
+                                    </p>
+                                @endif
                                 <p class="">{{\App\Models\VisaType::query()->find($passportApplication->visa_type_id)->name}}</p>
                             </div>
                     @endforeach

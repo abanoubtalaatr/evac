@@ -69,7 +69,18 @@
 {{--                            <td class='text-center'>{{$record->visaType ? $record->visaType->name :''}}</td>--}}
 {{--                            <td class='text-center'><button class="border-0">{{$record->status}}</button></td>--}}
                             <td class='text-center'>{{\Illuminate\Support\Carbon::parse($record->create_at)->format('Y-m-d')}}</td>
-                            <td class='text-center'><button class="border-0 rounded {{$record->travel_agent_id ?"bg-info " :'bg-primary'}}">{{$record->travel_agent_id ? "Agent" :'Direct'}}</button></td>
+                            <td class='text-center'>
+                                @if($record->travel_agent_id)
+                                    <button class="border-0 rounded bg-info">
+                                         Agent
+                                    </button>
+                                @else
+                                    <button class="border-0 rounded " style="background:  #24ee88">
+                                        Direct
+                                    </button>
+                                @endif
+
+                            </td>
 
                             <td class='text-center'><button class="border-0">{{$record->payment_method}}</button></td>
 

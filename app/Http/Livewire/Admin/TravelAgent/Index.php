@@ -114,7 +114,7 @@ class Index extends Component
     public function getRules(){
         return [
             'form.name'=>'required|max:500',
-            'form.company_name'=>'required|max:500',
+            'form.company_name'=>'nullable|max:500',
             'form.address'=>'required|max:500',
             'form.mobile'=>'required|max:500',
             'form.email'=>'required|max:500',
