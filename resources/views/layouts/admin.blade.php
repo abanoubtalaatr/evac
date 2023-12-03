@@ -189,6 +189,11 @@
                         @lang('admin.agent_applications')
                     </a>
                 </li>
+                <li style="line-height: 20px;margin-left: 18px;padding-left: 0px;text-indent: 0" class="border-bottom pb-2 {{ request()->routeIs('admin.travel_agent_payment_transactions') ? 'active' : '' }}">
+                    <a href="{{route('admin.travel_agent_payment_transactions')}}" class="text-white ">
+                        @lang('admin.travel_agent_payment_transactions')
+                    </a>
+                </li>
 
             @else
                 @can('Manage travel agents')
@@ -207,6 +212,11 @@
                         @lang('admin.agent_applications')
                     </a>
                 </li>
+                    <li style="line-height: 20px;margin-left: 18px;padding-left: 0px;text-indent: 0" class="border-bottom pb-2 {{ request()->routeIs('admin.travel_agent_payment_transactions') ? 'active' : '' }}">
+                        <a href="{{route('admin.travel_agent_payment_transactions')}}" class="text-white ">
+                            @lang('admin.travel_agent_payment_transactions')
+                        </a>
+                    </li>
                 @endcan
             @endif
 

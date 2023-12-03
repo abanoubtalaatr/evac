@@ -105,5 +105,10 @@ return [
     'payment_services' => "Payment services",
     "service_transaction_invoices" => "Service transaction invoices",
     "travel_agents" => "Travel agents",
-    "created_at" => "Created at"
+    "created_at" => "Created at",
+    "travel_agent_payment_transactions" => "Payment transactions",
+    "amount_paid" => "Amount paid",
+    "amount_should_paid" => "Amount should paid",
+    "invoice_footer" => "Invoice footer",
+    'account_number' => "Account number",
 ];

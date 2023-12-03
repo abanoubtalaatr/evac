@@ -5,11 +5,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-<style>
-    p{
-        padding-bottom: .1rem;
-    }
-</style>
+    <style>
+        p{
+            padding-bottom: .1rem;
+        }
+    </style>
 </head>
 <body>
 <div class="container mt-5 ">
@@ -36,21 +36,21 @@
         <div >Ref N: {{$application->application_ref}} </div>
         <div>Date : {{\Carbon\Carbon::parse($application->created_at)->format('d-m-Y')}} </div>
         <div>Visa type : {{$application->visaType? $application->visaType->name:''}}</div>
-       <div class="">
-        @if($application->travelAgent)
+        <div class="">
+            @if($application->travelAgent)
 
-        <div class="border-dotted border-top-0 border-right-0 border-left-0 mt-4">
-            <strong >Travel agent: {{$application->travelAgent->name}}</strong>
+                <div class="border-dotted border-top-0 border-right-0 border-left-0 mt-4">
+                    <strong >Travel agent: {{$application->travelAgent->name}}</strong>
+                </div>
+                <div class="fa-3x">---------------</div>
+                <div >Account number: {{$application->travelAgent->account_number}}</div>
+
+                <div>Name: {{$application->first_name . ' '. $application->last_name}}</div>
+            @else
+                Direct
+            @endif
+            <div>Passport No: {{$application->passport_no}} </div>
         </div>
-        <div class="fa-3x">---------------</div>
-               <div >Account number: {{$application->travelAgent->account_number}}</div>
-
-               <div>Name: {{$application->first_name . ' '. $application->last_name}}</div>
-        @else
-            Direct
-        @endif
-        <div>Passport No: {{$application->passport_no}} </div>
-       </div>
         <div>Visa fees  : {{\App\Helpers\formatCurrency($application->visaType->dubai_fee)}}</div>
         <div>Service fees  : {{\App\Helpers\formatCurrency($application->visaType->service_fee)}}</div>
         @if($application->vat > 0)
@@ -58,7 +58,7 @@
         @endif
 
         @php
-              $total = $application->dubai_fee + $application->service_fee + $application->vat;
+            $total = $application->dubai_fee + $application->service_fee + $application->vat;
         @endphp
         <div class="font-weight-bolder" style="font-weight: bolder">Total Fees : {{$total}} USD ({{$application->payment_method}})</div>
         <div class="mt-2">Service fees and sales tax included</div>

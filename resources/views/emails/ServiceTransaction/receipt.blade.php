@@ -5,11 +5,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-<style>
-    p{
-        padding-bottom: .1rem;
-    }
-</style>
+    <style>
+        p{
+            padding-bottom: .1rem;
+        }
+    </style>
 </head>
 <body>
 <div class="container mt-5">
@@ -25,7 +25,7 @@
         <div>Office address: {{ $settings->address??""}}</div>
         <div>Tel : {{$settings->mobile??""}}</div>
         @if(!empty($settings->registration_no))
-        <div>Registration No : {{$settings->registration_no??''}}</div>
+            <div>Registration No : {{$settings->registration_no??''}}</div>
         @endif
         @if(isset($settings->vat_no) && !empty($settings->vat_no))
             <div>Vat registration : {{$settings->vat_no}}</div>
@@ -37,11 +37,11 @@
         <div>Date : {{\Carbon\Carbon::parse($serviceTransaction->created_at)->format('d-m-Y')}} </div>
         <div>Service : {{$serviceTransaction->service? $serviceTransaction->service->name:''}}</div>
         @if($serviceTransaction->agent)
-        <div class="border-dotted border-top-0 border-right-0 border-left-0 mt-3"><strong >Travel agent: {{$serviceTransaction->agent->name}}</strong></div>
+            <div class="border-dotted border-top-0 border-right-0 border-left-0 mt-3"><strong >Travel agent: {{$serviceTransaction->agent->name}}</strong></div>
             <div >Account number: {{$serviceTransaction->agent->account_number}}</div>
 
             <div class="fa-3x">---------------</div>
-        <div>Name : {{$serviceTransaction->name ." ". $serviceTransaction->surname}}</div>
+            <div>Name : {{$serviceTransaction->name ." ". $serviceTransaction->surname}}</div>
         @else
             Direct
         @endif

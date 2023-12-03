@@ -116,6 +116,12 @@
                         @error('form.email') <p class="text-danger">{{$message}}</p> @enderror
                         <hr/>
                     </div>
+                    <div class="col-6">
+                        <label for="">@lang('admin.invoice_footer')</label>
+                        <textarea class="form-control" wire:model="form.invoice_footer" ></textarea>
+                        @error('form.invoice_footer') <p class="text-danger">{{$message}}</p> @enderror
+                        <hr/>
+                    </div>
                 </div>
 
 

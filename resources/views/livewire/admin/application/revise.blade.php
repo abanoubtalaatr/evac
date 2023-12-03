@@ -103,6 +103,9 @@
                                     <a style="cursor:pointer;" href="{{route('admin.applications.update', ['application' => $record])}}" class="no-btn mt-2">
                                         <i class="far fa-edit blue"></i>
                                     </a>
+                                    <button class="btn btn-secondary" wire:click="toggleShowModal({{$record->id}})">Send email</button>
+                                    <button class="btn btn-secondary mt-2" wire:click="downloadCSV({{$record->id}})">Csv</button>
+
                                 </div>
                             </td>
                             @endforeach
@@ -117,7 +120,7 @@
                 </div>
             @endif
         </div>
-
+        @include('livewire.admin.application.popup.send-email')
         @include('livewire.admin.application.popup.delete-confirmation')
     </div>
 </main>

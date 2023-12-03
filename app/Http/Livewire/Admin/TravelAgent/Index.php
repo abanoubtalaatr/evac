@@ -2,8 +2,10 @@
 
 namespace App\Http\Livewire\Admin\TravelAgent;
 
+use App\Exports\ReceiptApplicationExport;
 use App\Http\Livewire\Traits\ValidationTrait;
 use App\Models\Agent;
+use App\Services\Application\CSVService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
 use Livewire\Component;
@@ -111,6 +113,7 @@ class Index extends Component
         $agent->update(['is_active' => !$agent->is_active]);
     }
 
+
     public function getRules(){
         return [
             'form.name'=>'required|max:500',
@@ -123,6 +126,7 @@ class Index extends Component
             'form.iata_no'=>'nullable|max:500',
             'form.finance_no'=>'required|max:500',
             'form.telephone'=>'required|max:500',
+            'form.account_number' => ['required'],
         ];
     }
 

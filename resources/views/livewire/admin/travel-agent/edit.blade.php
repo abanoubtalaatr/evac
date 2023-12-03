@@ -33,13 +33,11 @@
                     <input  type="text" wire:model="form.name" class="form-control" id="name">
                     @error('form.name')<p style='color:red'> {{$message}} </p>@enderror
                 </div>
-
-{{--                <div class="form-group my-2">--}}
-{{--                    <label for="companyName">Company Name:</label>--}}
-{{--                    <input  type="text" wire:model="form.company_name" value="{{$agent->company_name}}" class="form-control" id="companyName">--}}
-{{--                    @error('form.company_name')<p style='color:red'> {{$message}} </p>@enderror--}}
-{{--                </div>--}}
-
+                    <div class="form-group my-2">
+                        <label for="account_number">Account number:</label>
+                        <input type="text" wire:model="form.account_number" class="form-control" id="account_number">
+                        @error('form.account_number')<p style='color:red'> {{$message}} </p>@enderror
+                    </div>
                 <div class="form-group my-2">
                     <label for="address">Address : </label>
                     <input  type="text" wire:model="form.address" class="form-control" id="address">

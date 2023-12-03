@@ -2,13 +2,19 @@
 
 namespace App\Http\Livewire\Admin\Application;
 
+use App\Exports\ReceiptApplicationExport;
 use App\Http\Livewire\Traits\Admin\Application\DeleteTrait;
+use App\Mail\AgentApplicationsMail;
+use App\Mail\ReceiptApplicationsMail;
+use App\Models\Agent;
 use App\Models\Application;
 use App\Models\Setting;
 use App\Models\VisaType;
 use App\Services\InvoiceService;
+use Illuminate\Support\Facades\Mail;
 use Livewire\Component;
-use function App\Helpers\vatRate;
+use Maatwebsite\Excel\Facades\Excel;
+
 
 class Revise extends Component
 {
@@ -16,6 +22,7 @@ class Revise extends Component
 
     public $passport, $search, $visaTypes, $visaType, $status, $fullName, $referenceNo, $from, $to, $formInvoice,$application;
     protected $listeners = [ 'showApplicationInvoice'];
+    public $showSendEmail, $email, $applicationThatSendByEmail;
 
     public function mount()
     {
@@ -55,6 +62,26 @@ class Revise extends Component
 
     }
 
+    public function downloadCSV($id)
+    {
+        $application = \App\Models\Application::query()->find($id);
+        return Excel::download(new ReceiptApplicationExport($application), 'applicationReceipt.csv');
+    }
+
+    public function send()
+    {
+        if(!empty($this->email)){
+            Mail::to($this->email)->send(new ReceiptApplicationsMail($this->applicationThatSendByEmail));
+            $this->email = null;
+            $this->showSendEmail = !$this->showSendEmail;
+        }
+    }
+
+    public function toggleShowModal($id)
+    {
+        $this->applicationThatSendByEmail = Application::find($id);
+        $this->showSendEmail = !$this->showSendEmail;
+    }
     public function getRecords()
     {
         return Application::query()
