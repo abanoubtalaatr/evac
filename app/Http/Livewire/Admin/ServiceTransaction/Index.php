@@ -2,23 +2,24 @@
 
 namespace App\Http\Livewire\Admin\ServiceTransaction;
 
+use App\Exports\ReceiptApplicationExport;
+use App\Exports\ReceiptServiceTransactionExport;
 use App\Http\Livewire\Traits\ValidationTrait;
+use App\Mail\ReceiptApplicationsMail;
+use App\Mail\ReceiptServiceTransactionMail;
 use App\Models\Agent;
 use App\Models\Applicant;
 use App\Models\Application;
 use App\Models\Service;
 use App\Models\ServiceTransaction;
 use App\Models\Setting;
-use App\Models\VisaType;
 use App\Services\InvoiceService;
-use Barryvdh\DomPDF\Facade\Pdf;
 use Carbon\Carbon;
 use Illuminate\Support\Arr;
+use Illuminate\Support\Facades\Mail;
 use Livewire\Component;
 use Livewire\WithPagination;
-use Spatie\Browsershot\Browsershot;
-use function App\Helpers\recalculateVat;
-use function App\Helpers\recalculateVatInServiceTransaction;
+use Maatwebsite\Excel\Facades\Excel;
 
 class Index extends Component
 {
@@ -31,7 +32,7 @@ class Index extends Component
     public $perPage =10;
     public $services, $agents;
     public $serviceTransaction, $formInvoice;
-    public $status = null;
+    public $status = null, $showSendEmail,$serviceTransactionThatSendByEmail, $email;
 
     protected $paginationTheme = 'bootstrap';
 
@@ -63,6 +64,26 @@ class Index extends Component
         }
     }
 
+    public function downloadCSV($id)
+    {
+        $application = \App\Models\ServiceTransaction::query()->find($id);
+        return Excel::download(new ReceiptServiceTransactionExport($application), 'serviceReceipt.csv');
+    }
+
+    public function send()
+    {
+        if(!empty($this->email)){
+            Mail::to($this->email)->send(new ReceiptServiceTransactionMail($this->serviceTransactionThatSendByEmail));
+            $this->email = null;
+            $this->showSendEmail = !$this->showSendEmail;
+        }
+    }
+
+    public function toggleShowModal($id)
+    {
+        $this->serviceTransactionThatSendByEmail = ServiceTransaction::find($id);
+        $this->showSendEmail = !$this->showSendEmail;
+    }
     public function emptyForm()
     {
         $this->form = [];

@@ -63,6 +63,7 @@ Route::group([
             //travel agents
             Route::get('travel-agents', App\Http\Livewire\Admin\TravelAgent\Index::class)->name('travel_agents');
             Route::get('travel-agents-applications', App\Http\Livewire\Admin\TravelAgent\Application::class )->name('travel_agent_applications');
+            Route::get('travel-agent-payment-transactions',\App\Http\Livewire\Admin\TravelAgent\PaymentTransaction::class)->name('travel_agent_payment_transactions');
             //visa types
             Route::get('visa-types', App\Http\Livewire\Admin\VisaType\Index::class)->name('visa_types');
 

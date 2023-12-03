@@ -69,6 +69,7 @@
                                         <i class="fas @if($record->is_active) fa-lock red @else fa-unlock green @endif"></i>
                                     </button>
 
+
                                     @include('livewire.admin.travel-agent.edit', ['agent' => $record])
                                     <a style="cursor:pointer;" wire:click="showAgent({{$record->id}})" class="no-btn"><i
                                             class="far fa-edit blue"></i></a>

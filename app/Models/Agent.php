@@ -26,6 +26,13 @@ class Agent extends Model
             }
         });
     }
+
+
+    public function paymentTransactions()
+    {
+        return $this->hasMany(PaymentTransaction::class);
+    }
+
     protected $casts = [
       'is_active' => 'boolean',
     ];
