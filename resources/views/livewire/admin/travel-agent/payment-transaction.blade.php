@@ -48,13 +48,16 @@
                         <tr>
                             <td>#{{$loop->index + 1}}</td>
                             <td class='text-center'>{{$record->name}}</td>
-                            <td class="text-center" >{{$record->amount??0}}</td>
+                            @php
+                                $totalAmount = $record->amount + $record->amount_service;
+                            @endphp
+                            <td class="text-center" >{{$totalAmount??0}}</td>
                             <td class="text-center" >{{$record->amount_paid??0}}</td>
                             <td class="text-center" >
-                                {{$record->amount - $record->amount_paid}}</td>
+                                {{$totalAmount - $record->amount_paid}}</td>
                             <td>
                                 <div class="actions">
-                                    @if(($record->amount - $record->amount_paid) > 0)
+                                    @if(($totalAmount - $record->amount_paid) > 0)
                                     <button class="btn btn-primary" wire:click="showAddPaymentHistory({{$record->id}})">Pay Amount</button>
                                     @endif
                                     @include('livewire.admin.travel-agent.popup.payment-history',['agent' => $record])
