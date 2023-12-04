@@ -17,15 +17,15 @@ class Application extends Model
         parent::boot();
 
         static::addGlobalScope('visibleApplications', function ($builder) {
-
-            if (Auth::check() && Auth::user()->is_owner) {
+            if (!Auth::check() || Auth::user()->is_owner) {
                 return;
             }
 
             $builder->where(function ($query) {
-                $query->whereHas('travelAgent', function ($query) {
-                    $query->where('is_visible', true);
-                });
+                $query->whereDoesntHave('travelAgent')
+                    ->orWhereHas('travelAgent', function ($query) {
+                        $query->where('is_visible', 1);
+                    });
             });
         });
     }

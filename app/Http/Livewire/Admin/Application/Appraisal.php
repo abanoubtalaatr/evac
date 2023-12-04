@@ -4,6 +4,7 @@ namespace App\Http\Livewire\Admin\Application;
 
 use App\Http\Livewire\Traits\Admin\Application\CancelTrait;
 use App\Http\Livewire\Traits\Admin\Application\DeleteTrait;
+use App\Models\Agent;
 use App\Models\Application;
 use App\Models\VisaType;
 use Illuminate\Http\Request;

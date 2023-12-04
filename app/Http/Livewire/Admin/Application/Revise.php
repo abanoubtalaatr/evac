@@ -77,9 +77,12 @@ class Revise extends Component
         }
     }
 
-    public function toggleShowModal($id)
+    public function toggleShowModal($id=null)
     {
-        $this->applicationThatSendByEmail = Application::find($id);
+        if($id){
+            $this->applicationThatSendByEmail = Application::find($id);
+
+        }
         $this->showSendEmail = !$this->showSendEmail;
     }
     public function getRecords()
