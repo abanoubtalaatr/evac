@@ -50,7 +50,7 @@
                             <td class='text-center'>{{$record->application_ref}}</td>
                             <td class='text-center'>{{$record->first_name .' '. $record->last_name}}</td>
                             <td class="text-center">{{$record->passport_no}}</td>
-                            <td class='text-center'>{{$record->travelAgent? $record->travelAgent->name:''}}</td>
+                            <td class='text-center'>{{$record->travelAgent ? $record->travelAgent->name :''}}</td>
                             <td class="text-center">{{$record->visaType->name}}</td>
 
                             <td class='text-center'>{{$record->status}}</td>
