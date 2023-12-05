@@ -12,10 +12,16 @@ use App\Models\ServiceTransaction;
 use App\Models\User;
 use App\Models\VisaProvider;
 use App\Models\VisaType;
+use function App\Helpers\isOwner;
 
 class DashboardController extends Controller{
     public function index(){
-        $agent_count = Agent::query()->count();
+        if(isOwner()){
+            $agent_count = Agent::query()->count();
+        }else{
+            $agent_count = Agent::query()->owner()->count();
+
+        }
         $new_applications = Application::query()->where('status', 'new')->count();
         $appraised_applications = Application::query()->where('status', 'appraised')->count();
         $services = Service::query()->count();

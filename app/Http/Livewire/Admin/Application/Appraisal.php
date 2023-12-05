@@ -27,10 +27,11 @@ class Appraisal extends Component
     public function getRecords()
     {
         return Application::query()
+            ->where('status', 'new')
+
             ->when(!empty($this->visaType), function ($query) {
                 return  $query->where('visa_type_id', $this->visaType);
             })
-            ->where('status', 'new')
             ->latest()
             ->paginate(50);
     }

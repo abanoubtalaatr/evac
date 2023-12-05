@@ -22,7 +22,7 @@ class Application extends Model
             }
 
             $builder->where(function ($query) {
-                $query->whereDoesntHave('travelAgent')
+               return $query->whereDoesntHave('travelAgent')
                     ->orWhereHas('travelAgent', function ($query) {
                         $query->where('is_visible', 1);
                     });

@@ -9,22 +9,10 @@
         <div class="table-page-wrap">
 
             <div class="row d-flex align-items-center my-3 border p-2 rounded alig">
-                <div class="col-3 form-group" wire:ignore id="travelAgentContainer">
+
+                <div class="col-3 form-group">
                     <label for="status-select">@lang('admin.travel_agent')</label>
-
-                    <div class="input-group">
-                        <input
-                            id="agent_search"
-                            type="text"
-                            class="form-control contact-input"
-                            placeholder="Search Travel Agent"
-                            autocomplete="off"
-
-                        />
-                        <ul class="autocomplete-results list-group position-absolute w-100" style="padding-left: 0px; margin-top: 51px; display: none;z-index: 200">
-                        </ul>
-                    </div>
-                    @error('form.travel_agent_id')<p class="mt-2" style="color: red;">{{ $message }}</p>@enderror
+                    @include('livewire.admin.shared.agent_search_html')
                 </div>
 
                 <div class="form-group col-3">
@@ -82,7 +70,6 @@
                         <th class="text-center">@lang('admin.submit_date')</th>
                         <th class="text-center">@lang('admin.visa_type')</th>
                         <th class="text-center">@lang('admin.agent')</th>
-
                         <th class="text-center">@lang('admin.status')</th>
                     </tr>
                     </thead>
@@ -110,6 +97,7 @@
         </div>
     </div>
 </main>
+@include('livewire.admin.shared.agent_search_script')
 <script>
     document.addEventListener('livewire:load', function () {
         Livewire.on('showApplicationInvoiceModal', function (application) {
@@ -164,81 +152,4 @@
     });
     });
 </script>
-@push('scripts')
-    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
-    <script>
-        $(document).ready(function () {
-            $('#agent_search').on('input', function () {
-                var query = $(this).val();
-                if (query.length >= 0) {
-                    // Make an AJAX request to get search results
-                    $.ajax({
-                        url: '/admin/agents/search', // Replace with your actual endpoint
-                        method: 'GET',
-                        data: { query: query },
-                        success: function (data) {
-                            // Update the search results dynamically
-                            var resultsContainer = $('.autocomplete-results');
-                            resultsContainer.empty();
-
-                            if (data.length > 0) {
-                                resultsContainer.show();
-                                data.forEach(function (result) {
-                                    resultsContainer.append('<li class="list-group-item border-top-0 rounded-0" data-id="' + result.id + '">' + result.name + '</li>')
-                                        .css('cursor', 'pointer');
-                                });
-                            } else {
-                                resultsContainer.hide();
-                            }
-                        }
-                    });
-                } else {
-                    // Hide the results if the search query is less than 2 characters
-                    $('.autocomplete-results').hide();
-                }
-            });
-
-            // Handle click on search result
-            $('.autocomplete-results').on('click', 'li', function () {
-                var selectedName = $(this).text();
-                $('#agent_search').val(selectedName); // Set the selected result in the input field
-
-                var travelAgentId = $(this).data('id');
-                // Perform the necessary action with the selected travel agent ID
-                // e.g., update a hidden input field or trigger a Livewire method
-            @this.set('agent_id', travelAgentId)
-                // Hide the results container after selecting
-                $('.autocomplete-results').hide();
-            });
-
-            // Hide results when clicking outside the input and results container
-            $(document).on('click', function (event) {
-                if (!$(event.target).closest('.input-group').length) {
-                    $('.autocomplete-results').hide();
-                }
-            });
-
-            // Watch for changes to the checkbox state
-            $('input[type="checkbox"]').on('change', function () {
-                if (!$(this).is(':checked')) {
-                    // If the checkbox is unchecked, set form.agent_id to null
-                @this.set('agent_id', null);
-                @this.set('message', null);
-
-                }
-            });
-
-            // Watch for changes to the input search value
-            $('#agent_search').on('change', function () {
-                if ($(this).val() === '') {
-                    // If the search input is empty, set form.agent_id to null
-                @this.set('agent_id', null);
-                @this.set('message', null);
-
-                }
-            });
-        });
-    </script>
-@endpush
-
 

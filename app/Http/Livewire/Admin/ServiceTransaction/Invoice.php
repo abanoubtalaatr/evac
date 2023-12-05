@@ -31,11 +31,12 @@ class Invoice extends Component
 
     public function resetData()
     {
-        $this->reset(['surname', 'name', 'passportNo', 'agent', 'from', 'to']);
+        return redirect()->to(route('admin.service_transactions.invoices'));
     }
     public function getRecords()
     {
         return ServiceTransaction::query()
+            ->where('agent_id', null)
             ->where('payment_method', 'invoice')
             ->when(!empty($this->name), function ($query) {
                 $query->where('name', 'like', '%'.$this->name.'%');
@@ -47,7 +48,11 @@ class Invoice extends Component
                 $query->where('passport_no', 'like', '%'.$this->passport.'%');
             })->when(!empty($this->agent), function ($query){
                 $query->whereHas('agent', function ($query){
-                    $query->where('name', 'like', '%'.$this->agent.'%');
+                    if($this->agent != 'no_result'){
+                        $query->where('id',$this->agent);
+                    }else{
+                        $query->where('id', '>',0);
+                    }
                 });
             })->when(!empty($this->service), function ($query){
                 $query->whereHas('service', function ($query){

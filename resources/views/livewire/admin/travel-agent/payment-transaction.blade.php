@@ -9,24 +9,11 @@
         <div class="table-page-wrap">
 
             <div class="row d-flex align-items-center my-3 border p-2 rounded alig">
-                <div class="col-3 form-group" wire:ignore id="travelAgentContainer">
-                    <label for="status-select">@lang('admin.travel_agent')</label>
 
-                    <div class="input-group">
-                        <input
-                            id="agent_search"
-                            type="text"
-                            class="form-control contact-input"
-                            placeholder="Search Travel Agent"
-                            autocomplete="off"
-
-                        />
-                        <ul class="autocomplete-results list-group position-absolute w-100" style="padding-left: 0px; margin-top: 51px; display: none;z-index: 200">
-                        </ul>
-                    </div>
-                    @error('form.agent_id')<p class="mt-2" style="color: red;">{{ $message }}</p>@enderror
+                <div class="form-group col-3">
+                    <label for="status-select">@lang('admin.search')</label>
+                    @include('livewire.admin.shared.agent_search_html')
                 </div>
-
 
             </div>
 
@@ -46,7 +33,7 @@
                     <tbody>
                     @foreach($records as $record)
                         <tr>
-                            <td>#{{$loop->index + 1}}</td>
+                            <td>#{{$record->id}}</td>
                             <td class='text-center'>{{$record->name}}</td>
                             @php
                                 $totalAmount = $record->amount + $record->amount_service;
@@ -58,11 +45,17 @@
                             <td>
                                 <div class="actions">
                                     @if(($totalAmount - $record->amount_paid) > 0)
-                                    <button class="btn btn-primary" wire:click="showAddPaymentHistory({{$record->id}})">Pay Amount</button>
+                                    <button class="btn btn-primary mt-2" wire:click="showAddPaymentHistory({{$record->id}})">Pay Amount</button>
+
                                     @endif
                                     @include('livewire.admin.travel-agent.popup.payment-history',['agent' => $record])
 
-                                    <button class="btn btn-secondary" wire:click="showPaymentHistory({{$record->id}})">Payment history</button>
+                                        <button class="btn btn-secondary mt-2" wire:click="showPaymentHistory({{$record->id}})">Payment history</button>
+
+                                    @if($record->amount_paid > 0)
+                                            <button class="btn btn-info mt-2" onclick="printPage('{{route('admin.travel_agent_payment_transactions_print_last_receipt',['agent' => $record->id])}}')">Print last receipt</button>
+
+                                        @endif
                                 </div>
                             </td>
                         </tr>
@@ -135,81 +128,31 @@
         });
     });
 </script>
-@push('scripts')
-    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
-    <script>
-        $(document).ready(function () {
-            $('#agent_search').on('input', function () {
-                var query = $(this).val();
-                if (query.length >= 0) {
-                    // Make an AJAX request to get search results
-                    $.ajax({
-                        url: '/admin/agents/search', // Replace with your actual endpoint
-                        method: 'GET',
-                        data: { query: query },
-                        success: function (data) {
-                            // Update the search results dynamically
-                            var resultsContainer = $('.autocomplete-results');
-                            resultsContainer.empty();
+@include('livewire.admin.shared.agent_search_script')
 
-                            if (data.length > 0) {
-                                resultsContainer.show();
-                                data.forEach(function (result) {
-                                    resultsContainer.append('<li class="list-group-item border-top-0 rounded-0" data-id="' + result.id + '">' + result.name + '</li>')
-                                        .css('cursor', 'pointer');
-                                });
-                            } else {
-                                resultsContainer.hide();
-                            }
-                        }
-                    });
-                } else {
-                    // Hide the results if the search query is less than 2 characters
-                    $('.autocomplete-results').hide();
-                }
-            });
+<script>
+    // Function to load content into an iframe and trigger printing
+    function printPage(url) {
+        // Create an iframe element
+        var iframe = document.createElement('iframe');
 
-            // Handle click on search result
-            $('.autocomplete-results').on('click', 'li', function () {
-                var selectedName = $(this).text();
-                $('#agent_search').val(selectedName); // Set the selected result in the input field
+        // Set the source URL of the iframe
+        iframe.src = url;
 
-                var travelAgentId = $(this).data('id');
-                // Perform the necessary action with the selected travel agent ID
-                // e.g., update a hidden input field or trigger a Livewire method
-                @this.set('agent_id', travelAgentId)
-                // Hide the results container after selecting
-                $('.autocomplete-results').hide();
-            });
+        // Set styles to hide the iframe
+        iframe.style.position = 'absolute';
+        iframe.style.top = '-9999px';
+        iframe.style.left = '-9999px';
+        iframe.style.width = '0';
+        iframe.style.height = '0';
 
-            // Hide results when clicking outside the input and results container
-            $(document).on('click', function (event) {
-                if (!$(event.target).closest('.input-group').length) {
-                    $('.autocomplete-results').hide();
-                }
-            });
+        // Append the iframe to the document body
+        document.body.appendChild(iframe);
 
-            // Watch for changes to the checkbox state
-            $('input[type="checkbox"]').on('change', function () {
-                if (!$(this).is(':checked')) {
-                    // If the checkbox is unchecked, set form.agent_id to null
-                @this.set('agent_id', null);
-                @this.set('message', null);
-
-                }
-            });
-
-            // Watch for changes to the input search value
-            $('#agent_search').on('change', function () {
-                if ($(this).val() === '') {
-                    // If the search input is empty, set form.agent_id to null
-                @this.set('agent_id', null);
-                @this.set('message', null);
-
-                }
-            });
-        });
-    </script>
-@endpush
-
-
+        // Wait for the iframe to load
+        iframe.onload = function() {
+            // Print the content of the iframe
+            iframe.contentWindow.print();
+        };
+    }
+</script>

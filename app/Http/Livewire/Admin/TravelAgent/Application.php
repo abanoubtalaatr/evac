@@ -20,7 +20,7 @@ class Application extends Component
         $email,
         $showSendEmail = false,
         $showSendEmailButton= false,
-        $message= null;
+        $message= null, $agent;
 
     public function mount()
     {
@@ -49,8 +49,12 @@ class Application extends Component
                 $query->where(function ($query) {
                     $query->where('passport_no', 'like', '%'.$this->passport.'%');
                 });
-            })->when(!empty($this->agent_id), function ($query) {
-                $query->where('travel_agent_id', $this->agent_id);
+            })->when($this->agent, function ($query){
+                if($this->agent == 'no_result'){
+                    $query->where('travel_agent_id', '>', 0);
+                }else{
+                    $query->where('travel_agent_id', $this->agent);
+                }
             })->when(!empty($this->referenceNo), function ($query) {
                 $query->where(function ($query) {
                     $query->where('application_ref', 'like', '%'.$this->referenceNo.'%');
@@ -96,7 +100,7 @@ class Application extends Component
 
     public function resetData()
     {
-        $this->reset(['from', 'to', 'agent_id', 'visaType', 'status']);
+        return redirect()->to(route('admin.travel_agent_applications'));
     }
 
     public function render()
