@@ -78,7 +78,7 @@
                                         Cancel
                                     </button>
 
-                                    <button wire:click="showDeleteConfirmation({{$record->id}})" class="btn btn-danger">
+                                    <button wire:click="showDeleteConfirmation({{$record->id}})" class="btn btn-danger mt-2">
                                         Delete
                                     </button>
 

@@ -42,6 +42,8 @@
                         <th class="text-center">#</th>
                         <th class="text-center">@lang('site.name')</th>
                         <th class="text-center">@lang('validation.attributes.email')</th>
+                        <th class="text-center">@lang('admin.role')</th>
+
                         <th class="text-center">@lang('site.status')</th>
                         <th>@lang('site.actions')</th>
                     </tr>
@@ -52,6 +54,8 @@
                             <td class="text-center">{{$loop->index + 1}}</td>
                             <td class='text-center'>{{$record->name}}</td>
                             <td class='text-center'>{{$record->email}}</td>
+                            <td class='text-center'>{{$record->roles()->first()->name}}</td>
+
                             <td class='text-center'>
                                 <div class="status {{$record->status_class}}">
                                     <span>@lang('site.'.$record->status)</span>

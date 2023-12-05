@@ -59,6 +59,12 @@ class Index extends Component
                         ->orWhere('telephone', 'like', '%'.$this->search.'%')
                         ;
                 });
+            })->when($this->agent, function ($query){
+                if($this->agent == 'no_result'){
+                    $query->where('id', '>', 0);
+                }else{
+                    $query->where('id', $this->agent);
+                }
             })
             ->latest()
             ->paginate(50);
@@ -70,7 +76,8 @@ class Index extends Component
     }
     public function resetData()
     {
-        $this->reset(['is_active', 'search']);
+        return redirect()->to(route('admin.travel_agents'));
+//        $this->reset(['is_active', 'search', 'ag']);
     }
 
 

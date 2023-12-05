@@ -85,6 +85,8 @@
                             <td class='text-center'><button class="border-0">{{$record->status}}</button></td>
                             <td>
                                 <div class="actions">
+
+
                                     @include('livewire.admin.application.popup.invoice', ['application' => $record])
                                     <button  style="cursor:pointer;" wire:click="showApplicationInvoice({{$record->id}})" class="btn btn-info mt-2">Edit invoice</button>
 
@@ -103,10 +105,8 @@
                                     <a style="cursor:pointer;" href="{{route('admin.applications.update', ['application' => $record])}}" class="no-btn mt-2">
                                         <i class="far fa-edit blue"></i>
                                     </a>
-                                    <button class="btn btn-secondary" wire:click="toggleShowModal({{$record->id}})">Send email</button>
-                                    <button class="btn btn-secondary mt-2" wire:click="downloadCSV({{$record->id}})">Csv</button>
-
-                                </div>
+                                    <button class="btn btn-secondary mt-1" wire:click="toggleShowModal({{$record->id}})">Send email</button>
+                                    <button class="btn btn-secondary mt-1" wire:click="downloadCSV({{$record->id}})">Csv</button>                                </div>
                             </td>
                             @endforeach
                         </tr>

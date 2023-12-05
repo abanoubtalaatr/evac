@@ -21,8 +21,9 @@
                     <input wire:model='surname' type="text" class="form-control contact-input">
                 </div>
                 <div class="form-group col-3">
-                    <label for="status-select">@lang('admin.agent')</label>
-                    <input wire:model='agent' type="text" class="form-control contact-input">
+                    <label>Agent</label>
+                    @include('livewire.admin.shared.agent_search_html')
+
                 </div>
                 <div class="form-group col-3">
                     <label for="status-select">@lang('admin.service')</label>
@@ -136,7 +137,7 @@
     <link href="{{asset('css/select2.min.css')}}" rel="stylesheet"/>
 @endpush
 
-
+@include('livewire.admin.shared.agent_search_script')
 
 <script>
     document.getElementById('addServiceTransactionButton').addEventListener('click', function() {

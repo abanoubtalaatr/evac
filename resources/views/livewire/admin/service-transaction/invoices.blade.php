@@ -21,10 +21,10 @@
                     <label for="status-select">@lang('admin.surname')</label>
                     <input wire:model='surname' type="text" class="form-control contact-input">
                 </div>
-                <div class="form-group col-3">
-                    <label for="status-select">@lang('admin.agent')</label>
-                    <input wire:model='agent' type="text" class="form-control contact-input">
-                </div>
+{{--                <div class="form-group col-3">--}}
+{{--                    <label for="status-select">@lang('admin.agent')</label>--}}
+{{--                    @include('livewire.admin.shared.agent_search_html')--}}
+{{--                </div>--}}
                 <div class="form-group col-3">
                     <label for="status-select">@lang('admin.service')</label>
                     <input wire:model='service' type="text" class="form-control contact-input">
@@ -53,7 +53,6 @@
                         <th class="text-center">@lang('admin.name')</th>
                         <th class="text-center">@lang('admin.surname')</th>
                         <th class="text-center">@lang('admin.vat')</th>
-                        <th class="text-center">@lang('admin.status')</th>
                         <th>@lang('site.actions')</th>
                     </tr>
                     </thead>
@@ -67,9 +66,6 @@
                             <td class='text-center'>{{$record->name}}</td>
                             <td class='text-center'>{{$record->surname}}</td>
                             <td class='text-center'>{{$record->vat}}</td>
-                            <td class='text-center'>
-                                <button class="border-0">{{$record->status}}</button>
-                            </td>
                             <td>
                                 <div class="actions">
                                     <button class="btn btn-primary mt-2" wire:click="showPayInvoiceConfirmation({{$record->id}})">Pay invoice</button>
@@ -112,7 +108,7 @@
 @push('styles')
     <link href="{{asset('css/select2.min.css')}}" rel="stylesheet"/>
 @endpush
-
+@include('livewire.admin.shared.agent_search_script')
 
 
 <script>

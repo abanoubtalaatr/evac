@@ -222,3 +222,10 @@ if (!function_exists('vatForServiceFee')) {
     }
 }
 
+if (!function_exists('isOwner')) {
+    function isOwner()
+    {
+       return  auth('admin')->user()->is_owner;
+    }
+}
+

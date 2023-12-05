@@ -64,6 +64,7 @@ Route::group([
             Route::get('travel-agents', App\Http\Livewire\Admin\TravelAgent\Index::class)->name('travel_agents');
             Route::get('travel-agents-applications', App\Http\Livewire\Admin\TravelAgent\Application::class )->name('travel_agent_applications');
             Route::get('travel-agent-payment-transactions',\App\Http\Livewire\Admin\TravelAgent\PaymentTransaction::class)->name('travel_agent_payment_transactions');
+            Route::get('travel-agent-payment-transactions-print-last-receipt/{agent}',[\App\Http\Controllers\Admin\PrintController::class,'printLastReceipt'])->name('travel_agent_payment_transactions_print_last_receipt');
             //visa types
             Route::get('visa-types', App\Http\Livewire\Admin\VisaType\Index::class)->name('visa_types');
 
@@ -106,7 +107,11 @@ Route::group([
 
             Route::get('/agents/search', function(Request $request){
                 $query = $request->input('query');
-                $searchResults = Agent::where('name', 'like', '%' . $query . '%')->get();
+                if(\App\Helpers\isOwner()){
+                    $searchResults = Agent::where('name', 'like', '%' . $query . '%')->get();
+                }else{
+                    $searchResults = Agent::owner()->where('name', 'like', '%' . $query . '%')->get();
+                }
 
                 return response()->json($searchResults);
             });

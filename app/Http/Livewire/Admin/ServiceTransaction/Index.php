@@ -20,6 +20,7 @@ use Illuminate\Support\Facades\Mail;
 use Livewire\Component;
 use Livewire\WithPagination;
 use Maatwebsite\Excel\Facades\Excel;
+use function App\Helpers\isOwner;
 
 class Index extends Component
 {
@@ -42,7 +43,12 @@ class Index extends Component
     {
         $this->page_title = __('admin.service_transactions');
         $this->services = Service::query()->get();
-        $this->agents = Agent::query()->orderBy('name')->get();
+        if(isOwner()){
+            $this->agents = Agent::query()->orderBy('name')->get();
+        }else{
+            $this->agents = Agent::owner()->orderBy('name')->get();
+
+        }
         if(!$this->serviceTransaction){
             $this->form['payment_method'] = 'invoice';
         }
@@ -165,9 +171,7 @@ class Index extends Component
             })->when(!empty($this->passport), function ($query){
                 $query->where('passport_no', 'like', '%'.$this->passport.'%');
             })->when(!empty($this->agent), function ($query){
-                $query->whereHas('agent', function ($query){
-                    $query->where('name', 'like', '%'.$this->agent.'%');
-                });
+                $query->where('agent_id', $this->agent);
             })->when(!empty($this->service), function ($query){
                 $query->whereHas('service', function ($query){
                     $query->where('name', 'like', '%'.$this->service.'%');

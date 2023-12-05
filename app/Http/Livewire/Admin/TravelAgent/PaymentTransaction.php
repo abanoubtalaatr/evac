@@ -37,26 +37,30 @@ class PaymentTransaction extends Component
 
     public function getRecords()
     {
-        return Agent::query()
-        ->when(!empty($this->agent_id), function ($query) {
-            $query->find($this->agent_id);
+        return Agent::query()->when($this->agent, function ($query) {
+            if($this->agent =='no_result'){
+                return $query->where('agents.id', '>', 0);
+
+            }else{
+                return $query->where('agents.id', $this->agent);
+            }
         })
-        ->leftJoin('applications', 'agents.id', '=', 'applications.travel_agent_id')
-        ->leftJoin('payment_transactions', function ($join) {
-            $join->on('agents.id', '=', 'payment_transactions.agent_id');
-        })
-        ->leftJoin('service_transactions', function ($join) {
-            $join->on('agents.id', '=', 'service_transactions.agent_id');
-        })
-        ->select(
-            'agents.*',
-            DB::raw('(SELECT SUM(amount) FROM applications WHERE applications.travel_agent_id = agents.id) as amount'),
-            DB::raw('(SELECT SUM(COALESCE(amount, 0)) FROM payment_transactions WHERE payment_transactions.agent_id = agents.id) as amount_paid'),
-            DB::raw('(SELECT SUM(COALESCE(amount, 0)) FROM service_transactions WHERE service_transactions.agent_id = agents.id) as amount_service')
-        )
-        ->groupBy('agents.id')
-        ->latest()
-        ->paginate(50);
+            ->leftJoin('applications', 'agents.id', '=', 'applications.travel_agent_id')
+            ->leftJoin('payment_transactions', function ($join) {
+                $join->on('agents.id', '=', 'payment_transactions.agent_id');
+            })
+            ->leftJoin('service_transactions', function ($join) {
+                $join->on('agents.id', '=', 'service_transactions.agent_id');
+            })
+            ->select(
+                'agents.*',
+                DB::raw('(SELECT SUM(amount) FROM applications WHERE applications.travel_agent_id = agents.id) as amount'),
+                DB::raw('(SELECT SUM(COALESCE(amount, 0)) FROM payment_transactions WHERE payment_transactions.agent_id = agents.id) as amount_paid'),
+                DB::raw('(SELECT SUM(COALESCE(amount, 0)) FROM service_transactions WHERE service_transactions.agent_id = agents.id) as amount_service')
+            )
+            ->groupBy('agents.id')
+            ->latest()
+            ->paginate(50);
 
     }
 

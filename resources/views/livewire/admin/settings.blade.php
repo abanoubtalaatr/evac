@@ -117,6 +117,14 @@
                         <hr/>
                     </div>
                     <div class="col-6">
+                        <label for="">@lang('admin.fax')</label>
+                        <input wire:model='form.fax' placeholder="@lang('admin.fax')"
+                               class="@error('form.fax') is-invalid @enderror form-control contact-input"
+                               type="text"/>
+                        @error('form.fax') <p class="text-danger">{{$message}}</p> @enderror
+                        <hr/>
+                    </div>
+                    <div class="col-6">
                         <label for="">@lang('admin.invoice_footer')</label>
                         <textarea class="form-control" wire:model="form.invoice_footer" ></textarea>
                         @error('form.invoice_footer') <p class="text-danger">{{$message}}</p> @enderror

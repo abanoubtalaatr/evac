@@ -23,6 +23,7 @@ class UnPaidApplication extends Component
     public function getRecords()
     {
         return Application::query()
+            ->where('travel_agent_id', null)
             ->where('payment_method', 'invoice')
             ->when(!empty($this->passport), function ($query) {
                 $query->where(function ($query) {

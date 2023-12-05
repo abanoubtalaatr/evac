@@ -15,7 +15,7 @@
 
                 <div class="form-group col-3">
                     <label for="status-select">@lang('admin.search')</label>
-                    <input wire:model='search' type="text" class="form-control contact-input">
+                    @include('livewire.admin.shared.agent_search_html')
                 </div>
                 <div class="form-group col-3">
                     <label for="status-select">@lang('admin.is_active')</label>
@@ -94,6 +94,7 @@
     </div>
 </main>
 
+@include('livewire.admin.shared.agent_search_script')
 <script>
     document.getElementById('addAgentButton').addEventListener('click', function() {
         $('#agentModal').modal('show');

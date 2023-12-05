@@ -111,4 +111,6 @@ return [
     "amount_should_paid" => "Amount should paid",
     "invoice_footer" => "Invoice footer",
     'account_number' => "Account number",
+    "role" => "Role",
+    'fax' => "Fax"
 ];

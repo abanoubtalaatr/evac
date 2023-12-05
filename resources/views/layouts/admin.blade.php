@@ -20,9 +20,9 @@
           href="{{asset('frontAssets')}}/assets_{{app()->getLocale()}}/css/{{app()->getLocale()}}Style.css">
     <script src="//unpkg.com/alpinejs" defer></script>
     <link defer rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css">
-    <script src="{{asset('frontAssets/plugins/toastr/toastr.min.js')}}"></script>
-    <script src="{{asset('frontAssets/plugins/toastr/toastr.min.css')}}"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
+
+
     @livewireStyles()
     @stack('styles')
 
@@ -184,7 +184,7 @@
                         @lang('admin.travel_agents')
                     </a>
                 </li>
-                <li style="line-height: 20px;margin-left: 18px;padding-left: 0px;text-indent: 0" class="border-bottom pb-2 {{ request()->routeIs('admin.travel_agents_applications') ? 'active' : '' }}">
+                <li style="line-height: 20px;margin-left: 18px;padding-left: 0px;text-indent: 0" class="border-bottom pb-2 {{ request()->routeIs('admin.travel_agent_applications') ? 'active' : '' }}">
                     <a href="{{route('admin.travel_agent_applications')}}" class="text-white ">
                         @lang('admin.agent_applications')
                     </a>
@@ -421,13 +421,14 @@
 <!-- End Main Content-->
 
 <script src="{{asset('js/jquery.js')}}"></script>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"></script>
+
+<script src="{{asset('js/bootstrap.bundle.js')}}"></script>
+
+
 <script src="{{asset('frontAssets')}}/assets_{{app()->getLocale()}}/js/functions.js"></script>
-<script src="{{asset('frontAssets/plugins/toastr/toastr.min.js')}}"></script>
 <script src="{{asset('js/select2.min.js')}}"></script>
-<script src="{{asset('js/jquery.js')}}"></script>
-<script src="{{asset('js/popper.min.js')}}"></script>
-<script src="{{asset('js/bootstrap.min.js')}}"></script>
+
+
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
 <script>
@@ -501,7 +502,6 @@
 
 
 @livewireScripts()
-<script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
 <script>
     document.addEventListener('livewire:load', function () {
         Livewire.on('showToast', function (data) {

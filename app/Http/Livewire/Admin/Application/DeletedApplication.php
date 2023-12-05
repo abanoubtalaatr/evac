@@ -5,6 +5,7 @@ namespace App\Http\Livewire\Admin\Application;
 use App\Http\Livewire\Traits\Admin\Application\DeleteTrait;
 use App\Models\VisaType;
 use Livewire\Component;
+use function App\Helpers\isOwner;
 
 class DeletedApplication extends Component
 {
@@ -23,6 +24,7 @@ class DeletedApplication extends Component
 
     public function getRecords()
     {
+
         return \App\Models\DeletedApplication::query()
             ->when(!empty($this->passport), function ($query) {
                 $query->where(function ($query) {

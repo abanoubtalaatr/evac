@@ -12,22 +12,10 @@ class Agent extends Model
 
     protected $guarded=[];
 
-    protected static function boot()
+    public function scopeOwner($query)
     {
-        parent::boot();
-
-        static::addGlobalScope('visibleAgents', function ($builder) {
-
-            if (Auth::check() && Auth::user()->is_owner) {
-                // If the user is an owner, do nothing (all agents are included)
-            } else {
-                // If not an owner, apply conditions for non-owners
-                $builder->where('is_visible', true);
-            }
-        });
+        $query->where('is_visible', 1);
     }
-
-
     public function paymentTransactions()
     {
         return $this->hasMany(PaymentTransaction::class);
