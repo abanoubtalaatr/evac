@@ -327,7 +327,8 @@ return [
         'brief_en' => 'Brief in english',
         'customer_service_number' => 'Customer service number',
         'video_url' => 'Video url',
-        'company_name ' => 'Company name'
+        'company_name ' => 'Company name',
+        "account_number" => "Account number"
     ],
 
 ];
