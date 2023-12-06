@@ -30,7 +30,7 @@ class Application extends Component
 
     public function updatedAgentId()
     {
-        if(!is_null($this->agent_id)) {
+        if(!is_null($this->agent)) {
             $this->showSendEmailButton = true;
         }else{
             $this->showSendEmailButton = false;
@@ -40,6 +40,7 @@ class Application extends Component
     {
         $this->email = null;
         $this->showSendEmail = !$this->showSendEmail;
+        $this->message = null;
     }
 
     public function getRecords()
@@ -76,20 +77,17 @@ class Application extends Component
     {
         $this->validate();
 
-        if(is_null($this->agent_id)) {
+        if(is_null($this->agent) || $this->agent =='no_result') {
             $this->message = "You must choose travel agent";
-            $this->toggleShowModal();
             return;
         }
-
         $records = $this->getRecords()->groupBy('visa_type_id');
-        $agent = Agent::query()->find($this->agent_id);
+        $agent = Agent::query()->find($this->agent);
         Mail::to($this->email)->send(new AgentApplicationsMail($records, $agent, $this->from, $this->to));
         $this->email = null;
         $this->message = null;
-        $this->agent_id = null;
-        $this->toggleShowModal();
-
+        $this->agent = null;
+        return redirect()->to(route('admin.travel_agent_applications'));
     }
     public function getRules()
     {
