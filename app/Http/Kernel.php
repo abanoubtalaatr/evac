@@ -74,7 +74,7 @@ class Kernel extends HttpKernel
         'RedirectInactiveUser'=>CheckActive::class,
         'acceptLocale'=>AcceptLocale::class,
         'logoutInactiveUser'=>LogoutInactiveUser::class,
-        'checkAdminIsLogin' => CheckAdminIsLogin::class,
+//        'checkAdminIsLogin' => CheckAdminIsLogin::class,
         'checkUserIsLogin' => CheckUserIsLogin::class,
     ];
 }
