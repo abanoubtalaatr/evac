@@ -13,7 +13,7 @@
             <div class="modal-body">
                 <div class="form-group my-2 ">
                     <label class="" for="service_id">Service : </label>
-                    <select wire:model="form.service_id" class="form-control" id="service_id">
+                    <select wire:model="form.service_id" class="w-100 p-2 rounded" style="border: 1px solid !important;" id="service_id">
                         <option value="">Select Service</option>
                         @foreach ($services as $service)
                             <option value="{{ $service->id }}">{{ $service->name }}</option>
@@ -24,7 +24,7 @@
 
                 <div class="form-group my-2 ">
                     <label class="" for="agent_id">Travel agent : </label>
-                    <select wire:model="form.agent_id" class="form-control" id="agent_id">
+                    <select wire:model="form.agent_id" class="w-100 p-2 rounded" style="border: 1px solid !important;" id="agent_id">
                         <option value="">Select Travel agent</option>
                         @foreach ($agents as $agent)
                             <option value="{{ $agent->id }}">{{ $agent->name }}</option>
