@@ -171,7 +171,11 @@ class Index extends Component
             })->when(!empty($this->passport), function ($query){
                 $query->where('passport_no', 'like', '%'.$this->passport.'%');
             })->when(!empty($this->agent), function ($query){
-                $query->where('agent_id', $this->agent);
+                if($this->agent =='no_result'){
+                    $query->where('agent_id', '>', 0);
+                }else{
+                    $query->where('agent_id', $this->agent);
+                }
             })->when(!empty($this->service), function ($query){
                 $query->whereHas('service', function ($query){
                     $query->where('name', 'like', '%'.$this->service.'%');
