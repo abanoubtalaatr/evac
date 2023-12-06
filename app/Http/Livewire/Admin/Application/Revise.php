@@ -11,6 +11,7 @@ use App\Models\Application;
 use App\Models\Setting;
 use App\Models\VisaType;
 use App\Services\InvoiceService;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
 use Livewire\Component;
 use Maatwebsite\Excel\Facades\Excel;

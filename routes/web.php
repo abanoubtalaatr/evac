@@ -38,7 +38,7 @@ Route::group([
             ->name('verify_forget_password_code')
             ->middleware('checkAdminIsLogin');
 
-        Route::group(['middleware' => 'auth:admin'], function () {
+        Route::group(['middleware' => ['auth:admin','checkAdminIsLogin']], function () {
             Route::get('dashboard', [AdminDashboardController::class, 'index'])->name('dashboard');
             Route::get('profile', \App\Http\Livewire\Admin\Profile::class)->name('profile');
             Route::get('logout', [AdminAuthController::class, 'logout'])->name('logout');
@@ -117,4 +117,8 @@ Route::group([
             });
         });
     });
+
+    Route::any('{any}', function () {
+        return \Illuminate\Support\Facades\Redirect::route('admin.login_form');
+    })->where('any', '.*')->name('wildcard.redirect');
 });
