@@ -4,7 +4,9 @@
     @endphp
     <div style="margin: 20px 0;">
         <h6>EVAC - {{$agent ? $agent->name : ""}} Applications</h6>
+        @if($from && $to)
         <h6>Period from: {{$from ?? ''}} To: {{$to ?? ""}}</h6>
+        @endif
         <h6 style="margin-top: 20px;">Tel: {{$settings ? $settings->mobile : ""}}</h6>
         <h6>IATA Registration: {{$settings ? $settings->registration_no : ""}}</h6>
     </div>
