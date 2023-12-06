@@ -67,6 +67,7 @@ class Index extends Component
     public function emptyForm()
     {
         $this->form =[];
+        $this->resetValidation();
     }
     public function update()
     {
