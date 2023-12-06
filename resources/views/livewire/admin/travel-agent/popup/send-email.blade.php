@@ -15,6 +15,11 @@
                 @error('email')<p style="color: red;">{{ $message }}</p>@enderror
 
             </div>
+            @if(isset($message) && !empty($message) && !is_null($message))
+                <div class="form-group mt-1  p-2">
+                    <div class="btn btn-danger form-control contact-">You must choose travel agent </div>
+                </div>
+            @endif
             <div class="modal-footer">
                 <button  class="btn btn-light" wire:click="send">Send</button>
                 <button type="button" class="btn btn-secondary" wire:click="toggleShowModal">Close</button>

@@ -53,11 +53,7 @@
                 <div class="form-group col-3 mt-4">
                     <button class="btn btn-secondary form-control contact-input" wire:click="toggleShowModal">Send email</button>
                 </div>
-                @if(isset($message) && !empty($message) && !is_null($message))
-                <div class="form-group col-3 mt-4">
-                    <div class="btn btn-danger form-control contact-">You must choose travel agent </div>
-                </div>
-                @endif
+
 
             </div>
 
