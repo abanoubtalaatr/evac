@@ -540,15 +540,15 @@
         $(".sidebar-toggle").click(function (e) {
             e.stopPropagation(); // Prevent event propagation to children
 
-            // Toggle the icon of the clicked menu
-            $(this).find(".fa").toggleClass("fa-plus fa-minus");
-
             // Toggle only the menu associated with the clicked toggle
             $(this).next(".sidebar-menu").slideToggle();
 
-            // Hide all other menus
+            // Toggle the icon of the clicked menu
+            $(this).find(".fas").toggleClass("fa-plus fa-minus");
+
+            // Hide all other menus and reset their icons
             $(".sidebar-menu").not($(this).next(".sidebar-menu")).slideUp();
-            $(".sidebar-toggle .fa").not($(this).find(".fa")).removeClass("fa-minus").addClass("fa-plus");
+            $(".sidebar-toggle .fas").not($(this).find(".fas")).removeClass("fa-minus").addClass("fa-plus");
         });
 
         // Check if the current URL is a child of any menu item
@@ -557,8 +557,11 @@
             var linkUrl = $(this).attr("href");
 
             if (currentUrl.startsWith(linkUrl)) {
-                // Keep the parent menu open and highlight it as active
-                $(this).closest(".sidebar-toggle").find(".fa").removeClass("fa-plus").addClass("fa-minus");
+                $(".sidebar-toggle .fas").not($(this).find(".fas")).addClass("fa-minus").removeClass('fa-plus');
+                console.log('fskdj')
+
+                // Keep the parent menu open, highlight it as active, and set the icon to minus
+                // $(this).closest(".sidebar-toggle").find(".fas").removeClass("fa-plus").addClass("fa-minus");
                 $(this).closest(".sidebar-menu").show();
             }
         });
@@ -569,9 +572,6 @@
         });
     });
 </script>
-
-
-
 
 
 @stack('scripts')
