@@ -56,7 +56,6 @@
         @if($application->vat > 0)
             <div>VAT : {{\App\Helpers\formatCurrency($application->vat)}} </div>
         @endif
-
         @php
             $total = $application->dubai_fee + $application->service_fee + $application->vat;
         @endphp
