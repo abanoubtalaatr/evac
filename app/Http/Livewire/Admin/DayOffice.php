@@ -63,13 +63,14 @@ class DayOffice extends Component
             $this->message = 'Please start your day first';
             return ;
         }
-        if(canCloseDay(1)){
-            $officeDay->update([
-                'end_time' => Carbon::now()->format('H:i:s'),
-                'day_status' => "0",
-            ]);
-            return redirect()->to(route('admin.day_office'));
-        }
+
+//        if(canCloseDay(1)){
+//            $officeDay->update([
+//                'end_time' => Carbon::now()->format('H:i:s'),
+//                'day_status' => "0",
+//            ]);
+//            return redirect()->to(route('admin.day_office'));
+//        }
         $this->message = "There is nothing in appraise";
     }
 
