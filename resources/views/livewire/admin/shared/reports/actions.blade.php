@@ -26,7 +26,7 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-primary" onclick="sendEmailWithAttachment('{{ "livewire.admin.PrintReports.daily_reports" }}')">Send Email</button>
+                <button type="button" class="btn btn-primary" onclick="sendEmailWithAttachment('App\\Http\\Controllers\\Admin\\Reports\\DailyReport\\PrintController')">Send Email</button>
             </div>
         </div>
     </div>
@@ -34,7 +34,7 @@
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/js/bootstrap.min.js" integrity="sha384-j0CNLUeiqtyaRmlzUHCPZ+Gy5fQu0dQ6eZ/xAww941Ai1SxSY+0EQqNXNE6DZiVc" crossorigin="anonymous"></script>
 
 <script>
-    function sendEmailWithAttachment(pdfPath) {
+    function sendEmailWithAttachment(className) {
         const recipientEmail = $('#email').val();
 
         if (recipientEmail) {
@@ -42,7 +42,7 @@
 console.log(csrfToken)
             const data = {
                 'email' : recipientEmail,
-                'pdfPath' : pdfPath,
+                'className' : className,
                 _token: csrfToken,
 
             };

@@ -116,7 +116,7 @@ Route::group([
                 return response()->json($searchResults);
             });
 
-            Route::get('print-daily-report', [\App\Http\Controllers\Admin\PrintController::class,'printDailyReport'])->name('print.daily_reports');
+            Route::get('print-daily-report', [\App\Http\Controllers\Admin\Reports\DailyReport\PrintController::class,'printReport'])->name('print.daily_reports');
             Route::post('send-email',[\App\Http\Controllers\Admin\SendEmailController::class,'send'])->name('send.email');
         });
     });
