@@ -3,12 +3,9 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use Barryvdh\DomPDF\Facade\Pdf;
-use GuzzleHttp\Client;
+use Barryvdh\DomPDF\Facade;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Mail;
-use Spatie\Browsershot\Browsershot;
 
 class SendEmailController extends Controller
 {
@@ -18,20 +15,29 @@ class SendEmailController extends Controller
             return response()->json(['error' => 'Recipient email not provided.'], 400);
         }
 
-        $url = route('admin.print.daily_reports'); // Replace with your actual URL
-        $pdfPath = storage_path('app/attachment.pdf');
-        $recipientEmail = $request->email;
-        $data = [];
+        if (!$request->className) {
+            return response()->json(['error' => 'Class name not provided.'], 400);
+        }
 
-        Browsershot::url($url)
-            ->save($pdfPath);
+        $reportClass = app()->make($request->className);
 
-        Mail::send([], $data, function ($message) use ($pdfPath, $recipientEmail) {
-            $message->to($recipientEmail)
+        $html = $reportClass->printReport();
+        $pdf = Facade\Pdf::loadHTML($html)
+            ->setPaper('a4', 'landscape')
+            ->setWarnings(false)
+            ->save('myfile.pdf');
+
+        // Send email with PDF attachment
+        Mail::send([], [], function ($message) use ($pdf, $request) {
+            $message->to($request->email)
                 ->subject('Subject of the Email')
-                ->attach($pdfPath, ['as' => 'attachment.pdf', 'mime' => 'application/pdf']);
+                ->attach('myfile.pdf', ['as' => 'attachment.pdf', 'mime' => 'application/pdf']);
         });
+
+        // Remove the temporary PDF file
+        unlink('myfile.pdf');
 
         return response()->json(['success' => 'Email sent successfully.']);
     }
+
 }
