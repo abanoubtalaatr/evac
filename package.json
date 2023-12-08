@@ -19,6 +19,7 @@
         "@popperjs/core": "^2.11.6",
         "bootstrap": "^5.2.3",
         "emojionearea": "^3.0.0",
+        "puppeteer": "^21.6.0",
         "webpack": "^5.73.0"
     }
 }
