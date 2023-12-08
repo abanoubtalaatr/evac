@@ -11,6 +11,8 @@ use Barryvdh\DomPDF\Facade\Pdf;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Spatie\Browsershot\Browsershot;
+
 
 class PrintController extends Controller
 {
@@ -24,6 +26,7 @@ class PrintController extends Controller
     }
     public function printDailyReport()
     {
+
         $title = "Daily reports";
 
         $dayReport['visaTypes'] = VisaType::with(['applications'])->get();
