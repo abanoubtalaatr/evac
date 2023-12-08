@@ -159,19 +159,18 @@
             @endif
 
             @if(auth('admin')->user()->id ==1)
-                <li>
-                    <a  class="text-white  ">
-                        <i class="fa fa-suitcase mr-5"></i>
-                        <span class="ml-2">@lang('admin.reports')</span>
-                    </a>
+
+                <li class="sidebar-toggle">
+                    <i class="fa fa-suitcase mr-5"></i>
+                    <span class="ml-2">@lang('admin.reports')</span>
+                    <i class="fas fa-plus"></i>
                 </li>
             @else
                 @can('Manage reports')
-                    <li >
-                        <a  class="text-white ">
-                            <i class="fa fa-suitcase mr-5"></i>
-                            <span class="ml-2">@lang('admin.reports')</span>
-                        </a>
+                    <li class="sidebar-toggle">
+                        <i class="fa fa-suitcase mr-5"></i>
+                        <span class="ml-2">@lang('admin.reports')</span>
+                        <i class="fas fa-plus"></i>
                     </li>
                 @endcan
             @endif

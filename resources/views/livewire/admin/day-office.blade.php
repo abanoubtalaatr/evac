@@ -8,6 +8,7 @@
             <div class="col-md-12">
                 <div class="border bg-white rounded p-lg-5 p-3 mb-3">
                     <h5 class="head-term">{{$page_title}}</h5>
+                    @include('livewire.admin.shared.reports.actions',['url' => route('admin.print.daily_reports')])
                     <hr>
                     @if(!empty($message))
                         <div class="alert alert-danger"> {{$message}}</div>
