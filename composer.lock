@@ -4850,7 +4850,6 @@
                     "type": "tidelift"
                 }
             ],
-
             "time": "2023-07-09T15:24:48+00:00"
         },
         {
@@ -12403,5 +12402,5 @@
         "php": "^7.3|^8.0|^7.4"
     },
     "platform-dev": [],
-    "plugin-api-version": "2.6.0"
+    "plugin-api-version": "2.3.0"
 }
