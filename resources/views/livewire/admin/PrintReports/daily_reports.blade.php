@@ -97,6 +97,8 @@
                 @include('livewire.admin.PrintReports.DailyReport.year')
             </div>
         </section>
+        @include('livewire.admin.shared.reports.footer')
+
     </main>
 
     </body>
