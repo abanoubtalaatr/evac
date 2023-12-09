@@ -12,21 +12,21 @@ class AgentApplicationsMail extends Mailable
 {
     use Queueable, SerializesModels;
 
-    public $data, $agent, $form, $toDate;
+    public $data, $agent, $fromDate, $toDate;
 
-    public function __construct($data, $agent, $from, $to)
+    public function __construct($data, $agent, $fromDate, $toDate)
     {
         $this->data = $data;
         $this->agent = $agent;
-        $this->from = $from;
-        $this->toDate = $to;
+        $this->fromDate = $fromDate;
+        $this->toDate = $toDate;
     }
 
     public function build()
     {
         return $this->attachData($this->generatePdf(), 'application_records.pdf')
             ->subject("EVAC - " . $this->agent->name . ' - ' . "Application Report")
-            ->view('livewire.admin.PrintReports.agent_application');
+            ->view('emails.TravelAgent.agent-applications-body');
 
     }
 
@@ -42,8 +42,8 @@ class AgentApplicationsMail extends Mailable
         $html = view('livewire.admin.PrintReports.agent_application')->with([
             'data' => $this->data,
             'agent' => $this->agent,
-            'from' => $this->from,
-            'to' => $this->toDate
+            'from' => $this->fromDate,
+            'toDate' => $this->toDate
         ])->render();
 
         // Load HTML to Dompdf
