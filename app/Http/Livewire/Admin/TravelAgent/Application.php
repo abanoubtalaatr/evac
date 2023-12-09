@@ -76,14 +76,13 @@ class Application extends Component
 
     public function sendEmail(Request $request)
     {
-$this->validate();
+        $this->validate();
         if(is_null($this->agent) || $this->agent =='no_result') {
             $this->message = "You must choose travel agent";
             return;
         }
         $records = $this->getRecords()->groupBy('visa_type_id');
         $agent = Agent::query()->find($this->agent);
-//        dd($this->email);
         Mail::to($this->email)->send(new AgentApplicationsMail($records, $agent, $this->from, $this->to));
         $this->email = null;
         $this->message = null;
