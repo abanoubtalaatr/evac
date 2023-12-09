@@ -88,7 +88,6 @@
 
 <main>
     @include('livewire.admin.shared.reports.header')
-
     <!--dashboard-->
     <section class="dashboard">
         <div class="row">

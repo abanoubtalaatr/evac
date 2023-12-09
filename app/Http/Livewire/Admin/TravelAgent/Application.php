@@ -83,7 +83,8 @@ class Application extends Component
         }
         $records = $this->getRecords()->groupBy('visa_type_id');
         $agent = Agent::query()->find($this->agent);
-        Mail::to($this->email)->send(new AgentApplicationsMail($records, $agent, $this->from, $this->to));
+        $this->fromDate = $this->from;
+        Mail::to($this->email)->send(new AgentApplicationsMail($records, $agent, $this->fromDate, $this->to));
         $this->email = null;
         $this->message = null;
         $this->agent = null;
