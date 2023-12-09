@@ -5,7 +5,8 @@
     <button type="button" class="btn btn-info rounded" data-bs-toggle="modal" data-bs-target="#exampleModal">
         Send email
     </button>
-    <button class="btn btn-success rounded">Download CSV</button>
+
+    <a class="btn btn-success rounded" href="{{ $routeName??null }}">Download CSV</a>
 </div>
 <meta name="csrf-token" content="{{ csrf_token() }}">
 
@@ -15,7 +16,7 @@
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+                <h5 class="modal-title" id="exampleModalLabel">Send email</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
@@ -26,12 +27,13 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-primary" onclick="sendEmailWithAttachment('App\\Http\\Controllers\\Admin\\Reports\\DailyReport\\PrintController')">Send Email</button>
+                <button type="button" class="btn btn-primary" onclick="sendEmailWithAttachment('{{$className??null}}')">Send Email</button>
             </div>
         </div>
     </div>
 </div>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/js/bootstrap.min.js" integrity="sha384-j0CNLUeiqtyaRmlzUHCPZ+Gy5fQu0dQ6eZ/xAww941Ai1SxSY+0EQqNXNE6DZiVc" crossorigin="anonymous"></script>
+<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
 
 <script>
     function sendEmailWithAttachment(className) {
@@ -39,7 +41,6 @@
 
         if (recipientEmail) {
             const csrfToken = $('meta[name="csrf-token"]').attr('content');
-console.log(csrfToken)
             const data = {
                 'email' : recipientEmail,
                 'className' : className,
@@ -52,7 +53,7 @@ console.log(csrfToken)
                 method: 'POST',  // Change the method to POST
                 data: data,      // Pass the data to be sent in the request body
                 success: function (response) {
-                    $('#email').modal('hide'); // Corrected the modal ID here
+                    window.location.reload()
                 },
                 error: function (error) {
                     console.error(error);

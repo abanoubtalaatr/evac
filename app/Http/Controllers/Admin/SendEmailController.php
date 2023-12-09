@@ -18,24 +18,22 @@ class SendEmailController extends Controller
         if (!$request->className) {
             return response()->json(['error' => 'Class name not provided.'], 400);
         }
-
         $reportClass = app()->make($request->className);
 
         $html = $reportClass->printReport();
+
         $pdf = Facade\Pdf::loadHTML($html)
             ->setPaper('a4', 'landscape')
             ->setWarnings(false)
-            ->save('myfile.pdf');
+            ->save('report.pdf');
 
-        // Send email with PDF attachment
         Mail::send([], [], function ($message) use ($pdf, $request) {
             $message->to($request->email)
-                ->subject('Subject of the Email')
-                ->attach('myfile.pdf', ['as' => 'attachment.pdf', 'mime' => 'application/pdf']);
+                ->subject('Report')
+                ->attach('report.pdf', ['as' => 'attachment.pdf', 'mime' => 'application/pdf']);
         });
 
-        // Remove the temporary PDF file
-        unlink('myfile.pdf');
+        unlink('report.pdf');
 
         return response()->json(['success' => 'Email sent successfully.']);
     }

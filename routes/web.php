@@ -10,6 +10,7 @@ use App\Http\Livewire\Admin\Role\Create as RoleCreate;
 use App\Http\Livewire\Admin\Admins\Index as AdminIndex;
 use App\Http\Livewire\Admin\Admins\Edit as AdminEdit;
 use App\Http\Livewire\Admin\Admins\Create as AdminCreate;
+use Maatwebsite\Excel\Facades\Excel;
 use Mcamara\LaravelLocalization\Facades\LaravelLocalization;
 use App\Http\Controllers\Admin\AuthController as AdminAuthController;
 use App\Http\Controllers\Admin\DashboardController as AdminDashboardController;
@@ -118,6 +119,12 @@ Route::group([
 
             Route::get('print-daily-report', [\App\Http\Controllers\Admin\Reports\DailyReport\PrintController::class,'printReport'])->name('print.daily_reports');
             Route::post('send-email',[\App\Http\Controllers\Admin\SendEmailController::class,'send'])->name('send.email');
+
+            Route::get('test-export', function (Request $request){
+                $application = \App\Models\Application::query()->first();
+                $fileExport = (new \App\Exports\ReceiptApplicationExport($application));
+                return Excel::download($fileExport, 'report.csv');
+            })->name('test_export');
         });
     });
 

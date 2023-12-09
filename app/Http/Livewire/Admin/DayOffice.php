@@ -2,7 +2,9 @@
 
 namespace App\Http\Livewire\Admin;
 
+use App\Http\Controllers\Admin\SendEmailController;
 use Carbon\Carbon;
+use Illuminate\Http\Request;
 use Livewire\Component;
 use function App\Helpers\canCloseDay;
 use function App\Helpers\checkDayClosed;
@@ -55,7 +57,7 @@ class DayOffice extends Component
        return redirect()->to(route('admin.day_office'));
     }
 
-    public function endDay()
+    public function endDay(Request $request)
     {
         $officeDay = currentDayForOffice(1);
 
@@ -64,13 +66,20 @@ class DayOffice extends Component
             return ;
         }
 
-//        if(canCloseDay(1)){
+        if(canCloseDay(1)){
+            $request->merge([
+                'email' => 'abanoubtalaat555@gmail.com',
+                'className' => "App\\Http\\Controllers\\Admin\\Reports\\DailyReport\\PrintController",
+            ]);
+
+            (new SendEmailController())->send($request);
+//
 //            $officeDay->update([
 //                'end_time' => Carbon::now()->format('H:i:s'),
 //                'day_status' => "0",
 //            ]);
-//            return redirect()->to(route('admin.day_office'));
-//        }
+            return redirect()->to(route('admin.day_office'));
+        }
         $this->message = "There is nothing in appraise";
     }
 
