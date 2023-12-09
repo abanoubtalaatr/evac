@@ -3,6 +3,7 @@
 namespace App\Http\Livewire\Admin;
 
 use App\Http\Controllers\Admin\SendEmailController;
+use App\Models\Setting;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Livewire\Component;
@@ -67,17 +68,19 @@ class DayOffice extends Component
         }
 
         if(canCloseDay(1)){
+            $settings = Setting::query()->first();
+
             $request->merge([
-                'email' => 'abanoubtalaat555@gmail.com',
+                'email' => $settings->email??"hala@ddilb.com",
                 'className' => "App\\Http\\Controllers\\Admin\\Reports\\DailyReport\\PrintController",
             ]);
 
             (new SendEmailController())->send($request);
-//
-//            $officeDay->update([
-//                'end_time' => Carbon::now()->format('H:i:s'),
-//                'day_status' => "0",
-//            ]);
+
+            $officeDay->update([
+                'end_time' => Carbon::now()->format('H:i:s'),
+                'day_status' => "0",
+            ]);
             return redirect()->to(route('admin.day_office'));
         }
         $this->message = "There is nothing in appraise";
