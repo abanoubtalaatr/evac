@@ -21,6 +21,9 @@ class DayOffice extends Component
     public $disabledButtonDayEnd = false;
     public $disabledButtonDayRestartDay = false;
     public $message = '';
+public  $email,
+$showSendEmail = false,
+$showSendEmailButton= false, $agent;
 
     public function mount()
     {
@@ -40,6 +43,13 @@ class DayOffice extends Component
 
     }
 
+    public function toggleShowModal()
+    {
+        $this->email = null;
+        $this->showSendEmail = !$this->showSendEmail;
+        $this->message = null;
+    }
+
     public function startDay()
     {
         $dayOffice = currentDayForOffice(1);
@@ -56,6 +66,19 @@ class DayOffice extends Component
         }
 
        return redirect()->to(route('admin.day_office'));
+    }
+
+    public function sendEmail(Request $request)
+    {
+
+        $request->merge([
+            'email' => $settings->email??"hala@ddilb.com",
+            'className' => "App\\Http\\Controllers\\Admin\\Reports\\DailyReport\\PrintController",
+        ]);
+
+        (new SendEmailController())->send($request);
+        return redirect()->to(route('admin.day_office'));
+
     }
 
     public function endDay(Request $request)

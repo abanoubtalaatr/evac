@@ -1,5 +1,5 @@
 <!--head-->
-<div class="head-notifi p-3">
+<div class="head-notifi p-3 form_wrapper">
     <div id="menu-toggle"><i class="fas fa-bars"></i></div>
     <h3></h3>
     <ul class="notifi-head">

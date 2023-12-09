@@ -66,6 +66,8 @@ Route::group([
             Route::get('travel-agents-applications', App\Http\Livewire\Admin\TravelAgent\Application::class )->name('travel_agent_applications');
             Route::get('travel-agent-payment-transactions',\App\Http\Livewire\Admin\TravelAgent\PaymentTransaction::class)->name('travel_agent_payment_transactions');
             Route::get('travel-agent-payment-transactions-print-last-receipt/{agent}',[\App\Http\Controllers\Admin\PrintController::class,'printLastReceipt'])->name('travel_agent_payment_transactions_print_last_receipt');
+            Route::get('travel-agent-applications-print',[\App\Http\Controllers\Admin\Reports\AgentApplication\ReportController::class,'printReport'])->name('travel_agents_print_applications');
+
             //visa types
             Route::get('visa-types', App\Http\Livewire\Admin\VisaType\Index::class)->name('visa_types');
 

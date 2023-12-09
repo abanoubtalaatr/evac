@@ -41,7 +41,7 @@
 <div id="wrapper" style="background: {{$background}}">
     <!--Sidebar-->
 
-    <div id="sidebar-wrapper" style="background: {{$background}}">
+    <div id="sidebar-wrapper" style="background: {{$background}}" class="form_wrapper">
         <div class="sidebar-nav">
             <div class="logo-wrap bg-white mb-5 " style="height: 100px;padding-right: 7px">
                 <x-logo  />
@@ -536,6 +536,7 @@
     });
 
 </script>
+
 <script>
     $(document).ready(function () {
         // Initially hide all menus

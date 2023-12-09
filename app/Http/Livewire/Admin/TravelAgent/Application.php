@@ -2,12 +2,15 @@
 
 namespace App\Http\Livewire\Admin\TravelAgent;
 
+use App\Exports\Reports\AgentApplicationExport;
 use App\Mail\AgentApplicationsMail;
 use App\Models\Agent;
+use App\Models\ServiceTransaction;
 use App\Models\VisaType;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
 use Livewire\Component;
+use Maatwebsite\Excel\Facades\Excel;
 
 class Application extends Component
 {
@@ -21,7 +24,7 @@ class Application extends Component
         $email,
         $showSendEmail = false,
         $showSendEmailButton= false,
-        $message= null, $agent;
+        $message= null, $agent, $isDirect=false;
 
     public function mount()
     {
@@ -44,34 +47,67 @@ class Application extends Component
         $this->message = null;
     }
 
+    public function setAgentToNull()
+    {
+        $this->agent = null;
+        $this->isDirect = !$this->isDirect;
+        $this->emit('agentSetToNull');
+    }
+    public function updatedAgent()
+    {
+        $this->isDirect = !$this->isDirect;
+    }
     public function getRecords()
     {
-        return \App\Models\Application::query()
-            ->when(!empty($this->passport), function ($query) {
-                $query->where(function ($query) {
-                    $query->where('passport_no', 'like', '%'.$this->passport.'%');
-                });
-            })->when($this->agent, function ($query){
-                if($this->agent == 'no_result'){
-                    $query->where('travel_agent_id', '>', 0);
-                }else{
+        if ($this->isDirect) {
+            $data['applications'] = \App\Models\Application::query()
+                ->whereNull('travel_agent_id')
+                ->when(!empty($this->from) && !empty($this->to), function ($query) {
+                    $query->whereBetween('created_at', [$this->from, $this->to]);
+                })
+                ->latest()
+                ->get();
+
+            $data['serviceTransactions'] = ServiceTransaction::query()
+                ->whereNull('agent_id')
+                ->when(!empty($this->from) && !empty($this->to), function ($query) {
+                    $query->whereBetween('created_at', [$this->from, $this->to]);
+                })
+                ->latest()
+                ->get();
+        } else {
+            if ($this->agent === null) {
+                return ['applications' => [], 'serviceTransactions' => []];
+            }
+
+            $data['applications'] = \App\Models\Application::query()
+                ->when($this->agent !== 'no_result', function ($query) {
                     $query->where('travel_agent_id', $this->agent);
-                }
-            })->when(!empty($this->referenceNo), function ($query) {
-                $query->where(function ($query) {
-                    $query->where('application_ref', 'like', '%'.$this->referenceNo.'%');
-                });
-            })->when(!empty($this->visaType), function ($query){
-                $query->where('visa_type_id', $this->visaType);
-            })->when(!empty($this->status), function ($query) {
-                $query->where(function ($query) {
-                    $query->where('status', 'like', '%'.$this->status.'%');
-                });
-            })->when(!empty($this->from) && !empty($this->to), function ($query) {
-                $query->whereBetween('created_at', [$this->from, $this->to]);
-            })
-            ->latest()
-            ->paginate(50);
+                })
+                ->when($this->agent === 'no_result', function ($query) {
+                    $query->where('travel_agent_id', '>', 0);
+                })
+                ->when(!empty($this->from) && !empty($this->to), function ($query) {
+                    $query->whereBetween('created_at', [$this->from, $this->to]);
+                })
+                ->latest()
+                ->get();
+
+            $data['serviceTransactions'] = ServiceTransaction::query()
+                ->when($this->agent !== 'no_result', function ($query) {
+                    $query->where('agent_id', $this->agent);
+                })
+                ->when($this->agent === 'no_result', function ($query) {
+                    $query->where('agent_id', '>', 0);
+                })
+                ->when(!empty($this->from) && !empty($this->to), function ($query) {
+                    $query->whereBetween('created_at', [$this->from, $this->to]);
+                })
+                ->latest()
+                ->get();
+        }
+
+        return $data;
     }
 
     public function sendEmail(Request $request)
@@ -91,6 +127,8 @@ class Application extends Component
         return redirect()->to(route('admin.travel_agent_applications'));
     }
 
+
+
     public function getRules()
     {
         return [
@@ -106,7 +144,6 @@ class Application extends Component
     public function render()
     {
         $records = $this->getRecords();
-
         return view('livewire.admin.travel-agent.application', compact('records'))->layout('layouts.admin');;
     }
 }

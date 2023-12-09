@@ -71,3 +71,15 @@
         });
     });
 </script>
+
+<script>
+    $(document).ready(function () {
+        // ... existing JavaScript code
+
+        Livewire.on('agentSetToNull', function () {
+            // Code to handle the Livewire event, for example, set agent to null
+            $('#agent_search').val('');  // Clear the input field
+            // Additional logic as needed
+        });
+    });
+</script>
