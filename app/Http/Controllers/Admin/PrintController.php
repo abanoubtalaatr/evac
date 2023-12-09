@@ -35,4 +35,9 @@ class PrintController extends Controller
 
         return view('livewire.admin.PrintReports.daily_reports',compact('title','dayReport'));
     }
+
+    public function printAgentApplications(Request $request)
+    {
+        return view('livewire.admin.PrintReports.agent_application');
+    }
 }

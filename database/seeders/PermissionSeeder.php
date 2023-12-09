@@ -32,6 +32,7 @@ class PermissionSeeder extends Seeder
             'Manage search' => '',
             'Manage edit' => '',
             'Manage settings' => 'أدراة الاعدات',
+            'Manage reports' => '',
         ];
 
         foreach ($crudPermissionNames as $en_permission => $ar_permission) {

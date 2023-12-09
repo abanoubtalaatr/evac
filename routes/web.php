@@ -118,6 +118,7 @@ Route::group([
             });
 
             Route::get('print-daily-report', [\App\Http\Controllers\Admin\Reports\DailyReport\PrintController::class,'printReport'])->name('print.daily_reports');
+            Route::get('agent-applications-report', [\App\Http\Controllers\Admin\PrintController::class,'printAgentApplications'])->name('print.agent.applications');
             Route::post('send-email',[\App\Http\Controllers\Admin\SendEmailController::class,'send'])->name('send.email');
 
             Route::get('test-export', function (Request $request){

@@ -165,13 +165,28 @@
                     <span class="ml-2">@lang('admin.reports')</span>
                     <i class="fas fa-plus"></i>
                 </li>
-            @else
+                <ul class="sidebar-menu">
+                    <li style="line-height: 20px;margin-left: 18px;padding-left: 0px;text-indent: 0" class="border-bottom pb-2 {{ request()->routeIs('admin.travel_agent_applications') ? 'active' : '' }}">
+                        <a href="{{route('admin.travel_agent_applications')}}" class="text-white ">
+                            @lang('admin.agent_applications')
+                        </a>
+                    </li>
+                </ul>
+                @else
                 @can('Manage reports')
+
                     <li class="sidebar-toggle">
                         <i class="fa fa-suitcase mr-5"></i>
                         <span class="ml-2">@lang('admin.reports')</span>
                         <i class="fas fa-plus"></i>
                     </li>
+                    <ul class="sidebar-menu">
+                        <li style="line-height: 20px;margin-left: 18px;padding-left: 0px;text-indent: 0" class="border-bottom pb-2 {{ request()->routeIs('admin.travel_agent_applications') ? 'active' : '' }}">
+                            <a href="{{route('admin.travel_agent_applications')}}" class="text-white ">
+                                @lang('admin.agent_applications')
+                            </a>
+                        </li>
+                    </ul>
                 @endcan
             @endif
 
@@ -190,11 +205,7 @@
                             @lang('admin.travel_agents')
                         </a>
                     </li>
-                    <li style="line-height: 20px;margin-left: 18px;padding-left: 0px;text-indent: 0" class="border-bottom pb-2 {{ request()->routeIs('admin.travel_agent_applications') ? 'active' : '' }}">
-                        <a href="{{route('admin.travel_agent_applications')}}" class="text-white ">
-                            @lang('admin.agent_applications')
-                        </a>
-                    </li>
+
                     <li style="line-height: 20px;margin-left: 18px;padding-left: 0px;text-indent: 0" class="border-bottom pb-2 {{ request()->routeIs('admin.travel_agent_payment_transactions') ? 'active' : '' }}">
                         <a href="{{route('admin.travel_agent_payment_transactions')}}" class="text-white ">
                             @lang('admin.travel_agent_payment_transactions')
@@ -211,11 +222,6 @@
                         <li style="line-height: 20px;margin-left: 18px;padding-left: 0px;text-indent: 0" class="border-bottom pb-2 {{ request()->routeIs('admin.travel_agents') ? 'active' : '' }}">
                             <a href="{{route('admin.travel_agents')}}" class="text-white ">
                                 @lang('admin.travel_agents')
-                            </a>
-                        </li>
-                        <li style="line-height: 20px;margin-left: 18px;padding-left: 0px;text-indent: 0" class="border-bottom pb-2 {{ request()->routeIs('admin.travel_agent_applications') ? 'active' : '' }}">
-                            <a href="{{route('admin.travel_agent_applications')}}" class="text-white ">
-                                @lang('admin.agent_applications')
                             </a>
                         </li>
                         <li style="line-height: 20px;margin-left: 18px;padding-left: 0px;text-indent: 0" class="border-bottom pb-2 {{ request()->routeIs('admin.travel_agent_payment_transactions') ? 'active' : '' }}">
