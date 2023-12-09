@@ -3,86 +3,72 @@
     <x-admin.head/>
     <!--table-->
     <div class="border-div">
-        <div class="b-btm flex-div-2">
+        <div class="b-btm flex-div-2 form_wrapper">
             <h4>{{$page_title}}</h4>
         </div>
         <div class="table-page-wrap">
 
-            <div class="row d-flex align-items-center my-3 border p-2 rounded alig">
-
-                <div class="col-3 form-group">
+            <div class="row d-flex align-items-center my-3  p-2 rounded align form_wrapper">
+                <div class="col-3 form-group form_wrapper">
                     <label for="status-select">@lang('admin.travel_agent')</label>
                     @include('livewire.admin.shared.agent_search_html')
                 </div>
-
-{{--                <div class="form-group col-3">--}}
-{{--                    <label for="status-select">@lang('admin.visa_type')</label>--}}
-{{--                    <select wire:model='visaType' id='status-select' class="form-control border  contact-input">--}}
-{{--                        <option value>@lang('admin.choose')</option>--}}
-{{--                        @foreach($visaTypes as $visaType)--}}
-{{--                            <option value="{{$visaType->id}}">{{$visaType->name}}</option>--}}
-{{--                        @endforeach--}}
-{{--                    </select>--}}
-{{--                </div>--}}
-{{--                <div class="form-group col-3 mt-2">--}}
-{{--                    <label for="status-select">@lang('admin.status')</label>--}}
-{{--                    <select wire:model='status' id='status-select' class="form-control border  contact-input">--}}
-{{--                        <option value>@lang('admin.choose')</option>--}}
-{{--                        <option value="new">New</option>--}}
-{{--                        <option value="appraised">Appraised</option>--}}
-{{--                        <option value="canceled">Canceled</option>--}}
-{{--                    </select>--}}
-{{--                </div>--}}
-
-                <div class="form-group col-3 mt-2">
+                <div class="form-group col-3 mt-2 form_wrapper">
                     <label for="status-select">@lang('admin.from')</label>
                     <input class="form-control border  contact-input" type="date" wire:model="from">
                 </div>
-                <div class="form-group col-3 mt-2">
+                <div class="form-group col-3 mt-2 form_wrapper">
                     <label for="status-select">@lang('admin.to')</label>
                     <input class="form-control border  contact-input" type="date" wire:model="to">
                 </div>
-
-                <div class="my-2">
-                @include('livewire.admin.shared.reports.actions',['url' => route('admin.print.agent.applications') ,'routeName' => route('admin.test_export'),'className' => 'App\\Http\\Controllers\\Admin\\Reports\\DailyReport\\PrintController'])
+                <div class="form-group col-3 mt-2 form_wrapper">
+                    <button wire:click="setAgentToNull" class="btn mt-3 {{$isDirect ? 'btn-primary' :'btn-secondary'}}">Is Direct</button>
                 </div>
-                <div class="form-group col-2">
+
+                <div class="my-2 form_wrapper">
+                @include('livewire.admin.shared.reports.actions',['url' => route('admin.travel_agents_print_applications') ,'routeName' => route('admin.test_export'),'className' => 'App\\Http\\Controllers\\Admin\\Reports\\DailyReport\\PrintController'])
+                </div>
+                <div class="form-group col-2 form_wrapper">
                     <button wire:click="resetData()"
                             class="btn btn-primary form-control contact-input">@lang('site.reset')</button>
                 </div>
-
-
-
             </div>
-
-            @if(count($records))
+            <hr class="form_wrapper">
+            <div class="d-none form_wrapper">
+            @include('livewire.admin.shared.reports.header')
+            </div>
+            @if(count($records['applications']) || count($records['serviceTransactions']))
                 <table class="table-page table">
                     <thead>
                     <tr>
                         <th class="text-center">#</th>
-                        <th class="text-center" >@lang('admin.applicant')</th>
-                        <th class="text-center">@lang('admin.submit_date')</th>
-                        <th class="text-center">@lang('admin.visa_type')</th>
-                        <th class="text-center">@lang('admin.agent')</th>
-                        <th class="text-center">@lang('admin.status')</th>
+                        <th class="text-center" >@lang('admin.description')</th>
+                        <th class="text-center">@lang('admin.type')</th>
+                        <th class="text-center">@lang('admin.date')</th>
                     </tr>
                     </thead>
                     <tbody>
-                    @foreach($records as $record)
+                    @foreach($records['applications'] as $record)
                         <tr>
                             <td>#{{$loop->index + 1}}</td>
-                            <td class='text-center'>{{$record->application_ref . ' - '. $record->first_name . ' ' . $record->last_name}}</td>
-                            <td class='text-center'>{{ \Illuminate\Support\Carbon::parse($record->created_at)->format('Y-m-d h:m')}}</td>
-                            <td class='text-center'><button class="border-0">{{$record->visaType->name}}</button></td>
-                            <td class='text-center'><button class="border-0">{{$record->travelAgent?$record->travelAgent->name:""}}</button></td>
+                            <td class='text-center'>{{$record->application_ref . ' - '. $record->first_name . ' ' . $record->last_name }}(application)</td>
+                            <td class='text-center'>{{ $record->visaType->name}}</td>
+                            <td class='text-center'><button class="border-0">{{\Illuminate\Support\Carbon::parse($record->created_at)->format('Y-m-d')}}</button></td>
 
-                            <td class='text-center'><button class="border-0">{{$record->status}}</button></td>
-                            @endforeach
                         </tr>
+                    @endforeach
+                    @foreach($records['serviceTransactions'] as $record)
+                        <tr>
+                            <td>#{{$loop->index + 1}}</td>
+                            <td class='text-center'>{{$record->name . ' - '. $record->surname }} (service)</td>
+                            <td class='text-center'>{{ $record->service->name}}</td>
+                            <td class='text-center'><button class="border-0">{{\Illuminate\Support\Carbon::parse($record->created_at)->format('Y-m-d')}}</button></td>
+
+                        </tr>
+                    @endforeach
                     </tbody>
                 </table>
 
-                {{$records->links()}}
             @else
                 <div class="row" style='margin-top:10px'>
                     <div class="alert alert-warning">@lang('site.no_data_to_display')</div>
@@ -105,32 +91,36 @@
         });
     });
 </script>
-
 <script>
-    // Function to load content into an iframe and trigger printing
-    function printPage(url) {
-        // Create an iframe element
-        var iframe = document.createElement('iframe');
+    function printPage() {
+        // Hide unnecessary elements during print
+        var formWrappers = document.querySelectorAll('.form_wrapper, .form_wrapper2, .form_wrapper3');
+        formWrappers.forEach(function (formWrapper) {
+            formWrapper.classList.remove('d-none');
 
-        // Set the source URL of the iframe
-        iframe.src = url;
+            formWrapper.style.display = 'none';
+        });
 
-        // Set styles to hide the iframe
-        iframe.style.position = 'absolute';
-        iframe.style.top = '-9999px';
-        iframe.style.left = '-9999px';
-        iframe.style.width = '0';
-        iframe.style.height = '0';
+        // Define a function to be called after printing
+        function afterPrint() {
+            // Show the hidden elements after printing
+            formWrappers.forEach(function (formWrapper) {
+                formWrapper.style.display = 'block';
+            });
 
-        // Append the iframe to the document body
-        document.body.appendChild(iframe);
+            // Remove the event listeners after printing
+            window.removeEventListener('afterprint', afterPrint);
+        }
 
-        // Wait for the iframe to load
-        iframe.onload = function() {
-            // Print the content of the iframe
-            iframe.contentWindow.print();
-        };
+        // Add an event listener for the 'afterprint' event
+        window.addEventListener('afterprint', afterPrint);
+
+        // Trigger the browser's print dialog
+        window.print();
     }
+
+</script>
+<script>
 
     document.addEventListener('livewire:load', function () {
     Livewire.on('show-message', function () {

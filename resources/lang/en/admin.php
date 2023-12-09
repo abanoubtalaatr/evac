@@ -112,5 +112,8 @@ return [
     "invoice_footer" => "Invoice footer",
     'account_number' => "Account number",
     "role" => "Role",
-    'fax' => "Fax"
+    'fax' => "Fax",
+    "date" => "Date",
+    'description' => "Description",
+    'direct' => "Direct"
 ];
