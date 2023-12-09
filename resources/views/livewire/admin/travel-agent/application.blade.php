@@ -15,24 +15,24 @@
                     @include('livewire.admin.shared.agent_search_html')
                 </div>
 
-                <div class="form-group col-3">
-                    <label for="status-select">@lang('admin.visa_type')</label>
-                    <select wire:model='visaType' id='status-select' class="form-control border  contact-input">
-                        <option value>@lang('admin.choose')</option>
-                        @foreach($visaTypes as $visaType)
-                            <option value="{{$visaType->id}}">{{$visaType->name}}</option>
-                        @endforeach
-                    </select>
-                </div>
-                <div class="form-group col-3 mt-2">
-                    <label for="status-select">@lang('admin.status')</label>
-                    <select wire:model='status' id='status-select' class="form-control border  contact-input">
-                        <option value>@lang('admin.choose')</option>
-                        <option value="new">New</option>
-                        <option value="appraised">Appraised</option>
-                        <option value="canceled">Canceled</option>
-                    </select>
-                </div>
+{{--                <div class="form-group col-3">--}}
+{{--                    <label for="status-select">@lang('admin.visa_type')</label>--}}
+{{--                    <select wire:model='visaType' id='status-select' class="form-control border  contact-input">--}}
+{{--                        <option value>@lang('admin.choose')</option>--}}
+{{--                        @foreach($visaTypes as $visaType)--}}
+{{--                            <option value="{{$visaType->id}}">{{$visaType->name}}</option>--}}
+{{--                        @endforeach--}}
+{{--                    </select>--}}
+{{--                </div>--}}
+{{--                <div class="form-group col-3 mt-2">--}}
+{{--                    <label for="status-select">@lang('admin.status')</label>--}}
+{{--                    <select wire:model='status' id='status-select' class="form-control border  contact-input">--}}
+{{--                        <option value>@lang('admin.choose')</option>--}}
+{{--                        <option value="new">New</option>--}}
+{{--                        <option value="appraised">Appraised</option>--}}
+{{--                        <option value="canceled">Canceled</option>--}}
+{{--                    </select>--}}
+{{--                </div>--}}
 
                 <div class="form-group col-3 mt-2">
                     <label for="status-select">@lang('admin.from')</label>
@@ -43,16 +43,14 @@
                     <input class="form-control border  contact-input" type="date" wire:model="to">
                 </div>
 
-
-                <div class="form-group col-2 mt-4">
+                <div class="my-2">
+                @include('livewire.admin.shared.reports.actions',['url' => route('admin.print.agent.applications') ,'routeName' => route('admin.test_export'),'className' => 'App\\Http\\Controllers\\Admin\\Reports\\DailyReport\\PrintController'])
+                </div>
+                <div class="form-group col-2">
                     <button wire:click="resetData()"
                             class="btn btn-primary form-control contact-input">@lang('site.reset')</button>
                 </div>
 
-                @include('livewire.admin.travel-agent.popup.send-email')
-                <div class="form-group col-3 mt-4">
-                    <button class="btn btn-secondary form-control contact-input" wire:click="toggleShowModal">Send email</button>
-                </div>
 
 
             </div>

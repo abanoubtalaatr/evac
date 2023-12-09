@@ -5,6 +5,7 @@ namespace App\Http\Livewire\Admin\TravelAgent;
 use App\Mail\AgentApplicationsMail;
 use App\Models\Agent;
 use App\Models\VisaType;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
 use Livewire\Component;
 
@@ -73,22 +74,23 @@ class Application extends Component
             ->paginate(50);
     }
 
-    public function send()
+    public function sendEmail(Request $request)
     {
-        $this->validate();
-
+$this->validate();
         if(is_null($this->agent) || $this->agent =='no_result') {
             $this->message = "You must choose travel agent";
             return;
         }
         $records = $this->getRecords()->groupBy('visa_type_id');
         $agent = Agent::query()->find($this->agent);
+//        dd($this->email);
         Mail::to($this->email)->send(new AgentApplicationsMail($records, $agent, $this->from, $this->to));
         $this->email = null;
         $this->message = null;
         $this->agent = null;
         return redirect()->to(route('admin.travel_agent_applications'));
     }
+
     public function getRules()
     {
         return [

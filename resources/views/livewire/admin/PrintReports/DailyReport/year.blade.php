@@ -126,7 +126,7 @@
             <table class="table total-table">
                 <thead>
                 <tr>
-                    <th>Total Type</th>
+                    <th>Total Yearly</th>
                     <th>Qty</th>
                     <th>Jan</th>
                     <th>Feb</th>
