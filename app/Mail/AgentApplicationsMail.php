@@ -26,7 +26,7 @@ class AgentApplicationsMail extends Mailable
     {
         return $this->attachData($this->generatePdf(), 'application_records.pdf')
             ->subject("EVAC - " . $this->agent->name . ' - ' . "Application Report")
-            ->view('emails.TravelAgent.agent-applications-body');
+            ->view('livewire.admin.PrintReports.agent_application');
 
     }
 
@@ -39,7 +39,7 @@ class AgentApplicationsMail extends Mailable
 
         $dompdf = new Dompdf($options);
         // Load HTML content
-        $html = view('emails.TravelAgent.agent-applications-email')->with([
+        $html = view('livewire.admin.PrintReports.agent_application')->with([
             'data' => $this->data,
             'agent' => $this->agent,
             'from' => $this->from,
