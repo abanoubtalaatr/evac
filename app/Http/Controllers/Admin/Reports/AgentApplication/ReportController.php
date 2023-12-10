@@ -7,7 +7,7 @@ use Illuminate\Http\Request;
 
 class ReportController extends Controller
 {
-    public function printReport()
+    public function printReport(Request $request)
     {
         return view('livewire.admin.PrintReports.agent_application');
     }

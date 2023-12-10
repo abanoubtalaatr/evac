@@ -12,11 +12,10 @@ class AgentApplicationsMail extends Mailable
 {
     use Queueable, SerializesModels;
 
-    public $data, $agent, $fromDate, $toDate;
+    public $agent, $fromDate, $toDate;
 
-    public function __construct($data, $agent, $fromDate, $toDate)
+    public function __construct($agent, $fromDate, $toDate)
     {
-        $this->data = $data;
         $this->agent = $agent;
         $this->fromDate = $fromDate;
         $this->toDate = $toDate;
@@ -40,9 +39,8 @@ class AgentApplicationsMail extends Mailable
         $dompdf = new Dompdf($options);
         // Load HTML content
         $html = view('livewire.admin.PrintReports.agent_application')->with([
-            'data' => $this->data,
             'agent' => $this->agent,
-            'from' => $this->fromDate,
+            'fromDate' => $this->fromDate,
             'toDate' => $this->toDate
         ])->render();
 

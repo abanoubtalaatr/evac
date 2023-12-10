@@ -40,6 +40,9 @@
             font-weight: bolder;
             color: black;
         }
+        .border-0{
+            border: none    ;
+        }
 
         .card-body {
             padding: 15px;
@@ -72,7 +75,9 @@
         .text-center{
             text-align: center;
         }
-
+        .btn-primary{
+            background: #0b5ed7;
+        }
         /* Set a fixed width for each column */
         .table th:nth-child(1),
         .table td:nth-child(1),
@@ -91,46 +96,106 @@
     <!--dashboard-->
     <section class="dashboard">
         <div class="row">
-            <h4>Agent : Abanoub talaat</h4>
-            <h4>Agent address : </h4>
-            <h4>Financial No: 400404</h4>
-            <h4>From : 2023-10-12 : 2023-10-29</h4>
-            <div class="card">
-                <div class="card-header">
-                    <h3 class="card-title">Agent applications</h3>
+            @php
+                $agent = \App\Models\Agent::query()->find(request()->agent);
+             @endphp
+            @if(request()->fromDate && request()->toDate)
+                <h4>From : {{request()->fromDate}} : to: {{request()->toDate}}</h4>
+            @endif
+            @if($agent)
+            <h4>Agent : {{$agent->name}}</h4>
+            <h4>Financial No: {{$agent->finance_no}}</h4>
+
+            @else
+                <button class="btn-primary" style="padding: 4px;border-radius: 4px;background: #0b5ed7">Direct</button>
+            @endif
+
+            @php
+                if (request()->isDirect) {
+                         $data['applications'] = \App\Models\Application::query()
+                             ->whereNull('travel_agent_id')
+                             ->when(!empty(request()->from) && !empty(request()->to), function ($query) {
+                                 $query->whereBetween('created_at', [request()->from, request()->to]);
+                             })
+                             ->latest()
+                             ->get();
+
+                         $data['serviceTransactions'] = \App\Models\ServiceTransaction::query()
+                             ->whereNull('agent_id')
+                             ->when(!empty(request()->from) && !empty(request()->to), function ($query) {
+                                 $query->whereBetween('created_at', [request()->from, request()->to]);
+                             })
+                             ->latest()
+                             ->get();
+                     } else {
+                         if (request()->agent === null) {
+                             return ['applications' => [], 'serviceTransactions' => []];
+                         }
+
+                         $data['applications'] = \App\Models\Application::query()
+                             ->when(request()->agent !== 'no_result', function ($query) {
+                                 $query->where('travel_agent_id', request()->agent);
+                             })
+                             ->when(request()->agent === 'no_result', function ($query) {
+                                 $query->where('travel_agent_id', '>', 0);
+                             })
+                             ->when(!empty(request()->from) && !empty(request()->to), function ($query) {
+                                 $query->whereBetween('created_at', [request()->from, request()->to]);
+                             })
+                             ->latest()
+                             ->get();
+
+                         $data['serviceTransactions'] = \App\Models\ServiceTransaction::query()
+                             ->when(request()->agent !== 'no_result', function ($query) {
+                                 $query->where('agent_id', request()->agent);
+                             })
+                             ->when(request()->agent === 'no_result', function ($query) {
+                                 $query->where('agent_id', '>', 0);
+                             })
+                             ->when(!empty(request()->from) && !empty(request()->to), function ($query) {
+                                 $query->whereBetween('created_at', [request()->from, request()->to]);
+                             })
+                             ->latest()
+                             ->get();
+                     }
+ @endphp
+            @if(count($data['applications']) || count($data['serviceTransactions']))
+                <table class="table-page table">
+                    <thead>
+                    <tr>
+                        <th class="text-center">#</th>
+                        <th class="text-center" >@lang('admin.description')</th>
+                        <th class="text-center">@lang('admin.type')</th>
+                        <th class="text-center">@lang('admin.date')</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    @foreach($data['applications'] as $record)
+                        <tr>
+                            <td>#{{$loop->index + 1}}</td>
+                            <td class='text-center'>{{$record->application_ref . ' - '. $record->first_name . ' ' . $record->last_name }}(application)</td>
+                            <td class='text-center'>{{ $record->visaType->name}}</td>
+                            <td class='text-center'><button class="border-0">{{\Illuminate\Support\Carbon::parse($record->created_at)->format('Y-m-d')}}</button></td>
+
+                        </tr>
+                    @endforeach
+                    @foreach($data['serviceTransactions'] as $record)
+                        <tr>
+                            <td>#{{$loop->index + 1}}</td>
+                            <td class='text-center'>{{$record->name . ' - '. $record->surname }} (service)</td>
+                            <td class='text-center'>{{ $record->service->name}}</td>
+                            <td class='text-center'><button class="border-0">{{\Illuminate\Support\Carbon::parse($record->created_at)->format('Y-m-d')}}</button></td>
+
+                        </tr>
+                    @endforeach
+                    </tbody>
+                </table>
+
+            @else
+                <div class="row" style='margin-top:10px'>
+                    <div class="alert alert-warning">@lang('site.no_data_to_display')</div>
                 </div>
-                <div class="card-body">
-                    <div class="table-responsive">
-                        <table class="table">
-                            <thead>
-                            <tr>
-                                <th>No .</th>
-                                <th>Description </th>
-                                <th>Type </th>
-                                <th>Date </th>
-
-                            </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td>1 </td>
-                                    <td>    Passport no , abanoub talaat </td>
-                                    <td>Visa type</td>
-                                    <td>2023-10-12</td>
-                                </tr>
-                                <tr>
-                                    <td>1 </td>
-                                    <td>    Passport no , abanoub talaat </td>
-                                    <td>Visa type</td>
-                                    <td>2023-10-12</td>
-                                </tr>
-
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
-
+            @endif
         </div>
     </section>
     @include('livewire.admin.shared.reports.footer')
