@@ -171,6 +171,11 @@
                             @lang('admin.agent_applications')
                         </a>
                     </li>
+                    <li style="line-height: 20px;margin-left: 18px;padding-left: 0px;text-indent: 0" class="border-bottom pb-2 {{ request()->routeIs('admin.report.direct_sales') ? 'active' : '' }}">
+                        <a href="{{route('admin.report.direct_sales')}}" class="text-white ">
+                            @lang('admin.direct_sales')
+                        </a>
+                    </li>
                 </ul>
                 @else
                 @can('Manage reports')
@@ -184,6 +189,11 @@
                         <li style="line-height: 20px;margin-left: 18px;padding-left: 0px;text-indent: 0" class="border-bottom pb-2 {{ request()->routeIs('admin.travel_agent_applications') ? 'active' : '' }}">
                             <a href="{{route('admin.travel_agent_applications')}}" class="text-white ">
                                 @lang('admin.agent_applications')
+                            </a>
+                        </li>
+                        <li style="line-height: 20px;margin-left: 18px;padding-left: 0px;text-indent: 0" class="border-bottom pb-2 {{ request()->routeIs('admin.report.direct_sales') ? 'active' : '' }}">
+                            <a href="{{route('admin.report.direct_sales')}}" class="text-white ">
+                                @lang('admin.direct_sales')
                             </a>
                         </li>
                     </ul>

@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Mail;
+namespace App\Mail\Reports;
 
 use Illuminate\Bus\Queueable;
 use Illuminate\Mail\Mailable;
@@ -8,24 +8,22 @@ use Illuminate\Queue\SerializesModels;
 use Dompdf\Dompdf;
 use Dompdf\Options;
 
-class AgentApplicationsMail extends Mailable
+class DirectSalesMail extends Mailable
 {
     use Queueable, SerializesModels;
 
-    public $data, $agent, $fromDate, $toDate;
+    public $fromDate, $toDate;
 
-    public function __construct($data, $agent, $fromDate, $toDate)
+    public function __construct( $fromDate, $toDate)
     {
-        $this->data = $data;
-        $this->agent = $agent;
         $this->fromDate = $fromDate;
         $this->toDate = $toDate;
     }
 
     public function build()
     {
-        return $this->attachData($this->generatePdf(), 'application_records.pdf')
-            ->subject("EVAC - " . $this->agent->name . ' - ' . "Application Report")
+        return $this->attachData($this->generatePdf(), 'sales.pdf')
+            ->subject("EVAC - " .' - ' . "Sales Report")
             ->view('emails.TravelAgent.agent-applications-body');
 
     }
@@ -39,9 +37,7 @@ class AgentApplicationsMail extends Mailable
 
         $dompdf = new Dompdf($options);
         // Load HTML content
-        $html = view('livewire.admin.PrintReports.agent_application')->with([
-            'data' => $this->data,
-            'agent' => $this->agent,
+        $html = view('livewire.admin.PrintReports.direct_sales')->with([
             'from' => $this->fromDate,
             'toDate' => $this->toDate
         ])->render();

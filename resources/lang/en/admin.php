@@ -115,5 +115,8 @@ return [
     'fax' => "Fax",
     "date" => "Date",
     'description' => "Description",
-    'direct' => "Direct"
+    'direct' => "Direct",
+    'direct_sales' => "Direct Sales",
+    "application_name" => "Application name",
+    "payment" => 'Payment'
 ];
