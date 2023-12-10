@@ -123,6 +123,11 @@ Route::group([
             Route::get('agent-applications-report', [\App\Http\Controllers\Admin\PrintController::class,'printAgentApplications'])->name('print.agent.applications');
             Route::post('send-email',[\App\Http\Controllers\Admin\SendEmailController::class,'send'])->name('send.email');
 
+            Route::get('reports-direct-sales', \App\Http\Livewire\Admin\Reports\DirectSale::class)->name('report.direct_sales');
+
+            Route::get('reports-direct-sales-print', function (){
+               return view('livewire.admin.printReports.direct_sales');
+            })->name('report.print.direct_sales');
             Route::get('test-export', function (Request $request){
                 $application = \App\Models\Application::query()->first();
                 $fileExport = (new \App\Exports\ReceiptApplicationExport($application));

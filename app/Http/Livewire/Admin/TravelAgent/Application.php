@@ -141,6 +141,11 @@ class Application extends Component
     }
 
 
+    public function exportReport()
+    {
+        $fileExport = (new \App\Exports\Reports\AgentApplicationExport($this->getRecords()));
+        return Excel::download($fileExport, 'report.csv');
+    }
 
     public function getRules()
     {

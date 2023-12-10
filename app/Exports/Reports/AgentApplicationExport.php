@@ -4,44 +4,58 @@ namespace App\Exports\Reports;
 
 use Illuminate\Support\Carbon;
 use Maatwebsite\Excel\Concerns\FromCollection;
+use Maatwebsite\Excel\Concerns\WithHeadings;
+use Maatwebsite\Excel\Concerns\ShouldAutoSize;
 
-class AgentApplicationExport implements FromCollection
+class AgentApplicationExport implements FromCollection, WithHeadings, ShouldAutoSize
 {
-    protected $applications;
-    protected $serviceTransactions;
+    protected $data;
 
-    public function __construct($applications, $serviceTransactions)
+    public function __construct($data)
     {
-        $this->applications = $applications;
-        $this->serviceTransactions = $serviceTransactions;
+        $this->data = $data;
     }
 
     public function collection()
     {
-        return collect([$this->applications, $this->serviceTransactions]);
-    }
+        $dataRows = [];
 
-    public function map($data): array
-    {
-        if (isset($data['vis_provider_id'])) {
-            // Application data
-            return [
-                $data['id'],
-                $data['first_name'] . ' ' . $data['last_name'],
-                $data['visaType']['name'],
-               Carbon::parse( $data['created_at'])->format('Y-m-d'),
+        foreach ($this->data['applications'] as $application) {
+            $dataRows[] = [
+                'ID' => $application->id,
+                'Description' => $application->application_ref .' '.  $application->first_name . ' ' . $application->last_name,
+                'Type' => $application->visaType->name,
+                'Date' => Carbon::parse($application->created_at)->format('Y-m-d'),
+            ];
+        }
+        foreach ($this->data['serviceTransactions'] as $serviceTransaction) {
+            $dataRows[] = [
+                'ID' => $serviceTransaction->id,
+                'Description' => $serviceTransaction->name .' '.  $serviceTransaction->surname,
+                'Type' => $serviceTransaction->service->name,
+                'Date' => Carbon::parse($serviceTransaction->created_at)->format('Y-m-d'),
             ];
         }
 
-        return [];
+        return collect($dataRows);
+    }
+
+    public function map($row): array
+    {
+        return [
+            $row['ID'],
+            $row['Description'],
+            $row['Type'],
+            $row['Date'],
+        ];
     }
 
     public function headings(): array
     {
-        // Adjust your headings based on your actual data structure
         return [
+            'ID',
             'Description',
-            'Type',
+            "Type",
             'Date',
         ];
     }
