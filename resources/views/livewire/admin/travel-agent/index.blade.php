@@ -102,6 +102,7 @@
 
     document.addEventListener('livewire:load', function () {
         Livewire.on('showAgentModal', function (agentId) {
+            console.log()
             $('#agentModal' + agentId).modal('show');
         });
     });
