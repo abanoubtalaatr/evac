@@ -126,8 +126,9 @@ Route::group([
             Route::get('reports-direct-sales', \App\Http\Livewire\Admin\Reports\DirectSale::class)->name('report.direct_sales');
 
             Route::get('reports-direct-sales-print', function (){
-               return view('livewire.admin.printReports.direct_sales');
+                return view('livewire.admin.PrintReports.direct_sales');
             })->name('report.print.direct_sales');
+
             Route::get('test-export', function (Request $request){
                 $application = \App\Models\Application::query()->first();
                 $fileExport = (new \App\Exports\ReceiptApplicationExport($application));
