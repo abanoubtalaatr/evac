@@ -96,10 +96,9 @@ class Index extends Component
     {
         $this->form = [];
         $this->agentId = $id;
-        $this->agent = Agent::query()->find($id);
+        $this->agentData = Agent::query()->find($id);
 
-        $this->form = $this->agent->toArray();
-
+        $this->form = $this->agentData->toArray();
         $this->emit("showAgentModal", $id);
     }
 
