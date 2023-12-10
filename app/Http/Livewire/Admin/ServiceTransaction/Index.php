@@ -219,11 +219,16 @@ class Index extends Component
     public function store()
     {
         $this->validate();
-        $today = Carbon::now()->format('dmY');
+// Assuming $today is already defined in your code as the current date in ddmmyyyy format
+        $today = date('dmY');
+
         $currentSerial = ServiceTransaction::where('service_ref', 'like', 'EVLB/' . $today . '/%')
             ->max('service_ref');
-        $nextSerial = $currentSerial ? (int)substr($currentSerial, -4) + 1 : 1;
-        $applicationReference = 'EVLB/' . $today . '/' . str_pad($nextSerial, 4, '0', STR_PAD_LEFT);
+
+        $nextSerial = $currentSerial ? (int)substr($currentSerial, -3) + 1 : 1;
+        $nextSerialPadded = str_pad($nextSerial, 3, '0', STR_PAD_LEFT);
+
+        $applicationReference = 'EVLB/' . $today . '/S' . $nextSerialPadded;
         $this->form['service_ref'] = $applicationReference;
 
         $service = Service::query()->find($this->form['service_id']);
