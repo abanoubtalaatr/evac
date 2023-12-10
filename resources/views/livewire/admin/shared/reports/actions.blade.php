@@ -2,7 +2,7 @@
 
 <div class="btn-group d-flex gap-2 form_wrapper">
     <div class="form-group col-3">
-        <button class="btn btn-secondary rounded  form-control contact-input" onclick="printPage()">Print <i class="fa fa-print"></i></button>
+        <button class="btn btn-secondary rounded  form-control contact-input" wire:click="printData()">Print <i class="fa fa-print"></i></button>
 
     </div>
     @include('livewire.admin.travel-agent.popup.send-email')

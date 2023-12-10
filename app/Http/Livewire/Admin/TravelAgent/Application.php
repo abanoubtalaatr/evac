@@ -53,6 +53,13 @@ class Application extends Component
         $this->isDirect = !$this->isDirect;
         $this->emit('agentSetToNull');
     }
+    public function printData()
+    {
+        $url = route('admin.travel_agents_print_applications', ['agent' => $this->agent,'isDirect' => $this->isDirect,'fromDate' => $this->from,'toDate' => $this->to]);
+        $this->emit('printTable', $url);
+    }
+
+
     public function updatedAgent()
     {
         $this->isDirect = !$this->isDirect;
@@ -117,10 +124,16 @@ class Application extends Component
             $this->message = "You must choose travel agent";
             return;
         }
-        $records = $this->getRecords()->groupBy('visa_type_id');
         $agent = Agent::query()->find($this->agent);
-        $this->fromDate = $this->from;
-        Mail::to($this->email)->send(new AgentApplicationsMail($records, $agent, $this->fromDate, $this->to));
+
+        $request->merge([
+           'agent' => $this->agent,
+           'fromDate' => $this->from,
+           'toDate' => $this->to,
+           'isDirect' => $this->isDirect,
+        ]);
+
+        Mail::to($this->email)->send(new AgentApplicationsMail($agent, $this->from, $this->to));
         $this->email = null;
         $this->message = null;
         $this->agent = null;

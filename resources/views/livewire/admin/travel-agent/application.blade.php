@@ -1,4 +1,6 @@
+
 <main class="main-content">
+
     <!--head-->
     <x-admin.head/>
     <!--table-->
@@ -26,7 +28,7 @@
                 </div>
 
                 <div class="my-2 form_wrapper">
-                @include('livewire.admin.shared.reports.actions',['url' => route('admin.travel_agents_print_applications') ,'routeName' => route('admin.test_export'),'className' => 'App\\Http\\Controllers\\Admin\\Reports\\DailyReport\\PrintController'])
+                @include('livewire.admin.shared.reports.actions')
                 </div>
                 <div class="form-group col-2 form_wrapper">
                     <button wire:click="resetData()"
@@ -34,9 +36,7 @@
                 </div>
             </div>
             <hr class="form_wrapper">
-            <div class="d-none form_wrapper">
-            @include('livewire.admin.shared.reports.header')
-            </div>
+
             @if(count($records['applications']) || count($records['serviceTransactions']))
                 <table class="table-page table">
                     <thead>
@@ -77,7 +77,9 @@
         </div>
     </div>
 </main>
+@push('scripts')
 @include('livewire.admin.shared.agent_search_script')
+
 <script>
     document.addEventListener('livewire:load', function () {
         Livewire.on('showApplicationInvoiceModal', function (application) {
@@ -91,35 +93,47 @@
         });
     });
 </script>
+
 <script>
-    function printPage() {
-        // Hide unnecessary elements during print
-        var formWrappers = document.querySelectorAll('.form_wrapper, .form_wrapper2, .form_wrapper3');
-        formWrappers.forEach(function (formWrapper) {
-            formWrapper.classList.remove('d-none');
-
-            formWrapper.style.display = 'none';
+    document.addEventListener('livewire:load', function () {
+        Livewire.on('printTable', function (url) {
+                printPage(url);
         });
+    });
 
-        // Define a function to be called after printing
-        function afterPrint() {
-            // Show the hidden elements after printing
-            formWrappers.forEach(function (formWrapper) {
-                formWrapper.style.display = 'block';
-            });
+    function printPage(url) {
+        // Create an iframe element
+        var iframe = document.createElement('iframe');
+        // Set the source URL of the iframe
+        iframe.src = url;
 
-            // Remove the event listeners after printing
-            window.removeEventListener('afterprint', afterPrint);
-        }
+        // Set styles to hide the iframe
+        iframe.style.position = 'absolute';
+        iframe.style.top = '-9999px';
+        iframe.style.left = '-9999px';
+        iframe.style.width = '0';
+        iframe.style.height = '0';
 
-        // Add an event listener for the 'afterprint' event
-        window.addEventListener('afterprint', afterPrint);
+        // Append the iframe to the document body
+        document.body.appendChild(iframe);
 
-        // Trigger the browser's print dialog
-        window.print();
+        iframe.onload = function() {
+            try {
+                iframe.contentWindow.print();
+            } catch (error) {
+                // Handle errors
+                console.error('Error printing:', error);
+            } finally {
+                // Remove the iframe after printing or in case of an error
+                console.log('Removing iframe');
+                // document.body.removeChild(iframe);
+            }
+        };
     }
 
 </script>
+
+
 <script>
 
     document.addEventListener('livewire:load', function () {
@@ -136,4 +150,4 @@
     });
     });
 </script>
-
+@endpush
