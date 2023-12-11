@@ -9,6 +9,20 @@
     p{
         padding-bottom: .1rem;
     }
+    .heading{
+        font-weight: bolder;
+        font-size: 18px;
+    }
+    .mb-10{
+        margin-bottom: 10px;
+    }
+    .mx-10{
+        margin-right: 10px;
+        margin-left: 10px;
+    }
+    .invoice-heading{
+        font-size: 20px;
+    }
 </style>
 </head>
 <body>
@@ -17,54 +31,69 @@
         $settings= \App\Models\Setting::query()->first();
     @endphp
 
-    <div >
-        <div class="my-2 text-center">
+    <div style="text-align: center;margin: auto;width:1000px">
+        <div class="my-2 text-center mb-10" >
             <img class="rounded" height="100" width="200" src="{{asset('uploads/pics/'. $settings->logo??"")}}">
         </div>
 
-        <div>Office address: {{ $settings->address??""}}</div>
-        <div>Tel : {{$settings->mobile??""}}</div>
-        @if(isset($settings->registration_no) && !empty($settings->registration_no))
-            <div>Registration No : {{$settings->registration_no??''}}</div>
-        @endif
+        <div style="display: flex;text-align: center;align-items: center;justify-content:center;margin-top: 30px" >
+
+            <div class="heading mx-10"> {{ $settings->address??""}} - </div>
+            <div class="heading mx-10">Tel : {{$settings->mobile??""}} - </div>
+            @if(isset($settings->registration_no) && !empty($settings->registration_no))
+                <div class="heading mx-10">Reg No : {{$settings->registration_no??''}}</div>
+            @endif
+            <div class="heading mx-10">Tel : {{$settings->mobile??''}}</div>
+
         @if(isset($settings->vat_no) && !empty($settings->vat_no))
-            <div>Vat registration : {{$settings->vat_no}}</div>
-        @endif
+                <div>Vat registration : {{ $settings->vat_no}}</div>
+            @endif
 
-        <div class="border-dotted border-top-0 border-right-0 border-left-0 mt-3"><strong class="">Invoice Receipt</strong></div>
-        <div class="fa-3x">------------------</div>
-        <div >Ref N: {{$application->application_ref}} </div>
-        <div>Date : {{\Carbon\Carbon::parse($application->created_at)->format('d-m-Y')}} </div>
-        <div>Visa type : {{$application->visaType? $application->visaType->name:''}}</div>
-       <div class="">
-        @if($application->travelAgent)
-
-        <div class="border-dotted border-top-0 border-right-0 border-left-0 mt-4">
-            <strong >Travel agent: {{$application->travelAgent->name}}</strong>
         </div>
-        <div class="fa-3x">---------------</div>
-               <div >Account number: {{$application->travelAgent->account_number}}</div>
+        <div class="border-dotted border-top-0 border-right-0 border-left-0 mt-3 invoice-heading" >
+            <p class="text-capitalize heading">INVOICE RECEIPT</p>
+        </div>
+        <div style="text-align: start">
+            <div class="py-1"><strong>Ref No: {{$application->application_ref}}</strong> </div>
+            <div class="py-1"><strong>Date : {{\Carbon\Carbon::parse($application->created_at)->format('d/m/Y')}} </strong></div>
+            <div class="py-1"><strong>Visa type : {{$application->visaType? $application->visaType->name:''}}</strong></div>
+        </div>
 
-               <div>Name: {{$application->first_name . ' '. $application->last_name}}</div>
+       <div class="" style="text-align: center">
+        @if($application->travelAgent)
+        <div class="border-dotted border-top-0 border-right-0 border-left-0 mt-4 py-1">
+            <strong>TRAVEL AGENT: {{$application->travelAgent->name}} / ACC NBR : {{$application->travelAgent->account_number}} / {{$application->travelAgent->address}}</strong>
+        </div>
+               <div><strong class="text-uppercase py-2">APPLICANT NAME: {{$application->first_name . ' '. $application->last_name}}</strong></div>
         @else
-            Direct
-        @endif
-        <div>Passport No: {{$application->passport_no}} </div>
+               <a href="#" style="font-weight: bolder;padding-top:5px;background: lightblue;color:black;font-size: 20px">Direct</a>
+           @endif
+           <div><strong class="text-uppercase py-2">Passport: {{$application->passport_no}} </strong></div>
        </div>
-        <div>Visa fees  : {{\App\Helpers\formatCurrency($application->dubai_fee)}}</div>
-        <div>Service fees  : {{\App\Helpers\formatCurrency($application->service_fee)}}</div>
-        @if($application->vat > 0)
-            <div>VAT : {{\App\Helpers\formatCurrency($application->vat)}} </div>
-        @endif
+        <div class="text-start">
+            <div>
+                <span>Visa fees  : {{\App\Helpers\formatCurrency($application->dubai_fee)}} USD</span>
+            </div>
+
+            <div>
+                Service fees  :   +
+                @if($application->vat > 0)
+                    <span>VAT  {{$settings->vat_rate}} :  </span>
+                @endif
+                <strong>  {{\App\Helpers\formatCurrency($application->service_fee + $application->vat)}} USD</strong>
+            </div>
+        </div>
+
+
 
         @php
               $total = $application->dubai_fee + $application->service_fee + $application->vat;
         @endphp
-        <div class="font-weight-bolder" style="font-weight: bolder">Total Fees : {{$total}} USD ({{$application->payment_method}})</div>
-        <div class="mt-2">Service fees and sales tax included</div>
-        <div>Fees in words : {{\App\Helpers\convertNumberToWorldsInUsd($total)}} </div>
-        <div class="mt-2">
-            <p>{{$settings->invoice_footer}}</p>
+
+        <div class="font-weight-bolder py-3 fa-4x"  style="font-weight: bolder;font-size: 19px">Total Fees :  ({{\App\Helpers\convertNumberToWorldsInUsd($total)}} )  {!! $application->payment_method =='invoice'? "<strong class='text-danger'>Paid</strong>" :"<strong>Not Paid</strong>"  !!} </div>
+
+        <div class="text-start">
+            <strong>Service Fees and Sales Tax Included : / {{$settings->invoice_footer}}</strong>
         </div>
     </div>
 

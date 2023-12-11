@@ -34,7 +34,7 @@
         <div class="fa-3x">------------------</div>
         <div>Date : {{\Carbon\Carbon::parse($paymentTransaction->created_at)->format('d-m-Y')}} </div>
         <div class="border-dotted border-top-0 border-right-0 border-left-0 mt-3"><strong >Travel agent: {{$paymentTransaction->agent->name}}</strong></div>
-
+        <div class="py-1">ACC NBR : {{$paymentTransaction->agent->account_number   }}</div>
         <div>Received the amount of $ {{($paymentTransaction->amount)}}</div>
         <div>Fees in Words : {{\App\Helpers\convertNumberToWorldsInUsd($paymentTransaction->amount)}} </div>
         <div class="mt-2">

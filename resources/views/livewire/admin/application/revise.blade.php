@@ -106,7 +106,7 @@
                                         <i class="far fa-edit blue"></i>
                                     </a>
                                     <button class="btn btn-secondary mt-1" wire:click="toggleShowModal({{$record->id}})">Send email</button>
-                                    <button class="btn btn-secondary mt-1" wire:click="downloadCSV({{$record->id}})">Csv</button>                                </div>
+{{--                                    <button class="btn btn-secondary mt-1" wire:click="downloadCSV({{$record->id}})">Csv</button>                                </div>--}}
                             </td>
                             @endforeach
                         </tr>
