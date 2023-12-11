@@ -126,7 +126,7 @@ if (!function_exists('convertNumberToWorldsInUsd')) {
         $result = implode('', $str);
         $points = ($decimal) ?
             "." . ($words[$decimal / 10] . " " . $words[$decimal % 10]) . " Cents" : '';
-        return $result . "USD" . $points;
+        return $result . "USD only" . $points;
     }
 }
 
@@ -157,7 +157,7 @@ if (!function_exists('canCloseDay')) {
 if (!function_exists('formatCurrency')) {
     function formatCurrency($amount)
     {
-        return '$ ' . number_format($amount, 2);
+        return  number_format($amount, 2);
     }
 }
 

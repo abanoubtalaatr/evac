@@ -31,19 +31,21 @@
             <div>Vat registration : {{$settings->vat_no}}</div>
         @endif
 
-        <div class="border-dotted border-top-0 border-right-0 border-left-0 mt-3"><strong class="">Invoice Receipt</strong></div>
+        <div class="border-dotted border-top-0 border-right-0 border-left-0 mt-3"><strong class="">Invoice / Receipt</strong></div>
         <div class="fa-3x">------------------</div>
         <div >Ref No : {{$serviceTransaction->service_ref}} </div>
         <div>Date : {{\Carbon\Carbon::parse($serviceTransaction->created_at)->format('d-m-Y')}} </div>
         <div>Service : {{$serviceTransaction->service? $serviceTransaction->service->name:''}}</div>
         @if($serviceTransaction->agent)
-        <div class="border-dotted border-top-0 border-right-0 border-left-0 mt-3"><strong >Travel agent: {{$serviceTransaction->agent->name}}</strong></div>
+        <div class="border-dotted border-top-0 border-right-0 border-left-0 mt-3 text-center"><strong >Travel agent: {{$serviceTransaction->agent->name}}</strong></div>
             <div >Account number: {{$serviceTransaction->agent->account_number}}</div>
 
             <div class="fa-3x">---------------</div>
         <div>Name : {{$serviceTransaction->name ." ". $serviceTransaction->surname}}</div>
         @else
-            Direct
+            <a href="#" style="font-weight: bolder;padding-top:5px;background: lightblue;color:black;font-size: 20px">Direct</a>
+            <div>Name : {{$serviceTransaction->name ." ". $serviceTransaction->surname}}</div>
+
         @endif
         @php
             $total = $serviceTransaction->service_fee + $serviceTransaction->dubai_fee + $serviceTransaction->vat;

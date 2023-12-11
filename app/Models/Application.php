@@ -44,4 +44,9 @@ class Application extends Model
     {
         return $this->belongsTo(VisaProvider::class, 'visa_provider_id');
     }
+
+    public function applicant()
+    {
+        return $this->belongsTo(Applicant::class);
+    }
 }
