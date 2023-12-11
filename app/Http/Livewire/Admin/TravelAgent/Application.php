@@ -85,8 +85,13 @@ class Application extends Component
         } else {
             if ($this->agent === null) {
                 return ['applications' => [], 'serviceTransactions' => []];
+
             }
 
+            if(empty($this->agent)){
+                return ['applications' => [], 'serviceTransactions' => []];
+
+            }
             $data['applications'] = \App\Models\Application::query()
                 ->when($this->agent !== 'no_result', function ($query) {
                     $query->where('travel_agent_id', $this->agent);

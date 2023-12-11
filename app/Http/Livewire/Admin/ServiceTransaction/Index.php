@@ -164,6 +164,17 @@ class Index extends Component
     }
     public function getRecords()
     {
+        if (
+            is_null($this->name) &&
+            is_null($this->surname) &&
+            is_null($this->passport) &&
+            is_null($this->agent) &&
+            is_null($this->service) &&
+            (is_null($this->from) || is_null($this->to)) &&
+            is_null($this->status)
+        ) {
+            return [];
+        }
         return ServiceTransaction::query()
             ->when(!empty($this->name), function ($query) {
                 $query->where('name', 'like', '%'.$this->name.'%');
