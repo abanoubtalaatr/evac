@@ -15,6 +15,11 @@
                     @include('livewire.admin.shared.agent_search_html')
                 </div>
 
+                <div class="form-group col-2 mt-4">
+                    <button wire:click="resetData()"
+                            class="btn btn-primary form-control contact-input">Show all</button>
+                </div>
+
             </div>
 
             @if(count($records))
@@ -81,8 +86,10 @@
             $('#showPaymentHistoryModal' + agent).modal('show');
         });
         Livewire.on('showAddPaymentHistoryModal', function () {
-            console.log('here we are');
             $('#showAddPaymentHistoryModal').modal('show');
+        });
+        Livewire.on('hideAddPaymentHistoryModal', function () {
+            $('#showAddPaymentHistoryModal').modal('hide');
         });
     });
 

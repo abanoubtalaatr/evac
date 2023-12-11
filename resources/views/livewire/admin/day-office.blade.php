@@ -8,7 +8,7 @@
             <div class="col-md-12">
                 <div class="border bg-white rounded p-lg-5 p-3 mb-3">
                     <h5 class="head-term">{{$page_title}}</h5>
-                    @include('livewire.admin.shared.reports.actions',['url' => route('admin.print.daily_reports') ,'routeName' => route('admin.test_export'),'className' => 'App\\Http\\Controllers\\Admin\\Reports\\DailyReport\\PrintController'])
+{{--                    @include('livewire.admin.shared.reports.actions',['url' => route('admin.print.daily_reports') ,'routeName' => route('admin.test_export'),'className' => 'App\\Http\\Controllers\\Admin\\Reports\\DailyReport\\PrintController'])--}}
                     <hr>
                     @if(!empty($message))
                         <div class="alert alert-danger"> {{$message}}</div>

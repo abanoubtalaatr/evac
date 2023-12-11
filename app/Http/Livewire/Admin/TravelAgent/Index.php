@@ -40,7 +40,13 @@ class Index extends Component
     public function getRecords()
     {
 
-        return Agent::query()
+        if(\App\Helpers\isOwner()){
+            $agents = Agent::query();
+        }else{
+            $agents= Agent::owner();
+        }
+
+        return $agents
             ->when(!empty($this->is_active), function ($query) {
                 if($this->is_active == "1") {
                     return  $query->where('is_active', "1");

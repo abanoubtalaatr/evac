@@ -128,7 +128,9 @@ class Create extends Component
             $data['travel_agent_id'] = $this->form['agent_id'];
             unset($data['agent_id']);
         }
-
+        if(is_null($data['agent_id'])){
+            unset($data['agent_id']);
+        }
        $applicant = (new ApplicantService())->create($data);
 
         $visaType = VisaType::query()->find($this->form['visa_type_id']);
