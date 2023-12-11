@@ -98,7 +98,7 @@ $showSendEmailButton= false, $agent;
                 'className' => "App\\Http\\Controllers\\Admin\\Reports\\DailyReport\\PrintController",
             ]);
 
-//            (new SendEmailController())->send($request);
+            (new SendEmailController())->send($request);
 
             $officeDay->update([
                 'end_time' => Carbon::now()->format('H:i:s'),
@@ -106,7 +106,7 @@ $showSendEmailButton= false, $agent;
             ]);
             return redirect()->to(route('admin.day_office'));
         }
-        $this->message = "There is nothing in appraise";
+        $this->message = "Please appraise applications";
     }
 
     public function restartDay()

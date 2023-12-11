@@ -10,6 +10,12 @@
 
             <div class="row d-flex align-items-center my-3 border p-2 rounded">
 
+
+                <div class="form-group col-3">
+                    <label for="status-select">@lang('admin.search')</label>
+                    @include('livewire.admin.shared.agent_search_html')
+                </div>
+
                 <div class="form-group col-3">
                     <label for="status-select">@lang('admin.passport')</label>
                     <input wire:model='passport' type="text" class="form-control contact-input">
@@ -56,10 +62,10 @@
                 </div>
 
             </div>
-
             @if(count($records))
                 <table class="table-page table">
                     <thead>
+                    <!-- Header row here -->
                     <tr>
                         <th class="text-center">#</th>
                         <th class="text-center">@lang('admin.passport')</th>
@@ -73,57 +79,64 @@
                     </tr>
                     </thead>
                     <tbody>
-                    @foreach($records as $record)
-                        <tr>
-                            <td>#{{$loop->index + 1}}</td>
-                            <td class='text-center'>{{$record->passport_no}}</td>
-                            <td class='text-center'>{{$record->first_name . ' ' . $record->last_name}}</td>
-                            <td class='text-center'>{{$record->application_ref}}</td>
-                            <td class='text-center'>{{$record->travelAgent ? $record->travelAgent->name :''}}</td>
-                            <td class='text-center'>{{$record->visaProvider ? $record->visaProvider->name :''}}</td>
-                            <td class='text-center'>{{$record->visaType ? $record->visaType->name :''}}</td>
-                            <td class='text-center'><button class="border-0">{{$record->status}}</button></td>
-                            <td>
-                                <div class="actions">
+                    @foreach($records as $visaTypeRow)
+                        @foreach($visaTypeRow as $record)
+                            <tr>
+                                @if($loop->first) <!-- Display visa type name only in the first row of the group -->
+                                <td colspan="9"><strong>{{ $record->visaType ? $record->visaType->name : '' }}</strong></td>
+                                @else
+                                    <td>#{{$loop->index}}</td>
+                                    <td class='text-center'>{{$record->passport_no}}</td>
+                                    <td class='text-center'>{{$record->first_name . ' ' . $record->last_name}}</td>
+                                    <td class='text-center'>{{$record->application_ref}}</td>
+                                    <td class='text-center'>{{$record->travelAgent ? $record->travelAgent->name :''}}</td>
+                                    <td class='text-center'>{{$record->visaProvider ? $record->visaProvider->name :''}}</td>
+                                    <td class='text-center'>{{$record->visaType ? $record->visaType->name :''}}</td>
+                                    <td class='text-center'><button class="border-0">{{$record->status}}</button></td>
+                                    <td>
+                                        <div class="actions">
 
 
-                                    @include('livewire.admin.application.popup.invoice', ['application' => $record])
-                                    <button  style="cursor:pointer;" wire:click="showApplicationInvoice({{$record->id}})" class="btn btn-info mt-2">Edit invoice</button>
+                                            @include('livewire.admin.application.popup.invoice', ['application' => $record])
+                                            <button  style="cursor:pointer;" wire:click="showApplicationInvoice({{$record->id}})" class="btn btn-info mt-2">Edit invoice</button>
 
-                                    <button class="btn btn-primary mt-2" onclick="printPage('{{route('admin.applications.print', ['application' => $record->id])}}')">Print</button>
+                                            <button class="btn btn-primary mt-2" onclick="printPage('{{route('admin.applications.print', ['application' => $record->id])}}')">Print</button>
 
-                                    @include('livewire.admin.application.show',  ['application' => $record])
+                                            @include('livewire.admin.application.show',  ['application' => $record])
 
-                                    <button wire:click="showDeleteConfirmation({{$record->id}})" class="btn btn-danger mt-2">
-                                        Delete
-                                    </button>
+                                            <button wire:click="showDeleteConfirmation({{$record->id}})" class="btn btn-danger mt-2">
+                                                Delete
+                                            </button>
 
-                                    <a style="cursor:pointer;" wire:click="showApplicationModal({{$record->id}})" class="no-btn mt-2">
-                                        <i class="far fa-eye blue"></i>
-                                    </a>
+                                            <a style="cursor:pointer;" wire:click="showApplicationModal({{$record->id}})" class="no-btn mt-2">
+                                                <i class="far fa-eye blue"></i>
+                                            </a>
 
-                                    <a style="cursor:pointer;" href="{{route('admin.applications.update', ['application' => $record])}}" class="no-btn mt-2">
-                                        <i class="far fa-edit blue"></i>
-                                    </a>
-                                    <button class="btn btn-secondary mt-1" wire:click="toggleShowModal({{$record->id}})">Send email</button>
-{{--                                    <button class="btn btn-secondary mt-1" wire:click="downloadCSV({{$record->id}})">Csv</button>                                </div>--}}
-                            </td>
-                            @endforeach
-                        </tr>
+                                            <a style="cursor:pointer;" href="{{route('admin.applications.update', ['application' => $record])}}" class="no-btn mt-2">
+                                                <i class="far fa-edit blue"></i>
+                                            </a>
+                                            <button class="btn btn-secondary mt-1" wire:click="toggleShowModal({{$record->id}})">Send email</button>
+                                        </div>
+                                    </td>
+                                @endif
+                            </tr>
+                        @endforeach
+                    @endforeach
                     </tbody>
                 </table>
-
-                {{$records->links()}}
             @else
                 <div class="row" style='margin-top:10px'>
                     <div class="alert alert-warning">@lang('site.no_data_to_display')</div>
                 </div>
             @endif
+
         </div>
         @include('livewire.admin.application.popup.send-email')
         @include('livewire.admin.application.popup.delete-confirmation')
     </div>
 </main>
+@include('livewire.admin.shared.agent_search_script')
+
 <script>
     document.addEventListener('livewire:load', function () {
        Livewire.on('showApplicationInvoiceModal', function (application) {
