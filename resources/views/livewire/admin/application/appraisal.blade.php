@@ -73,6 +73,7 @@
                                         </button>
                                     @endif
 
+                                    <button class="btn btn-primary" onclick="printPage('{{route('admin.applications.print', ['application' => $record->id])}}')">Print</button>
 
                                     <button wire:click="showCancelConfirmation({{$record->id}})" class="btn btn-warning">
                                         Cancel
@@ -117,6 +118,7 @@
         });
     });
 </script>
+
 
 <script>
     // Function to load content into an iframe and trigger printing

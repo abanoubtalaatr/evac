@@ -32,14 +32,17 @@ trait ApplicationChecks
     {
         $settings = Setting::query()->first();
         $numberOfDaysToCheckVisa = 90;
-        if($settings) {
+        if ($settings) {
             $numberOfDaysToCheckVisa = $settings->no_of_days_to_check_visa;
         }
-        $this->numberOfDaysToCheckVisa =$numberOfDaysToCheckVisa;
+        $this->numberOfDaysToCheckVisa = $numberOfDaysToCheckVisa;
 
         $previousApplications = Application::where('passport_no', $this->form['passport_no'])
             ->withoutGlobalScope('visibleApplications')
-            ->where('created_at', '>', now()->subDays($numberOfDaysToCheckVisa))
+            ->where(function ($query) use ($numberOfDaysToCheckVisa) {
+                $query->where('created_at', '>', now()->subDays($numberOfDaysToCheckVisa))
+                    ->orWhereDate('created_at', now()->format('Y-m-d'));
+            })
             ->get();
 
         if ($previousApplications->count() > 1) {
@@ -48,4 +51,5 @@ trait ApplicationChecks
         }
         return false;
     }
+
 }

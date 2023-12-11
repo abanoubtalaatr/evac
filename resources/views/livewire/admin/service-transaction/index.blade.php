@@ -2,10 +2,15 @@
     <!--head-->
     <x-admin.head/>
     <!--table-->
+    <style>
+        .disable-link {
+            pointer-events: none;
+        }
+    </style>
     <div class="border-div">
         <div class="b-btm flex-div-2">
             <h4>{{$page_title}}</h4>
-            <a style='text-align:center;cursor:pointer' class="button btn-red big" wire:click="emptyForm" id="addServiceTransactionButton">@lang('site.create_new')</a>
+            <a   style='text-align:center;cursor:pointer' class="button btn-red big {{\App\Helpers\checkDayStart(1)? '':'disable-link bg-secondary'}} " wire:click="emptyForm" id="addServiceTransactionButton">@lang('site.create_new')</a>
 
         </div>
         <div class="table-page-wrap">

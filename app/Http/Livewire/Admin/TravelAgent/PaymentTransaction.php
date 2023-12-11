@@ -83,6 +83,8 @@ class PaymentTransaction extends Component
     public function resetData()
     {
         $this->reset(['agent_id']);
+        return redirect()->to(route('admin.travel_agent_payment_transactions'));
+
     }
 
     public function store(Request $request)
@@ -91,9 +93,8 @@ class PaymentTransaction extends Component
 
         \App\Models\PaymentTransaction::query()->create($this->form);
 
-        session()->flash('success',__('admin.create_successfully'));
-
-        return redirect()->to(route('admin.travel_agent_payment_transactions'));
+        $this->form = [];
+$this->emit('hideAddPaymentHistoryModal');
     }
 
     public function getRules(){
