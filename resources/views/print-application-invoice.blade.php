@@ -50,7 +50,7 @@
 
         </div>
         <div class="border-dotted border-top-0 border-right-0 border-left-0 mt-3 invoice-heading" >
-            <p class="text-capitalize heading">INVOICE RECEIPT</p>
+            <p class="text-capitalize text-center heading">INVOICE RECEIPT</p>
         </div>
         <div style="text-align: start">
             <div class="py-1"><strong>Ref No: {{$application->application_ref}}</strong> </div>
