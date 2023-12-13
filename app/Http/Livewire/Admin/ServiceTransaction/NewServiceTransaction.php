@@ -22,7 +22,7 @@ use Livewire\WithPagination;
 use Maatwebsite\Excel\Facades\Excel;
 use function App\Helpers\isOwner;
 
-class Index extends Component
+class NewServiceTransaction extends Component
 {
     use WithPagination;
     use ValidationTrait;
@@ -41,7 +41,7 @@ class Index extends Component
 
     public function mount()
     {
-        $this->page_title = __('admin.service_transactions');
+        $this->page_title = __('admin.new_service_transactions');
         $this->services = Service::query()->get();
         if(isOwner()){
             $this->agents = Agent::query()->orderBy('name')->get();
@@ -164,18 +164,8 @@ class Index extends Component
     }
     public function getRecords()
     {
-        if (
-            is_null($this->name) &&
-            is_null($this->surname) &&
-            is_null($this->passport) &&
-            is_null($this->agent) &&
-            is_null($this->service) &&
-            (is_null($this->from) || is_null($this->to)) &&
-            is_null($this->status)
-        ) {
-            return [];
-        }
         return ServiceTransaction::query()
+            ->where('status', 'new')
             ->when(!empty($this->name), function ($query) {
                 $query->where('name', 'like', '%'.$this->name.'%');
             })->when(!empty($this->surname), function ($query){
@@ -195,16 +185,7 @@ class Index extends Component
             })->when(!empty($this->from) && !empty($this->to), function ($query) {
                 $query->whereBetween('created_at', [$this->from, $this->to]);
             })
-            ->when(is_null($this->status), function ($query){
-                $query->where('status', null);
-            })
-            ->when(!is_null($this->status), function ($query){
-                if($this->status =='deleted'){
-                    $query->where('status', 'deleted');
-                }else{
-                    $query->whereIn('status', ['new', null]);
-                }
-            })
+
             ->latest()
             ->paginate(50);
     }
@@ -245,7 +226,6 @@ class Index extends Component
         $service = Service::query()->find($this->form['service_id']);
         $this->form['dubai_fee'] = $service->dubai_fee;
         $this->form['service_fee'] = $service->service_fee;
-        $this->form['status'] = 'new';
 
         ServiceTransaction::query()->create($this->form);
 
@@ -269,6 +249,6 @@ class Index extends Component
     public function render()
     {
         $records = $this->getRecords();
-        return view('livewire.admin.service-transaction.index', compact('records'))->layout('layouts.admin');
+        return view('livewire.admin.service-transaction.new-service-transaction', compact('records'))->layout('layouts.admin');
     }
 }

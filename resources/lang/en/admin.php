@@ -122,5 +122,6 @@ return [
     "report_total_profit" => "Profit & Loss",
     "outstanding" => "Outstanding",
     "total_sales" => "Total sales",
-    'un_paid_bail' => "Unpaid Bal"
+    'un_paid_bail' => "Unpaid Bal",
+    "new_service_transactions" => "New transactions",
 ];
