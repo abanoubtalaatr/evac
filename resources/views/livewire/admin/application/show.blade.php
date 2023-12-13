@@ -15,14 +15,14 @@
                     <div class="col-12">
                         <div class="form-group  ">
                             <label class="" for="visaType">Visa Type:</label>
-                            <input class="border-0" value="{{$application->visaType->name}}" />
+                            <input class="border-0" value="{{$application->visaType? $application->visaType->name:""}}" />
                         </div>
                     </div>
 
                     <div class="col-12">
                         <div class="form-group ">
                             <label for="visaProvider">Visa Provider:</label>
-                            <input class="border-0" value="{{$application->visaProvider->name}}" />
+                            <input class="border-0" value="{{$application->visaProvider? $application->visaProvider->name:""}}" />
                         </div>
                     </div>
 
