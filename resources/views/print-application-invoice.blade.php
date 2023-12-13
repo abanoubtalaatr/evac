@@ -31,7 +31,7 @@
         $settings= \App\Models\Setting::query()->first();
     @endphp
 
-    <div style="text-align: center;margin: auto;width:1000px">
+    <div style="">
         <div class="my-2 text-center mb-10" >
             <img class="rounded" height="100" width="200" src="{{asset('uploads/pics/'. $settings->logo??"")}}">
         </div>
@@ -67,6 +67,8 @@
                <div><strong class="text-uppercase py-2">APPLICANT NAME: {{$application->first_name . ' '. $application->last_name}}</strong></div>
         @else
                <a href="#" style="font-weight: bolder;padding-top:5px;background: lightblue;color:black;font-size: 20px">Direct</a>
+               <div><strong class="text-uppercase py-2">APPLICANT NAME: {{$application->first_name . ' '. $application->last_name}}</strong></div>
+
            @endif
            <div><strong class="text-uppercase py-2">Passport: {{$application->passport_no}} </strong></div>
        </div>
