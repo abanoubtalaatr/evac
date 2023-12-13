@@ -10,7 +10,7 @@ class Application extends Model
 {
     use HasFactory;
 
-    protected $guarded=['payment_method','visa_type_id','service_fee','dubai_fee','vat','amount','visa_provider_id','passport_no','expiry_date','first_name','last_name','notes','travel_agent_id','application_ref'];
+    protected $fillable=['payment_method','visa_type_id','service_fee','dubai_fee','vat','amount','visa_provider_id','passport_no','expiry_date','first_name','last_name','notes','travel_agent_id','application_ref'];
 
     protected static function boot()
     {
