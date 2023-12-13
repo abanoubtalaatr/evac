@@ -89,7 +89,7 @@
               $total = $application->dubai_fee + $application->service_fee + $application->vat;
         @endphp
 
-        <div class="font-weight-bolder py-3 fa-4x text-center"  style="font-weight: bolder;font-size: 19px">Total Fees : {{$total}} USD  ({{\App\Helpers\convertNumberToWorldsInUsd($total)}} )  {!! $application->payment_method =='invoice'? "<strong class='text-danger'>Un paid</strong>" :"<strong>Paid</strong>"  !!} </div>
+        <div class="font-weight-bolder py-3 fa-4x text-center"  style="font-weight: bolder;font-size: 19px">Total Fees : {{$total}} USD  ({{\App\Helpers\convertNumberToWorldsInUsd($total)}} )  {!! $application->payment_method =='invoice'? "<strong class='text-danger'>Unpaid</strong>" :"<strong>Paid</strong>"  !!} </div>
 
         <div class="text-start">
             <strong>Service Fees and Sales Tax Included / {{$settings->invoice_footer}}</strong>
