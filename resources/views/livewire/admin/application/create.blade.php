@@ -35,7 +35,7 @@
                 @error('form.visa_type_id')<p style="color: red;">{{ $message }}</p>@enderror
             </div>
             <div class="col-6 mt-3">
-                <input type="checkbox" id="showTravelAgent" onclick="toggleShowTravelAgent()"> Show Travel Agent
+                <input type="checkbox" id="showTravelAgent"  onclick="toggleShowTravelAgent()"> Show Travel Agent
 
                 <div class="col-12 form-group my-2 hidden" wire:ignore  id="travelAgentContainer">
                     <div class="input-group">
@@ -71,13 +71,6 @@
                 </div>
             </div>
 
-
-            <script>
-                function toggleShowTravelAgent() {
-                    var container = document.getElementById('travelAgentContainer');
-                    container.classList.toggle('hidden');
-                }
-            </script>
 
 
             <div class="col-6">
@@ -179,7 +172,10 @@
           $('#blackListModal').modal('hide');
           @this.set('form.agent_id', null)
           $("#agent_search").val(null)
-          $('#showTravelAgent').prop('checked', true);
+          $('#showTravelAgent').prop('checked', false);
+
+          var container = document.getElementById('travelAgentContainer');
+          container.classList.toggle('hidden');
       });
   });
   // Function to load content into an iframe and trigger printing

@@ -132,6 +132,7 @@ class Create extends Component
         if(isset($data['agent_id']) && is_null($data['agent_id']) ){
             unset($data['agent_id']);
         }
+
        $applicant = (new ApplicantService())->create($data);
 
         $visaType = VisaType::query()->find($this->form['visa_type_id']);
@@ -156,6 +157,7 @@ class Create extends Component
         $this->form['expiry_date'] = null;
         $this->form['travel_agent_id'] =null;
         $this->form['agent_id'] = null;
+        $this->isChecked = false;
     }
 
     public function checkPassportNumber()
