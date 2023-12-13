@@ -44,7 +44,7 @@ trait ApplicationChecks
             })
             ->get();
 
-        if ($previousApplications->count() > 1) {
+        if ($previousApplications->count() >= 1) {
             $this->passportApplications = $previousApplications;
             return true;
         }
