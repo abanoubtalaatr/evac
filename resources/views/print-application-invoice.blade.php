@@ -26,7 +26,7 @@
 </style>
 </head>
 <body>
-<div class="container mt-5 ">
+<div class=" mt-5 ">
     @php
         $settings= \App\Models\Setting::query()->first();
     @endphp
