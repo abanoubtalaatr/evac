@@ -21,6 +21,7 @@ class PaymentTransaction extends Component
     public $search;
     public $agent,$rowNumber, $form, $agent_id, $message, $showPaymentHistory=false, $agentWhoWillAddToHimHistory;
 
+    public $showAll= false;
     protected $paginationTheme = 'bootstrap';
 
     protected $listeners = ['showPaymentHistory','showAddPaymentHistory'];
@@ -35,42 +36,50 @@ class PaymentTransaction extends Component
         $this->rowNumber = ($this->page - 1) * $this->perPage + 1;
     }
 
+    public function showAll()
+    {
+        $this->showAll = true;
+        $this->agent = null;
+        $this->emit('makeAgentNull');
+    }
     public function getRecords()
     {
-        if(is_null($this->agent)){
-            return [];
-        }
+
         if(\App\Helpers\isOwner()){
             $agents = Agent::query();
         }else{
             $agents= Agent::owner();
         }
+        if($this->showAll || !is_null($this->agent)){
+            return $agents->when($this->agent, function ($query) {
+                if($this->agent =='no_result'){
+                    return $query->where('agents.id', '>', 0);
 
-        return $agents->when($this->agent, function ($query) {
-            if($this->agent =='no_result'){
-                return $query->where('agents.id', '>', 0);
-
-            }else{
-                return $query->where('agents.id', $this->agent);
-            }
-        })
-            ->leftJoin('applications', 'agents.id', '=', 'applications.travel_agent_id')
-            ->leftJoin('payment_transactions', function ($join) {
-                $join->on('agents.id', '=', 'payment_transactions.agent_id');
+                }else{
+                    return $query->where('agents.id', $this->agent);
+                }
             })
-            ->leftJoin('service_transactions', function ($join) {
-                $join->on('agents.id', '=', 'service_transactions.agent_id');
-            })
-            ->select(
-                'agents.*',
-                DB::raw('(SELECT SUM(amount) FROM applications WHERE applications.travel_agent_id = agents.id) as amount'),
-                DB::raw('(SELECT SUM(COALESCE(amount, 0)) FROM payment_transactions WHERE payment_transactions.agent_id = agents.id) as amount_paid'),
-                DB::raw('(SELECT SUM(COALESCE(amount, 0)) FROM service_transactions WHERE service_transactions.agent_id = agents.id) as amount_service')
-            )
-            ->groupBy('agents.id')
-            ->latest()
-            ->paginate(50);
+                ->leftJoin('applications', 'agents.id', '=', 'applications.travel_agent_id')
+                ->leftJoin('payment_transactions', function ($join) {
+                    $join->on('agents.id', '=', 'payment_transactions.agent_id');
+                })
+                ->leftJoin('service_transactions', function ($join) {
+                    $join->on('agents.id', '=', 'service_transactions.agent_id');
+                })
+                ->select(
+                    'agents.*',
+                    DB::raw('(SELECT SUM(amount) FROM applications WHERE applications.travel_agent_id = agents.id) as amount'),
+                    DB::raw('(SELECT SUM(COALESCE(amount, 0)) FROM payment_transactions WHERE payment_transactions.agent_id = agents.id) as amount_paid'),
+                    DB::raw('(SELECT SUM(COALESCE(amount, 0)) FROM service_transactions WHERE service_transactions.agent_id = agents.id) as amount_service')
+                )
+                ->groupBy('agents.id')
+                ->latest()
+                ->paginate(50);
+        }
 
+        if(is_null($this->agent)){
+            return [];
+        }
     }
 
     public function showPaymentHistory($id)

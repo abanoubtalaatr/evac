@@ -100,7 +100,7 @@ Route::group([
             Route::get('service-transaction', \App\Http\Livewire\Admin\ServiceTransaction\Index::class)->name('service_transactions');
             Route::get('service-transactions/{service_transaction}', [\App\Http\Controllers\Admin\ServiceTransactionController::class, 'show'])->name('service_transactions.print');
             Route::get('service-transactions-invoices', App\Http\Livewire\Admin\ServiceTransaction\Invoice::class)->name('service_transactions.invoices');
-
+            Route::get('service-transactions-new', \App\Http\Livewire\Admin\ServiceTransaction\NewServiceTransaction::class)->name('service_transactions.new');
             //notifications
             Route::get('notifications', \App\Http\Livewire\Admin\Notifications::class )->name('notifications');
 

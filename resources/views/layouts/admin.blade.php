@@ -141,20 +141,46 @@
             </ul>
 
             @if(auth('admin')->user()->id ==1)
-                <li class="{{ request()->routeIs('admin.service_transactions') ? 'active' : '' }}">
-                    <a href="{{route('admin.service_transactions')}}" class="text-white  ">
-                        <i class="fa fa-suitcase mr-5"></i>
-                        <span class="ml-2">@lang('admin.service_transactions')</span>
-                    </a>
+
+                <li class="sidebar-toggle">
+                    <i class="fa fa-suitcase mr-5"></i>
+                    <span class="ml-2">@lang('admin.service_transactions')</span>
+                    <i class="fas fa-plus"></i>
                 </li>
-            @else
-                @can('Manage service transactions')
-                    <li class="{{ request()->routeIs('admin.service_transactions') ? 'active' : '' }}">
+                <ul class="sidebar-menu">
+                    <li style="line-height: 20px;margin-left: 18px;padding-left: 0px;text-indent: 0" class="border-bottom pb-2 {{ request()->routeIs('admin.service_transactions') ? 'active' : '' }}">
                         <a href="{{route('admin.service_transactions')}}" class="text-white ">
-                            <i class="fa fa-suitcase mr-5"></i>
-                            <span class="ml-2">@lang('admin.service_transactions')</span>
+                            @lang('admin.service_transactions')
                         </a>
                     </li>
+                    <li style="line-height: 20px;margin-left: 18px;padding-left: 0px;text-indent: 0" class="border-bottom pb-2 {{ request()->routeIs('admin.service_transactions.new') ? 'active' : '' }}">
+                        <a href="{{route('admin.service_transactions.new')}}" class="text-white ">
+                            @lang('admin.new_service_transactions')
+                        </a>
+                    </li>
+
+                </ul>
+            @else
+                @can('Manage service transactions')
+
+                    <li class="sidebar-toggle">
+                        <i class="fa fa-suitcase mr-5"></i>
+                        <span class="ml-2">@lang('admin.reports')</span>
+                        <i class="fas fa-plus"></i>
+                    </li>
+                    <ul class="sidebar-menu">
+                        <li style="line-height: 20px;margin-left: 18px;padding-left: 0px;text-indent: 0" class="border-bottom pb-2 {{ request()->routeIs('admin.travel_agent_applications') ? 'active' : '' }}">
+                            <a href="{{route('admin.travel_agent_applications')}}" class="text-white ">
+                                @lang('admin.agent_applications')
+                            </a>
+                        </li>
+                        <li style="line-height: 20px;margin-left: 18px;padding-left: 0px;text-indent: 0" class="border-bottom pb-2 {{ request()->routeIs('admin.report.direct_sales') ? 'active' : '' }}">
+                            <a href="{{route('admin.report.direct_sales')}}" class="text-white ">
+                                @lang('admin.direct_sales')
+                            </a>
+                        </li>
+
+                    </ul>
                 @endcan
             @endif
 

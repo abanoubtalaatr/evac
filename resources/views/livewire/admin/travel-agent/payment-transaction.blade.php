@@ -16,12 +16,12 @@
                 </div>
 
                 <div class="form-group col-2 mt-4">
-                    <button wire:click="resetData()"
+                    <button wire:click="showAll()"
                             class="btn btn-primary form-control contact-input">Show all</button>
                 </div>
 
             </div>
-
+{{--@dd($records)--}}
             @if(count($records))
                 <table class="table-page table">
                     <thead>
@@ -91,6 +91,11 @@
         Livewire.on('hideAddPaymentHistoryModal', function () {
             $('#showAddPaymentHistoryModal').modal('hide');
         });
+        Livewire.on('makeAgentNull', function () {
+            $('#agent_search').val('');  // Clear the input field
+
+        });
+
     });
 
 </script>
