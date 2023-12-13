@@ -88,59 +88,55 @@ class Revise extends Component
     }
     // Livewire Component
 
-        public function getRecords()
-        {
+    public function getRecords()
+    {
+        $records = Application::query()
+            ->when($this->agent, function ($query) {
+                if ($this->agent == 'no_result') {
+                    // $query->where('travel_agent_id', 0);
+                } else {
+                    $query->where('travel_agent_id', $this->agent);
+                }
+            })
+            ->when(!empty($this->passport), function ($query) {
+                $query->where('passport_no', 'like', '%' . $this->passport . '%');
+            })
+            ->when(!empty($this->fullName), function ($query) {
+                $query->where(function ($query) {
+                    $query->where('first_name', 'like', '%' . $this->fullName . '%')
+                        ->orWhere('last_name', 'like', '%' . $this->fullName . '%');
+                });
+            })
+            ->when(!empty($this->referenceNo), function ($query) {
+                $query->where('application_ref', 'like', '%' . $this->referenceNo . '%');
+            })
+            ->when(!empty($this->visaType), function ($query) {
+                $query->where('visa_type_id', $this->visaType);
+            })
+            ->when(!empty($this->status), function ($query) {
+                $query->where('status', 'like', '%' . $this->status . '%');
+            })
+            ->when(!empty($this->from) && !empty($this->to), function ($query) {
+                // Use whereDate to filter based on the entire day
+                $query->whereDate('created_at', '>=', $this->from)
+                    ->whereDate('created_at', '<=', $this->to);
+            })
+            ->latest()
+            ->get();
 
-            $records = Application::query()
-                ->when($this->agent, function ($query){
-                    if($this->agent == 'no_result'){
-//                        $query->where('travel_agent_id', 0);
-                    }else{
-                        $query->where('travel_agent_id', $this->agent);
-                    }
-                })
-                ->when(!empty($this->passport), function ($query) {
-                    $query->where(function ($query) {
-                        $query->where('passport_no', 'like', '%' . $this->passport . '%');
-                    });
-                })
-                ->when(!empty($this->fullName), function ($query) {
-                    $query->where(function ($query) {
-                        $query->where('first_name', 'like', '%' . $this->fullName . '%')
-                            ->orWhere('last_name', 'like', '%' . $this->fullName . '%');
-                    });
-                })
-                ->when(!empty($this->referenceNo), function ($query) {
-                    $query->where(function ($query) {
-                        $query->where('application_ref', 'like', '%' . $this->referenceNo . '%');
-                    });
-                })
-                ->when(!empty($this->visaType), function ($query) {
-                    $query->where('visa_type_id', $this->visaType);
-                })
-                ->when(!empty($this->status), function ($query) {
-                    $query->where(function ($query) {
-                        $query->where('status', 'like', '%' . $this->status . '%');
-                    });
-                })
-                ->when(!empty($this->from) && !empty($this->to), function ($query) {
-                    $query->whereBetween('created_at', [$this->from, $this->to]);
-                })
-                ->latest()
-                ->get();
-            if (
-                is_null($this->passport) &&
-                is_null($this->fullName) &&
-                is_null($this->referenceNo) &&
-                is_null($this->visaType) &&
-                is_null($this->status) &&
-                (is_null($this->from) || is_null($this->to))
-            ) {
-                return [];
-            }else{
-                return $records->groupBy('visa_type_id');
-            }
+        if (
+            is_null($this->passport) &&
+            is_null($this->fullName) &&
+            is_null($this->referenceNo) &&
+            is_null($this->visaType) &&
+            is_null($this->status) &&
+            (is_null($this->from) || is_null($this->to))
+        ) {
+            return [];
+        } else {
+            return $records->groupBy('visa_type_id');
         }
+    }
 
     public function resetData()
     {
