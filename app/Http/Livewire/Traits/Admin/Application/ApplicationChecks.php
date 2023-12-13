@@ -38,7 +38,6 @@ trait ApplicationChecks
         $this->numberOfDaysToCheckVisa = $numberOfDaysToCheckVisa;
 
         $previousApplications = Application::where('passport_no', $this->form['passport_no'])
-            ->withoutGlobalScope('visibleApplications')
             ->where(function ($query) use ($numberOfDaysToCheckVisa) {
                 $query->where('created_at', '>', now()->subDays($numberOfDaysToCheckVisa))
                     ->orWhereDate('created_at', now()->format('Y-m-d'));
