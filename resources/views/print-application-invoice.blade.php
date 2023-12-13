@@ -39,9 +39,8 @@
         <div style="display: flex;text-align: center;align-items: center;justify-content:center;margin-top: 30px" >
 
             <div class="heading mx-10"> {{ $settings->address??""}} - </div>
-            <div class="heading mx-10">Tel : {{$settings->mobile??""}} - </div>
             @if(isset($settings->registration_no) && !empty($settings->registration_no))
-                <div class="heading mx-10">Reg No : {{$settings->registration_no??''}}</div>
+                <div class="heading mx-10">Reg No : {{$settings->registration_no??''}} - </div>
             @endif
             <div class="heading mx-10">Tel : {{$settings->mobile??''}}</div>
 
@@ -56,17 +55,17 @@
         <div style="text-align: start">
             <div class="py-1"><strong>Ref No: {{$application->application_ref}}</strong> </div>
             <div class="py-1"><strong>Date : {{\Carbon\Carbon::parse($application->created_at)->format('d/m/Y')}} </strong></div>
-            <div class="py-1"><strong>Visa type : {{$application->visaType? $application->visaType->name:''}}</strong></div>
+            <div class="py-1"><strong class="text-uppercase">Visa type : {{$application->visaType? $application->visaType->name:''}}</strong></div>
         </div>
 
-       <div class="" style="text-align: center">
+       <div class="mt-4" style="text-align: center">
         @if($application->travelAgent)
         <div class="border-dotted border-top-0 border-right-0 border-left-0 mt-4 py-1">
             <strong>TRAVEL AGENT: {{$application->travelAgent->name}} / ACC NBR : {{$application->travelAgent->account_number}} / {{$application->travelAgent->address}}</strong>
         </div>
                <div><strong class="text-uppercase py-2">APPLICANT NAME: {{$application->first_name . ' '. $application->last_name}}</strong></div>
         @else
-               <a href="#" style="font-weight: bolder;padding-top:5px;background: lightblue;color:black;font-size: 20px">Direct</a>
+               <a href="#" style="" class="btn text-uppercase"><strong>Direct</strong></a>
                <div><strong class="text-uppercase py-2">APPLICANT NAME: {{$application->first_name . ' '. $application->last_name}}</strong></div>
 
            @endif
@@ -78,11 +77,9 @@
             </div>
 
             <div>
-                Service fees  :   +
-                @if($application->vat > 0)
-                    <span>VAT  {{$settings->vat_rate}} :  </span>
-                @endif
-                <strong>  {{\App\Helpers\formatCurrency($application->service_fee + $application->vat)}} USD</strong>
+                Service fees   + <span>VAT  % :  </span>
+
+                  {{\App\Helpers\formatCurrency($application->service_fee + $application->vat)}} USD
             </div>
         </div>
 
@@ -92,10 +89,10 @@
               $total = $application->dubai_fee + $application->service_fee + $application->vat;
         @endphp
 
-        <div class="font-weight-bolder py-3 fa-4x"  style="font-weight: bolder;font-size: 19px">Total Fees :  ({{\App\Helpers\convertNumberToWorldsInUsd($total)}} )  {!! $application->payment_method =='invoice'? "<strong class='text-danger'>Paid</strong>" :"<strong>Not Paid</strong>"  !!} </div>
+        <div class="font-weight-bolder py-3 fa-4x text-center"  style="font-weight: bolder;font-size: 19px">Total Fees : {{$total}} USD  ({{\App\Helpers\convertNumberToWorldsInUsd($total)}} )  {!! $application->payment_method =='invoice'? "<strong class='text-danger'>Paid</strong>" :"<strong>Not Paid</strong>"  !!} </div>
 
         <div class="text-start">
-            <strong>Service Fees and Sales Tax Included : / {{$settings->invoice_footer}}</strong>
+            <strong>Service Fees and Sales Tax Included / {{$settings->invoice_footer}}</strong>
         </div>
     </div>
 
