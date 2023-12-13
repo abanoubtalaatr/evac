@@ -49,7 +49,7 @@
 
                 <div class="form-group col-3 mt-2">
                     <label for="status-select">@lang('admin.from')</label>
-                   <input class="form-control border  contact-input" type="date" wire:model="from">
+                   <input class="form-control border  contact-input" type="date"  wire:model="from">
                 </div>
                 <div class="form-group col-3 mt-2">
                     <label for="status-select">@lang('admin.to')</label>
