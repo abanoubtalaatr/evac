@@ -12,6 +12,10 @@ class Agent extends Model
 
     protected $guarded=[];
 
+    protected $casts = [
+        'is_active' => 'boolean',
+    ];
+
     public function scopeOwner($query)
     {
         $query->where('is_visible', 1);
@@ -21,7 +25,14 @@ class Agent extends Model
         return $this->hasMany(PaymentTransaction::class);
     }
 
-    protected $casts = [
-      'is_active' => 'boolean',
-    ];
+    public function serviceTransactions()
+    {
+        return $this->hasMany(ServiceTransaction::class);
+    }
+
+    public function applications()
+    {
+        return $this->hasMany(Application::class, 'travel_agent_id');
+    }
+
 }

@@ -118,5 +118,9 @@ return [
     'direct' => "Direct",
     'direct_sales' => "Direct Sales",
     "application_name" => "Application name",
-    "payment" => 'Payment'
+    "payment" => 'Payment',
+    "report_total_profit" => "Profit & Loss",
+    "outstanding" => "Outstanding",
+    "total_sales" => "Total sales",
+    'un_paid_bail' => "Unpaid Bal"
 ];

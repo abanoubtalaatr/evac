@@ -124,6 +124,8 @@ Route::group([
             Route::post('send-email',[\App\Http\Controllers\Admin\SendEmailController::class,'send'])->name('send.email');
 
             Route::get('reports-direct-sales', \App\Http\Livewire\Admin\Reports\DirectSale::class)->name('report.direct_sales');
+            Route::get('reports-total-profit', \App\Http\Livewire\Admin\Reports\ProfitLoss::class)->name('report.total.profit');
+            Route::get('reports-outstanding', \App\Http\Livewire\Admin\Reports\Outstanding::class)->name('report.outstanding');
 
             Route::get('reports-direct-sales-print', function (){
                 return view('livewire.admin.PrintReports.direct_sales');
