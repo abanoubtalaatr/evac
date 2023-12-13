@@ -175,7 +175,7 @@
           $('#showTravelAgent').prop('checked', false);
 
           var container = document.getElementById('travelAgentContainer');
-          container.classList.toggle('hidden');
+          container.classList.addClass('hidden');
       });
   });
   // Function to load content into an iframe and trigger printing

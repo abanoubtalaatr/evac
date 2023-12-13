@@ -77,6 +77,8 @@ class Create extends Component
 
         $this->form['vat'] = $vatRate;
         $this->form['amount'] = $amount;
+        $this->form['dubai_fee'] = $visaType->dubai_fee;
+        $this->form['service_fee'] = $visaType->service_fee;
     }
 
     public function updatedFormVisaTypeId()
@@ -129,9 +131,6 @@ class Create extends Component
             unset($data['agent_id']);
         }
 
-        if(isset($data['agent_id']) && is_null($data['agent_id']) ){
-            unset($data['agent_id']);
-        }
 
        $applicant = (new ApplicantService())->create($data);
 
@@ -157,7 +156,6 @@ class Create extends Component
         $this->form['expiry_date'] = null;
         $this->form['travel_agent_id'] =null;
         $this->form['agent_id'] = null;
-        $this->isChecked = false;
     }
 
     public function checkPassportNumber()
