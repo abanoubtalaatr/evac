@@ -13,6 +13,7 @@ use App\Models\Application;
 use App\Models\Service;
 use App\Models\ServiceTransaction;
 use App\Models\Setting;
+use App\Services\ApplicantService;
 use App\Services\InvoiceService;
 use Carbon\Carbon;
 use Illuminate\Support\Arr;
@@ -247,7 +248,16 @@ class Index extends Component
         $this->form['service_fee'] = $service->service_fee;
         $this->form['status'] = 'new';
 
+        $applicantData = [
+            'first_name' => $this->form['name'],
+            'last_name' => $this->form['surname'],
+            'passport_no' => $this->form['passport_no'],
+        ];
+
+        $applicant = (new ApplicantService())->create($applicantData);
+        $this->form['applicant_id'] = $applicant->id;
         ServiceTransaction::query()->create($this->form);
+
 
         session()->flash('success',__('admin.create_successfully'));
 

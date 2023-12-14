@@ -5,8 +5,10 @@ namespace App\Http\Livewire\Admin\Reports;
 use App\Exports\Reports\AgentApplicationExport;
 use App\Mail\AgentApplicationsMail;
 use App\Mail\Reports\DirectSalesMail;
+use App\Mail\Reports\ProfitLossMail;
 use App\Models\Agent;
 use App\Models\Application;
+use App\Models\PaymentTransaction;
 use App\Models\ServiceTransaction;
 use App\Models\VisaType;
 use Illuminate\Http\Request;
@@ -56,7 +58,7 @@ class ProfitLoss extends Component
 
     public function printData()
     {
-        $url = route('admin.report.print.direct_sales', ['fromDate' => $this->from,'toDate' => $this->to]);
+        $url = route('admin.report.print.profit_loss', ['fromDate' => $this->from,'toDate' => $this->to]);
         $this->emit('printTable', $url);
     }
 
@@ -70,31 +72,17 @@ class ProfitLoss extends Component
     {
         $fromDate = $this->from;
         $toDate = $this->to;
-
-        $data['applications']['invoices'] = Application::query()
-            ->where('payment_method', 'invoice')
-            ->where('travel_agent_id', null)
-            ->whereBetween('created_at', [$fromDate, $toDate])
-            ->get();
-
-        $data['applications']['cashes'] = Application::query()
-            ->where('payment_method', 'cash')
-            ->where('travel_agent_id', null)
-            ->whereBetween('created_at', [$fromDate, $toDate])
-            ->get();
-
-        $data['serviceTransactions']['invoices'] = ServiceTransaction::query()
-            ->where('agent_id', null)
-            ->where('payment_method', 'invoice')
-            ->whereBetween('created_at', [$fromDate, $toDate])
-            ->get();
-
-        $data['serviceTransactions']['cashes'] = ServiceTransaction::query()
-            ->where('agent_id', null)
-            ->where('payment_method', 'cashes')
-            ->whereBetween('created_at', [$fromDate, $toDate])
-            ->get();
-
+        $applicationServiceFees = Application::query()->whereBetween('created_at', [$fromDate, $toDate])->get()->sum('service_fee');
+        $applicationDubaiFees = Application::query()->whereBetween('created_at', [$fromDate, $toDate])->get()->sum('dubai_fee');
+        $applicationVats = Application::query()->whereBetween('created_at', [$fromDate, $toDate])->get()->sum('vat');
+        $serviceTransactionServiceFees = ServiceTransaction::query()->whereBetween('created_at', [$fromDate, $toDate])->get()->sum('service_fee');
+        $serviceTransactionDubaiFees = ServiceTransaction::query()->whereBetween('created_at', [$fromDate, $toDate])->get()->sum('dubai_fee');
+        $serviceTransactionVats = ServiceTransaction::query()->whereBetween('created_at', [$fromDate, $toDate])->get()->sum('vat');
+        $data['total_sales'] = $applicationServiceFees  + $applicationDubaiFees + $applicationVats +  $serviceTransactionServiceFees  + $serviceTransactionDubaiFees + $serviceTransactionVats;
+        $data['profit_loss'] = ($applicationServiceFees + $serviceTransactionServiceFees) - ($applicationVats + $serviceTransactionVats);
+        $data['vat'] = $applicationVats + $serviceTransactionVats;
+        $data['dubai_fee'] = $applicationDubaiFees + $serviceTransactionDubaiFees;
+        $data['payments_received'] = PaymentTransaction::query()->whereBetween('created_at', [$fromDate, $toDate])->sum('amount');
         return $data;
     }
 
@@ -107,17 +95,17 @@ class ProfitLoss extends Component
             'toDate' => $this->to,
         ]);
 
-        Mail::to($this->email)->send(new DirectSalesMail( $this->from, $this->to));
+        Mail::to($this->email)->send(new ProfitLossMail( $this->from, $this->to));
         $this->email = null;
 
-        return redirect()->to(route('admin.report.direct_sales'));
+        return redirect()->to(route('admin.report.total.profit'));
     }
 
 
     public function exportReport()
     {
-        $fileExport = (new \App\Exports\Reports\DirectSalesExport($this->getRecords()));
-        return Excel::download($fileExport, 'sales.csv');
+        $fileExport = (new \App\Exports\Reports\ProfitLossExport($this->getRecords()));
+        return Excel::download($fileExport, 'profit_loss.csv');
     }
 
     public function getRules()
@@ -129,7 +117,7 @@ class ProfitLoss extends Component
 
     public function resetData()
     {
-        return redirect()->to(route('admin.report.direct_sales'));
+        return redirect()->to(route('admin.report.profit'));
     }
 
     public function render()

@@ -92,103 +92,63 @@
 <body>
 
 <main>
-    @include('livewire.admin.shared.reports.header')
+{{--    @include('livewire.admin.shared.reports.header')--}}
     <!--dashboard-->
     <section class="dashboard">
+        <h4>Period From : {{request()->fromDate}} till : {{request()->toDate}}</h4>
         <div class="row">
-@php
-//dd(request()->all());
-    $fromDate = request()->fromDate;
-            $toDate = request()->toDate;
-            $data['applications']['invoices'] = \App\Models\Application::query()
-                ->where('payment_method', 'invoice')
-                ->where('travel_agent_id', null)
-                ->whereBetween('created_at', [$fromDate, $toDate])
-                ->get();
-            $data['applications']['cashes'] = \App\Models\Application::query()
-                ->where('payment_method', 'cash')
-                ->where('travel_agent_id', null)
-                ->whereBetween('created_at', [$fromDate, $toDate])
-                ->get();
+            @php
+                $fromDate = request()->fromDate;
+                $toDate = request()->toDate;
 
-            $data['serviceTransactions']['invoices'] = \App\Models\ServiceTransaction::query()
-                ->where('agent_id', null)
-                ->where('payment_method', 'invoice')
-                ->whereBetween('created_at', [$fromDate, $toDate])
-                ->get();
+        $applicationServiceFees = \App\Models\Application::query()->whereBetween('created_at', [$fromDate, $toDate])->get()->sum('service_fee');
+        $applicationDubaiFees = \App\Models\Application::query()->whereBetween('created_at', [$fromDate, $toDate])->get()->sum('dubai_fee');
+        $applicationVats = \App\Models\Application::query()->whereBetween('created_at', [$fromDate, $toDate])->get()->sum('vat');
+        $serviceTransactionServiceFees = \App\Models\ServiceTransaction::query()->whereBetween('created_at', [$fromDate, $toDate])->get()->sum('service_fee');
+        $serviceTransactionDubaiFees = \App\Models\ServiceTransaction::query()->whereBetween('created_at', [$fromDate, $toDate])->get()->sum('dubai_fee');
+        $serviceTransactionVats = \App\Models\ServiceTransaction::query()->whereBetween('created_at', [$fromDate, $toDate])->get()->sum('vat');
+        $data['total_sales'] = $applicationServiceFees + $applicationDubaiFees + $applicationDubaiFees + $serviceTransactionServiceFees + $applicationVats + $serviceTransactionDubaiFees + $serviceTransactionVats;
+        $data['profit_loss'] = ($applicationServiceFees + $serviceTransactionServiceFees) - ($applicationVats + $serviceTransactionVats);
+        $data['vat'] = $applicationVats + $serviceTransactionVats;
+        $data['dubai_fee'] = $applicationDubaiFees + $serviceTransactionDubaiFees;
+        $data['payments_received'] = \App\Models\PaymentTransaction::query()->whereBetween('created_at', [$fromDate, $toDate])->sum('amount');
 
-            $data['serviceTransactions']['cashes'] =  \App\Models\ServiceTransaction::query()
-                ->where('agent_id', null)
-                ->where('payment_method', 'cashes')
-                ->whereBetween('created_at', [$fromDate, $toDate])
-                ->get();
+            @endphp
 
- @endphp
-            @if(count($data['applications']['invoices']) || count($data['serviceTransactions']['cashes']) || count($data['serviceTransactions']['invoices']))
-                <table class="table-page table">
-                    <thead>
-                    <tr>
-                        <th class="text-center">#</th>
-                        <th class="text-center" >@lang('admin.date')</th>
-                        <th class="text-center">@lang('admin.application_name')</th>
-                        <th class="text-center">@lang('admin.amount')</th>
-                        <th class="text-center">@lang('admin.payment')</th>
-                        <th class="text-center">@lang('admin.type')</th>
+            <table class="table-page table my-3">
+                <thead>
+                <tr>
+                    <th class="" >@lang('admin.description')</th>
+                    <th class="">@lang('admin.amount')</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <td>Total sales  : </td>
+                    <td>{{$data['total_sales']}} $</td>
+                </tr>
+                <tr>
+                    <td>Less dubai fee :</td>
+                    <td> {{$data['dubai_fee']}} $</td>
+                </tr>
+                <tr>
+                    <td>VAT : </td>
+                    <td>{{$data['vat']}} $</td>
+                </tr>
+                <tr>
+                    <td>P&L : </td>
+                    <td>{{$data['profit_loss']}} $</td>
+                </tr>
+                <tr>
+                    <td>Payment received :  </td>
+                    <td>{{$data['payments_received']}} $</td>
+                </tr>
+                </tbody>
+            </table>
 
-                    </tr>
-                    </thead>
-                    <tbody>
-                    @foreach($data['applications']['invoices'] as $record)
-                        <tr>
-                            <td>#{{$loop->index + 1}}</td>
-                            <td class='text-center'>{{\Illuminate\Support\Carbon::parse($record->create_at)->format('Y-m-d') }}</td>
-                            <td class='text-center'>{{ $record->first_name . ' '. $record->last_name}}</td>
-                            <td class='text-center'>{{$record->amount}}</td>
-                            <td class='text-center'>{{$record->payment_method}}</td>
-                            <td class='text-center'>{{$record->visaType->name}}</td>
-                        </tr>
-                    @endforeach
-                    @foreach($data['serviceTransactions']['invoices'] as $record)
-                        <tr>
-                            <td>#{{$loop->index + 1}}</td>
-                            <td class='text-center'>{{\Illuminate\Support\Carbon::parse($record->create_at)->format('Y-m-d') }}</td>
-                            <td class='text-center'>{{ $record->name . ' '. $record->surname}}</td>
-                            <td class='text-center'>{{$record->amount}}</td>
-                            <td class='text-center'>{{$record->payment_method}}</td>
-                            <td class='text-center'>{{$record->service->name}}</td>
-                        </tr>
-                    @endforeach
-                    @foreach($data['applications']['cashes'] as $record)
-                        <tr>
-                            <td>#{{$loop->index + 1}}</td>
-                            <td class='text-center'>{{\Illuminate\Support\Carbon::parse($record->create_at)->format('Y-m-d') }}</td>
-                            <td class='text-center'>{{ $record->first_name . ' '. $record->last_name}}</td>
-                            <td class='text-center'>{{$record->amount}}</td>
-                            <td class='text-center'>{{$record->payment_method}}</td>
-                            <td class='text-center'>{{$record->visaType->name}}</td>
-                        </tr>
-                    @endforeach
-                    @foreach($data['serviceTransactions']['cashes'] as $record)
-                        <tr>
-                            <td>#{{$loop->index + 1}}</td>
-                            <td class='text-center'>{{\Illuminate\Support\Carbon::parse($record->create_at)->format('Y-m-d') }}</td>
-                            <td class='text-center'>{{ $record->name . ' '. $record->surname}}</td>
-                            <td class='text-center'>{{$record->amount}}</td>
-                            <td class='text-center'>{{$record->payment_method}}</td>
-                            <td class='text-center'>{{$record->service->name}}</td>
-                        </tr>
-                    @endforeach
-                    </tbody>
-                </table>
-
-            @else
-                <div class="row" style='margin-top:10px'>
-                    <div class="alert alert-warning">@lang('site.no_data_to_display')</div>
-                </div>
-            @endif
         </div>
     </section>
-    @include('livewire.admin.shared.reports.footer')
+{{--    @include('livewire.admin.shared.reports.footer')--}}
 
 </main>
 

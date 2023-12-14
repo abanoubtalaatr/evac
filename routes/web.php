@@ -131,6 +131,15 @@ Route::group([
                 return view('livewire.admin.PrintReports.direct_sales');
             })->name('report.print.direct_sales');
 
+            Route::get('reports-outstanding-print', function (){
+                return view('livewire.admin.PrintReports.outstanding');
+            })->name('report.print.outstanding');
+
+            Route::get('reports-profit-loss-print', function (){
+                return view('livewire.admin.PrintReports.profit_loss');
+            })->name('report.print.profit_loss');
+
+
             Route::get('test-export', function (Request $request){
                 $application = \App\Models\Application::query()->first();
                 $fileExport = (new \App\Exports\ReceiptApplicationExport($application));

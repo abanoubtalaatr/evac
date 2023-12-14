@@ -32,7 +32,7 @@
             </div>
             <hr class="form_wrapper">
 
-            @if(isset($records['agents']) && count($records['agents']))
+            @if(isset($records['agents']) && count($records['agents']) )
                 <table class="table-page table">
                     <thead>
                     <tr>
@@ -67,6 +67,38 @@
                 <div class="row" style='margin-top:10px'>
                     <div class="alert alert-warning">@lang('site.no_data_to_display')</div>
                 </div>
+            @endif
+            @if(isset($records['directs']) && count($records['directs']) )
+                <table class="table-page table">
+                    <thead>
+                    <tr>
+                        <th class="text-center">#</th>
+                        <th class="text-center" >@lang('admin.direct')</th>
+                        <th class="text-center" >@lang('admin.total_sales')</th>
+                        <th class="text-center" >@lang('admin.un_paid_bail')</th>
+
+                    </tr>
+                    </thead>
+                    <tbody>
+                    @foreach($records['directs'] as $record)
+                        <tr>
+                            <td>#{{$loop->index + 1}}</td>
+                            <td class='text-center'>{{$record['name'] }}</td>
+                            <td class='text-center'>$ {{$record['total'] }}</td>
+                            <td class='text-center'>$ {{$record['un_paid'] }}</td>
+                        </tr>
+                    @endforeach
+                    <tfoot>
+                    <tr>
+                        {{--                        <td></td>--}}
+                        <td colspan="2">Total </td>
+                        <td class="text-center">{{$records['total_sales_for_direct']}}</td>
+                        <td class="text-center">{{$records['total_un_paid_bal_for_direct']}}</td>
+                    </tr>
+                    </tfoot>
+                    </tbody>
+                </table>
+
             @endif
         </div>
     </div>
