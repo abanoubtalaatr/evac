@@ -26,7 +26,7 @@
                     @include('livewire.admin.shared.reports.actions')
                 </div>
                 <div class="form-group col-2 form_wrapper">
-                    <button wire:click="resetData()"
+                    <button wire:click="resetrecords()"
                             class="btn btn-primary form-control contact-input">@lang('site.reset')</button>
                 </div>
             </div>
@@ -42,29 +42,29 @@
                     <tbody>
                     <tr>
                         <td>Total sales  : </td>
-                        <td>500 $</td>
+                        <td>{{$records['total_sales']}} $</td>
                     </tr>
                     <tr>
                         <td>Less dubai fee :</td>
-                        <td> 300 $</td>
+                        <td> {{$records['dubai_fee']}} $</td>
                     </tr>
                     <tr>
                         <td>VAT : </td>
-                        <td>50 $</td>
+                        <td>{{$records['vat']}} $</td>
                     </tr>
                     <tr>
                         <td>P&L : </td>
-                        <td>150 $</td>
+                        <td>{{$records['profit_loss']}} $</td>
                     </tr>
                     <tr>
                         <td>Payment received :  </td>
-                        <td>100 $</td>
+                        <td>{{$records['payments_received']}} $</td>
                     </tr>
                     </tbody>
                 </table>
 
 {{--                <div class="row" style='margin-top:10px'>--}}
-{{--                    <div class="alert alert-warning">@lang('site.no_data_to_display')</div>--}}
+{{--                    <div class="alert alert-warning">@lang('site.no_records_to_display')</div>--}}
 {{--                </div>--}}
 {{--            --}}
         </div>
