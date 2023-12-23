@@ -101,6 +101,9 @@ Route::group([
             Route::get('service-transactions/{service_transaction}', [\App\Http\Controllers\Admin\ServiceTransactionController::class, 'show'])->name('service_transactions.print');
             Route::get('service-transactions-invoices', App\Http\Livewire\Admin\ServiceTransaction\Invoice::class)->name('service_transactions.invoices');
             Route::get('service-transactions-new', \App\Http\Livewire\Admin\ServiceTransaction\NewServiceTransaction::class)->name('service_transactions.new');
+
+            //invoices
+            Route::get('invoices', App\Http\Livewire\Admin\Invoice\Index::class)->name('invoices');
             //notifications
             Route::get('notifications', \App\Http\Livewire\Admin\Notifications::class )->name('notifications');
 
@@ -128,6 +131,7 @@ Route::group([
             Route::get('reports-outstanding', \App\Http\Livewire\Admin\Reports\Outstanding::class)->name('report.outstanding');
             Route::get('reports-agent-invoice',\App\Http\Livewire\Admin\Reports\AgentInvoice::class)->name('report.agent_invoices');
             Route::get('reports-agent-sales', \App\Http\Livewire\Admin\Reports\AgentSales::class)->name('report.agent_sales');
+            Route::get('reports-agent-statement', \App\Http\Livewire\Admin\Reports\AgentStatement::class)->name('report.agent_statement');
 
             Route::get('print-direct-sales-print', function (){
                 return view('livewire.admin.PrintReports.direct_sales');
@@ -145,11 +149,13 @@ Route::group([
                 return view('livewire.admin.PrintReports.agent_invoices');
             })->name('report.print.agent_invoices');
 
-
             Route::get('print-agent-sales', function (){
                 return view('livewire.admin.PrintReports.agent_sales');
             })->name('report.print.agent_sales');
 
+            Route::get('print-agent-statement', function (){
+               return view('livewire.admin.PrintReports.agent_statement');
+            })->name('report.print.agent_statement');
 
             Route::get('test-export', function (Request $request){
                 $application = \App\Models\Application::query()->first();

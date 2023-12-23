@@ -1,5 +1,5 @@
 <div class="col-md-12">
-    <h4 class="text-center">Total this year</h4>
+    <h4 class="text-center">{{\Illuminate\Support\Carbon::now()->format('Y')}}</h4>
     <div class="card">
         <div class="card-header">
             <h3 class="card-title">Visas</h3>

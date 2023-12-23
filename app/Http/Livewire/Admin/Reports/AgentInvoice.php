@@ -7,6 +7,7 @@ use App\Mail\AgentApplicationsMail;
 use App\Mail\Reports\AgentInvoiceMail;
 use App\Models\Agent;
 use App\Models\Application;
+use App\Models\PaymentTransaction;
 use App\Models\Service;
 use App\Models\ServiceTransaction;
 use App\Models\Setting;
@@ -28,7 +29,7 @@ class AgentInvoice extends Component
         $email,
         $showSendEmail = false,
         $showSendEmailButton= false,
-        $message= null, $agent, $payment_method, $disableSendForAdminsButton= false;
+        $message= null, $agent, $payment_method, $disableSendForAdminsButton= false, $showSaveInvoiceMessage=false;
 
     public function mount()
     {
@@ -74,7 +75,74 @@ class AgentInvoice extends Component
 
         return redirect()->to(route('admin.report.agent_invoices'));
     }
+    public function saveInvoices()
+    {
+        $data = $this->getRecords();
 
+        foreach ($data['agents'] as $row) {
+            $totalFromVisas = 0;
+            $totalFromServices = 0;
+            $paymentForAgent = 0;
+
+            if (!is_null($row['agent'])) {
+                $paymentForAgent = PaymentTransaction::query()
+                    ->where('agent_id', $row['agent']['id'])
+                    ->when($this->from && $this->to, function ($query) {
+                        return $query->whereBetween('created_at', [$this->from, $this->to]);
+                    })
+                    ->sum('amount');
+
+                foreach ($row['visas'] as $visa) {
+                    $totalFromVisas += $visa->total * $visa->qty;
+                }
+
+                foreach ($row['services'] as $service) {
+                    $totalFromServices += $service->amount * $service->qty;
+                }
+
+                // Check if there are existing records for the agent in agent_invoices table
+                $existingRecordsCount = \App\Models\AgentInvoice::query()
+                    ->count();
+
+                $lastRow = \App\Models\AgentInvoice::query()->latest()->first();
+
+                $nextInvoiceNumber = $existingRecordsCount + 1;
+
+                $lastTwoDigitsOfYear = substr(date('y'), -2);
+
+                $settings = Setting::query()->first();
+
+                if(!$lastRow){
+                    if($settings->invoice_start){
+                        $nextInvoiceNumber = $settings->invoice_start;
+                    }
+                }
+                if($lastRow){
+                    [$evac_name, $year, $count] = explode('/', $lastRow->invoice_title);
+                    if(intval(trim($year)) < intval(date('y'))){
+                        $nextInvoiceNumber = 1;
+                    }
+                }
+
+                // Generate the invoice title with leading zeros
+                $invoiceTitle = 'EV / ' . $lastTwoDigitsOfYear . ' / ' . str_pad($nextInvoiceNumber, 3, '0', STR_PAD_LEFT);
+
+                // Create the AgentInvoice record
+                \App\Models\AgentInvoice::query()->create([
+                    'agent_id' => $row['agent']['id'],
+                    'invoice_title' => $invoiceTitle,
+                    'total_amount' => $totalFromServices + $totalFromVisas,
+                    'payment_received' => $paymentForAgent,
+                ]);
+            }
+        }
+        $this->showSaveInvoiceMessage = true;
+    }
+
+    public function hideSaveInvoiceMessage()
+    {
+        $this->showSaveInvoiceMessage= false;
+    }
     public function setAgentToNull()
     {
         $this->agent = null;
