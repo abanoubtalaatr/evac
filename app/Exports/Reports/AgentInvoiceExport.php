@@ -3,6 +3,7 @@
 namespace App\Exports\Reports;
 use App\Models\Agent;
 use App\Models\PaymentTransaction;
+use App\Models\Setting;
 use Illuminate\Support\Carbon;
 use Maatwebsite\Excel\Concerns\FromCollection;
 use Maatwebsite\Excel\Concerns\WithHeadings;
@@ -10,6 +11,7 @@ use Maatwebsite\Excel\Concerns\ShouldAutoSize;
 use Maatwebsite\Excel\Concerns\WithStyles;
 use Maatwebsite\Excel\Events\BeforeSheet;
 use PhpOffice\PhpSpreadsheet\Worksheet\Worksheet;
+use function App\Helpers\convertNumberToWorldsInUsd;
 
 class AgentInvoiceExport implements FromCollection, WithHeadings, ShouldAutoSize, WithStyles
 {
@@ -84,7 +86,44 @@ class AgentInvoiceExport implements FromCollection, WithHeadings, ShouldAutoSize
             'Unit price' => 'Grand total',
             'Amount' => $totalAmount - $totalPayment
         ];
+        for($i =0 ; $i < 3; $i++){
+            $dataRows[] = [
 
+                'Item #' => '',
+                'Description' => "",
+                'Qty' => "",
+                'Unit price' => "",
+                'Amount' => ""
+            ];
+        }
+
+        $dataRows[] = [
+          'Item #' => "Amount due in words : " . convertNumberToWorldsInUsd($totalAmount) ,
+          'Description' => '',
+          'Qty' => '',
+          'Unit price' => '',
+          'Amount' => '',
+        ];
+
+        for($i =0 ; $i < 1; $i++){
+            $dataRows[] = [
+
+                'Item #' => '',
+                'Description' => "",
+                'Qty' => "",
+                'Unit price' => "",
+                'Amount' => ""
+            ];
+        }
+
+        $settings = Setting::query()->first();
+        $dataRows[] = [
+            'Item #' =>  $settings->invoice_footer,
+            'Description' => '',
+            'Qty' => '',
+            'Unit price' => '',
+            'Amount' => '',
+        ];
          return collect($dataRows);
     }
 

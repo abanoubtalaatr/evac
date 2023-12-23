@@ -126,5 +126,10 @@ return [
     "new_service_transactions" => "New transactions",
     'agent_invoices' => "Agent invoices",
     'payment_type' => "Payment method",
-    'agent_sales' => "Agent sales"
+    'agent_sales' => "Agent sales",
+    'agent_statement' => "Agent statement",
+    "invoice_start" => 'Invoice start',
+    "management_invoice" => "Management invoices",
+    "title_invoice" => "Title invoice",
+    "total_amount" => "Total amount",
 ];

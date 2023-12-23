@@ -90,10 +90,24 @@
                     @endforeach
                     <tfoot>
                     <tr>
-                        {{--                        <td></td>--}}
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                    <tr>
                         <td colspan="2">Total </td>
                         <td class="text-center">{{$records['total_sales_for_direct']}}</td>
                         <td class="text-center">{{$records['total_un_paid_bal_for_direct']}}</td>
+                    </tr>
+                    <tr>
+                        <td colspan="2">Total Sales</td>
+                        <td class="text-center">{{$records['total_sales_for_direct'] + $records['total_sales_for_all_agents']}}</td>
+                        <td class="text-center"></td>
+                    </tr>
+                    <tr>
+                        <td colspan="2">Total unpaid</td>
+                        <td class="text-center">{{$records['total_un_paid_bal_for_agents'] + $records['total_un_paid_bal_for_direct']}}</td>
+                        <td class="text-center"></td>
                     </tr>
                     </tfoot>
                     </tbody>

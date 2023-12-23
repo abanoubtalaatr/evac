@@ -207,19 +207,30 @@
                             @lang('admin.agent_sales')
                         </a>
                     </li>
+                    <li style="line-height: 20px;margin-left: 18px;padding-left: 0px;text-indent: 0" class="border-bottom pb-2 {{ request()->routeIs('admin.report.agent_statement') ? 'active' : '' }}">
+                        <a href="{{route('admin.report.agent_statement')}}" class="text-white ">
+                            @lang('admin.agent_statement')
+                        </a>
+                    </li>
                     <li style="line-height: 20px;margin-left: 18px;padding-left: 0px;text-indent: 0" class="border-bottom pb-2 {{ request()->routeIs('admin.report.direct_sales') ? 'active' : '' }}">
                         <a href="{{route('admin.report.direct_sales')}}" class="text-white ">
                             @lang('admin.direct_sales')
                         </a>
                     </li>
-                    <li style="line-height: 20px;margin-left: 18px;padding-left: 0px;text-indent: 0" class="border-bottom pb-2 {{ request()->routeIs('admin.report.total.profit') ? 'active' : '' }}">
-                        <a href="{{route('admin.report.total.profit')}}" class="text-white ">
-                            @lang('admin.report_total_profit')
-                        </a>
-                    </li>
+
+{{--                    <li style="line-height: 20px;margin-left: 18px;padding-left: 0px;text-indent: 0" class="border-bottom pb-2 {{ request()->routeIs('admin.report.total.profit') ? 'active' : '' }}">--}}
+{{--                        <a href="{{route('admin.report.total.profit')}}" class="text-white ">--}}
+{{--                            @lang('admin.report_total_profit')--}}
+{{--                        </a>--}}
+{{--                    </li>--}}
                     <li style="line-height: 20px;margin-left: 18px;padding-left: 0px;text-indent: 0" class="border-bottom pb-2 {{ request()->routeIs('admin.report.outstanding') ? 'active' : '' }}">
                         <a href="{{route('admin.report.outstanding')}}" class="text-white ">
                             @lang('admin.outstanding')
+                        </a>
+                    </li>
+                    <li style="line-height: 20px;margin-left: 18px;padding-left: 0px;text-indent: 0" class="border-bottom pb-2 {{ request()->routeIs('admin.invoices') ? 'active' : '' }}">
+                        <a href="{{route('admin.invoices')}}" class="text-white ">
+                            @lang('admin.management_invoice')
                         </a>
                     </li>
                 </ul>
@@ -247,6 +258,11 @@
                                 @lang('admin.agent_sales')
                             </a>
                         </li>
+                        <li style="line-height: 20px;margin-left: 18px;padding-left: 0px;text-indent: 0" class="border-bottom pb-2 {{ request()->routeIs('admin.report.agent_statement') ? 'active' : '' }}">
+                            <a href="{{route('admin.report.agent_statement')}}" class="text-white ">
+                                @lang('admin.agent_statement')
+                            </a>
+                        </li>
                         <li style="line-height: 20px;margin-left: 18px;padding-left: 0px;text-indent: 0" class="border-bottom pb-2 {{ request()->routeIs('admin.report.direct_sales') ? 'active' : '' }}">
                             <a href="{{route('admin.report.direct_sales')}}" class="text-white ">
                                 @lang('admin.direct_sales')
@@ -260,6 +276,11 @@
                         <li style="line-height: 20px;margin-left: 18px;padding-left: 0px;text-indent: 0" class="border-bottom pb-2 {{ request()->routeIs('admin.report.outstanding') ? 'active' : '' }}">
                             <a href="{{route('admin.report.outstanding')}}" class="text-white ">
                                 @lang('admin.outstanding')
+                            </a>
+                        </li>
+                        <li style="line-height: 20px;margin-left: 18px;padding-left: 0px;text-indent: 0" class="border-bottom pb-2 {{ request()->routeIs('admin.invoices') ? 'active' : '' }}">
+                            <a href="{{route('admin.invoices')}}" class="text-white ">
+                                @lang('admin.management_invoice')
                             </a>
                         </li>
                     </ul>

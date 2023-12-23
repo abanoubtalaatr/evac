@@ -1,5 +1,10 @@
 <div class="col-md-12">
-    <h4 class="text-center">Day report</h4>
+    @php
+        $visaTypeTotal = 0;
+        $today = \Illuminate\Support\Carbon::now()->toDateString(); // Get the current date
+
+    @endphp
+    <h4 class="text-center">Day Report : {{\Illuminate\Support\Carbon::now()->format('Y/m/d')}}</h4>
     <div class="card">
         <div class="card-header">
             <h3 class="card-title">Visas</h3>
@@ -15,11 +20,7 @@
                     </tr>
                     </thead>
                     <tbody>
-                    @php
-                        $visaTypeTotal = 0;
-                        $today = \Illuminate\Support\Carbon::now()->toDateString(); // Get the current date
 
-                    @endphp
                     @foreach($dayReport['visaTypes'] as $visaType)
                         <tr>
                             <td>{{$visaType->name}}</td>
