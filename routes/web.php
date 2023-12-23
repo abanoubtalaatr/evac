@@ -126,18 +126,29 @@ Route::group([
             Route::get('reports-direct-sales', \App\Http\Livewire\Admin\Reports\DirectSale::class)->name('report.direct_sales');
             Route::get('reports-total-profit', \App\Http\Livewire\Admin\Reports\ProfitLoss::class)->name('report.total.profit');
             Route::get('reports-outstanding', \App\Http\Livewire\Admin\Reports\Outstanding::class)->name('report.outstanding');
+            Route::get('reports-agent-invoice',\App\Http\Livewire\Admin\Reports\AgentInvoice::class)->name('report.agent_invoices');
+            Route::get('reports-agent-sales', \App\Http\Livewire\Admin\Reports\AgentSales::class)->name('report.agent_sales');
 
-            Route::get('reports-direct-sales-print', function (){
+            Route::get('print-direct-sales-print', function (){
                 return view('livewire.admin.PrintReports.direct_sales');
             })->name('report.print.direct_sales');
 
-            Route::get('reports-outstanding-print', function (){
+            Route::get('print-outstanding-print', function (){
                 return view('livewire.admin.PrintReports.outstanding');
             })->name('report.print.outstanding');
 
-            Route::get('reports-profit-loss-print', function (){
+            Route::get('print-profit-loss-print', function (){
                 return view('livewire.admin.PrintReports.profit_loss');
             })->name('report.print.profit_loss');
+
+            Route::get('print-agent-invoices', function (){
+                return view('livewire.admin.PrintReports.agent_invoices');
+            })->name('report.print.agent_invoices');
+
+
+            Route::get('print-agent-sales', function (){
+                return view('livewire.admin.PrintReports.agent_sales');
+            })->name('report.print.agent_sales');
 
 
             Route::get('test-export', function (Request $request){

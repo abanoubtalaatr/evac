@@ -64,7 +64,7 @@ class Index extends Component
 
             $value = (int) filter_var($setting->vat_rate, FILTER_SANITIZE_NUMBER_INT);
 
-            $amount = $service->dubai_fee + $service->service_fee + ($value / 100 * $service->service_fee);
+            $amount = $service->dubai_fee + $service->service_fee;
             $vat = $value / 100 * $service->service_fee;
             $this->form['amount'] = $amount;
             $this->form['vat'] = $vat;

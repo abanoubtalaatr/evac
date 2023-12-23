@@ -21,6 +21,7 @@
                 </div>
             @endif
             <div class="modal-footer">
+
                 <button  class="btn btn-light" wire:click="sendEmail">Send</button>
                 <button type="button" class="btn btn-secondary" wire:click="toggleShowModal">Close</button>
             </div>

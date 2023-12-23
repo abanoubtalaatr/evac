@@ -109,7 +109,7 @@
                         <hr/>
                     </div>
                     <div class="col-6">
-                        <label for="">@lang('admin.email')</label>
+                        <label for="" class="text-danger">If you have more than one email, you must write like this <p style="margin-bottom: 0px;font-size: 18px;font-weight: bold;" class="">test@gmail.com, test2@gmail.com</p> separate by, to avoid any issues in application</label>
                         <input wire:model='form.email' placeholder="@lang('admin.email')"
                                class="@error('form.email') is-invalid @enderror form-control contact-input"
                                type="text"/>
