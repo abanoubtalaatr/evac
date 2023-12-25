@@ -13,9 +13,10 @@ use Maatwebsite\Excel\Events\BeforeSheet;
 use PhpOffice\PhpSpreadsheet\Worksheet\Worksheet;
 use function App\Helpers\convertNumberToWorldsInUsd;
 
-class AgentInvoiceExport implements FromCollection, WithHeadings, ShouldAutoSize, WithStyles
+class AgentInvoiceExport implements FromCollection
 {
     protected $data;
+    protected $agent = null;
 
     public function __construct($data)
     {
@@ -29,6 +30,10 @@ class AgentInvoiceExport implements FromCollection, WithHeadings, ShouldAutoSize
         $rowCount =1;
         $totalAmount = 0;
         $totalPayment  = PaymentTransaction::query()->where('agent_id', $this->data['agents'][0]['agent']['id'])->sum('amount');
+        $this->agent = Agent::query()->find($this->data['agents'][0]['agent']['id']);
+
+        $dataRows = $this->heading();
+
 
         if(isset($this->data['agents'][0]['visas'])){
             foreach ($this->data['agents'][0]['visas'] as $visa) {
@@ -127,32 +132,185 @@ class AgentInvoiceExport implements FromCollection, WithHeadings, ShouldAutoSize
          return collect($dataRows);
     }
 
-    public function headings(): array
-    {
-        return [
-            'Item #',
-            'Description',
-            'Qty',
-            'Unit price',
-            'Amount',
-        ];
-    }
 
-    public function styles(Worksheet $sheet)
+    public function heading()
     {
-        // ... Your existing styles logic ...
-    }
-
-    public function registerEvents(): array
-    {
-        return [
-            BeforeSheet::class => function (BeforeSheet $event) {
-                // Add rows for name and address data above the heading row
-                $event->sheet->setCellValue('A1', "Name: EVAC");
-                $event->sheet->setCellValue('A2', "Address: Address");
-                $event->sheet->mergeCells('A1:E1');
-                $event->sheet->mergeCells('A2:E2');
-            },
+        $dataRows[] = [
+            "Item #" => "EAVC",
+            "Description"  => "",
+            "Qty" => "",
+            'Unit price' => "",
+            'Amount'=>""
         ];
+        for ($i = 0 ; $i< 1; $i++){
+            $dataRows[] = [
+                "Item #" => "",
+                "Description"  => "",
+                "Qty" => "",
+                'Unit price' => "",
+                'Amount'=>""
+            ];
+        }
+
+        $dataRows[] = [
+            "Item #" => "Diyarna Center - Zekrit - Lebanon",
+            "Description"  => "",
+            "Qty" => "",
+            'Unit price' => "",
+            'Amount'=>""
+        ];
+        for ($i = 0 ; $i< 1; $i++){
+            $dataRows[] = [
+                "Item #" => "",
+                "Description"  => "",
+                "Qty" => "",
+                'Unit price' => "",
+                'Amount'=>""
+            ];
+        }
+
+        $settings = Setting::query()->first();
+
+        $dataRows[] = [
+            "Item #" =>"Reg No : " . $settings->registration_no,
+            "Description"  => "",
+            "Qty" => "",
+            'Unit price' => "",
+            'Amount'=>""
+        ];
+        for ($i = 0 ; $i< 1; $i++){
+            $dataRows[] = [
+                "Item #" =>"",
+                "Description"  => "",
+                "Qty" => "",
+                'Unit price' => "",
+                'Amount'=>""
+            ];
+        }
+        $dataRows[] = [
+            "Item #" =>"Tel : " . $settings->mobile,
+            "Description"  => "",
+            "Qty" => "",
+            'Unit price' => "",
+            'Amount'=>""
+        ];
+        for ($i = 0 ; $i< 1; $i++){
+            $dataRows[] = [
+                "Item #" =>"",
+                "Description"  => "",
+                "Qty" => "",
+                'Unit price' => "",
+                'Amount'=>""
+            ];
+        }
+
+        if($this->agent){
+            $dataRows[] = [
+                "Item #" => "Agent : " . $this->agent->name,
+                "Description"  => "",
+                "Qty" => "",
+                'Unit price' => "",
+                'Amount'=>""
+            ];
+            for ($i = 0 ; $i< 1; $i++){
+                $dataRows[] = [
+                    "Item #" => "",
+                    "Description"  => "",
+                    "Qty" => "",
+                    'Unit price' => "",
+                    'Amount'=>""
+                ];
+            }
+            $dataRows[] = [
+                "Item #" => "Agent Address : " . $this->agent->address,
+                "Description"  => "",
+                "Qty" => "",
+                'Unit price' => "",
+                'Amount'=>""
+            ];
+            for ($i = 0 ; $i< 1; $i++){
+                $dataRows[] = [
+                    "Item #" => "",
+                    "Description"  => "",
+                    "Qty" => "",
+                    'Unit price' => "",
+                    'Amount'=>""
+                ];
+            }
+            $dataRows[] = [
+
+                "Item #" => "Financial No : " . $this->agent->financial_no,
+                "Description"  => "",
+                "Qty" => "",
+                'Unit price' => "",
+                'Amount'=>""
+            ];
+            for ($i = 0 ; $i< 1; $i++){
+                $dataRows[] = [
+                    "Item #" => "",
+                    "Description"  => "",
+                    "Qty" => "",
+                    'Unit price' => "",
+                    'Amount'=>""
+                ];
+            }
+            $dataRows[] = [
+                "Item #" =>  "Tel : " . $this->agent->telephone,
+                "Description"  => "",
+                "Qty" => "",
+                'Unit price' => "",
+                'Amount'=>""
+            ];
+            for ($i = 0 ; $i< 1; $i++){
+                $dataRows[] = [
+                    "Item #" =>  "",
+                    "Description"  => "",
+                    "Qty" => "",
+                    'Unit price' => "",
+                    'Amount'=>""
+                ];
+            }
+            $dataRows[] = [
+                "Item #" =>   "Agent invoices ",
+                "Description"  => "",
+                "Qty" => "",
+                'Unit price' => "",
+                'Amount'=>""
+            ];
+            for ($i = 0 ; $i< 1; $i++){
+                $dataRows[] = [
+                    "Item #" =>   "",
+                    "Description"  => "",
+                    "Qty" => "",
+                    'Unit price' => "",
+                    'Amount'=>""
+                ];
+            }
+            $dataRows[] = [
+                "Item #" =>    "Date : " . Carbon::parse(now())->format('Y-m-d'),
+                "Description"  => "",
+                "Qty" => "",
+                'Unit price' => "",
+                'Amount'=>""
+            ];
+            for ($i = 0 ; $i< 1; $i++){
+                $dataRows[] = [
+                    "Item #" =>   "",
+                    "Description"  => "",
+                    "Qty" => "",
+                    'Unit price' => "",
+                    'Amount'=>""
+                ];
+            }
+
+        }
+        $dataRows[] = [
+            "Item #" =>    "Item #",
+            "Description"  => "Description",
+            "Qty" => "Qty",
+            'Unit price' => "Unit price",
+            'Amount'=> "Amount"
+        ];
+        return $dataRows;
     }
 }

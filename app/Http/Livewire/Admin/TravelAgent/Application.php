@@ -148,7 +148,7 @@ class Application extends Component
 
     public function exportReport()
     {
-        $fileExport = (new \App\Exports\Reports\AgentApplicationExport($this->getRecords()));
+        $fileExport = (new \App\Exports\Reports\AgentApplicationExport($this->getRecords(), $this->agent));
         return Excel::download($fileExport, 'report.csv');
     }
 
