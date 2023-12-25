@@ -139,7 +139,7 @@ class AgentStatement extends Component
 
     public function exportReport()
     {
-        $fileExport = (new \App\Exports\Reports\AgentStatementExport($this->getRecords()));
+        $fileExport = (new \App\Exports\Reports\AgentStatementExport($this->getRecords(), $this->agent));
         $this->agent = null;
         $this->from = null;
         $this->to = null;
