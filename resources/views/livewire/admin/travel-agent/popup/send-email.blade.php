@@ -11,7 +11,7 @@
             </div>
             <div class="modal-body">
                 <label>Write an email</label>
-                <input class="form-control" wire:model="email" required type="email" placeholder="Write the email you want to send to him">
+                <input class="form-control" wire:model="email" required type="email" placeholder="Write the email you want to send to him" autocomplete="off">
                 @error('email')<p style="color: red;">{{ $message }}</p>@enderror
 
             </div>
