@@ -82,10 +82,10 @@
                     @foreach($records as $visaTypeRow)
                         @foreach($visaTypeRow as $record)
                             <tr>
-                                @if($loop->first) <!-- Display visa type name only in the first row of the group -->
                                 <td colspan="9"><strong>{{ $record->visaType ? $record->visaType->name : '' }}</strong></td>
-                                @else
-                                    <td>#{{$loop->index}}</td>
+                            </tr>
+                            <tr>
+                                    <td>#{{$loop->index +1}}</td>
                                     <td class='text-center'>{{$record->passport_no}}</td>
                                     <td class='text-center'>{{$record->first_name . ' ' . $record->last_name}}</td>
                                     <td class='text-center'>{{$record->application_ref}}</td>
@@ -118,7 +118,7 @@
                                             <button class="btn btn-secondary mt-1" wire:click="toggleShowModal({{$record->id}})">Send email</button>
                                         </div>
                                     </td>
-                                @endif
+
                             </tr>
                         @endforeach
                     @endforeach
