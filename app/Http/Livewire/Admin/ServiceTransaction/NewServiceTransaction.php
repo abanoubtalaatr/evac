@@ -155,7 +155,7 @@ class NewServiceTransaction extends Component
 
         session()->flash('success',__('admin.edit_successfully'));
 
-        return redirect()->to(route('admin.service_transactions'));
+        return redirect()->to(route('admin.service_transactions.new'));
 
     }
     public function resetData()
@@ -205,7 +205,7 @@ class NewServiceTransaction extends Component
         $this->form = [];
         session()->flash('success',__('admin.edit_successfully'));
 
-        return redirect()->to(route('admin.service_transactions'));
+        return redirect()->to(route('admin.service_transactions.new'));
     }
 
     public function store()
