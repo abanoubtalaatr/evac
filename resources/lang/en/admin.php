@@ -132,4 +132,5 @@ return [
     "management_invoice" => "Management invoices",
     "title_invoice" => "Title invoice",
     "total_amount" => "Total amount",
+    "service_ref" => "Service ref"
 ];
