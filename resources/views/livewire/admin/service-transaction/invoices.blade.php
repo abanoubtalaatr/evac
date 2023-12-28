@@ -48,11 +48,17 @@
                     <tr>
                         <th class="text-center">#</th>
                         <th class="text-center">@lang('admin.service')</th>
+                        <th class="text-center">@lang('admin.service_ref')</th>
+                        <th class="text-center">@lang('admin.amount')</th>
+
+
                         <th class="text-center">@lang('admin.agent')</th>
                         <th class="text-center">@lang('admin.passport_no')</th>
                         <th class="text-center">@lang('admin.name')</th>
                         <th class="text-center">@lang('admin.surname')</th>
                         <th class="text-center">@lang('admin.vat')</th>
+                        <th class="text-center">@lang('admin.created_at')</th>
+
                         <th>@lang('site.actions')</th>
                     </tr>
                     </thead>
@@ -61,11 +67,17 @@
                         <tr>
                             <td>#{{$loop->index + 1}}</td>
                             <td class='text-center'>{{$record->service? $record->service->name:"--"}}</td>
+                            <td class='text-center'>{{$record->service_ref}}</td>
+                            <td class='text-center'>{{$record->vat + $record->dubai_fee + $record->service_fee}}
+
+
                             <td class='text-center'>{{$record->agent ? $record->agent->name :"--"}}</td>
                             <td class='text-center'>{{$record->passport_no}}</td>
                             <td class='text-center'>{{$record->name}}</td>
                             <td class='text-center'>{{$record->surname}}</td>
                             <td class='text-center'>{{$record->vat}}</td>
+                            <td class='text-center'>{{\Illuminate\Support\Carbon::parse($record->created_at)->format('Y-m-d')}}</td>
+
                             <td>
                                 <div class="actions">
                                     <button class="btn btn-primary mt-2" wire:click="showPayInvoiceConfirmation({{$record->id}})">Pay invoice</button>
