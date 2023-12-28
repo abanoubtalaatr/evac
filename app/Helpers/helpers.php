@@ -114,13 +114,17 @@ if (!function_exists('convertNumberToWorldsInUsd')) {
             $number = floor($no % $divider);
             $no = floor($no / $divider);
             $i += $divider == 10 ? 1 : 2;
-            if ($number) {
+
+            // Check if the index is within bounds before accessing the arrays
+            if (isset($digits[$i]) && isset($words[$number]) && isset($words2[floor($number / 10)])) {
                 $plural = (($counter = count($str)) && $number > 9) ? 's' : null;
                 $hundred = ($counter == 1 && $str[0]) ? ' and ' : null;
-                $str [] = ($number < 20) ? $words[$number] . " " . $digits[$counter] . $plural . " " . $hundred :
-                    $words2[floor($number / 10)] . " " . $words[$number % 10] . " " . $digits[$counter] . $plural . " " . $hundred;
-            } else
+                $str[] = ($number < 20)
+                    ? $words[$number] . " " . $digits[$i] . $plural . " " . $hundred
+                    : $words2[floor($number / 10)] . " " . $words[$number % 10] . " " . $digits[$i] . $plural . " " . $hundred;
+            } else {
                 $str[] = null;
+            }
         }
         $str = array_reverse($str);
         $result = implode('', $str);
