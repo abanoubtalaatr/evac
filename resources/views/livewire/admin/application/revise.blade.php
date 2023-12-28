@@ -80,10 +80,11 @@
                     </thead>
                     <tbody>
                     @foreach($records as $visaTypeRow)
+                        <tr>
+                            <td colspan="9"><strong>{{$visaTypeRow[0]['visaType']['name']??'' }}</strong></td>
+                        </tr>
                         @foreach($visaTypeRow as $record)
-                            <tr>
-                                <td colspan="9"><strong>{{ $record->visaType ? $record->visaType->name : '' }}</strong></td>
-                            </tr>
+
                             <tr>
                                     <td>#{{$loop->index +1}}</td>
                                     <td class='text-center'>{{$record->passport_no}}</td>
