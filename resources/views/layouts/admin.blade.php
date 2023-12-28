@@ -74,27 +74,27 @@
             <ul class="sidebar-menu">
                 @if(auth('admin')->user()->id ==1 || auth('admin')->user()->id ==46)
 
-                    <li style="line-height: 20px;margin-left: 18px;padding-left: 0px;text-indent: 0" class="border-bottom pb-2 {{ request()->routeIs('admin.applications.store') ? 'active' : 'abanoub' }} ">
+                    <li style="line-height: 20px;margin-left: 4px;padding-left: 0px;text-indent: 0" class="border-bottom pb-2 {{ request()->routeIs('admin.applications.store') ? 'active' : 'abanoub' }} ">
                         <a href="{{route('admin.applications.store')}}" class="text-white  {{\App\Helpers\checkDayStart(1)? '':'disabled'}}">
                             @lang('admin.new_applications')
                         </a>
                     </li>
-                    <li style="line-height: 20px;margin-left: 18px;padding-left: 0px;text-indent: 0" class="border-bottom pb-2 {{ request()->routeIs('admin.applications.appraisal') ? 'active' : '' }}">
+                    <li style="line-height: 20px;margin-left: 4px;padding-left: 0px;text-indent: 0" class="border-bottom pb-2 {{ request()->routeIs('admin.applications.appraisal') ? 'active' : '' }}">
                         <a href="{{route('admin.applications.appraisal')}}" class="text-white {{\App\Helpers\checkDayStart(1)? '':'disabled'}}">
                             @lang('admin.appraisal')
                         </a>
                     </li>
-                    {{--                <li style="line-height: 20px;margin-left: 18px;padding-left: 0px;text-indent: 0" class="border-bottom pb-2">--}}
+                    {{--                <li style="line-height: 20px;margin-left: 4px;padding-left: 0px;text-indent: 0" class="border-bottom pb-2">--}}
                     {{--                    <a href="{{ route('admin.applications.appraised') }}" class="text-white ">--}}
                     {{--                        @lang('admin.appraised')--}}
                     {{--                    </a>--}}
                     {{--                </li>--}}
-                    <li style="line-height: 20px;margin-left: 18px;padding-left: 0px;text-indent: 0" class="border-bottom pb-2 {{ request()->routeIs('admin.applications.revise') ? 'active' : '' }}">
+                    <li style="line-height: 20px;margin-left: 4px;padding-left: 0px;text-indent: 0" class="border-bottom pb-2 {{ request()->routeIs('admin.applications.revise') ? 'active' : '' }}">
                         <a href="{{route('admin.applications.revise')}}" class="text-white ">
                             @lang('admin.revise')
                         </a>
                     </li>
-                    <li style="line-height: 20px;margin-left: 18px;padding-left: 0px;text-indent: 0" class="border-bottom pb-2 {{ request()->routeIs('admin.applications.deleted') ? 'active' : '' }}">
+                    <li style="line-height: 20px;margin-left: 4px;padding-left: 0px;text-indent: 0" class="border-bottom pb-2 {{ request()->routeIs('admin.applications.deleted') ? 'active' : '' }}">
                         <a href="{{route('admin.applications.deleted')}}" class="text-white ">
                             @lang('admin.deleted_applications')
                         </a>
@@ -102,7 +102,7 @@
                 @else
 
                     @can("Manage new application")
-                        <li style="line-height: 20px;margin-left: 18px;padding-left: 0px;text-indent: 0" class="border-bottom pb-2 {{ request()->routeIs('admin.applications.store') ? 'active' : '' }}">
+                        <li style="line-height: 20px;margin-left: 4px;padding-left: 0px;text-indent: 0" class="border-bottom pb-2 {{ request()->routeIs('admin.applications.store') ? 'active' : '' }}">
                             <a href="{{route('admin.applications.store')}}" class="text-white {{\App\Helpers\checkDayStart(1)? '':'disabled' }} ">
                                 @lang('admin.new_applications')
                             </a>
@@ -110,28 +110,28 @@
                     @endcan
 
                     @can("Manage new application")
-                        <li style="line-height: 20px;margin-left: 18px;padding-left: 0px;text-indent: 0" class="border-bottom pb-2 {{ request()->routeIs('admin.applications.appraisal') ? 'active' : '' }}">
+                        <li style="line-height: 20px;margin-left: 4px;padding-left: 0px;text-indent: 0" class="border-bottom pb-2 {{ request()->routeIs('admin.applications.appraisal') ? 'active' : '' }}">
                             <a href="{{route('admin.applications.appraisal')}}" class="text-white {{\App\Helpers\checkDayStart(1)? '':'disabled'}}">
                                 @lang('admin.appraisal')
                             </a>
                         </li>
                     @endcan
                     {{--                @can("Manage appraised")--}}
-                    {{--                    <li style="line-height: 20px;margin-left: 18px;padding-left: 0px;text-indent: 0" class="border-bottom pb-2">--}}
+                    {{--                    <li style="line-height: 20px;margin-left: 4px;padding-left: 0px;text-indent: 0" class="border-bottom pb-2">--}}
                     {{--                        <a href="{{ route('admin.applications.appraised') }}" class="text-white ">--}}
                     {{--                            @lang('admin.appraised')--}}
                     {{--                        </a>--}}
                     {{--                    </li>--}}
                     {{--                @endcan--}}
                     @can("Manage revises")
-                        <li style="line-height: 20px;margin-left: 18px;padding-left: 0px;text-indent: 0" class="border-bottom pb-2 {{ request()->routeIs('admin.applications.revise') ? 'active' : '' }}">
+                        <li style="line-height: 20px;margin-left: 4px;padding-left: 0px;text-indent: 0" class="border-bottom pb-2 {{ request()->routeIs('admin.applications.revise') ? 'active' : '' }}">
                             <a href="{{route('admin.applications.revise')}}" class="text-white ">
                                 @lang('admin.revise')
                             </a>
                         </li>
                     @endcan
                     @can("Manage Deleted applications")
-                        <li style="line-height: 20px;margin-left: 18px;padding-left: 0px;text-indent: 0" class="border-bottom pb-2 {{ request()->routeIs('admin.applications.deleted') ? 'active' : '' }}">
+                        <li style="line-height: 20px;margin-left: 4px;padding-left: 0px;text-indent: 0" class="border-bottom pb-2 {{ request()->routeIs('admin.applications.deleted') ? 'active' : '' }}">
                             <a href="{{route('admin.applications.deleted')}}" class="text-white ">
                                 @lang('admin.deleted_applications')
                             </a>
@@ -148,12 +148,12 @@
                     <i class="fas fa-plus"></i>
                 </li>
                 <ul class="sidebar-menu">
-                    <li style="line-height: 20px;margin-left: 18px;padding-left: 0px;text-indent: 0" class="border-bottom pb-2 {{ request()->routeIs('admin.service_transactions') ? 'active' : '' }}">
+                    <li style="line-height: 20px;margin-left: 4px;padding-left: 0px;text-indent: 0" class="border-bottom pb-2 {{ request()->routeIs('admin.service_transactions') ? 'active' : '' }}">
                         <a href="{{route('admin.service_transactions')}}" class="text-white ">
                             @lang('admin.service_transactions')
                         </a>
                     </li>
-                    <li style="line-height: 20px;margin-left: 18px;padding-left: 0px;text-indent: 0" class="border-bottom pb-2 {{ request()->routeIs('admin.service_transactions.new') ? 'active' : '' }}">
+                    <li style="line-height: 20px;margin-left: 4px;padding-left: 0px;text-indent: 0" class="border-bottom pb-2 {{ request()->routeIs('admin.service_transactions.new') ? 'active' : '' }}">
                         <a href="{{route('admin.service_transactions.new')}}" class="text-white ">
                             @lang('admin.new_service_transactions')
                         </a>
@@ -169,12 +169,12 @@
                         <i class="fas fa-plus"></i>
                     </li>
                     <ul class="sidebar-menu">
-                        <li style="line-height: 20px;margin-left: 18px;padding-left: 0px;text-indent: 0" class="border-bottom pb-2 {{ request()->routeIs('admin.travel_agent_applications') ? 'active' : '' }}">
+                        <li style="line-height: 20px;margin-left: 4px;padding-left: 0px;text-indent: 0" class="border-bottom pb-2 {{ request()->routeIs('admin.travel_agent_applications') ? 'active' : '' }}">
                             <a href="{{route('admin.travel_agent_applications')}}" class="text-white ">
                                 @lang('admin.agent_applications')
                             </a>
                         </li>
-                        <li style="line-height: 20px;margin-left: 18px;padding-left: 0px;text-indent: 0" class="border-bottom pb-2 {{ request()->routeIs('admin.report.direct_sales') ? 'active' : '' }}">
+                        <li style="line-height: 20px;margin-left: 4px;padding-left: 0px;text-indent: 0" class="border-bottom pb-2 {{ request()->routeIs('admin.report.direct_sales') ? 'active' : '' }}">
                             <a href="{{route('admin.report.direct_sales')}}" class="text-white ">
                                 @lang('admin.direct_sales')
                             </a>
@@ -192,43 +192,43 @@
                     <i class="fas fa-plus"></i>
                 </li>
                 <ul class="sidebar-menu">
-                    <li style="line-height: 20px;margin-left: 18px;padding-left: 0px;text-indent: 0" class="border-bottom pb-2 {{ request()->routeIs('admin.travel_agent_applications') ? 'active' : '' }}">
+                    <li style="line-height: 20px;margin-left: 4px;padding-left: 0px;text-indent: 0" class="border-bottom pb-2 {{ request()->routeIs('admin.travel_agent_applications') ? 'active' : '' }}">
                         <a href="{{route('admin.travel_agent_applications')}}" class="text-white ">
                             @lang('admin.agent_applications')
                         </a>
                     </li>
-                    <li style="line-height: 20px;margin-left: 18px;padding-left: 0px;text-indent: 0" class="border-bottom pb-2 {{ request()->routeIs('admin.report.agent_invoices') ? 'active' : '' }}">
+                    <li style="line-height: 20px;margin-left: 4px;padding-left: 0px;text-indent: 0" class="border-bottom pb-2 {{ request()->routeIs('admin.report.agent_invoices') ? 'active' : '' }}">
                         <a href="{{route('admin.report.agent_invoices')}}" class="text-white ">
                             @lang('admin.agent_invoices')
                         </a>
                     </li>
-                    <li style="line-height: 20px;margin-left: 18px;padding-left: 0px;text-indent: 0" class="border-bottom pb-2 {{ request()->routeIs('admin.report.agent_sales') ? 'active' : '' }}">
+                    <li style="line-height: 20px;margin-left: 4px;padding-left: 0px;text-indent: 0" class="border-bottom pb-2 {{ request()->routeIs('admin.report.agent_sales') ? 'active' : '' }}">
                         <a href="{{route('admin.report.agent_sales')}}" class="text-white ">
                             @lang('admin.agent_sales')
                         </a>
                     </li>
-                    <li style="line-height: 20px;margin-left: 18px;padding-left: 0px;text-indent: 0" class="border-bottom pb-2 {{ request()->routeIs('admin.report.agent_statement') ? 'active' : '' }}">
+                    <li style="line-height: 20px;margin-left: 4px;padding-left: 0px;text-indent: 0" class="border-bottom pb-2 {{ request()->routeIs('admin.report.agent_statement') ? 'active' : '' }}">
                         <a href="{{route('admin.report.agent_statement')}}" class="text-white ">
                             @lang('admin.agent_statement')
                         </a>
                     </li>
-                    <li style="line-height: 20px;margin-left: 18px;padding-left: 0px;text-indent: 0" class="border-bottom pb-2 {{ request()->routeIs('admin.report.direct_sales') ? 'active' : '' }}">
+                    <li style="line-height: 20px;margin-left: 4px;padding-left: 0px;text-indent: 0" class="border-bottom pb-2 {{ request()->routeIs('admin.report.direct_sales') ? 'active' : '' }}">
                         <a href="{{route('admin.report.direct_sales')}}" class="text-white ">
                             @lang('admin.direct_sales')
                         </a>
                     </li>
 
-{{--                    <li style="line-height: 20px;margin-left: 18px;padding-left: 0px;text-indent: 0" class="border-bottom pb-2 {{ request()->routeIs('admin.report.total.profit') ? 'active' : '' }}">--}}
+{{--                    <li style="line-height: 20px;margin-left: 4px;padding-left: 0px;text-indent: 0" class="border-bottom pb-2 {{ request()->routeIs('admin.report.total.profit') ? 'active' : '' }}">--}}
 {{--                        <a href="{{route('admin.report.total.profit')}}" class="text-white ">--}}
 {{--                            @lang('admin.report_total_profit')--}}
 {{--                        </a>--}}
 {{--                    </li>--}}
-                    <li style="line-height: 20px;margin-left: 18px;padding-left: 0px;text-indent: 0" class="border-bottom pb-2 {{ request()->routeIs('admin.report.outstanding') ? 'active' : '' }}">
+                    <li style="line-height: 20px;margin-left: 4px;padding-left: 0px;text-indent: 0" class="border-bottom pb-2 {{ request()->routeIs('admin.report.outstanding') ? 'active' : '' }}">
                         <a href="{{route('admin.report.outstanding')}}" class="text-white ">
                             @lang('admin.outstanding')
                         </a>
                     </li>
-                    <li style="line-height: 20px;margin-left: 18px;padding-left: 0px;text-indent: 0" class="border-bottom pb-2 {{ request()->routeIs('admin.invoices') ? 'active' : '' }}">
+                    <li style="line-height: 20px;margin-left: 4px;padding-left: 0px;text-indent: 0" class="border-bottom pb-2 {{ request()->routeIs('admin.invoices') ? 'active' : '' }}">
                         <a href="{{route('admin.invoices')}}" class="text-white ">
                             @lang('admin.management_invoice')
                         </a>
@@ -243,42 +243,42 @@
                         <i class="fas fa-plus"></i>
                     </li>
                     <ul class="sidebar-menu">
-                        <li style="line-height: 20px;margin-left: 18px;padding-left: 0px;text-indent: 0" class="border-bottom pb-2 {{ request()->routeIs('admin.travel_agent_applications') ? 'active' : '' }}">
+                        <li style="line-height: 20px;margin-left: 4px;padding-left: 0px;text-indent: 0" class="border-bottom pb-2 {{ request()->routeIs('admin.travel_agent_applications') ? 'active' : '' }}">
                             <a href="{{route('admin.travel_agent_applications')}}" class="text-white ">
                                 @lang('admin.agent_applications')
                             </a>
                         </li>
-                        <li style="line-height: 20px;margin-left: 18px;padding-left: 0px;text-indent: 0" class="border-bottom pb-2 {{ request()->routeIs('admin.report.agent_invoices') ? 'active' : '' }}">
+                        <li style="line-height: 20px;margin-left: 4px;padding-left: 0px;text-indent: 0" class="border-bottom pb-2 {{ request()->routeIs('admin.report.agent_invoices') ? 'active' : '' }}">
                             <a href="{{route('admin.report.agent_invoices')}}" class="text-white ">
                                 @lang('admin.agent_invoices')
                             </a>
                         </li>
-                        <li style="line-height: 20px;margin-left: 18px;padding-left: 0px;text-indent: 0" class="border-bottom pb-2 {{ request()->routeIs('admin.report.agent_sales') ? 'active' : '' }}">
+                        <li style="line-height: 20px;margin-left: 4px;padding-left: 0px;text-indent: 0" class="border-bottom pb-2 {{ request()->routeIs('admin.report.agent_sales') ? 'active' : '' }}">
                             <a href="{{route('admin.report.agent_sales')}}" class="text-white ">
                                 @lang('admin.agent_sales')
                             </a>
                         </li>
-                        <li style="line-height: 20px;margin-left: 18px;padding-left: 0px;text-indent: 0" class="border-bottom pb-2 {{ request()->routeIs('admin.report.agent_statement') ? 'active' : '' }}">
+                        <li style="line-height: 20px;margin-left: 4px;padding-left: 0px;text-indent: 0" class="border-bottom pb-2 {{ request()->routeIs('admin.report.agent_statement') ? 'active' : '' }}">
                             <a href="{{route('admin.report.agent_statement')}}" class="text-white ">
                                 @lang('admin.agent_statement')
                             </a>
                         </li>
-                        <li style="line-height: 20px;margin-left: 18px;padding-left: 0px;text-indent: 0" class="border-bottom pb-2 {{ request()->routeIs('admin.report.direct_sales') ? 'active' : '' }}">
+                        <li style="line-height: 20px;margin-left: 4px;padding-left: 0px;text-indent: 0" class="border-bottom pb-2 {{ request()->routeIs('admin.report.direct_sales') ? 'active' : '' }}">
                             <a href="{{route('admin.report.direct_sales')}}" class="text-white ">
                                 @lang('admin.direct_sales')
                             </a>
                         </li>
-                        <li style="line-height: 20px;margin-left: 18px;padding-left: 0px;text-indent: 0" class="border-bottom pb-2 {{ request()->routeIs('admin.report.total.profit') ? 'active' : '' }}">
+                        <li style="line-height: 20px;margin-left: 4px;padding-left: 0px;text-indent: 0" class="border-bottom pb-2 {{ request()->routeIs('admin.report.total.profit') ? 'active' : '' }}">
                             <a href="{{route('admin.report.total.profit')}}" class="text-white ">
                                 @lang('admin.report_total_profit')
                             </a>
                         </li>
-                        <li style="line-height: 20px;margin-left: 18px;padding-left: 0px;text-indent: 0" class="border-bottom pb-2 {{ request()->routeIs('admin.report.outstanding') ? 'active' : '' }}">
+                        <li style="line-height: 20px;margin-left: 4px;padding-left: 0px;text-indent: 0" class="border-bottom pb-2 {{ request()->routeIs('admin.report.outstanding') ? 'active' : '' }}">
                             <a href="{{route('admin.report.outstanding')}}" class="text-white ">
                                 @lang('admin.outstanding')
                             </a>
                         </li>
-                        <li style="line-height: 20px;margin-left: 18px;padding-left: 0px;text-indent: 0" class="border-bottom pb-2 {{ request()->routeIs('admin.invoices') ? 'active' : '' }}">
+                        <li style="line-height: 20px;margin-left: 4px;padding-left: 0px;text-indent: 0" class="border-bottom pb-2 {{ request()->routeIs('admin.invoices') ? 'active' : '' }}">
                             <a href="{{route('admin.invoices')}}" class="text-white ">
                                 @lang('admin.management_invoice')
                             </a>
@@ -297,13 +297,13 @@
             <ul class="sidebar-menu">
                 @if(auth('admin')->user()->id == 1)
 
-                    <li style="line-height: 20px;margin-left: 18px;padding-left: 0px;text-indent: 0" class="border-bottom pb-2 {{ request()->routeIs('admin.travel_agents') ? 'active' : '' }}">
+                    <li style="line-height: 20px;margin-left: 4px;padding-left: 0px;text-indent: 0" class="border-bottom pb-2 {{ request()->routeIs('admin.travel_agents') ? 'active' : '' }}">
                         <a href="{{route('admin.travel_agents')}}" class="text-white ">
                             @lang('admin.travel_agents')
                         </a>
                     </li>
 
-                    <li style="line-height: 20px;margin-left: 18px;padding-left: 0px;text-indent: 0" class="border-bottom pb-2 {{ request()->routeIs('admin.travel_agent_payment_transactions') ? 'active' : '' }}">
+                    <li style="line-height: 20px;margin-left: 4px;padding-left: 0px;text-indent: 0" class="border-bottom pb-2 {{ request()->routeIs('admin.travel_agent_payment_transactions') ? 'active' : '' }}">
                         <a href="{{route('admin.travel_agent_payment_transactions')}}" class="text-white ">
                             @lang('admin.travel_agent_payment_transactions')
                         </a>
@@ -316,12 +316,12 @@
                             <i class="fa fa-suitcase mr-5"></i>
                             <span class="ml-2">@lang('admin.travel_agents')</span>
                         </li>
-                        <li style="line-height: 20px;margin-left: 18px;padding-left: 0px;text-indent: 0" class="border-bottom pb-2 {{ request()->routeIs('admin.travel_agents') ? 'active' : '' }}">
+                        <li style="line-height: 20px;margin-left: 4px;padding-left: 0px;text-indent: 0" class="border-bottom pb-2 {{ request()->routeIs('admin.travel_agents') ? 'active' : '' }}">
                             <a href="{{route('admin.travel_agents')}}" class="text-white ">
                                 @lang('admin.travel_agents')
                             </a>
                         </li>
-                        <li style="line-height: 20px;margin-left: 18px;padding-left: 0px;text-indent: 0" class="border-bottom pb-2 {{ request()->routeIs('admin.travel_agent_payment_transactions') ? 'active' : '' }}">
+                        <li style="line-height: 20px;margin-left: 4px;padding-left: 0px;text-indent: 0" class="border-bottom pb-2 {{ request()->routeIs('admin.travel_agent_payment_transactions') ? 'active' : '' }}">
                             <a href="{{route('admin.travel_agent_payment_transactions')}}" class="text-white ">
                                 @lang('admin.travel_agent_payment_transactions')
                             </a>
@@ -339,12 +339,12 @@
             <ul class="sidebar-menu">
             @if(auth('admin')->user()->id == 1)
 
-                <li style="line-height: 20px;margin-left: 18px;padding-left: 0px;text-indent: 0" class="border-bottom pb-2 {{ request()->routeIs('admin.applications.un_paid') ? 'active' : '' }}">
+                <li style="line-height: 20px;margin-left: 4px;padding-left: 0px;text-indent: 0" class="border-bottom pb-2 {{ request()->routeIs('admin.applications.un_paid') ? 'active' : '' }}">
                     <a href="{{route('admin.applications.un_paid')}}" class="text-white ">
                         @lang('admin.payment_applications')
                     </a>
                 </li>
-                <li style="line-height: 20px;margin-left: 18px;padding-left: 0px;text-indent: 0" class="border-bottom pb-2 {{ request()->routeIs('admin.service_transactions.invoices') ? 'active' : '' }}">
+                <li style="line-height: 20px;margin-left: 4px;padding-left: 0px;text-indent: 0" class="border-bottom pb-2 {{ request()->routeIs('admin.service_transactions.invoices') ? 'active' : '' }}">
                     <a href="{{route('admin.service_transactions.invoices')}}" class="text-white ">
                         @lang('admin.payment_services')
                     </a>
@@ -352,12 +352,12 @@
 
             @else
                 @can('Manage travel agents')
-                    <li style="line-height: 20px;margin-left: 18px;padding-left: 0px;text-indent: 0" class="border-bottom pb-2 {{ request()->routeIs('admin.applications.un_paid') ? 'active' : '' }}">
+                    <li style="line-height: 20px;margin-left: 4px;padding-left: 0px;text-indent: 0" class="border-bottom pb-2 {{ request()->routeIs('admin.applications.un_paid') ? 'active' : '' }}">
                         <a href="{{route('admin.applications.un_paid')}}" class="text-white ">
                             @lang('admin.payment_applications')
                         </a>
                     </li>
-                    <li style="line-height: 20px;margin-left: 18px;padding-left: 0px;text-indent: 0" class="border-bottom pb-2 {{ request()->routeIs('admin.service_transactions.invoices') ? 'active' : '' }}">
+                    <li style="line-height: 20px;margin-left: 4px;padding-left: 0px;text-indent: 0" class="border-bottom pb-2 {{ request()->routeIs('admin.service_transactions.invoices') ? 'active' : '' }}">
                         <a href="{{route('admin.service_transactions.invoices')}}" class="text-white ">
                             @lang('admin.payment_services')
                         </a>
@@ -450,24 +450,24 @@
             <ul class="sidebar-menu">
                 @if(auth('admin')->user()->id == 1)
 
-                    <li style="line-height: 20px;margin-left: 18px;padding-left: 0px;text-indent: 0" class="border-bottom pb-2 {{ request()->routeIs('admin.admins.index') ? 'active' : '' }}">
+                    <li style="line-height: 20px;margin-left: 4px;padding-left: 0px;text-indent: 0" class="border-bottom pb-2 {{ request()->routeIs('admin.admins.index') ? 'active' : '' }}">
                         <a href="{{route('admin.admins.index')}}" class="text-white ">
                             @lang('admin.users')
                         </a>
                     </li>
-                    <li style="line-height: 20px;margin-left: 18px;padding-left: 0px;text-indent: 0" class="border-bottom pb-2 {{ request()->routeIs('admin.role') ? 'active' : '' }}">
+                    <li style="line-height: 20px;margin-left: 4px;padding-left: 0px;text-indent: 0" class="border-bottom pb-2 {{ request()->routeIs('admin.role') ? 'active' : '' }}">
                         <a href="{{route('admin.role')}}" class="text-white ">
                             @lang('admin.roles')
                         </a>
                     </li>
                 @else
                     @can('Manage admins')
-                        <li style="line-height: 20px;margin-left: 18px;padding-left: 0px;text-indent: 0" class="border-bottom pb-2 {{ request()->routeIs('admin.admins.index') ? 'active' : '' }}">
+                        <li style="line-height: 20px;margin-left: 4px;padding-left: 0px;text-indent: 0" class="border-bottom pb-2 {{ request()->routeIs('admin.admins.index') ? 'active' : '' }}">
                             <a href="{{route('admin.admins.index')}}" class="text-white ">
                                 @lang('admin.users')
                             </a>
                         </li>
-                        <li style="line-height: 20px;margin-left: 18px;padding-left: 0px;text-indent: 0" class="border-bottom pb-2 {{ request()->routeIs('admin.role') ? 'active' : '' }}">
+                        <li style="line-height: 20px;margin-left: 4px;padding-left: 0px;text-indent: 0" class="border-bottom pb-2 {{ request()->routeIs('admin.role') ? 'active' : '' }}">
                             <a href="{{route('admin.role')}}" class="text-white ">
                                 @lang('admin.roles')
                             </a>
@@ -484,24 +484,24 @@
             </li>
             <ul class="sidebar-menu">
                 @if(auth('admin')->user()->id ==1 || auth('admin')->user()->id ==46 )
-                    <li style="line-height: 20px;margin-left: 18px;padding-left: 0px;text-indent: 0" class="border-bottom pb-2 {{ request()->routeIs('admin.settings') ? 'active' : '' }}">
+                    <li style="line-height: 20px;margin-left: 4px;padding-left: 0px;text-indent: 0" class="border-bottom pb-2 {{ request()->routeIs('admin.settings') ? 'active' : '' }}">
                         <a href="{{route('admin.settings')}}" class="text-white ">
                             @lang('admin.general_settings')
                         </a>
                     </li>
-                    <li style="line-height: 20px;margin-left: 18px;padding-left: 0px;text-indent: 0" class="border-bottom pb-2 {{ request()->routeIs('admin.profile') ? 'active' : '' }}">
+                    <li style="line-height: 20px;margin-left: 4px;padding-left: 0px;text-indent: 0" class="border-bottom pb-2 {{ request()->routeIs('admin.profile') ? 'active' : '' }}">
                         <a href="{{route('admin.profile')}}" class="text-white ">
                             @lang('admin.profile')
                         </a>
                     </li>
                 @else
                     @can('Manage settings')
-                        <li style="line-height: 20px;margin-left: 18px;padding-left: 0px;text-indent: 0" class="border-bottom pb-2 {{ request()->routeIs('admin.settings') ? 'active' : '' }}">
+                        <li style="line-height: 20px;margin-left: 4px;padding-left: 0px;text-indent: 0" class="border-bottom pb-2 {{ request()->routeIs('admin.settings') ? 'active' : '' }}">
                             <a href="{{route('admin.settings')}}" class="text-white ">
                                 @lang('admin.general_settings')
                             </a>
                         </li>
-                        <li style="line-height: 20px;margin-left: 18px;padding-left: 0px;text-indent: 0" class="border-bottom pb-2 ">
+                        <li style="line-height: 20px;margin-left: 4px;padding-left: 0px;text-indent: 0" class="border-bottom pb-2 ">
                             <a href="{{route('admin.profile')}}" class="text-white ">
                                 @lang('admin.profile')
                             </a>
