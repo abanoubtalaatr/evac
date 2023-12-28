@@ -251,7 +251,7 @@ class Index extends Component
         $applicantData = [
             'first_name' => $this->form['name'],
             'last_name' => $this->form['surname'],
-            'passport_no' => $this->form['passport_no'],
+            'passport_no' => isset($this->form['passport_no'])??null,
         ];
 
         $applicant = (new ApplicantService())->create($applicantData);
