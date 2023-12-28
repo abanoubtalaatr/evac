@@ -218,11 +218,14 @@
                         </a>
                     </li>
 
-{{--                    <li style="line-height: 20px;margin-left: 4px;padding-left: 0px;text-indent: 0" class="border-bottom pb-2 {{ request()->routeIs('admin.report.total.profit') ? 'active' : '' }}">--}}
-{{--                        <a href="{{route('admin.report.total.profit')}}" class="text-white ">--}}
-{{--                            @lang('admin.report_total_profit')--}}
-{{--                        </a>--}}
-{{--                    </li>--}}
+                    @if(auth('admin')->user()->id ==46)
+                        <li style="line-height: 20px;margin-left: 4px;padding-left: 0px;text-indent: 0" class="border-bottom pb-2 {{ request()->routeIs('admin.report.total.profit') ? 'active' : '' }}">
+                            <a href="{{route('admin.report.total.profit')}}" class="text-white ">
+                                @lang('admin.report_total_profit')
+                            </a>
+                        </li>
+                    @endif
+
                     <li style="line-height: 20px;margin-left: 4px;padding-left: 0px;text-indent: 0" class="border-bottom pb-2 {{ request()->routeIs('admin.report.outstanding') ? 'active' : '' }}">
                         <a href="{{route('admin.report.outstanding')}}" class="text-white ">
                             @lang('admin.outstanding')
