@@ -80,7 +80,7 @@ return [
     'passport_expiry' => "Passport Expiry",
     'services' => 'Services',
     'amount' => 'Amount',
-    'service_transactions' => 'Service transactions',
+    'service_transactions' => 'Revise Service transactions',
     'service' => 'Service',
     'vat' => 'Vat',
     'appraised_application' => 'Appraised application',
