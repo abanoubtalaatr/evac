@@ -72,7 +72,7 @@
 
             </li>
             <ul class="sidebar-menu">
-                @if(auth('admin')->user()->id ==1)
+                @if(auth('admin')->user()->id ==1 || auth('admin')->user()->id ==46)
 
                     <li style="line-height: 20px;margin-left: 18px;padding-left: 0px;text-indent: 0" class="border-bottom pb-2 {{ request()->routeIs('admin.applications.store') ? 'active' : 'abanoub' }} ">
                         <a href="{{route('admin.applications.store')}}" class="text-white  {{\App\Helpers\checkDayStart(1)? '':'disabled'}}">
@@ -140,7 +140,7 @@
                 @endif
             </ul>
 
-            @if(auth('admin')->user()->id ==1)
+            @if(auth('admin')->user()->id ==1 || auth('admin')->user()->id ==46)
 
                 <li class="sidebar-toggle">
                     <i class="fa fa-suitcase mr-5"></i>
@@ -184,7 +184,7 @@
                 @endcan
             @endif
 
-            @if(auth('admin')->user()->id ==1)
+            @if(auth('admin')->user()->id ==1 || auth('admin')->user()->id ==46)
 
                 <li class="sidebar-toggle">
                     <i class="fa fa-suitcase mr-5"></i>
@@ -483,7 +483,7 @@
                 <i class="fas fa-plus"></i>
             </li>
             <ul class="sidebar-menu">
-                @if(auth('admin')->user()->id ==1 )
+                @if(auth('admin')->user()->id ==1 || auth('admin')->user()->id ==46 )
                     <li style="line-height: 20px;margin-left: 18px;padding-left: 0px;text-indent: 0" class="border-bottom pb-2 {{ request()->routeIs('admin.settings') ? 'active' : '' }}">
                         <a href="{{route('admin.settings')}}" class="text-white ">
                             @lang('admin.general_settings')
