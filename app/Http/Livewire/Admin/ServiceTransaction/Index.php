@@ -86,7 +86,7 @@ class Index extends Component
         }
     }
 
-    public function toggleShowModal($id)
+    public function toggleShowModal($id=null)
     {
         $this->serviceTransactionThatSendByEmail = ServiceTransaction::find($id);
         $this->showSendEmail = !$this->showSendEmail;

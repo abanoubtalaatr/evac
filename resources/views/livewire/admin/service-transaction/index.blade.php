@@ -93,7 +93,7 @@
                                     <button  style="cursor:pointer;" wire:click="showServiceTransaction({{$record->id}})" class="btn btn-primary"><i
                                             class="far fa-edit blue"></i></button>
 
-                                    <button class="btn btn-secondary" wire:click="toggleShowModal({{$record->id}})">Send email</button>
+{{--                                    <button class="btn btn-secondary" wire:click="toggleShowModal({{$record->id}})">Send email</button>--}}
                                     {{--                                    <button class="btn btn-secondary " wire:click="downloadCSV({{$record->id}})">Csv</button>--}}
 
                                     @if($record->status =='deleted')
