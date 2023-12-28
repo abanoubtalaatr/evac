@@ -45,8 +45,12 @@
                     <tr>
                         <th class="text-center">#</th>
                         <th class="text-center">@lang('admin.passport')</th>
+                        <th class="text-center">@lang('admin.application_ref')</th>
+
                         <th class="text-center">@lang('admin.applicant')</th>
-{{--                        <th class="text-center">@lang('admin.application_ref')</th>--}}
+                        <th class="text-center">@lang('admin.amount')</th>
+
+                        {{--                        <th class="text-center">@lang('admin.application_ref')</th>--}}
 {{--                        <th class="text-center">@lang('admin.travel_agent')</th>--}}
 {{--                        <th class="text-center">@lang('admin.visa_provider')</th>--}}
 {{--                        <th class="text-center">@lang('admin.visa_type')</th>--}}
@@ -62,13 +66,17 @@
                         <tr>
                             <td>#{{$loop->index + 1}}</td>
                             <td class='text-center'>{{$record->passport_no}}</td>
+                            <td class='text-center'>{{$record->application_ref}}</td>
+
                             <td class='text-center'>{{$record->first_name . ' ' . $record->last_name}}</td>
-{{--                            <td class='text-center'>{{$record->application_ref}}</td>--}}
+                            <td class='text-center'>{{$record->vat + $record->dubai_fee + $record->service_fee}}</td>
+
+                            {{--                            <td class='text-center'>{{$record->application_ref}}</td>--}}
 {{--                            <td class='text-center'>{{$record->travelAgent ? $record->travelAgent->name :''}}</td>--}}
 {{--                            <td class='text-center'>{{$record->visaProvider ? $record->visaProvider->name :''}}</td>--}}
 {{--                            <td class='text-center'>{{$record->visaType ? $record->visaType->name :''}}</td>--}}
 {{--                            <td class='text-center'><button class="border-0">{{$record->status}}</button></td>--}}
-                            <td class='text-center'>{{\Illuminate\Support\Carbon::parse($record->create_at)->format('Y-m-d')}}</td>
+                            <td class='text-center'>{{ \Illuminate\Support\Carbon::parse($record->created_at)->format('Y-m-d') }}</td>
                             <td class='text-center'>
                                 @if($record->travel_agent_id)
                                     <button class="border-0 rounded bg-info">
