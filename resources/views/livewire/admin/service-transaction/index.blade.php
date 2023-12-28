@@ -10,6 +10,8 @@
     <div class="border-div">
         <div class="b-btm flex-div-2">
             <h4>{{$page_title}}</h4>
+            {{--            <a   style='text-align:center;cursor:pointer' class="button btn-red big {{\App\Helpers\checkDayStart(1)? '':'disable-link bg-secondary'}} " wire:click="emptyForm" id="addServiceTransactionButton">@lang('site.create_new')</a>--}}
+            <a   style='text-align:center;cursor:pointer;background: transparent' class="button btn-red big {{\App\Helpers\checkDayStart(1)? '':'disable-link bg-secondary'}} " wire:click="emptyForm" id="addServiceTransactionButton">@lang('site.create_new')</a>
 
         </div>
         <div class="table-page-wrap">
@@ -67,7 +69,7 @@
                         <th class="text-center">@lang('admin.name')</th>
                         <th class="text-center">@lang('admin.surname')</th>
                         <th class="text-center">@lang('admin.created_at')</th>
-{{--                        <th class="text-center">@lang('admin.status')</th>--}}
+                        {{--                        <th class="text-center">@lang('admin.status')</th>--}}
                         <th>@lang('site.actions')</th>
                     </tr>
                     </thead>
@@ -92,7 +94,7 @@
                                             class="far fa-edit blue"></i></button>
 
                                     <button class="btn btn-secondary" wire:click="toggleShowModal({{$record->id}})">Send email</button>
-{{--                                    <button class="btn btn-secondary " wire:click="downloadCSV({{$record->id}})">Csv</button>--}}
+                                    {{--                                    <button class="btn btn-secondary " wire:click="downloadCSV({{$record->id}})">Csv</button>--}}
 
                                     @if($record->status =='deleted')
                                         <button  style="cursor:pointer;" wire:click="unDestroy({{$record->id}})" class="btn btn-warning">Undelete</button>
@@ -129,9 +131,9 @@
         });
 
         $(document).ready(()=>{
-           $('#agent_id').select2();
+            $('#agent_id').select2();
             $('#agent_id').change(e=>{
-                @this.set('form.agent_id', $('#agent_id').select2('val'));
+            @this.set('form.agent_id', $('#agent_id').select2('val'));
             });
 
         });
@@ -148,16 +150,16 @@
         $('#serviceTransactionModal').modal('show');
     });
     document.addEventListener('livewire:load', function () {
-         Livewire.on('showServiceTransactionModal', function (transaction) {
-             $('#showServiceTransactionModal' + transaction).modal('show');
-         });
-     });
+        Livewire.on('showServiceTransactionModal', function (transaction) {
+            $('#showServiceTransactionModal' + transaction).modal('show');
+        });
+    });
 
-     document.addEventListener('livewire:load', function () {
-         Livewire.on('showServiceTransactionInvoiceModal', function (transaction) {
-             $('#showServiceTransactionInvoiceModal' + transaction).modal('show');
-         });
-     });
+    document.addEventListener('livewire:load', function () {
+        Livewire.on('showServiceTransactionInvoiceModal', function (transaction) {
+            $('#showServiceTransactionInvoiceModal' + transaction).modal('show');
+        });
+    });
 </script>
 
 <script>
