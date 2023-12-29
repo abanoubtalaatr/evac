@@ -99,7 +99,7 @@ $showSendEmailButton= false, $agent;
             ]);
 
 
-            (new SendEmailController())->send($request);
+//            (new SendEmailController())->send($request);
 
             $officeDay->update([
                 'end_time' => Carbon::now()->format('H:i:s'),
