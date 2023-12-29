@@ -24,7 +24,8 @@ class Application extends Component
         $email,
         $showSendEmail = false,
         $showSendEmailButton= false,
-        $message= null, $agent, $isDirect=false;
+        $message= null, $agent = null, $isDirect=false;
+
 
     public function mount()
     {
@@ -62,7 +63,7 @@ class Application extends Component
 
     public function updatedAgent()
     {
-        $this->isDirect = !$this->isDirect;
+        $this->isDirect = false;
     }
     public function getRecords()
     {
@@ -125,11 +126,15 @@ class Application extends Component
     public function sendEmail(Request $request)
     {
         $this->validate();
-        if(is_null($this->agent) || $this->agent =='no_result') {
+        if(!$this->isDirect && is_null($this->agent) || $this->agent =='no_result') {
             $this->message = "You must choose travel agent";
             return;
         }
-        $agent = Agent::query()->find($this->agent);
+        if($this->agent){
+            $agent = Agent::query()->find($this->agent);
+        }else{
+            $agent = null;
+        }
 
         $request->merge([
            'agent' => $this->agent,
@@ -138,7 +143,10 @@ class Application extends Component
            'isDirect' => $this->isDirect,
         ]);
 
-        Mail::to($this->email)->send(new AgentApplicationsMail($this->getRecords(),$agent, $this->from, $this->to));
+        $emails = explode(',', $this->email);
+        foreach ($emails as $email){
+            Mail::to($email)->send(new AgentApplicationsMail($this->getRecords(),$agent, $this->from, $this->to));
+        }
         $this->email = null;
         $this->message = null;
         $this->agent = null;
@@ -155,7 +163,7 @@ class Application extends Component
     public function getRules()
     {
         return [
-          'email' => ['required', 'email']
+          'email' => ['required']
         ];
     }
 
