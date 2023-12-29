@@ -141,7 +141,11 @@ class AgentSales extends Component
            'toDate' => $this->to,
         ]);
 
-        Mail::to($this->email)->send(new AgentSalesMail( $this->from, $this->to));
+
+        $emails = explode(',', $this->email);
+        foreach ($emails as $email){
+            Mail::to($email)->send(new AgentSalesMail( $this->from, $this->to));
+        }
         $this->email = null;
         $this->message = null;
         return redirect()->to(route('admin.report.agent_sales'));
@@ -159,7 +163,7 @@ class AgentSales extends Component
     public function getRules()
     {
         return [
-          'email' => ['required', 'email']
+          'email' => ['required']
         ];
     }
 

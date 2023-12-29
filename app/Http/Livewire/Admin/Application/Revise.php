@@ -11,6 +11,7 @@ use App\Models\Application;
 use App\Models\Setting;
 use App\Models\VisaType;
 use App\Services\InvoiceService;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
 use Livewire\Component;
@@ -29,6 +30,8 @@ class Revise extends Component
     {
         $this->page_title = __('admin.revise');
         $this->visaTypes = VisaType::query()->get();
+        $this->from = Carbon::parse(now())->format('Y-m-d');
+        $this->to = Carbon::parse(now())->format('Y-m-d');
     }
 
     public function showApplicationModal($id)

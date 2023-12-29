@@ -95,9 +95,12 @@ class ProfitLoss extends Component
             'toDate' => $this->to,
         ]);
 
-        Mail::to($this->email)->send(new ProfitLossMail( $this->from, $this->to));
-        $this->email = null;
+        $emails = explode(',', $this->email);
+        foreach ($emails as $email){
+            Mail::to($email)->send(new ProfitLossMail( $this->from, $this->to));
+        }
 
+        $this->email = null;
         return redirect()->to(route('admin.report.total.profit'));
     }
 

@@ -10,8 +10,8 @@
                 </button>
             </div>
             <div class="modal-body">
-                <label>Write an email</label>
-                <input class="form-control" wire:model="email" required type="email" placeholder="Write the email you want to send to him" autocomplete="off">
+                <label>Write emails</label>
+                <input class="form-control" wire:model="email" required type="email" placeholder="Emails to send to separated by comma" autocomplete="off">
                 @error('email')<p style="color: red;">{{ $message }}</p>@enderror
 
             </div>

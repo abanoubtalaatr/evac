@@ -107,7 +107,10 @@ class DirectSale extends Component
             'toDate' => $this->to,
         ]);
 
-        Mail::to($this->email)->send(new DirectSalesMail( $this->from, $this->to));
+        $emails = explode(',', $this->email);
+        foreach ($emails as $email){
+            Mail::to($email)->send(new DirectSalesMail( $this->from, $this->to));
+        }
         $this->email = null;
 
         return redirect()->to(route('admin.report.direct_sales'));
@@ -123,7 +126,7 @@ class DirectSale extends Component
     public function getRules()
     {
         return [
-            'email' => ['required', 'email']
+            'email' => ['required']
         ];
     }
 

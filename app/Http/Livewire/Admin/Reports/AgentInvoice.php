@@ -271,7 +271,11 @@ class AgentInvoice extends Component
            'toDate' => $this->to,
         ]);
 
-        Mail::to($this->email)->send(new AgentInvoiceMail($agent, $this->from, $this->to));
+
+        $emails = explode(',', $this->email);
+        foreach ($emails as $email){
+            Mail::to($email)->send(new AgentInvoiceMail($agent, $this->from, $this->to));
+        }
         $this->email = null;
         $this->message = null;
         $this->agent = null;
@@ -296,7 +300,7 @@ class AgentInvoice extends Component
     public function getRules()
     {
         return [
-          'email' => ['required', 'email']
+          'email' => ['required']
         ];
     }
 
