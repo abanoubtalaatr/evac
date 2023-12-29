@@ -58,12 +58,6 @@ if (!function_exists('displayTextInNavbarForOfficeTime')) {
         $data = [];
         $lastOpenedDay = LastOpenedDay();
 
-        $data[] = [
-            'prefix' => "Day Opened by",
-            'user' => $lastOpenedDay->admin->name,
-            'day' => $lastOpenedDay->day_start,
-            'time' => $lastOpenedDay->start_time,
-        ];
 
         $lastRow = LastDayInExistDatabase();
 
@@ -78,10 +72,18 @@ if (!function_exists('displayTextInNavbarForOfficeTime')) {
                 return $data;
             }elseif ($lastRow->day_status == '2'){
                 $data[] = [
-                    'user' => $officeDay->adminRestartDay->name,
+                    'user' => $lastRow->adminRestartDay->name,
                     'prefix' => "Day reopened by",
-                    'day' => $officeDay->day_start,
-                    'time' => $officeDay->restart_at,
+                    'day' => $lastRow->day_start,
+                    'time' => $lastRow->restart_at,
+                ];
+                return $data;
+            }else{
+                $data[] = [
+                    'user' => $lastRow->admin->name,
+                    'prefix' => "Day open by",
+                    'day' => $lastRow->day_start,
+                    'time' => $lastRow->restart_at,
                 ];
                 return $data;
             }
