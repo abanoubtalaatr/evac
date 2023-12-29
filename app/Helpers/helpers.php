@@ -261,3 +261,11 @@ if (!function_exists('LastDayInExistDatabase')) {
 }
 
 
+
+if (!function_exists('disableActionsWhereOpenClosed')) {
+    function disableActionsWhereOpenClosed()
+    {
+        return  LastDayInExistDatabase()->day_status != "0";
+    }
+}
+
