@@ -26,12 +26,12 @@
 
                     <hr>
 
-                    <div class="form-group col-6">
-                        <label for="form.mobile">@lang('validation.attributes.phone')</label>
-                        <input readonly wire:model.defer='form.phone' class="form-control" type="text"
-                               placeholder="@lang('validation.attributes.phone')"/>
-                        @error('form.phone')<p style='color:red'> {{$message}} </p>@enderror
-                    </div>
+{{--                    <div class="form-group col-6">--}}
+{{--                        <label for="form.mobile">@lang('validation.attributes.phone')</label>--}}
+{{--                        <input readonly wire:model.defer='form.phone' class="form-control" type="text"--}}
+{{--                               placeholder="@lang('validation.attributes.phone')"/>--}}
+{{--                        @error('form.phone')<p style='color:red'> {{$message}} </p>@enderror--}}
+{{--                    </div>--}}
 
 
                     <div class="form-group col-6">

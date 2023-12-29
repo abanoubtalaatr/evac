@@ -57,7 +57,7 @@ class Profile extends Component
         return [
             'form.email' => 'required|email:dns,rfc|unique:admins,email,' . $this->admin->id,
             'form.name' => 'required|min:3|max:100|unique:admins,name,' . $this->admin->id,
-            'form.phone' => 'nullable|integer|digits:9|bail|unique:admins,phone,' . $this->admin->id,
+            'form.phone' => 'nullable|unique:admins,phone,' . $this->admin->id,
             'form.password' => 'nullable|min:8',
             'form.password_confirmation' => 'nullable|same:form.password',
             'image'=>'nullable|file|mimes:png,jpg,jpeg|max:10240'
