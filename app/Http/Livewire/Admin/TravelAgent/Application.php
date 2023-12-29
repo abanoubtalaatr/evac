@@ -138,7 +138,7 @@ class Application extends Component
            'isDirect' => $this->isDirect,
         ]);
 
-        Mail::to($this->email)->send(new AgentApplicationsMail($agent, $this->from, $this->to));
+        Mail::to($this->email)->send(new AgentApplicationsMail($this->getRecords(),$agent, $this->from, $this->to));
         $this->email = null;
         $this->message = null;
         $this->agent = null;
