@@ -103,8 +103,10 @@
                 <h4>From : {{request()->fromDate}} : to: {{request()->toDate}}</h4>
             @endif
             @if($agent)
-            <h4>Agent : {{$agent->name}}</h4>
-            <h4>Financial No: {{$agent->finance_no}}</h4>
+                <h4>Agent : {{$agent->name}}</h4>
+                <h4>Financial No: {{$agent->finance_no}}</h4>
+                <h4>Address: {{$agent->address}}</h4>
+                <h4>Tel: {{$agent->telephone}}</h4>
 
             @else
                 <button class="btn-primary" style="padding: 4px;border-radius: 4px;background: #0b5ed7">Direct</button>
@@ -182,7 +184,7 @@
                     @foreach($data['serviceTransactions'] as $record)
                         <tr>
                             <td>#{{$loop->index + 1}}</td>
-                            <td class='text-center'>{{$record->name . ' - '. $record->surname }} (service)</td>
+                            <td class='text-center'>{{$record->service_ref . ' - '. $record->name . ' - '. $record->surname }} (service)</td>
                             <td class='text-center'>{{ $record->service->name}}</td>
                             <td class='text-center'><button class="border-0">{{\Illuminate\Support\Carbon::parse($record->created_at)->format('Y-m-d')}}</button></td>
 
