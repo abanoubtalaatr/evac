@@ -35,11 +35,16 @@
             @php
                 $data = \App\Helpers\displayTextInNavbarForOfficeTime(1);
             @endphp
-            @if(!empty($data['prefix']))
-            <span class="d-block text-success fa-3 my-3">{{$data['prefix']}} <strong> {{$data['user']}}</strong> on {{$data['day'] .' '. $data['time']}} </span>
-            @else
-                <span class="d-block text-success fa-3 my-3">Please start your day</span>
-            @endif
+
+{{--            @if(!empty($data['prefix']))--}}
+{{--            <span class="d-block text-success fa-3 my-3">{{$data['prefix']}} <strong> {{$data['user']}}</strong> on {{$data['day'] .' '. $data['time']}} </span>--}}
+{{--            @else--}}
+{{--                <span class="d-block text-success fa-3 my-3">Please start your day</span>--}}
+{{--            @endif--}}
+
+            @foreach($data as $item)
+             <span class="d-block text-success fa-3 my-3">{{$item['prefix']}} <strong> {{$item['user']}}</strong> on {{$item['day'] .' '. $item['time']}} </span>
+            @endforeach
         </div>
     </div>
 

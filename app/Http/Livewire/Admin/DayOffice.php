@@ -12,6 +12,7 @@ use function App\Helpers\checkDayClosed;
 use function App\Helpers\checkDayRestart;
 use function App\Helpers\checkDayStart;
 use function App\Helpers\currentDayForOffice;
+use function App\Helpers\LastDayInExistDatabase;
 
 
 class DayOffice extends Component
@@ -29,15 +30,18 @@ $showSendEmailButton= false, $agent;
     {
         $this->page_title = __('admin.day_office');
 
-        if((currentDayForOffice(1) && checkDayClosed(1)) || checkDayStart(1)) {
-            $this->disabledButtonDayStart = true;
-        }
-
-        $this->disabledButtonDayEnd = checkDayClosed(1);
-
-        if(checkDayRestart(1)) {
+        if(LastDayInExistDatabase()->day_status == '2') {//restart
             $this->disabledButtonDayStart = true;
             $this->disabledButtonDayEnd = false;
+            $this->disabledButtonDayRestartDay  = true;
+        }elseif (LastDayInExistDatabase()->day_status== '1'){ //start
+            $this->disabledButtonDayStart = true;
+            $this->disabledButtonDayRestartDay = false;
+            $this->disabledButtonDayEnd = false;
+        } elseif (LastDayInExistDatabase()->day_status== '0'){ //closed
+            $this->disabledButtonDayStart = false;
+            $this->disabledButtonDayRestartDay = false;
+            $this->disabledButtonDayEnd = true;
         }
 
 
@@ -52,18 +56,14 @@ $showSendEmailButton= false, $agent;
 
     public function startDay()
     {
-        $dayOffice = currentDayForOffice(1);
-
-        if(!$dayOffice) {
-            \App\Models\DayOffice::query()->create([
-                'admin_id' => auth('admin')->id(),
-                'office_id' => 1,
-                'day_start' => Carbon::today(),
-                'start_time' => Carbon::now()->format('H:i:s'),
-                'end_time' => null,
-                'day_status' => '1',
-            ]);
-        }
+        \App\Models\DayOffice::query()->create([
+            'admin_id' => auth('admin')->id(),
+            'office_id' => 1,
+            'day_start' => Carbon::today(),
+            'start_time' => Carbon::now()->format('H:i:s'),
+            'end_time' => null,
+            'day_status' => '1',
+        ]);
 
        return redirect()->to(route('admin.day_office'));
     }
@@ -98,11 +98,13 @@ $showSendEmailButton= false, $agent;
                 'className' => "App\\Http\\Controllers\\Admin\\Reports\\DailyReport\\PrintController",
             ]);
 
+
             (new SendEmailController())->send($request);
 
             $officeDay->update([
                 'end_time' => Carbon::now()->format('H:i:s'),
                 'day_status' => "0",
+                'end_admin_id' => auth('admin')->id()
             ]);
             return redirect()->to(route('admin.day_office'));
         }
@@ -116,6 +118,7 @@ $showSendEmailButton= false, $agent;
         $officeDay->update([
             'restart_at' => Carbon::now()->format('H:i:s'),
             'day_status' => "2",
+            'restart_admin_id' => auth('admin')->id(),
         ]);
         return redirect()->to(route('admin.day_office'));
     }

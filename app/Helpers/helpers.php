@@ -15,8 +15,8 @@ if (!function_exists('checkDayStart')) {
     function checkDayStart($officeId)
     {
         return DayOffice::where('office_id', $officeId)
-            ->where('day_start', Carbon::today())
-            ->where('day_status', '!=', "0")
+            ->latest()
+            ->where('day_status', "1")
             ->exists();
     }
 }
@@ -25,7 +25,7 @@ if (!function_exists('checkDayRestart')) {
     function checkDayRestart($officeId)
     {
         return DayOffice::where('office_id', $officeId)
-            ->where('day_start', Carbon::today())
+            ->latest()
             ->where('day_status', "2")
             ->exists();
     }
@@ -35,9 +35,8 @@ if (!function_exists('checkDayClosed')) {
     function checkDayClosed($officeId)
     {
         return DayOffice::where('office_id', $officeId)
-            ->where('day_start', Carbon::today())
             ->where('day_status', "0")
-
+            ->latest()
             ->exists();
     }
 }
@@ -46,7 +45,7 @@ if (!function_exists('currentDayForOffice')) {
     function currentDayForOffice($officeId)
     {
         return DayOffice::where('office_id', $officeId)
-            ->where('day_start', Carbon::today())
+            ->latest()
             ->first();
     }
 }
@@ -57,37 +56,36 @@ if (!function_exists('displayTextInNavbarForOfficeTime')) {
         $officeDay = currentDayForOffice($officeId);
 
         $data = [];
-        if($officeDay){
-            $data['user'] = Admin::find($officeDay['admin_id'])->name;
+        $lastOpenedDay = LastOpenedDay();
 
-            if($officeDay->day_status == "0") {
-                $data['prefix'] = "Day closed by";
-                $data['day'] = $officeDay->day_start;
-                $data['time'] = $officeDay->end_time;
+        $data[] = [
+            'prefix' => "Day Opened by",
+            'user' => $lastOpenedDay->admin->name,
+            'day' => $lastOpenedDay->day_start,
+            'time' => $lastOpenedDay->start_time,
+        ];
 
+        $lastRow = LastDayInExistDatabase();
+
+        if($lastRow){
+            if($lastRow->day_status == "0"){
+                $data[] = [
+                    'user' => $officeDay->adminCloseDay->name,
+                    'prefix' => "Day closed by",
+                    'day' => $officeDay->day_start,
+                    'time' => $officeDay->end_time,
+                ];
                 return $data;
-            }
-
-            if($officeDay->day_status == "1") {
-                $data['prefix'] = "Day opened by";
-                $data['day'] = $officeDay->day_start;
-                $data['time'] = $officeDay->start_time;
-
-                return $data;
-            }
-            if($officeDay->day_status == "2") {
-                $data['prefix'] = "Day reopened by";
-                $data['day'] = $officeDay->day_start;
-                $data['time'] = $officeDay->restart_at;
-
+            }elseif ($lastRow->day_status == '2'){
+                $data[] = [
+                    'user' => $officeDay->adminRestartDay->name,
+                    'prefix' => "Day reopened by",
+                    'day' => $officeDay->day_start,
+                    'time' => $officeDay->restart_at,
+                ];
                 return $data;
             }
         }
-
-        $data['prefix'] = "";
-        $data['day'] = "";
-        $data['time'] = "";
-        $data['user']= '';
         return $data;
     }
 }
@@ -232,4 +230,34 @@ if (!function_exists('isOwner')) {
        return  auth('admin')->user()->is_owner;
     }
 }
+
+if (!function_exists('LastOpenedDay')) {
+    function LastOpenedDay()
+    {
+        return DayOffice::query()->where('day_status', "1")->latest()->first();
+    }
+}
+
+if (!function_exists('LastClosedDay')) {
+    function LastClosedDay()
+    {
+        return  DayOffice::query()->where('day_status', "0")->latest()->first();
+    }
+}
+
+if (!function_exists('LastReopenedDay')) {
+    function LastReopenedDay()
+    {
+        return  DayOffice::query()->where('day_status', "2")->latest()->first();
+    }
+}
+
+
+if (!function_exists('LastDayInExistDatabase')) {
+    function LastDayInExistDatabase()
+    {
+        return  DayOffice::query()->latest()->first();
+    }
+}
+
 
