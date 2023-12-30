@@ -37,12 +37,14 @@
                     </thead>
                     <tbody>
                     @foreach($records as $record)
+                        @php
+                            $totalAmount = $record->amount + $record->amount_service;
+                        @endphp
+                        @if($totalAmount > 0 && $record->is_active ==1)
                         <tr>
                             <td>#{{$record->id}}</td>
                             <td class='text-center'>{{$record->name}}</td>
-                            @php
-                                $totalAmount = $record->amount + $record->amount_service;
-                            @endphp
+
                             <td class="text-center" >{{$totalAmount??0}}</td>
                             <td class="text-center" >{{$record->amount_paid??0}}</td>
                             <td class="text-center" >
@@ -64,6 +66,7 @@
                                 </div>
                             </td>
                         </tr>
+                        @endif
                     @endforeach
                     </tbody>
                 </table>
