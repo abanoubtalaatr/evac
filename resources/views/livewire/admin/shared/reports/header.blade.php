@@ -1,7 +1,7 @@
 <div>
     @php $settings = \App\Models\Setting::query()->first(); @endphp
     <div class="my-2 text-center">
-        <img class="rounded" height="100" width="200" src="{{asset('uploads/pics/'. $settings->logo??"")}}">
+        <img class="rounded" height="100" width="200" src="{{ url('uploads/pics/'. $settings->logo) }}" alt="Logo">
     </div>
 
     <h4>Evac</h4>
