@@ -58,7 +58,7 @@
         <div class="font-weight-bolder py-3 fa-1x text-center" ><strong>Total Fees : {{$total}} USD  ({{\App\Helpers\convertNumberToWorldsInUsd($total)}} )  {!! $serviceTransaction->payment_method =='invoice'? "<strong class='text-danger'>Unpaid</strong>" :"<strong>Paid</strong>"  !!}</strong> </div>
 
         <div class="text-start">
-            <strong>Service Fees and Sales Tax Included / {{$settings->invoice_footer}}</strong>
+            <strong>{{$settings->invoice_footer}}</strong>
         </div>
 
     </div>
