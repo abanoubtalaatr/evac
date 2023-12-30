@@ -109,7 +109,7 @@
                 <h4>Tel: {{$agent->telephone}}</h4>
 
             @else
-                <button class="btn-primary" style="padding: 4px;border-radius: 4px;>Direct</button>
+                <button class="btn-primary" style="padding: 4px;border-radius: 4px;">Direct</button>
             @endif
 
             @php
