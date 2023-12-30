@@ -1,10 +1,11 @@
 <div class="col-md-12">
     @php
         $visaTypeTotal = 0;
-        $today = \Illuminate\Support\Carbon::now()->toDateString(); // Get the current date
+        $today = \Illuminate\Support\Carbon::parse(\App\Models\DayOffice::query()->latest()->first()->day_start)->format('Y-m-d');
+;
 
     @endphp
-    <h4 class="text-center">Day Report : {{\Illuminate\Support\Carbon::now()->format('Y/m/d')}}</h4>
+    <h4 class="text-center">Day Report : {{\Illuminate\Support\Carbon::parse($today)->format('Y/m/d')}}</h4>
     <div class="card">
         <div class="card-header">
             <h3 class="card-title">Visas</h3>
