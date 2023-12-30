@@ -11,7 +11,7 @@
         <div class="b-btm flex-div-2">
             <h4>{{$page_title}}</h4>
             {{--            <a   style='text-align:center;cursor:pointer' class="button btn-red big {{\App\Helpers\checkDayStart(1)? '':'disable-link bg-secondary'}} " wire:click="emptyForm" id="addServiceTransactionButton">@lang('site.create_new')</a>--}}
-            <a   style='text-align:center;cursor:pointer;background: transparent' class="button btn-red big {{\App\Helpers\checkDayStart(1)? '':'disable-link bg-secondary'}} " wire:click="emptyForm" id="addServiceTransactionButton">@lang('site.create_new')</a>
+            <a   style='text-align:center;cursor:pointer;background: transparent' class="button btn-red big {{\App\Helpers\disableActionsWhereOpenClosed(1)? '':'disable-link bg-secondary'}} " wire:click="emptyForm" id="addServiceTransactionButton">@lang('site.create_new')</a>
 
         </div>
         <div class="table-page-wrap">
@@ -63,6 +63,8 @@
                     <thead>
                     <tr>
                         <th class="text-center">#</th>
+                        <th class="text-center">@lang('admin.service_ref')</th>
+
                         <th class="text-center">@lang('admin.service')</th>
                         <th class="text-center">@lang('admin.agent')</th>
                         <th class="text-center">@lang('admin.passport_no')</th>
@@ -77,6 +79,8 @@
                     @foreach($records as $record)
                         <tr>
                             <td>#{{$loop->index + 1}}</td>
+                            <td class='text-center'>{{$record->service_ref}}</td>
+
                             <td class='text-center'>{{$record->service? $record->service->name:"--"}}</td>
                             <td class='text-center'>{{$record->agent ? $record->agent->name :"--"}}</td>
                             <td class='text-center'>{{$record->passport_no}}</td>
