@@ -225,7 +225,8 @@ class NewServiceTransaction extends Component
 
         $service = Service::query()->find($this->form['service_id']);
         $this->form['dubai_fee'] = $service->dubai_fee;
-        $this->form['service_fee'] = $service->service_fee;
+//        $this->form['service_fee'] = $service->service_fee;
+
         $this->form['status']=  "new";
         ServiceTransaction::query()->create($this->form);
 

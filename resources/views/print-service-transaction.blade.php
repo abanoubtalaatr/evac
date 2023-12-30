@@ -48,7 +48,7 @@
 
         @endif
         @php
-            $total = $serviceTransaction->service_fee + $serviceTransaction->dubai_fee + $serviceTransaction->vat;
+            $total = ($serviceTransaction->service_fee) + ($serviceTransaction->dubai_fee) + $serviceTransaction->vat;
         @endphp
         <div> Amount : {{$total}} USD ({{$serviceTransaction->payment_method}})</div>
 {{--        @if($serviceTransaction->vat >0)--}}
