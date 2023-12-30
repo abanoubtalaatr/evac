@@ -1,7 +1,11 @@
 <div>
-    @php $settings = \App\Models\Setting::query()->first(); @endphp
+    @php
+        $settings = \App\Models\Setting::query()->first();
+       $logoPath = public_path('uploads/pics/' . $settings->logo);
+
+    @endphp
     <div class="my-2 text-center">
-        <img class="rounded" height="100" width="200" src="{{ url('public/uploads/pics/'. $settings->logo) }}" alt="Logo">
+        <img src="{{ $message->embed('logo') }}" alt="Logo">
     </div>
 
     <h4>Evac</h4>
