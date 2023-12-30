@@ -84,15 +84,10 @@ class Application extends Component
                 ->latest()
                 ->get();
         } else {
-            if ($this->agent === null) {
+            if ($this->agent === null || empty($this->agent)) {
                 return ['applications' => [], 'serviceTransactions' => []];
-
             }
 
-            if(empty($this->agent)){
-                return ['applications' => [], 'serviceTransactions' => []];
-
-            }
             $data['applications'] = \App\Models\Application::query()
                 ->when($this->agent !== 'no_result', function ($query) {
                     $query->where('travel_agent_id', $this->agent);
@@ -101,7 +96,8 @@ class Application extends Component
                     $query->where('travel_agent_id', '>', 0);
                 })
                 ->when(!empty($this->from) && !empty($this->to), function ($query) {
-                    $query->whereBetween('created_at', [$this->from, $this->to]);
+                    $query->whereDate('created_at', '>=', $this->from)
+                        ->whereDate('created_at', '<=', $this->to);
                 })
                 ->latest()
                 ->get();
@@ -114,7 +110,8 @@ class Application extends Component
                     $query->where('agent_id', '>', 0);
                 })
                 ->when(!empty($this->from) && !empty($this->to), function ($query) {
-                    $query->whereBetween('created_at', [$this->from, $this->to]);
+                    $query->whereDate('created_at', '>=', $this->from)
+                        ->whereDate('created_at', '<=', $this->to);
                 })
                 ->latest()
                 ->get();
