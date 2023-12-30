@@ -47,6 +47,8 @@
                     <label for="status-select">@lang('admin.status')</label>
                     <select wire:model='status' id='status-select' class="form-control border  contact-input">
                         <option value>@lang('admin.choose')</option>
+                        <option value="new">new</option>
+
                         <option value="all">All</option>
 
                         <option value="deleted">Deleted</option>
