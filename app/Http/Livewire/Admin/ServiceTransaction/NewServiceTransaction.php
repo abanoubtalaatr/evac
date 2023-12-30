@@ -167,7 +167,7 @@ class NewServiceTransaction extends Component
         return ServiceTransaction::query()
             ->when(isset($this->status), function ($query){
                 if($this->status == "all"){
-                    $query->whereIn('status', ['new', 'null', null]);
+                    $query->whereIn('status', ['new', 'null'])->orWhereNull('status');
                 }else{
                     $query->where('status', $this->status);
                 }
