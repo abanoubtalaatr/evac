@@ -5,7 +5,7 @@
 
     @endphp
     <div class="my-2 text-center">
-        <img src="data:image/png;base64,{{ base64_encode(file_get_contents($logoPath)) }}">
+        <img width="200" height="200" src="data:image/png;base64,{{ base64_encode(file_get_contents($logoPath)) }}">
     </div>
 
     <h4>Evac</h4>
