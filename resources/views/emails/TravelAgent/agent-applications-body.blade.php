@@ -1,23 +1,23 @@
 <div>
+    @php
+    $settings = \App\Models\Setting::query()->first();
+ @endphp
     Dear Business Partner,
     <br>
-    Greetings from EVAC!
+    Greeting from EVAC.
     <br>
-    Kindly find attached your applications report till date .
+    Kindly find attached your applications report till date.
     <br>
     Best regards,
     <br>
-    Jhonny Salem
+    Johnny Salem
     <br>
     Managing Director
     <br>
     Emirates Visa Application Center
     <br>
-    Diyarna Center – Ground Floor
+    {{$settings->address}}
     <br>
-    Zakrit – Lebanon
+    {{$settings->mobile}}
     <br>
-    Tel: +961 4 93 00 42
-    <br>
-    Mob: +961 71 77 52 66 / +961 3 04 81 29
 </div>
