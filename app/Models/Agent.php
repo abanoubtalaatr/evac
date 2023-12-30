@@ -20,6 +20,11 @@ class Agent extends Model
     {
         $query->where('is_visible', 1);
     }
+
+    public function scopeIsActive($query)
+    {
+        $query->where('is_active', 1);
+    }
     public function paymentTransactions()
     {
         return $this->hasMany(PaymentTransaction::class);

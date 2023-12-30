@@ -45,9 +45,9 @@ class Index extends Component
         $this->page_title = __('admin.service_transactions');
         $this->services = Service::query()->get();
         if(isOwner()){
-            $this->agents = Agent::query()->orderBy('name')->get();
+            $this->agents = Agent::query()->isActive()->orderBy('name')->get();
         }else{
-            $this->agents = Agent::owner()->orderBy('name')->get();
+            $this->agents = Agent::owner()->isActive()->orderBy('name')->get();
 
         }
         if(!$this->serviceTransaction){

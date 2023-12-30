@@ -28,7 +28,6 @@ class Appraisal extends Component
     {
         return Application::query()
             ->where('status', 'new')
-
             ->when(!empty($this->visaType), function ($query) {
                 return  $query->where('visa_type_id', $this->visaType);
             })
