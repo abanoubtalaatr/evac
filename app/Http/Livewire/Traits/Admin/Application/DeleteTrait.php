@@ -20,7 +20,7 @@ trait DeleteTrait
         $this->deleteRecordId = $recordId;
     }
 
-    public function delete()
+    public function deleteApplication()
     {
         $application = Application::query()->find($this->deleteRecordId);
         $application->delete();
@@ -29,8 +29,7 @@ trait DeleteTrait
 
     public function validateAndDelete($recordId)
     {
-        $application = Application::query()->find($recordId);
-
+        $application = Application::query()->find($this->deleteRecordId);
         $this->validate([
             'reasonForDeletion' => 'required|string|max:255', // Adjust the validation rules as needed
         ]);
@@ -48,7 +47,7 @@ trait DeleteTrait
             'last_app_status' => $application->status,
         ]);
 
-        $this->delete();
+        $this->deleteApplication();
 
         $this->reasonForDeletion = '';
     }
