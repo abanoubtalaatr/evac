@@ -164,37 +164,41 @@ class NewServiceTransaction extends Component
     }
     public function getRecords()
     {
-        return ServiceTransaction::query()
-            ->when(isset($this->status), function ($query){
-                if($this->status == "all"){
-                    $query->whereIn('status', ['new', 'null'])->orWhereNull('status');
-                }else{
-                    $query->where('status', $this->status);
-                }
-            })
+        $query = ServiceTransaction::query()
             ->when(!empty($this->name), function ($query) {
-                $query->where('name', 'like', '%'.$this->name.'%');
-            })->when(!empty($this->surname), function ($query){
-                $query->where('surname', 'like', '%'.$this->surname.'%');
-            })->when(!empty($this->passport), function ($query){
-                $query->where('passport_no', 'like', '%'.$this->passport.'%');
-            })->when(!empty($this->agent), function ($query){
-                if($this->agent =='no_result'){
-                    $query->where('agent_id', '>', 0);
-                }else{
-                    $query->where('agent_id', $this->agent);
-                }
-            })->when(!empty($this->service), function ($query){
-                $query->whereHas('service', function ($query){
-                    $query->where('name', 'like', '%'.$this->service.'%');
+                $query->where('name', 'like', '%' . $this->name . '%');
+            })
+            ->when(!empty($this->surname), function ($query) {
+                $query->where('surname', 'like', '%' . $this->surname . '%');
+            })
+            ->when(!empty($this->passport), function ($query) {
+                $query->where('passport_no', 'like', '%' . $this->passport . '%');
+            })
+            ->when(!empty($this->service), function ($query) {
+                $query->whereHas('service', function ($query) {
+                    $query->where('name', 'like', '%' . $this->service . '%');
                 });
-            })->when(!empty($this->from) && !empty($this->to), function ($query) {
+            })
+            ->when(!empty($this->from) && !empty($this->to), function ($query) {
                 $query->whereDate('created_at', '>=', $this->from)
                     ->whereDate('created_at', '<=', $this->to);
             })
+            ->when(isset($this->status), function ($query) {
+                if ($this->status == "all") {
+                    if (!empty($this->agent) && $this->agent != 'no_result') {
+                        // If agent is provided, get all service transactions for that agent
+                        $query->where('agent_id', $this->agent);
+                    }
+                } else {
+                    // If a specific status is selected, filter by both status and agent if provided
+                    $query->where('status', $this->status);
+                    if (!empty($this->agent) && $this->agent != 'no_result') {
+                        $query->where('agent_id', $this->agent);
+                    }
+                }
+            });
 
-            ->latest()
-            ->paginate(50);
+        return $query->latest()->paginate(50);
     }
 
     public function unDestroy(ServiceTransaction $serviceTransaction)
