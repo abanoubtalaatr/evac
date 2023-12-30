@@ -5,7 +5,7 @@
 
     @endphp
     <div class="my-2 text-center">
-        <img src="{{ $message->embed('logo') }}" alt="Logo">
+        <img src="{{$logoPath }}" alt="Logo">
     </div>
 
     <h4>Evac</h4>
