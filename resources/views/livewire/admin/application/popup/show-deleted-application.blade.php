@@ -15,7 +15,7 @@
                     <div class="col-12">
                         <div class="form-group  ">
                             <label class="" for="visaType">Travel agent :</label>
-                            <input class="border-0" readonly value="{{$application->agent? $application->agent->name:""}}" />
+                            <input class="border-0" readonly value="{{$application->agent? $application->agent->name:"Direct"}}" />
                         </div>
                     </div>
 
