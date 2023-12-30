@@ -33,7 +33,7 @@ class NewServiceTransaction extends Component
     public $perPage =10;
     public $services, $agents;
     public $serviceTransaction, $formInvoice;
-    public $status = null, $showSendEmail,$serviceTransactionThatSendByEmail, $email;
+    public $status = "new", $showSendEmail,$serviceTransactionThatSendByEmail, $email;
 
     protected $paginationTheme = 'bootstrap';
 
@@ -52,8 +52,6 @@ class NewServiceTransaction extends Component
         if(!$this->serviceTransaction){
             $this->form['payment_method'] = 'invoice';
         }
-        $this->from = Carbon::today()->format('Y-m-d');
-        $this->to = Carbon::today()->format('Y-m-d');
     }
 
     public function updatedFormServiceId()
@@ -167,7 +165,13 @@ class NewServiceTransaction extends Component
     public function getRecords()
     {
         return ServiceTransaction::query()
-            ->where('status', 'new')
+            ->when(isset($this->status), function ($query){
+                if($this->status == "all"){
+                    $query->whereIn('status', ['new', 'null']);
+                }else{
+                    $query->where('status', $this->status);
+                }
+            })
             ->when(!empty($this->name), function ($query) {
                 $query->where('name', 'like', '%'.$this->name.'%');
             })->when(!empty($this->surname), function ($query){
