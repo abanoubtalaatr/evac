@@ -99,8 +99,8 @@
             @php
                 $agent = \App\Models\Agent::query()->find(request()->agent);
              @endphp
-            @if(request()->fromDate && request()->toDate)
-                <h4>From : {{request()->fromDate}} : to: {{request()->toDate}}</h4>
+            @if(request()->fromDateDate && request()->toDate)
+                <h4>fromDate : {{request()->fromDateDate}} : to: {{request()->toDate}}</h4>
             @endif
             @if($agent)
                 <h4>Agent : {{$agent->name}}</h4>
@@ -114,52 +114,55 @@
 
             @php
                 if (request()->isDirect) {
-                         $data['applications'] = \App\Models\Application::query()
-                             ->whereNull('travel_agent_id')
-                             ->when(!empty(request()->from) && !empty(request()->to), function ($query) {
-                                 $query->whereBetween('created_at', [request()->from, request()->to]);
-                             })
-                             ->latest()
-                             ->get();
+           $data['applications'] = \App\Models\Application::query()
+               ->whereNull('travel_agent_id')
+               ->when(!empty(request()->fromDate) && !empty(request()->toDate), function ($query) {
+                   $query->whereBetween('created_at', [request()->fromDate, request()->toDate]);
+               })
+               ->latest()
+               ->get();
 
-                         $data['serviceTransactions'] = \App\Models\ServiceTransaction::query()
-                             ->whereNull('agent_id')
-                             ->when(!empty(request()->from) && !empty(request()->to), function ($query) {
-                                 $query->whereBetween('created_at', [request()->from, request()->to]);
-                             })
-                             ->latest()
-                             ->get();
-                     } else {
-                         if (request()->agent === null) {
-                             return ['applications' => [], 'serviceTransactions' => []];
-                         }
+           $data['serviceTransactions'] = \App\Models\ServiceTransaction::query()
+               ->whereNull('agent_id')
+               ->when(!empty(request()->fromDate) && !empty(request()->toDate), function ($query) {
+                   $query->whereBetween('created_at', [request()->fromDate, request()->toDate]);
+               })
+               ->latest()
+               ->get();
+       } else {
+           if (request()->agent === null || empty(request()->agent)) {
+               return ['applications' => [], 'serviceTransactions' => []];
+           }
 
-                         $data['applications'] = \App\Models\Application::query()
-                             ->when(request()->agent !== 'no_result', function ($query) {
-                                 $query->where('travel_agent_id', request()->agent);
-                             })
-                             ->when(request()->agent === 'no_result', function ($query) {
-                                 $query->where('travel_agent_id', '>', 0);
-                             })
-                             ->when(!empty(request()->from) && !empty(request()->to), function ($query) {
-                                 $query->whereBetween('created_at', [request()->from, request()->to]);
-                             })
-                             ->latest()
-                             ->get();
+           $data['applications'] = \App\Models\Application::query()
+               ->when(request()->agent !== 'no_result', function ($query) {
+                   $query->where('travel_agent_id', request()->agent);
+               })
+               ->when(request()->agent === 'no_result', function ($query) {
+                   $query->where('travel_agent_id', '>', 0);
+               })
+               ->when(!empty(request()->fromDate) && !empty(request()->toDate), function ($query) {
+                   $query->whereDate('created_at', '>=', request()->fromDate)
+                       ->whereDate('created_at', '<=', request()->toDate);
+               })
+               ->latest()
+               ->get();
 
-                         $data['serviceTransactions'] = \App\Models\ServiceTransaction::query()
-                             ->when(request()->agent !== 'no_result', function ($query) {
-                                 $query->where('agent_id', request()->agent);
-                             })
-                             ->when(request()->agent === 'no_result', function ($query) {
-                                 $query->where('agent_id', '>', 0);
-                             })
-                             ->when(!empty(request()->from) && !empty(request()->to), function ($query) {
-                                 $query->whereBetween('created_at', [request()->from, request()->to]);
-                             })
-                             ->latest()
-                             ->get();
-                     }
+           $data['serviceTransactions'] = \App\Models\ServiceTransaction::query()
+               ->when(request()->agent !== 'no_result', function ($query) {
+                   $query->where('agent_id', request()->agent);
+               })
+               ->when(request()->agent === 'no_result', function ($query) {
+                   $query->where('agent_id', '>', 0);
+               })
+               ->when(!empty(request()->fromDate) && !empty(request()->toDate), function ($query) {
+                   $query->whereDate('created_at', '>=', request()->fromDate)
+                       ->whereDate('created_at', '<=', request()->toDate);
+               })
+               ->latest()
+               ->get();
+       }
+
  @endphp
             @if(count($data['applications']) || count($data['serviceTransactions']))
                 <table class="table-page table">
