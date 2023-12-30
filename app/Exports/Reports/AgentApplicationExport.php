@@ -34,9 +34,10 @@ class AgentApplicationExport implements FromCollection, ShouldAutoSize
             'Date' => 'Date',
         ];
 
+        $count =1;
         foreach ($this->data['applications'] as $application) {
             $dataRows[] = [
-                'ID' => $application->id,
+                'ID' => $count++,
                 'Description' => $application->application_ref .' '.  $application->first_name . ' ' . $application->last_name,
                 'Type' => $application->visaType->name,
                 'Date' => Carbon::parse($application->created_at)->format('Y-m-d'),
@@ -44,7 +45,7 @@ class AgentApplicationExport implements FromCollection, ShouldAutoSize
         }
         foreach ($this->data['serviceTransactions'] as $serviceTransaction) {
             $dataRows[] = [
-                'ID' => $serviceTransaction->id,
+                'ID' => $count++,
                 'Description' =>$serviceTransaction->service_ref . ' - '.  $serviceTransaction->name .' '.  $serviceTransaction->surname,
                 'Type' => $serviceTransaction->service->name,
                 'Date' => Carbon::parse($serviceTransaction->created_at)->format('Y-m-d'),
