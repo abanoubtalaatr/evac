@@ -149,8 +149,9 @@ class Application extends Component
         }
         $this->email = null;
         $this->message = null;
-        $this->agent = null;
-        return redirect()->to(route('admin.travel_agent_applications'));
+        $this->toggleShowModal();
+//        $this->agent = null;
+//        return redirect()->to(route('admin.travel_agent_applications'));
     }
 
 
