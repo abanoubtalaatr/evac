@@ -18,7 +18,7 @@ class Index extends Component
 
     public $name;
 
-    public $is_active;
+    public $is_active = '1';
     public $perPage =10;
     public $search;
     public $agent,$rowNumber;
@@ -72,6 +72,7 @@ class Index extends Component
                     $query->where('id', $this->agent);
                 }
             })
+            ->orderBy('name')
             ->latest()
             ->paginate(50);
     }
