@@ -40,6 +40,8 @@
                     <thead>
                     <tr>
                         <th class="text-center">#</th>
+                        <th class="text-center">@lang('admin.application_ref')</th>
+
                         <th class="text-center">@lang('admin.passport')</th>
                         <th class="text-center">@lang('admin.applicant')</th>
                         <th class="text-center">@lang('admin.deleted_date')</th>
@@ -52,6 +54,7 @@
                     @foreach($records as $record)
                         <tr>
                             <td>#{{$loop->index + 1}}</td>
+                            <td class='text-center'>{{$record->reference_no}}</td>
                             <td class='text-center'>{{$record->passport_no}}</td>
                             <td class='text-center'>{{$record->applicant_name}}</td>
                             <td class='text-center'>{{\Carbon\Carbon::parse($record->deletion_date)->format('Y-m-d h:m')}}</td>

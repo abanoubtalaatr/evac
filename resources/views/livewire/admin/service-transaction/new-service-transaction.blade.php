@@ -63,6 +63,8 @@
                     <thead>
                     <tr>
                         <th class="text-center">#</th>
+                        <th class="text-center">@lang('admin.service_ref')</th>
+
                         <th class="text-center">@lang('admin.service')</th>
                         <th class="text-center">@lang('admin.agent')</th>
                         <th class="text-center">@lang('admin.passport_no')</th>
@@ -77,6 +79,8 @@
                     @foreach($records as $record)
                         <tr>
                             <td>#{{$loop->index + 1}}</td>
+                            <td class='text-center'>{{$record->service_ref}}</td>
+
                             <td class='text-center'>{{$record->service? $record->service->name:"--"}}</td>
                             <td class='text-center'>{{$record->agent ? $record->agent->name :"--"}}</td>
                             <td class='text-center'>{{$record->passport_no}}</td>
