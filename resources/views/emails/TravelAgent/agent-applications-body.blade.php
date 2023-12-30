@@ -6,11 +6,11 @@
     <br>
     <span style="margin-bottom: 10px"> Greeting from EVAC.</span>
     <br>
+    <br>
     <span style="margin-bottom: 10px">    Kindly find attached your applications report till date.</span>
     <br>
+    <br>
 <span style="margin-bottom: 10px">    Best regards,</span>
-    <br>
-    <br>
     <br>
     <br>
     Johnny Salem
