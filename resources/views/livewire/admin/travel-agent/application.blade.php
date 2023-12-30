@@ -60,7 +60,7 @@
                     @foreach($records['serviceTransactions'] as $record)
                         <tr>
                             <td>#{{$loop->index + 1}}</td>
-                            <td class='text-center'>{{$record->service_ref . $record->name . ' - '. $record->surname }} (service)</td>
+                            <td class='text-center'>{{$record->service_ref .' - '. $record->name . ' - '. $record->surname }} (service)</td>
                             <td class='text-center'>{{ $record->service->name}}</td>
                             <td class='text-center'><button class="border-0">{{\Illuminate\Support\Carbon::parse($record->created_at)->format('Y-m-d')}}</button></td>
 
