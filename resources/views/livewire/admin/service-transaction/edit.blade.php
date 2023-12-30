@@ -11,6 +11,12 @@
             </div>
 
             <div class="modal-body">
+
+                <div class="form-group my-2">
+                    <label for="service_ref">Service ref : </label>
+                    <input type="text" wire:model="form.service_ref" class="form-control" id="service_ref">
+                    @error('form.service_ref')<p style='color:red'> {{$message}} </p>@enderror
+                </div>
                 <div class="form-group my-2 ">
                     <label class="" for="service_id">Service : </label>
                     <select wire:model="form.service_id" class="w-100 p-2 rounded" style="border: 1px solid !important;" id="service_id">
