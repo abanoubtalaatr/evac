@@ -74,6 +74,10 @@
                                     <a style="cursor:pointer;" wire:click="showAgent({{$record->id}})" class="no-btn"><i
                                             class="far fa-edit blue"></i></a>
 
+                                    @if(\App\Helpers\isOwner() && $record->is_visible==0)
+                                        <i class="fas fa-eye"></i>
+                                    @endif
+
                                 </div>
                             </td>
                             @endforeach
