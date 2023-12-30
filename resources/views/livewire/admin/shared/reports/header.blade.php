@@ -5,7 +5,7 @@
 
     @endphp
     <div class="my-2 text-center">
-        <img src="{{$logoPath }}" alt="Logo">
+        <img src="https://dev.evaclb.com/uploads/pics/2023/11/17/BSDdW4RdKoI2yaILbTHgPAkNS3M3VY96c1NDp5Gt7TPXvv5NwX.png" alt="" style="width: 150px; height: 150px;">
     </div>
 
     <h4>Evac</h4>
