@@ -157,15 +157,16 @@ class AgentInvoice extends Component
 
     public function getRecords($export= false)
     {
+        if(!$this->agent && !$this->from && !$this->to){
+            return [];
+        }
         if($export) {
-
             $agentData = $this->getAgentData($this->agent, $this->from, $this->to);
             $agentData['agent'] = Agent::query()->find($this->agent); // Add agent_id to the data
             $data['agents'][] = $agentData;
             return $data;
         }
             if ($this->agent && !is_null($this->agent) && $this->agent !='no_result') {
-
                 $agentData = $this->getAgentData($this->agent, $this->from, $this->to);
                 $agentData['agent'] = Agent::query()->find($this->agent); // Add agent_id to the data
                 $data['agents'][] = $agentData;
