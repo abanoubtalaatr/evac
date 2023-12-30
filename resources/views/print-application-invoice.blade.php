@@ -43,10 +43,10 @@
                 <div class="heading mx-10">Reg No : {{$settings->registration_no??''}} - </div>
             @endif
             <div class="heading mx-10">Tel : {{$settings->mobile??''}}</div>
-
-        @if(isset($settings->vat_no) && !empty($settings->vat_no))
-                <div>Vat registration : {{ $settings->vat_no}}</div>
-            @endif
+{{--            --}}
+{{--            @if(isset($settings->vat_no) && !empty($settings->vat_no))--}}
+{{--                <div>Vat registration : {{ $settings->vat_no}}</div>--}}
+{{--            @endif--}}
 
         </div>
         <div class="border-dotted border-top-0 border-right-0 border-left-0 mt-3 invoice-heading" >
@@ -77,8 +77,8 @@
             </div>
 
             <div>
-                Service fees   + <span>VAT  % :  </span>
-
+                Service fees :
+{{--                + <span>VAT  % :  </span>--}}
                   {{\App\Helpers\formatCurrency($application->service_fee + $application->vat)}} USD
             </div>
         </div>
