@@ -117,16 +117,18 @@
                          $data['applications'] = \App\Models\Application::query()
                              ->whereNull('travel_agent_id')
                              ->when(!empty(request()->fromDate) && !empty(request()->toDate), function ($query) {
-                                 $query->whereBetween('created_at', [request()->fromDate, request()->toDate]);
-                             })
+                    $query->whereDate('created_at', '>=', request()->fromDate)
+                        ->whereDate('created_at', '<=', request()->fromDate);
+                })
                              ->latest()
                              ->get();
 
                          $data['serviceTransactions'] = \App\Models\ServiceTransaction::query()
                              ->whereNull('agent_id')
                              ->when(!empty(request()->fromDate) && !empty(request()->toDate), function ($query) {
-                                 $query->whereBetween('created_at', [request()->fromDate, request()->toDate]);
-                             })
+                    $query->whereDate('created_at', '>=', request()->fromDate)
+                        ->whereDate('created_at', '<=', request()->toDate);
+                })
                              ->latest()
                              ->get();
                      } else {

@@ -71,7 +71,8 @@ class Application extends Component
             $data['applications'] = \App\Models\Application::query()
                 ->whereNull('travel_agent_id')
                 ->when(!empty($this->from) && !empty($this->to), function ($query) {
-                    $query->whereBetween('created_at', [$this->from, $this->to]);
+                    $query->whereDate('created_at', '>=', $this->from)
+                        ->whereDate('created_at', '<=', $this->to);
                 })
                 ->latest()
                 ->get();
@@ -79,7 +80,8 @@ class Application extends Component
             $data['serviceTransactions'] = ServiceTransaction::query()
                 ->whereNull('agent_id')
                 ->when(!empty($this->from) && !empty($this->to), function ($query) {
-                    $query->whereBetween('created_at', [$this->from, $this->to]);
+                    $query->whereDate('created_at', '>=', $this->from)
+                        ->whereDate('created_at', '<=', $this->to);
                 })
                 ->latest()
                 ->get();

@@ -73,6 +73,7 @@ class PaymentTransaction extends Component
                     DB::raw('(SELECT SUM(COALESCE(amount, 0)) FROM service_transactions WHERE service_transactions.agent_id = agents.id) as amount_service')
                 )
                 ->groupBy('agents.id')
+                ->orderBy('agents.name') // Add this line to order by agent name
                 ->latest()
                 ->paginate(50);
         }
