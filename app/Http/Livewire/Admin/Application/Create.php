@@ -229,8 +229,8 @@ class Create extends Component
             if ($existingPassport) {
 
                 $this->form['expiry_date'] = Carbon::parse($existingPassport->expiry_date)->format('Y-m-d');
-                $this->form['first_name'] = $existingPassport->first_name;
-                $this->form['last_name'] = $existingPassport->last_name;
+                $this->form['first_name'] = $existingPassport->name;
+                $this->form['last_name'] = $existingPassport->surname;
 
             }else{
                 $this->form['expiry_date'] =null;
