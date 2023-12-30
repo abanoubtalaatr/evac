@@ -12,6 +12,11 @@
         <div class="row mt-30">
 
             <div class="col-6">
+                <label for="passport_no" class="">Application ref:</label>
+                <input type="text" class="form-control" wire:model="form.application_ref" >
+                @error('form.application_ref')<p style="color: red;">{{ $message }}</p>@enderror
+            </div>
+            <div class="col-6">
                 <div class="form-group my-2 ">
                     <label class="" for="visaType">Visa Type:</label>
                     <select wire:model="form.visa_type_id" class="form-control" id="visaType">
