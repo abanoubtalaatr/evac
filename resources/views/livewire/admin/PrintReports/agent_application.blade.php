@@ -143,9 +143,10 @@
                              ->when(request()->agent === 'no_result', function ($query) {
                                  $query->where('travel_agent_id', '>', 0);
                              })
-                             ->when(!empty(request()->fromDate) && !empty(request()->toDate), function ($query) {
-                                 $query->whereBetween('created_at', [request()->fromDate, request()->toDate]);
-                             })
+                                        ->when(!empty(request()->fromDate) && !empty(request()->toDate), function ($query) {
+                    $query->whereDate('created_at', '>=', request()->fromDate)
+                        ->whereDate('created_at', '<=', request()->toDate);
+                })
                              ->latest()
                              ->get();
 
@@ -156,9 +157,10 @@
                              ->when(request()->agent === 'no_result', function ($query) {
                                  $query->where('agent_id', '>', 0);
                              })
-                             ->when(!empty(request()->fromDate) && !empty(request()->toDate), function ($query) {
-                                 $query->whereBetween('created_at', [request()->fromDate, request()->toDate]);
-                             })
+                                        ->when(!empty(request()->fromDate) && !empty(request()->toDate), function ($query) {
+                    $query->whereDate('created_at', '>=', request()->fromDate)
+                        ->whereDate('created_at', '<=', request()->toDate);
+                })
                              ->latest()
                              ->get();
                      }
