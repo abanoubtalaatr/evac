@@ -4,11 +4,11 @@
  @endphp
     Dear Business Partner,
     <br>
-    Greeting from EVAC.
+    <span style="margin-bottom: 10px"> Greeting from EVAC.</span>
     <br>
-    Kindly find attached your applications report till date.
+    <span style="margin-bottom: 10px">    Kindly find attached your applications report till date.</span>
     <br>
-    Best regards,
+<span style="margin-bottom: 10px">    Best regards,</span>
     <br>
     Johnny Salem
     <br>
