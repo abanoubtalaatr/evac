@@ -5,6 +5,7 @@ namespace App\Http\Livewire\Admin\Application;
 use App\Http\Livewire\Traits\Admin\Application\ApplicationChecks;
 use App\Http\Livewire\Traits\ValidationTrait;
 use App\Models\Agent;
+use App\Models\Applicant;
 use App\Models\Application;
 use App\Models\BlackListPassport;
 use App\Models\Setting;
@@ -223,7 +224,7 @@ class Create extends Component
 
         if ($this->form['passport_no'] !== '') {
 
-        $existingPassport = Application::where('passport_no', strtolower($this->form['passport_no']))->latest()->first();
+        $existingPassport = Applicant::where('passport_no', strtolower($this->form['passport_no']))->latest()->first();
 
             if ($existingPassport) {
 
