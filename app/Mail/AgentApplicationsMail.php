@@ -28,7 +28,6 @@ class AgentApplicationsMail extends Mailable
         return $this->attachData($this->generatePdf(), 'application_records.pdf')
             ->subject("EVAC - "   .$name. " - Application Report")
             ->view('emails.TravelAgent.agent-applications-body');
-
     }
 
     private function generatePdf()
