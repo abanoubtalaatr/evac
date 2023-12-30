@@ -27,9 +27,9 @@
         @if(!empty($settings->registration_no))
         <div>Registration No : {{$settings->registration_no??''}}</div>
         @endif
-        @if(isset($settings->vat_no) && !empty($settings->vat_no))
-            <div>Vat registration : {{$settings->vat_no}}</div>
-        @endif
+{{--        @if(isset($settings->vat_no) && !empty($settings->vat_no))--}}
+{{--            <div>Vat registration : {{$settings->vat_no}}</div>--}}
+{{--        @endif--}}
 
         <div class="border-dotted border-top-0 border-right-0 border-left-0 mt-3"><strong class="">Invoice / Receipt</strong></div>
         <div class="fa-3x">------------------</div>
@@ -51,9 +51,9 @@
             $total = $serviceTransaction->service_fee + $serviceTransaction->dubai_fee + $serviceTransaction->vat;
         @endphp
         <div> Amount : {{$total}} USD ({{$serviceTransaction->payment_method}})</div>
-        @if($serviceTransaction->vat >0)
-            <div>VAT : {{\App\Helpers\formatCurrency($serviceTransaction->vat)}} </div>
-        @endif
+{{--        @if($serviceTransaction->vat >0)--}}
+{{--            <div>VAT : {{\App\Helpers\formatCurrency($serviceTransaction->vat)}} </div>--}}
+{{--        @endif--}}
 
         <div class="font-weight-bolder py-3 fa-1x text-center" ><strong>Total Fees : {{$total}} USD  ({{\App\Helpers\convertNumberToWorldsInUsd($total)}} )  {!! $serviceTransaction->payment_method =='invoice'? "<strong class='text-danger'>Unpaid</strong>" :"<strong>Paid</strong>"  !!}</strong> </div>
 
