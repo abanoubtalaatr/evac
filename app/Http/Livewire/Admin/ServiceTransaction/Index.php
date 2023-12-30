@@ -53,6 +53,9 @@ class Index extends Component
         if(!$this->serviceTransaction){
             $this->form['payment_method'] = 'invoice';
         }
+
+        $this->from = Carbon::today()->format('Y-m-d');
+        $this->to = Carbon::today()->format('Y-m-d');
     }
 
     public function updatedFormServiceId()
@@ -194,7 +197,8 @@ class Index extends Component
                     $query->where('name', 'like', '%'.$this->service.'%');
                 });
             })->when(!empty($this->from) && !empty($this->to), function ($query) {
-                $query->whereBetween('created_at', [$this->from, $this->to]);
+                $query->whereDate('created_at', '>=', $this->from)
+                    ->whereDate('created_at', '<=', $this->to);
             })
             ->when(is_null($this->status), function ($query){
                 $query->where('status', null);
