@@ -49,12 +49,7 @@
             $total = $serviceTransaction->service_fee + $serviceTransaction->dubai_fee + $serviceTransaction->vat;
         @endphp
         <div> Amount : {{$total}} USD ({{$serviceTransaction->payment_method}})</div>
-        @if($serviceTransaction->vat >0)
-            <div>VAT : {{\App\Helpers\formatCurrency($serviceTransaction->vat)}} </div>
-        @endif
 
-
-        <div>Service fee and sales tax included</div>
         <div>Fees in words : {{\App\Helpers\convertNumberToWorldsInUsd($total)}} </div>
         <div class="mt-2">
             <p>{{$settings->invoice_footer}}</p>

@@ -27,9 +27,6 @@
         @if(isset($settings->registration_no) && !empty($settings->registration_no))
             <div>Registration No : {{$settings->registration_no??''}}</div>
         @endif
-        @if(isset($settings->vat_no) && !empty($settings->vat_no))
-            <div>Vat registration : {{$settings->vat_no}}</div>
-        @endif
 
         <div class="border-dotted border-top-0 border-right-0 border-left-0 mt-3"><strong class="">Invoice Receipt</strong></div>
         <div class="fa-3x">------------------</div>
@@ -53,14 +50,11 @@
         </div>
         <div>Visa fees  : {{\App\Helpers\formatCurrency($application->visaType->dubai_fee)}}</div>
         <div>Service fees  : {{\App\Helpers\formatCurrency($application->visaType->service_fee)}}</div>
-        @if($application->vat > 0)
-            <div>VAT : {{\App\Helpers\formatCurrency($application->vat)}} </div>
-        @endif
+
         @php
             $total = $application->dubai_fee + $application->service_fee + $application->vat;
         @endphp
         <div class="font-weight-bolder" style="font-weight: bolder">Total Fees : {{$total}} USD ({{$application->payment_method}})</div>
-        <div class="mt-2">Service fees and sales tax included</div>
         <div>Fees in words : {{\App\Helpers\convertNumberToWorldsInUsd($total)}} </div>
         <div class="mt-2">
             <p>{{$settings->invoice_footer}}</p>
