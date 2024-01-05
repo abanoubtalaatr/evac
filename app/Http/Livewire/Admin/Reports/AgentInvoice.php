@@ -61,6 +61,7 @@ class AgentInvoice extends Component
         $this->disableSendForAdminsButton = true;
         $settings = Setting::query()->first();
         $emails = explode(',', $settings->email);
+
         $data = (new AgentInvoiceService())->getRecords(null, $this->from, $this->to);
         foreach ($emails as $email){
             foreach ($data['agents'] as $agent){
