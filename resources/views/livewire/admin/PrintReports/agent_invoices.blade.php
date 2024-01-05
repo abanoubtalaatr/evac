@@ -124,51 +124,12 @@
             <h4>Date : {{\Illuminate\Support\Carbon::today()->format('Y-m-d')}}</h4>
             <h4>INV No: {{\Illuminate\Support\Carbon::parse(now())->format('Y/m/d')}}</h4>
 
-
-        @if(request()->fromDate && request()->toDate)
+            @if(request()->fromDate && request()->toDate)
                 <h4>From : {{request()->fromDate}} - To : {{request()->toDate}}</h4>
             @endif
-
             @php
-                if (request()->agent && !is_null(request()->agent) && request()->agent !='no_result') {
-                    $data = ['visas' => [], 'services' => []];
-
-                    $visas = \App\Models\VisaType::query()->get();
-
-                    foreach ($visas as $visa) {
-                        $applications = \App\Models\Application::query()
-                            ->where('visa_type_id', $visa->id)
-                            ->where('travel_agent_id', request()->agent);
-
-                        if (request()->fromDate && request()->toDate) {
-                            $applications->whereBetween('created_at', [request()->fromDate, request()->toDate . ' 23:59:59']);
-                        }
-
-                        $applications = $applications->get(); // Assign the results to the variable
-
-                        $visa->qty = $applications->count();
-                        $data['visas'][] = $visa;
-                    }
-
-                    $services = \App\Models\Service::query()->get();
-
-                    foreach ($services as $service) {
-                        $serviceTransactions = \App\Models\ServiceTransaction::query()
-                            ->where('agent_id', request()->agent)
-                            ->where('service_id', $service->id);
-
-                        if (request()->fromDate && request()->toDate) {
-                            $serviceTransactions->whereBetween('created_at', [request()->fromDate, request()->toDate . ' 23:59:59']);
-                        }
-
-                        $serviceTransactions = $serviceTransactions->get(); // Assign the results to the variable
-
-                        $service->qty = $serviceTransactions->count();
-                        $data['services'][] = $service;
-                    }
-
-                }
-                @endphp
+                $data = (new \App\Services\AgentInvoiceService())->getAgentData(request()->agent, request()->fromDate, request()->toDate);
+            @endphp
 
             @php
                 $rowsCount= 1;
@@ -205,13 +166,13 @@
 
                                     <tr>
                                         @php
-                                            $totalAmount += $visa->total * $visa->qty;
+                                            $totalAmount += $visa->totalAmount;
                                         @endphp
                                         <td class="text-center">#{{ $rowsCount++ }}</td>
                                         <td class="text-center">{{ $visa->name }}</td>
                                         <td class="text-center">{{ $visa->qty }}</td>
                                         <td class="text-center">{{ $visa->total }}</td>
-                                        <td class="text-center">{{ $visa->total * $visa->qty }}</td>
+                                        <td class="text-center">{{ $visa->totalAmount }}</td>
                                     </tr>
                                 @endforeach
                             @endif
@@ -222,13 +183,13 @@
 
                                     <tr>
                                         @php
-                                            $totalAmount += $service->amount * $service->qty;
+                                            $totalAmount += $service->totalAmount;
                                         @endphp
                                         <td class="text-center">#{{ $rowsCount++ }}</td>
                                         <td class="text-center">{{ $service->name }}</td>
                                         <td class="text-center">{{ $service->qty }}</td>
                                         <td class="text-center">{{ $service->amount }}</td>
-                                        <td class="text-center">{{ $service->amount * $service->qty }}</td>
+                                        <td class="text-center">{{ $service->totalAmount }}</td>
                                     </tr>
                                 @endforeach
                             @endif

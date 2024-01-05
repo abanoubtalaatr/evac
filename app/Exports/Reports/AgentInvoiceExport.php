@@ -42,9 +42,9 @@ class AgentInvoiceExport implements FromCollection
                     'Description' => $visa->name,
                     'Qty' => $visa->qty,
                     'Unit price' => $visa->total,
-                    'Amount' => $visa->qty * $visa->total,
+                    'Amount' => $visa->totalAmount,
                 ];
-            $totalAmount += $visa->qty * $visa->total;
+            $totalAmount += $visa->totalAmount;
             }
         }
 
@@ -55,9 +55,9 @@ class AgentInvoiceExport implements FromCollection
                     'Description' => $service->name,
                     'Qty' => $service->qty,
                     'Unit price' => $service->amount,
-                    'Amount' => $service->qty * $service->amount,
+                    'Amount' => $service->totalAmount,
                 ];
-                $totalAmount += $service->qty * $service->amount;
+                $totalAmount += $service->totalAmount;
             }
         }
 
