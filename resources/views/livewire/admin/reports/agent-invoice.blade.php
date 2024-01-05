@@ -83,7 +83,7 @@
                             <td></td>
                             <td></td>
                             <td class="text-center">
-                                <button class="btn btn-primary" wire:click="printData('{{$agent['agent']['id']}},{{request()->from}},{{request()->to}}')">Print</button>
+                                <button class="btn btn-primary" wire:click="printData('{{$agent['agent']['id']}}')">Print</button>
                                 <button class="btn btn-secondary" wire:click="exportReport('{{$agent['agent']['id']}},{{request()->from}},{{request()->to}}')">CSV</button>
                                 <button class="btn btn-info" wire:click="toggleShowModal('{{$agent['agent']['id']}}')">Email</button>
 
