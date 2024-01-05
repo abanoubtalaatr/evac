@@ -142,15 +142,6 @@ class AgentInvoiceExport implements FromCollection
             'Unit price' => "",
             'Amount'=>""
         ];
-        for ($i = 0 ; $i< 1; $i++){
-            $dataRows[] = [
-                "Item #" => "",
-                "Description"  => "",
-                "Qty" => "",
-                'Unit price' => "",
-                'Amount'=>""
-            ];
-        }
 
         $dataRows[] = [
             "Item #" => "Diyarna Center - Zekrit - Lebanon",
@@ -159,15 +150,6 @@ class AgentInvoiceExport implements FromCollection
             'Unit price' => "",
             'Amount'=>""
         ];
-        for ($i = 0 ; $i< 1; $i++){
-            $dataRows[] = [
-                "Item #" => "",
-                "Description"  => "",
-                "Qty" => "",
-                'Unit price' => "",
-                'Amount'=>""
-            ];
-        }
 
         $settings = Setting::query()->first();
 
@@ -178,15 +160,7 @@ class AgentInvoiceExport implements FromCollection
             'Unit price' => "",
             'Amount'=>""
         ];
-        for ($i = 0 ; $i< 1; $i++){
-            $dataRows[] = [
-                "Item #" =>"",
-                "Description"  => "",
-                "Qty" => "",
-                'Unit price' => "",
-                'Amount'=>""
-            ];
-        }
+
         $dataRows[] = [
             "Item #" =>"Tel : " . $settings->mobile,
             "Description"  => "",
@@ -212,15 +186,6 @@ class AgentInvoiceExport implements FromCollection
                 'Unit price' => "",
                 'Amount'=>""
             ];
-            for ($i = 0 ; $i< 1; $i++){
-                $dataRows[] = [
-                    "Item #" => "",
-                    "Description"  => "",
-                    "Qty" => "",
-                    'Unit price' => "",
-                    'Amount'=>""
-                ];
-            }
             $dataRows[] = [
                 "Item #" => "Agent Address : " . $this->agent->address,
                 "Description"  => "",
@@ -228,32 +193,7 @@ class AgentInvoiceExport implements FromCollection
                 'Unit price' => "",
                 'Amount'=>""
             ];
-            for ($i = 0 ; $i< 1; $i++){
-                $dataRows[] = [
-                    "Item #" => "",
-                    "Description"  => "",
-                    "Qty" => "",
-                    'Unit price' => "",
-                    'Amount'=>""
-                ];
-            }
-            $dataRows[] = [
 
-                "Item #" => "Financial No : " . $this->agent->financial_no,
-                "Description"  => "",
-                "Qty" => "",
-                'Unit price' => "",
-                'Amount'=>""
-            ];
-            for ($i = 0 ; $i< 1; $i++){
-                $dataRows[] = [
-                    "Item #" => "",
-                    "Description"  => "",
-                    "Qty" => "",
-                    'Unit price' => "",
-                    'Amount'=>""
-                ];
-            }
             $dataRows[] = [
                 "Item #" =>  "Tel : " . $this->agent->telephone,
                 "Description"  => "",
@@ -261,22 +201,7 @@ class AgentInvoiceExport implements FromCollection
                 'Unit price' => "",
                 'Amount'=>""
             ];
-            for ($i = 0 ; $i< 1; $i++){
-                $dataRows[] = [
-                    "Item #" =>  "",
-                    "Description"  => "",
-                    "Qty" => "",
-                    'Unit price' => "",
-                    'Amount'=>""
-                ];
-            }
-            $dataRows[] = [
-                "Item #" =>   "Agent invoices ",
-                "Description"  => "",
-                "Qty" => "",
-                'Unit price' => "",
-                'Amount'=>""
-            ];
+
             for ($i = 0 ; $i< 1; $i++){
                 $dataRows[] = [
                     "Item #" =>   "",
@@ -286,6 +211,14 @@ class AgentInvoiceExport implements FromCollection
                     'Amount'=>""
                 ];
             }
+            $dataRows[] = [
+                "Item #" =>  "Account No: " . $this->agent->account_number,
+                "Description"  => "",
+                "Qty" => "",
+                'Unit price' => "",
+                'Amount'=>""
+            ];
+
             $dataRows[] = [
                 "Item #" =>    "Date : " . Carbon::parse(now())->format('Y-m-d'),
                 "Description"  => "",
@@ -293,18 +226,17 @@ class AgentInvoiceExport implements FromCollection
                 'Unit price' => "",
                 'Amount'=>""
             ];
-            for ($i = 0 ; $i< 1; $i++){
-                $dataRows[] = [
-                    "Item #" =>   "",
-                    "Description"  => "",
-                    "Qty" => "",
-                    'Unit price' => "",
-                    'Amount'=>""
-                ];
-            }
+
             $dataRows[] = [
                 "Item #" =>    "From : " . request()->fromDate,
                 "Description"  => "To : " . request()->toDate,
+                "Qty" => "",
+                'Unit price' => "",
+                'Amount'=>""
+            ];
+            $dataRows[] = [
+                "Item #" =>    "INV No : " . Carbon::parse(now())->format('Y/m/d'),
+                "Description"  => "",
                 "Qty" => "",
                 'Unit price' => "",
                 'Amount'=>""

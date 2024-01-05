@@ -174,18 +174,6 @@ class AgentInvoice extends Component
             return $data;
         }
         return (new AgentInvoiceService())->getRecords($agent, $from,$to);
-//            if ($this->agent && !is_null($this->agent) && $this->agent !='no_result') {
-//                $agentData = $this->getAgentData($this->agent, $this->from, $this->to);
-//                $agentData['agent'] = Agent::query()->find($this->agent); // Add agent_id to the data
-//                $data['agents'][] = $agentData;
-//                return $data;
-//            } else{
-//                // Display data for all agents with applications this week or service transactions
-//                return  $this->getAllAgentsData($this->from, $this->to);
-//
-//            }
-
-            return [];
     }
 
     protected function getAgentData($agentId, $from, $to)
@@ -224,40 +212,6 @@ class AgentInvoice extends Component
 
             $service->qty = $serviceTransactions->count();
             $data['services'][] = $service;
-        }
-
-        return $data;
-    }
-
-    protected function getAllAgentsData($from, $to)
-    {
-        $data = ['agents' => []];
-
-        // Get all agents with applications this week
-        if($from && $to){
-            $agentsWithApplications = Application::whereBetween('created_at', [$from, $to . ' 23:59:59'])
-                ->pluck('travel_agent_id')
-                ->unique();
-
-            // Get all agents with service transactions
-            $agentsWithServiceTransactions = ServiceTransaction::whereBetween('created_at', [$from, $to . ' 23:59:59'])
-                ->pluck('agent_id')
-                ->unique();
-        }else{
-
-            $agentsWithApplications = Application::pluck('travel_agent_id')->unique();
-
-            // Get all agents with service transactions
-            $agentsWithServiceTransactions = ServiceTransaction::pluck('agent_id')->unique();
-        }
-
-        $allAgents = $agentsWithApplications->merge($agentsWithServiceTransactions)->unique();
-
-        // Fetch data for each agent
-        foreach ($allAgents as $agentId) {
-            $agentData = $this->getAgentData($agentId, $from, $to);
-            $agentData['agent'] = Agent::query()->find($agentId); // Add agent_id to the data
-            $data['agents'][] = $agentData;
         }
 
         return $data;
