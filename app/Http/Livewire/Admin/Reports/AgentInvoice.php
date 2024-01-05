@@ -56,7 +56,7 @@ class AgentInvoice extends Component
     }
 
 
-    public function sendForAdmins()
+    public function sendForAdmins(Request $request)
     {
         $this->disableSendForAdminsButton = true;
         $settings = Setting::query()->first();
@@ -65,6 +65,12 @@ class AgentInvoice extends Component
         foreach ($emails as $email){
             foreach ($data['agents'] as $agent){
                 if(!is_null($agent['agent'])){
+                    $request->merge([
+                        'agent' => $agent['agent']['id'],
+                        'fromDate' => $this->from,
+                        'toDate' => $this->to,
+                    ]);
+
                     Mail::to($email)->send(new AgentInvoiceMail($agent['agent']['id'], $this->from, $this->to));
                 }
             }
