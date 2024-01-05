@@ -148,8 +148,9 @@ class AgentInvoice extends Component
         $this->agent = null;
         $this->emit('agentSetToNull');
     }
-    public function printData($parameters)
+    public function printData($agentId)
     {
+        $this->agent = $agentId;
         $url = route('admin.report.print.agent_invoices', ['agent' => $this->agent,'fromDate' => $this->from,'toDate' => $this->to]);
         $this->emit('printTable', $url);
     }
@@ -276,9 +277,9 @@ class AgentInvoice extends Component
         foreach ($emails as $email){
             Mail::to($email)->send(new AgentInvoiceMail($agent, $this->from, $this->to));
         }
-        $this->email = null;
-        $this->message = null;
-        $this->agent = null;
+//        $this->email = null;
+//        $this->message = null;
+//        $this->agent = null;
         return redirect()->to(route('admin.report.agent_invoices'));
     }
 
@@ -291,9 +292,9 @@ class AgentInvoice extends Component
         $this->from = $fromDate;
         $this->to = $toDate;
         $fileExport = (new \App\Exports\Reports\AgentInvoiceExport($this->getRecords(true)));
-        $this->agent = null;
-        $this->from = null;
-        $this->to = null;
+//        $this->agent = null;
+//        $this->from = null;
+//        $this->to = null;
         return Excel::download($fileExport, 'agent_invoice.csv');
     }
 
