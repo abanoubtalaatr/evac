@@ -101,7 +101,7 @@
 
 <main>
     @include('livewire.admin.shared.reports.header')
-    <br>
+
     <!--dashboard-->
     <section class="dashboard">
         <div class="row">
@@ -111,16 +111,19 @@
 
            @endphp
         @if($agent)
+            <div class="mt-4" style="margin-top: 10px">
+                <br>
                 <h4>Agent : {{$agent->name}}</h4>
                 <h4>Agent address: {{$agent->address}}</h4>
 
-                <h4>Financial No: {{$agent->finance_no}}</h4>
                 <h4>Tel : {{$agent->telephone}}</h4>
                  <br>
                 <h4>Account No: {{$agent->account_no}}</h4>
-
+            </div>
             @endif
             <h4>Date : {{\Illuminate\Support\Carbon::today()->format('Y-m-d')}}</h4>
+            <h4>INV No: {{\Illuminate\Support\Carbon::parse(now())->format('Y/m/d')}}</h4>
+
 
         @if(request()->fromDate && request()->toDate)
                 <h4>From : {{request()->fromDate}} - To : {{request()->toDate}}</h4>
