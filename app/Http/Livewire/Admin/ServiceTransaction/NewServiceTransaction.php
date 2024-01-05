@@ -76,7 +76,7 @@ class NewServiceTransaction extends Component
         return Excel::download(new ReceiptServiceTransactionExport($application), 'serviceReceipt.csv');
     }
 
-    public function send()
+    public function send($id= null)
     {
         if(!empty($this->email)){
             Mail::to($this->email)->send(new ReceiptServiceTransactionMail($this->serviceTransactionThatSendByEmail));
@@ -85,7 +85,7 @@ class NewServiceTransaction extends Component
         }
     }
 
-    public function toggleShowModal($id)
+    public function toggleShowModal($id =null)
     {
         $this->serviceTransactionThatSendByEmail = ServiceTransaction::find($id);
         $this->showSendEmail = !$this->showSendEmail;
