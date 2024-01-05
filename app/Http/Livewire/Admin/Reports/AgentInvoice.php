@@ -292,13 +292,12 @@ class AgentInvoice extends Component
     }
 
 
-    public function exportReport(Request $request,$parameters)
+    public function exportReport(Request $request,$id)
     {
-        list($agentId, $fromDate, $toDate) = explode(',', $parameters);
-        $data = (new AgentInvoiceService())->getRecords($agentId, $this->from, $this->to);
+        $data = (new AgentInvoiceService())->getRecords($id, $this->from, $this->to);
 
         $request->merge([
-            'agent' => $agentId,
+            'agent' => $id,
             'fromDate' => $this->from,
             'toDate' => $this->to,
         ]);
