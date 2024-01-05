@@ -78,9 +78,9 @@ class AgentInvoice extends Component
         }
         $this->disableSendForAdminsButton= false;
 
-        session()->flash('success',"Send Successfully");
-
-        return redirect()->to(route('admin.report.agent_invoices'));
+//        session()->flash('success',"Send Successfully");
+//
+//        return redirect()->to(route('admin.report.agent_invoices'));
     }
     public function saveInvoices()
     {
