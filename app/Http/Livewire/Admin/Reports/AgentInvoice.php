@@ -296,7 +296,7 @@ class AgentInvoice extends Component
     {
         list($agentId, $fromDate, $toDate) = explode(',', $parameters);
 
-        $data = (new AgentInvoiceService())->getRecords($agentId, $fromDate, $toDate);
+        $data = (new AgentInvoiceService())->getAgentData($agentId, $fromDate, $toDate);
 
         $request->merge([
             'agent' => $agentId,
