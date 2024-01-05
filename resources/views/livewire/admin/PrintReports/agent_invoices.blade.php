@@ -101,6 +101,7 @@
 
 <main>
     @include('livewire.admin.shared.reports.header')
+    <br>
     <!--dashboard-->
     <section class="dashboard">
         <div class="row">
@@ -115,7 +116,9 @@
 
                 <h4>Financial No: {{$agent->finance_no}}</h4>
                 <h4>Tel : {{$agent->telephone}}</h4>
-                <h4>Agent invoices</h4>
+                 <br>
+                <h4>Account No: {{$agent->account_no}}</h4>
+
             @endif
             <h4>Date : {{\Illuminate\Support\Carbon::today()->format('Y-m-d')}}</h4>
 
