@@ -30,7 +30,7 @@ class AgentInvoiceService
         return [];
     }
 
-    protected function getAgentData($agentId, $from, $to)
+    public function getAgentData($agentId, $from, $to)
     {
         $data = ['visas' => [], 'services' => []];
 

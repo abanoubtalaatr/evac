@@ -96,6 +96,10 @@
     <!--dashboard-->
     <section class="dashboard">
         <div class="row">
+
+            @if(request()->fromDate && request()->toDate)
+                <h4>From : {{request()->fromDate}} - To : {{request()->toDate}}</h4>
+            @endif
 @php
 //dd(request()->all());
     $fromDate = request()->fromDate;

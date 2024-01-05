@@ -12,6 +12,7 @@ use App\Models\Service;
 use App\Models\ServiceTransaction;
 use App\Models\Setting;
 use App\Models\VisaType;
+use App\Services\AgentInvoiceService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
 use Livewire\Component;
@@ -29,6 +30,7 @@ class AgentInvoice extends Component
         $email,
         $showSendEmail = false,
         $showSendEmailButton= false,
+        $agentEmailed = null,
         $message= null, $agent, $payment_method, $disableSendForAdminsButton= false, $showSaveInvoiceMessage=false;
 
     public function mount()
@@ -50,8 +52,7 @@ class AgentInvoice extends Component
     {
         $this->email = null;
         $this->showSendEmail = !$this->showSendEmail;
-        $this->agent = $agent;
-        $this->message = null;
+        $this->agentEmailed = $agent;
     }
 
 
@@ -60,7 +61,7 @@ class AgentInvoice extends Component
         $this->disableSendForAdminsButton = true;
         $settings = Setting::query()->first();
         $emails = explode(',', $settings->email);
-        $data = $this->getRecords();
+        $data = (new AgentInvoiceService())->getRecords(null, $this->from, $this->to);
         foreach ($emails as $email){
             foreach ($data['agents'] as $agent){
                 if(!is_null($agent['agent'])){
@@ -77,7 +78,7 @@ class AgentInvoice extends Component
     }
     public function saveInvoices()
     {
-        $data = $this->getRecords();
+        $data = (new AgentInvoiceService())->getRecords(null,$this->from, $this->to);
 
         foreach ($data['agents'] as $row) {
             $totalFromVisas = 0;
@@ -150,32 +151,33 @@ class AgentInvoice extends Component
     }
     public function printData($agentId)
     {
-        $this->agent = $agentId;
-        $url = route('admin.report.print.agent_invoices', ['agent' => $this->agent,'fromDate' => $this->from,'toDate' => $this->to]);
+        $this->agentEmailed = $agentId;
+        $url = route('admin.report.print.agent_invoices', ['agent' => $this->agentEmailed,'fromDate' => $this->from,'toDate' => $this->to]);
         $this->emit('printTable', $url);
     }
 
-    public function getRecords($export= false)
+    public function getRecords($export= false, $agent = null, $from = null, $to = null)
     {
         if(!$this->agent && !$this->from && !$this->to){
             return [];
         }
         if($export) {
-            $agentData = $this->getAgentData($this->agent, $this->from, $this->to);
+            $agentData = (new AgentInvoiceService())->getAgentData($agent, $from, $to);
             $agentData['agent'] = Agent::query()->find($this->agent); // Add agent_id to the data
             $data['agents'][] = $agentData;
             return $data;
         }
-            if ($this->agent && !is_null($this->agent) && $this->agent !='no_result') {
-                $agentData = $this->getAgentData($this->agent, $this->from, $this->to);
-                $agentData['agent'] = Agent::query()->find($this->agent); // Add agent_id to the data
-                $data['agents'][] = $agentData;
-                return $data;
-            } else{
-                // Display data for all agents with applications this week or service transactions
-                return  $this->getAllAgentsData($this->from, $this->to);
-
-            }
+        return (new AgentInvoiceService())->getRecords($agent, $from,$to);
+//            if ($this->agent && !is_null($this->agent) && $this->agent !='no_result') {
+//                $agentData = $this->getAgentData($this->agent, $this->from, $this->to);
+//                $agentData['agent'] = Agent::query()->find($this->agent); // Add agent_id to the data
+//                $data['agents'][] = $agentData;
+//                return $data;
+//            } else{
+//                // Display data for all agents with applications this week or service transactions
+//                return  $this->getAllAgentsData($this->from, $this->to);
+//
+//            }
 
             return [];
     }
@@ -259,15 +261,15 @@ class AgentInvoice extends Component
     {
         $this->validate();
 
-        if(is_null($this->agent) || $this->agent =='no_result') {
+        if(is_null($this->agentEmailed) || $this->agentEmailed =='no_result') {
             $this->message = "You must choose travel agent";
             return;
         }
 
-        $agent = Agent::query()->find($this->agent);
+        $agent = Agent::query()->find($this->agentEmailed);
 
         $request->merge([
-           'agent' => $this->agent,
+           'agent' => $this->agentEmailed,
            'fromDate' => $this->from,
            'toDate' => $this->to,
         ]);
@@ -277,24 +279,26 @@ class AgentInvoice extends Component
         foreach ($emails as $email){
             Mail::to($email)->send(new AgentInvoiceMail($agent, $this->from, $this->to));
         }
-//        $this->email = null;
-//        $this->message = null;
+        $this->toggleShowModal();
+
 //        $this->agent = null;
-        return redirect()->to(route('admin.report.agent_invoices'));
+//        return redirect()->to(route('admin.report.agent_invoices'));
     }
 
 
-    public function exportReport($parameters)
+    public function exportReport(Request $request,$parameters)
     {
         list($agentId, $fromDate, $toDate) = explode(',', $parameters);
 
-        $this->agent = $agentId;
-        $this->from = $fromDate;
-        $this->to = $toDate;
-        $fileExport = (new \App\Exports\Reports\AgentInvoiceExport($this->getRecords(true)));
-//        $this->agent = null;
-//        $this->from = null;
-//        $this->to = null;
+        $data = (new AgentInvoiceService())->getRecords($agentId, $fromDate, $toDate);
+
+        $request->merge([
+            'agent' => $agentId,
+            'fromDate' => $this->from,
+            'toDate' => $this->to,
+        ]);
+
+        $fileExport = (new \App\Exports\Reports\AgentInvoiceExport($data));
         return Excel::download($fileExport, 'agent_invoice.csv');
     }
 
@@ -312,7 +316,7 @@ class AgentInvoice extends Component
 
     public function render()
     {
-        $records = $this->getRecords();
+        $records = $this->getRecords(false,$this->agent, $this->from, $this->to);
         return view('livewire.admin.reports.agent-invoice', compact('records'))->layout('layouts.admin');
     }
 }

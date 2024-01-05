@@ -106,6 +106,9 @@
         <div class="row">
             <h4>Date : {{\Illuminate\Support\Carbon::today()->format('Y-m-d')}}</h4>
 
+            @if(request()->fromDate && request()->toDate)
+                <h4>From : {{request()->fromDate}} - To : {{request()->toDate}}</h4>
+            @endif
             @php
                 $fromDate = request()->fromDate;
             $toDate = request()->toDate;
