@@ -46,9 +46,22 @@ class AgentInvoiceService
                     ->whereDate('created_at', '<=', $to);
             }
 
-            $applications = $applications->get(); // Assign the results to the variable
+            $applications = $applications->get();
+
+            $totalAmount = 0; // Initialize total amount variable
+
+            foreach ($applications as $application) {
+                // Assuming these fields exist, adjust them based on your actual fields
+                $serviceFee = $application->service_fee ?? 0;
+                $dubaiFee = $application->dubai_fee ?? 0;
+                $vat = $application->vat ?? 0;
+
+                // Calculate the total amount for each application
+                $totalAmount += $serviceFee + $dubaiFee + $vat;
+            }
 
             $visa->qty = $applications->count();
+            $visa->totalAmount = $totalAmount; // Assign total amount to the visa
             $data['visas'][] = $visa;
         }
 
@@ -64,9 +77,20 @@ class AgentInvoiceService
                     ->whereDate('created_at', '<=', $to);
             }
 
-            $serviceTransactions = $serviceTransactions->get(); // Assign the results to the variable
+            $serviceTransactions = $serviceTransactions->get();
+
+            $totalAmount = 0; // Initialize total amount variable
+
+            foreach ($serviceTransactions as $transaction) {
+                // Assuming these fields exist, adjust them based on your actual fields
+                $amount = $transaction->amount ?? 0;
+
+                // Calculate the total amount for each service transaction
+                $totalAmount += $amount;
+            }
 
             $service->qty = $serviceTransactions->count();
+            $service->totalAmount = $totalAmount; // Assign total amount to the service
             $data['services'][] = $service;
         }
 

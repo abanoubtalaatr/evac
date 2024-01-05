@@ -91,18 +91,17 @@
                         </tr>
                         {{-- Display Visa information --}}
                         @if(isset($agent['visas']) && count($agent['visas']) > 0)
-
                             @foreach($agent['visas'] as $visa)
 
                                 <tr>
                                     @php
-                                        $totalAmount += $visa->total * $visa->qty;
+                                        $totalAmount += $visa->totalAmount;
                                     @endphp
                                     <td class="text-center">#{{ $rowsCount++ }}</td>
                                     <td class="text-center">{{ $visa->name }}</td>
                                     <td class="text-center">{{ $visa->qty }}</td>
                                     <td class="text-center">{{ $visa->total }}</td>
-                                    <td class="text-center">{{ $visa->total * $visa->qty }}</td>
+                                    <td class="text-center">{{ $visa->totalAmount }}</td>
                                 </tr>
                             @endforeach
                         @endif
@@ -111,15 +110,16 @@
                         @if(isset($agent['services']) && count($agent['services']) > 0)
                             @foreach($agent['services'] as $service)
 
+
                                 <tr>
                                     @php
-                                        $totalAmount += $service->amount * $service->qty;
+                                        $totalAmount += $service->totalAmount;
                                     @endphp
                                     <td class="text-center">#{{ $rowsCount++ }}</td>
                                     <td class="text-center">{{ $service->name }}</td>
                                     <td class="text-center">{{ $service->qty }}</td>
                                     <td class="text-center">{{ $service->amount }}</td>
-                                    <td class="text-center">{{ $service->amount * $service->qty }}</td>
+                                    <td class="text-center">{{ $service->totalAmount }}</td>
                                 </tr>
                             @endforeach
                         @endif
