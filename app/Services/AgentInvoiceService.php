@@ -42,7 +42,8 @@ class AgentInvoiceService
                 ->where('travel_agent_id', $agentId);
 
             if ($from && $to) {
-                $applications->whereBetween('created_at', [$from, $to . ' 23:59:59']);
+                $applications->whereDate('created_at', '>=', $from)
+                    ->whereDate('created_at', '<=', $to);
             }
 
             $applications = $applications->get(); // Assign the results to the variable
@@ -59,7 +60,8 @@ class AgentInvoiceService
                 ->where('service_id', $service->id);
 
             if ($from && $to) {
-                $serviceTransactions->whereBetween('created_at', [$from, $to . ' 23:59:59']);
+                $serviceTransactions->whereDate('created_at', '>=', $from)
+                    ->whereDate('created_at', '<=', $to);
             }
 
             $serviceTransactions = $serviceTransactions->get(); // Assign the results to the variable
@@ -77,12 +79,14 @@ class AgentInvoiceService
 
         // Get all agents with applications this week
         if($from && $to){
-            $agentsWithApplications = Application::whereBetween('created_at', [$from, $to . ' 23:59:59'])
+            $agentsWithApplications = Application::whereDate('created_at', '>=', $from)
+                ->whereDate('created_at', '<=', $to)
                 ->pluck('travel_agent_id')
                 ->unique();
 
             // Get all agents with service transactions
-            $agentsWithServiceTransactions = ServiceTransaction::whereBetween('created_at', [$from, $to . ' 23:59:59'])
+            $agentsWithServiceTransactions = ServiceTransaction::whereDate('created_at', '>=', $from)
+                ->whereDate('created_at', '<=', $to)
                 ->pluck('agent_id')
                 ->unique();
         }else{
