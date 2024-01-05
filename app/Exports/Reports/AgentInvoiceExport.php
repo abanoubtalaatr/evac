@@ -302,7 +302,22 @@ class AgentInvoiceExport implements FromCollection
                     'Amount'=>""
                 ];
             }
-
+            $dataRows[] = [
+                "Item #" =>    "From : " . request()->fromDate,
+                "Description"  => "To : " . request()->toDate,
+                "Qty" => "",
+                'Unit price' => "",
+                'Amount'=>""
+            ];
+            for ($i = 0 ; $i< 1; $i++){
+                $dataRows[] = [
+                    "Item #" =>   "",
+                    "Description"  => "",
+                    "Qty" => "",
+                    'Unit price' => "",
+                    'Amount'=>""
+                ];
+            }
         }
         $dataRows[] = [
             "Item #" =>    "Item #",

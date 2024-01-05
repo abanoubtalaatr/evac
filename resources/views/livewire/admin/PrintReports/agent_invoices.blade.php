@@ -115,6 +115,9 @@
                 <h4>Financial No: {{$agent->finance_no}}</h4>
 
             @endif
+            @if(request()->fromDate && request()->toDate)
+                <h4>From : {{request()->fromDate}} - To : {{request()->toDate}}</h4>
+            @endif
 
             @php
                 if (request()->agent && !is_null(request()->agent) && request()->agent !='no_result') {

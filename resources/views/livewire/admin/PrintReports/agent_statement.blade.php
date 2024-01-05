@@ -116,6 +116,10 @@
 
             @endif
 
+            @if(request()->fromDate && request()->toDate)
+                <h4>From : {{request()->fromDate}} - To : {{request()->toDate}}</h4>
+            @endif
+
             @php
                 $totalDrCount= 0;
                 $totalCrCount = 0;
