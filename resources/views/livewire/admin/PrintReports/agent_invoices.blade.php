@@ -118,7 +118,7 @@
 
                 <h4>Tel : {{$agent->telephone}}</h4>
                  <br>
-                <h4>Account No: {{$agent->account_no}}</h4>
+                <h4>Account No: {{$agent->account_number}}</h4>
             </div>
             @endif
             <h4>Date : {{\Illuminate\Support\Carbon::today()->format('Y-m-d')}}</h4>
