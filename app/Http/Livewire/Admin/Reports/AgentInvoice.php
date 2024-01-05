@@ -150,8 +150,7 @@ class AgentInvoice extends Component
     }
     public function printData($parameters)
     {
-        list($agentId, $fromDate, $toDate) = explode(',', $parameters);
-        $url = route('admin.report.print.agent_invoices', ['agent' => $agentId,'fromDate' => $fromDate,'toDate' => $toDate]);
+        $url = route('admin.report.print.agent_invoices', ['agent' => $this->agent,'fromDate' => $this->from,'toDate' => $this->to]);
         $this->emit('printTable', $url);
     }
 
