@@ -151,7 +151,7 @@
             ]);
 
             // Check if the user is the owner
-            if (\App\Helpers\isOwner()) {
+            if (!\App\Helpers\isOwner()) {
                 $query->owner();
             }
 
