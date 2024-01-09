@@ -72,6 +72,8 @@
                     @php
                         $rowsCount = 1;
                         $totalAmount = 0;
+                        $totalServiceTransactionsAmount =0;
+                        $totalApplicationAmount =0;
                     @endphp
 
                     @foreach($records['agents'] as $agent)
@@ -125,6 +127,13 @@
                         @endif
                         @php
                             $totalPayment += \App\Models\PaymentTransaction::query()->where('agent_id', $agent['agent']['id'])->sum('amount');
+                            $totalApplicationAmount += \App\Models\Application::query()->where('travel_agent_id', $agent['agent']['id'])->sum('dubai_fee');
+                            $totalApplicationAmount += \App\Models\Application::query()->where('travel_agent_id', $agent['agent']['id'])->sum('service_fee');
+                            $totalApplicationAmount += \App\Models\Application::query()->where('travel_agent_id', $agent['agent']['id'])->sum('vat');
+                            $totalServiceTransactionsAmount += \App\Models\ServiceTransaction::query()->where('agent_id', $agent['agent']['id'])->sum('dubai_fee');
+                            $totalServiceTransactionsAmount += \App\Models\ServiceTransaction::query()->where('agent_id', $agent['agent']['id'])->sum('service_fee');
+                            $totalServiceTransactionsAmount += \App\Models\ServiceTransaction::query()->where('agent_id', $agent['agent']['id'])->sum('vat');
+$oldBalance = ($totalApplicationAmount + $totalServiceTransactionsAmount) - $totalPayment - $totalAmount;
                         @endphp
                         @endif
 
@@ -154,7 +163,7 @@
                             <td></td>
                             <td></td>
                             <td class="text-center"><strong>Old balance</strong></td>
-                            <td class="text-center"><strong>$ {{ ($totalAmount + $totalPayment) - $totalAmount }}</strong></td>
+                            <td class="text-center"><strong>$ {{ $oldBalance }}</strong></td>
                             <td></td>
                         </tr>
                         <tr>
@@ -163,7 +172,7 @@
                             <td></td>
                             <td></td>
                             <td class="text-center"><strong>Grand total </strong></td>
-                            <td class="text-center"><strong>$ {{ $totalAmount - $totalPayment }}</strong></td>
+                            <td class="text-center"><strong>$ {{ $oldBalance + $totalAmount }}</strong></td>
                             <td></td>
                         </tr>
                     </tfooter>
