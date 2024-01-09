@@ -128,7 +128,7 @@
                 <h4>From : {{request()->fromDate}} - To : {{request()->toDate}}</h4>
             @endif
             @php
-                $data = (new \App\Services\AgentInvoiceService())->getAgentData(request()->agent, request()->fromDate, request()->toDate);
+                $data = (new \App\Services\AgentInvoiceService())->getRecords(request()->agent, request()->fromDate, request()->toDate);
             @endphp
 
             @php
@@ -136,8 +136,9 @@
                 $totalAmount = 0;
                 $totalGrand = 0;
                 $totalPayment = 0;
+
             @endphp
-            @if(isset($data['visas']) && count($data['visas']) > 0)
+            @if(isset($data['agents'][0]['visas']) && count($data['agents'][0]['visas']) > 0)
                 <table  width="100%" cellpadding="0" cellspacing="0" align="center" >
                     <thead>
                     <tr>
@@ -154,15 +155,16 @@
                     @php
                         $rowsCount = 1;
                         $totalAmount = 0;
+                        $totalApplicationAmount =0;
+                        $totalServiceTransactionsAmount =0;
                     @endphp
 
 
-                        @if(!is_null($agent))
 
                             {{-- Display Visa information --}}
-                            @if(isset($data['visas']) && count($data['visas']) > 0)
+                            @if(isset($data['agents'][0]['visas']) && count($data['agents'][0]['visas']) > 0)
 
-                                @foreach($data['visas'] as $visa)
+                                @foreach($data['agents'][0]['visas'] as $visa)
 
                                     <tr>
                                         @php
@@ -178,8 +180,8 @@
                             @endif
 
                             {{-- Display Service information --}}
-                            @if(isset($data['services']) && count($data['services']) > 0)
-                                @foreach($data['services'] as $service)
+                            @if(isset($data['agents'][0]['services']) && count($data['agents'][0]['services']) > 0)
+                                @foreach($data['agents'][0]['services'] as $service)
 
                                     <tr>
                                         @php
@@ -193,10 +195,21 @@
                                     </tr>
                                 @endforeach
                             @endif
-                            @php
-                                $totalPayment += \App\Models\PaymentTransaction::query()->where('agent_id', $agent->id)->sum('amount');
-                            @endphp
-                        @endif
+
+                    @php
+                        foreach ($data['agents'] as $agent) {
+                if (!is_null($agent['agent'])){
+                    $totalPayment += \App\Models\PaymentTransaction::query()->where('agent_id', $agent['agent']['id'])->sum('amount');
+                    $totalApplicationAmount += \App\Models\Application::query()->where('travel_agent_id', $agent['agent']['id'])->sum('dubai_fee');
+                    $totalApplicationAmount += \App\Models\Application::query()->where('travel_agent_id', $agent['agent']['id'])->sum('service_fee');
+                    $totalApplicationAmount += \App\Models\Application::query()->where('travel_agent_id', $agent['agent']['id'])->sum('vat');
+                    $totalServiceTransactionsAmount += \App\Models\ServiceTransaction::query()->where('agent_id', $agent['agent']['id'])->sum('dubai_fee');
+                    $totalServiceTransactionsAmount += \App\Models\ServiceTransaction::query()->where('agent_id', $agent['agent']['id'])->sum('service_fee');
+                    $totalServiceTransactionsAmount += \App\Models\ServiceTransaction::query()->where('agent_id', $agent['agent']['id'])->sum('vat');
+                    $oldBalance = ($totalApplicationAmount + $totalServiceTransactionsAmount) - $totalPayment - $totalAmount;
+                }
+            }
+                    @endphp
 
 
                     {{-- Display total --}}
@@ -222,7 +235,7 @@
                         <td></td>
                         <td></td>
                         <td class="text-center"><strong>Old balance</strong></td>
-                        <td class="text-center"><strong>$ {{ ($totalAmount + $totalPayment) - $totalAmount }}</strong></td>
+                        <td class="text-center"><strong>$ {{ $oldBalance }}</strong></td>
                         <td></td>
                     </tr>
                     <tr>
@@ -230,7 +243,7 @@
                         <td></td>
                         <td></td>
                         <td class="text-center"><strong>Grand total </strong></td>
-                        <td class="text-center"><strong>$ {{ $totalAmount - $totalPayment }}</strong></td>
+                        <td class="text-center"><strong>$ {{ $oldBalance + $totalAmount }}</strong></td>
                         <td></td>
                     </tr>
                     </tfoot>
