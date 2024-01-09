@@ -29,13 +29,17 @@ class AgentInvoiceExport implements FromCollection
 
         $rowCount =1;
         $totalAmount = 0;
-        $totalPayment  = PaymentTransaction::query()->where('agent_id', $this->data['agents'][0]['agent']['id'])->sum('amount');
+        $totalApplicationAmount= 0;
+        $totalServiceTransactionsAmount = 0;
+        $totalPayment =0;
         $this->agent = Agent::query()->find($this->data['agents'][0]['agent']['id']);
+
 
         $dataRows = $this->heading();
 
 
         if(isset($this->data['agents'][0]['visas'])){
+
             foreach ($this->data['agents'][0]['visas'] as $visa) {
                 $dataRows[] = [
                     'Item #' => $rowCount++,
@@ -61,7 +65,18 @@ class AgentInvoiceExport implements FromCollection
             }
         }
 
-
+        foreach ($this->data['agents'] as $agent) {
+            if (!is_null($agent['agent'])){
+                $totalPayment += \App\Models\PaymentTransaction::query()->where('agent_id', $agent['agent']['id'])->sum('amount');
+                $totalApplicationAmount += \App\Models\Application::query()->where('travel_agent_id', $agent['agent']['id'])->sum('dubai_fee');
+                $totalApplicationAmount += \App\Models\Application::query()->where('travel_agent_id', $agent['agent']['id'])->sum('service_fee');
+                $totalApplicationAmount += \App\Models\Application::query()->where('travel_agent_id', $agent['agent']['id'])->sum('vat');
+                $totalServiceTransactionsAmount += \App\Models\ServiceTransaction::query()->where('agent_id', $agent['agent']['id'])->sum('dubai_fee');
+                $totalServiceTransactionsAmount += \App\Models\ServiceTransaction::query()->where('agent_id', $agent['agent']['id'])->sum('service_fee');
+                $totalServiceTransactionsAmount += \App\Models\ServiceTransaction::query()->where('agent_id', $agent['agent']['id'])->sum('vat');
+                $oldBalance = ($totalApplicationAmount + $totalServiceTransactionsAmount) - $totalPayment - $totalAmount;
+            }
+        }
         $dataRows[] = [
 
             'Item #' => '',
@@ -82,14 +97,14 @@ class AgentInvoiceExport implements FromCollection
             'Description' => "",
             'Qty' => "",
             'Unit price' => 'Old balance',
-            'Amount' => ($totalAmount + $totalPayment) - $totalAmount
+            'Amount' => $oldBalance
         ];
         $dataRows[] = [
             'Item #' => '',
             'Description' => "",
             'Qty' => "",
             'Unit price' => 'Grand total',
-            'Amount' => $totalAmount - $totalPayment
+            'Amount' => $oldBalance + $totalAmount
         ];
         for($i =0 ; $i < 3; $i++){
             $dataRows[] = [
