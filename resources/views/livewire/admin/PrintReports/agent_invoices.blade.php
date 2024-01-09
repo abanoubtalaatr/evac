@@ -94,6 +94,10 @@
         th, td {
             width: auto; /* or specify widths in pixels */
         }
+        .span-block{
+            display: block;
+            margin-bottom: 3px;
+        }
 
     </style>
 </head>
@@ -111,22 +115,21 @@
 
            @endphp
         @if($agent)
-            <div class="mt-4" style="margin-top: 10px">
-                <br>
-                <h4>Agent : {{$agent->name}}</h4>
-                <h4>Agent address: {{$agent->address}}</h4>
+            <div class="mt-4" style="margin-bottom: 10px;margin-top: 10px;">
+                <strong class="span-block">Agent : {{$agent->name}}</strong>
+                <strong class="span-block">Agent address: {{$agent->address}}</strong>
 
-                <h4>Tel : {{$agent->telephone}}</h4>
-                 <br>
-                <h4>Account No: {{$agent->account_number}}</h4>
+                <strong class="span-block">Tel : {{$agent->telephone}}</strong>
+                <strong class="span-block">Account No: {{$agent->account_number}}</strong>
             </div>
             @endif
-            <h4>Date : {{\Illuminate\Support\Carbon::today()->format('Y-m-d')}}</h4>
-            <h4>INV No: {{\Illuminate\Support\Carbon::parse(now())->format('Y/m/d')}}</h4>
+            <strong class="span-block">Date : {{\Illuminate\Support\Carbon::today()->format('Y-m-d')}}</strong>
+            <strong class="span-block">INV No: {{\Illuminate\Support\Carbon::parse(now())->format('Y/m/d')}}</strong>
 
             @if(request()->fromDate && request()->toDate)
                 <h4>From : {{request()->fromDate}} - To : {{request()->toDate}}</h4>
             @endif
+            <br>
             @php
                 $data = (new \App\Services\AgentInvoiceService())->getRecords(request()->agent, request()->fromDate, request()->toDate);
             @endphp
