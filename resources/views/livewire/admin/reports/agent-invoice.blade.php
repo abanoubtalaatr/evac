@@ -26,11 +26,11 @@
 
                 <div class="my-2 form_wrapper d-flex">
                     @include('livewire.admin.travel-agent.popup.send-email')
-                    <div class="form-group col-3 mx-2">
-                        <button class="btn btn-info form-control contact-input" wire:click="sendForAdmins" @if($disableSendForAdminsButton) disabled @endif>
-                            Send all invoices to admins
-                        </button>
-                    </div>
+{{--                    <div class="form-group col-3 mx-2">--}}
+{{--                        <button class="btn btn-info form-control contact-input" wire:click="sendForAdmins" @if($disableSendForAdminsButton) disabled @endif>--}}
+{{--                            Send all invoices to admins--}}
+{{--                        </button>--}}
+{{--                    </div>--}}
                     <div class="form-group col-3">
                         <button class="btn btn-success form-control contact-input" wire:click="saveInvoices" >
                         Save the invoices
