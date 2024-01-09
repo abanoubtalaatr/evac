@@ -77,14 +77,20 @@ class AgentSales extends Component
         $toDate = $this->to;
 
         $today = now()->format('Y-m-d'); // Get the current date in the format 'YYYY-MM-DD'
+        $query = Agent::query();
+        // Check if the user is the owner
+        if (!isOwner()) {
+            $query->owner();
+        }
 
-        $query = Agent::query()
-            ->where(function ($query) use ($fromDate, $toDate, $today) {
+            $query->where(function ($query) use ($fromDate, $toDate, $today) {
                 if ($fromDate && $toDate) {
                     $query->whereHas('applications', function ($appQuery) use ($fromDate, $toDate) {
-                        $appQuery->whereBetween('created_at', [$fromDate, $toDate]);
+                       $appQuery->whereDate('created_at', '>=', $fromDate)
+                            ->whereDate('created_at', '<=', $toDate);
                     })->orWhereHas('serviceTransactions', function ($transQuery) use ($fromDate, $toDate) {
-                        $transQuery->whereBetween('created_at', [$fromDate, $toDate]);
+                        $transQuery->whereDate('created_at', '>=', $fromDate)
+                            ->whereDate('created_at', '<=', $toDate);
                     });
                 } else {
                     // If no fromDate and toDate, filter records for the last one week
@@ -113,10 +119,6 @@ class AgentSales extends Component
 
         ]);
 
-        // Check if the user is the owner
-        if (isOwner()) {
-            $query->owner();
-        }
 
         $result = $query->orderBy('name')->get();
 
