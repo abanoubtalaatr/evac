@@ -282,7 +282,7 @@ if (!function_exists('oldBalance')) {
         $totalServiceTransactionsAmount += \App\Models\ServiceTransaction::query()->where('agent_id', $agentId)->sum('dubai_fee');
         $totalServiceTransactionsAmount += \App\Models\ServiceTransaction::query()->where('agent_id', $agentId)->sum('service_fee');
         $totalServiceTransactionsAmount += \App\Models\ServiceTransaction::query()->where('agent_id', $agentId)->sum('vat');
-        return $totalApplicationAmount + $totalServiceTransactionsAmount - $totalPayment - $totalAmountForAgent;
+        return ($totalApplicationAmount + $totalServiceTransactionsAmount) - $totalPayment - $totalAmountForAgent;
     }
 }
 
