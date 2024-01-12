@@ -82,7 +82,7 @@
 
         $totalPreviousBalForAllAgents += \App\Helpers\oldBalance($record->id, $totalAmountForAgent);
         $totalNewSalesForAllAgents += $totalAmountForAgent;
-        $totalForAllAgent += $totalAmountForAgent;
+        $totalForAllAgent += \App\Helpers\oldBalance($record->id, $totalAmountForAgent)+ $totalAmountForAgent;
     }
 
 @endphp
