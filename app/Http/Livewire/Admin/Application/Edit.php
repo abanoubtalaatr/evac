@@ -4,6 +4,7 @@ namespace App\Http\Livewire\Admin\Application;
 
 use App\Http\Livewire\Traits\ValidationTrait;
 use App\Models\Agent;
+use App\Models\Applicant;
 use App\Models\Application;
 use App\Models\BlackListPassport;
 use App\Models\Setting;
@@ -172,18 +173,17 @@ class Edit extends Component
 
     public function updatedFormPassportNo()
     {
-        $existingPassport = Application::where('passport_no', $this->form['passport_no'])->latest()->first();
-
+        $existingPassport = Applicant::where('passport_no', strtolower($this->form['passport_no']))->latest()->first();
         if ($existingPassport) {
-            $this->form['expiry_date'] = Carbon::parse($existingPassport->expiry_date)->format('Y-m-d');
-            $this->form['first_name'] = $existingPassport->first_name;
-            $this->form['last_name'] = $existingPassport->last_name;
-        }else{
-            $this->form['expiry_date'] = null;
-            $this->form['first_name'] = null;
-            $this->form['last_name'] = null;
-        }
+            $this->form['expiry_date'] = Carbon::parse($existingPassport->passport_expiry)->format('Y-m-d');
+            $this->form['first_name'] = $existingPassport->name;
+            $this->form['last_name'] = $existingPassport->surname;
 
+        }else{
+            $this->form['expiry_date'] =null;
+            $this->form['first_name'] = null;
+            $this->form['last_name']= null;
+        }
     }
 
     public function getRules(){
