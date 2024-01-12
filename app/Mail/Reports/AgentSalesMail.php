@@ -40,6 +40,7 @@ class AgentSalesMail extends Mailable
         $html = view('livewire.admin.PrintReports.agent_sales')->with([
             'from' => $this->fromDate,
             'toDate' => $this->toDate,
+            'email' => true,
         ])->render();
 
 
