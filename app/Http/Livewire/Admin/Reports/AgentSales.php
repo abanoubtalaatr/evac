@@ -83,10 +83,11 @@ class AgentSales extends Component
             $query->owner();
         }
 
+        if($fromDate && $toDate){
             $query->where(function ($query) use ($fromDate, $toDate, $today) {
                 if ($fromDate && $toDate) {
                     $query->whereHas('applications', function ($appQuery) use ($fromDate, $toDate) {
-                       $appQuery->whereDate('created_at', '>=', $fromDate)
+                        $appQuery->whereDate('created_at', '>=', $fromDate)
                             ->whereDate('created_at', '<=', $toDate);
                     })->orWhereHas('serviceTransactions', function ($transQuery) use ($fromDate, $toDate) {
                         $transQuery->whereDate('created_at', '>=', $fromDate)
@@ -101,38 +102,41 @@ class AgentSales extends Component
                     });
                 }
             })
-            ->withSum('applications', 'vat')
-            ->withSum('applications', 'dubai_fee')
-            ->withSum('applications', 'service_fee')
-            ->withSum('serviceTransactions', 'vat')
-            ->withSum('serviceTransactions', 'dubai_fee')
-            ->withSum('serviceTransactions', 'service_fee')
-            ->withCount('applications')
-            ->withCount('serviceTransactions');
+                ->withSum('applications', 'vat')
+                ->withSum('applications', 'dubai_fee')
+                ->withSum('applications', 'service_fee')
+                ->withSum('serviceTransactions', 'vat')
+                ->withSum('serviceTransactions', 'dubai_fee')
+                ->withSum('serviceTransactions', 'service_fee')
+                ->withCount('applications')
+                ->withCount('serviceTransactions');
 
-        // Add a new column for previous balance
-        $query->addSelect([
-            'previous_bal' => PaymentTransaction::query()
-                ->whereColumn('agent_id', 'agents.id')
-                ->selectRaw('COALESCE(SUM(amount), 0)'),
-
-
-        ]);
+            // Add a new column for previous balance
+            $query->addSelect([
+                'previous_bal' => PaymentTransaction::query()
+                    ->whereColumn('agent_id', 'agents.id')
+                    ->selectRaw('COALESCE(SUM(amount), 0)'),
 
 
-        $result = $query->orderBy('name')->get();
+            ]);
 
-        // Retrieve counts from the result
-        $totalApplicationsCount = $result->pluck('applications_count')->sum();
-        $totalServiceTransactionsCount = $result->pluck('service_transactions_count')->sum();
-        $totalPreviousBalSum = $result->pluck('previous_bal')->sum();
-        $totalTotalAmountSum = $result->pluck('total_amount')->sum();
 
-        // Add total counts to the result
-        $result->total_applications_count = $totalApplicationsCount;
-        $result->total_previous_bal_sum = $totalPreviousBalSum;
-        $result->total_service_transactions_count = $totalServiceTransactionsCount;
-        return $result;
+            $result = $query->orderBy('name')->get();
+
+            // Retrieve counts from the result
+            $totalApplicationsCount = $result->pluck('applications_count')->sum();
+            $totalServiceTransactionsCount = $result->pluck('service_transactions_count')->sum();
+            $totalPreviousBalSum = $result->pluck('previous_bal')->sum();
+            $totalTotalAmountSum = $result->pluck('total_amount')->sum();
+
+            // Add total counts to the result
+            $result->total_applications_count = $totalApplicationsCount;
+            $result->total_previous_bal_sum = $totalPreviousBalSum;
+            $result->total_service_transactions_count = $totalServiceTransactionsCount;
+            return $result;
+        }
+
+        return [];
     }
 
     public function sendEmail(Request $request)
