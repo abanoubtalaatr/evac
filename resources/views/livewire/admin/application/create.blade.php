@@ -172,7 +172,6 @@
           $('#blackListModal').modal('hide');
           @this.set('form.agent_id', null)
           $("#agent_search").val(null)
-          $('#showTravelAgent').prop('checked', false);
 
           var container = document.getElementById('travelAgentContainer');
           container.classList.addClass('hidden');
