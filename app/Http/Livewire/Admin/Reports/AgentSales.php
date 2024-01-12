@@ -146,23 +146,15 @@ class AgentSales extends Component
            'fromDate' => $this->from,
            'toDate' => $this->to,
         ]);
-        $records = $this->getRecords();
-        $export = new \App\Exports\Reports\AgentSalesExport($records, $this->from, $this->to);
-
-        // Save the Excel file to a temporary location
-        $filePath = storage_path('exports/agent_sales_export.xlsx');
-        Excel::store($export, 'agent_sales_export.xlsx', 'exports');
-
-        // Attach the Excel file to the email
 
 
         $emails = explode(',', $this->email);
         foreach ($emails as $email){
-            Mail::to($email)->send(new AgentSalesMail($this->from, $this->to, $filePath));
+            Mail::to($email)->send(new AgentSalesMail( $this->from, $this->to));
         }
         $this->email = null;
         $this->message = null;
-//        return redirect()->to(route('admin.report.agent_sales'));
+        return redirect()->to(route('admin.report.agent_sales'));
     }
 
 

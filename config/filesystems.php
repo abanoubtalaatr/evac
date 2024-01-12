@@ -55,6 +55,8 @@ return [
         'exports' => [
             'driver' => 'local',
             'root' => storage_path('app/exports'), // Define the root directory for the disk
+            'visibility' => 'public',
+
         ],
 
     ],
