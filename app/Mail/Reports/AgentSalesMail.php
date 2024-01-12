@@ -23,7 +23,7 @@ class AgentSalesMail extends Mailable
     public function build()
     {
         return $this->attachData($this->generatePdf(), 'agent_sales.pdf')
-            ->subject("EVAC - " .' - ' . "Agent sales Report")
+            ->subject("EVAC - " . "Agent sales Report")
             ->view('emails.TravelAgent.agent-applications-body');
 
     }
