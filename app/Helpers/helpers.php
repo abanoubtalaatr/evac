@@ -7,6 +7,7 @@ use App\Models\Applicant;
 use App\Models\Application;
 use App\Models\DayOffice;
 
+use App\Models\PaymentTransaction;
 use App\Models\Setting;
 use App\Models\VisaType;
 use Carbon\Carbon;
@@ -267,3 +268,28 @@ if (!function_exists('disableActionsWhereOpenClosed')) {
     }
 }
 
+if (!function_exists('oldBalance')) {
+    function oldBalance($agentId, $totalAmountForAgent)
+    {
+        $totalApplicationsAmountForAgent = 0;
+        $totalServiceTransactionsAmountForAgent = 0;
+        $totalPayment = totalPayment($agentId);
+
+        $totalApplicationsAmountForAgent += \App\Models\Application::query()
+            ->where('travel_agent_id', $agentId)
+            ->selectRaw('SUM(service_fee + dubai_fee + vat) as total_amount')
+            ->value('total_amount');
+        $totalServiceTransactionsAmountForAgent += \App\Models\ServiceTransaction::query()
+            ->where('agent_id', $agentId)
+            ->selectRaw('SUM(service_fee + dubai_fee + vat) as total_amount')
+            ->value('total_amount');
+
+        return $totalServiceTransactionsAmountForAgent + $totalApplicationsAmountForAgent - ($totalPayment +$totalAmountForAgent);
+    }
+}
+
+if (!function_exists('totalPayment')) {
+    function totalPayment($agentId){
+        return PaymentTransaction::query()->where('agent_id', $agentId)->sum('amount');
+    }
+}

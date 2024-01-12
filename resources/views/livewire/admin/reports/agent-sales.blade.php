@@ -41,12 +41,19 @@
             $totalDefaultVisaCount = 0;
             $totalNewSales = 0;
             $totalPreviousBal = 0;
+            $totalServiceTransactionsAmount =0;
+            $totalApplicationsAmount= 0;
+            $totalApplicationsAmountForAgent = 0;
+            $totalServiceTransactionsAmountForAgent = 0;
+            $totalPreviousBalForAllAgents = 0;
+            $totalNewSalesForAllAgents =0;
+            $totalForAllAgent =0;
+
             @endphp
             @if(isset($records) && count($records) > 0)
                 <table class="table-page table">
                     <thead>
                     <tr>
-
                         <th>Agent</th>
                         <th>Default visa</th>
                         <th>Previous Bal</th>
@@ -71,14 +78,17 @@
     $defaultVisaCount = \App\Models\Application::query()->where('visa_type_id', $defaultVisa->id)->where('travel_agent_id', $record->id)->count();
     $totalDefaultVisaCount += $defaultVisaCount;
     $totalAmount += $totalAmountForAgent;
+ $totalPreviousBalForAllAgents += \App\Helpers\oldBalance($record->id, $totalAmountForAgent);
+ $totalNewSalesForAllAgents += $totalAmountForAgent;
+ $totalForAllAgent += \App\Helpers\oldBalance($record->id, $totalAmountForAgent)+ $totalAmountForAgent;
 
 @endphp
                             <tr>
                                 <td>{{$record->name}}</td>
                                 <td>{{$defaultVisaCount}}</td>
-                                <td>{{$record->previous_bal}}</td>
-                                <td>{{$totalAmountForAgent - $record->previous_bal }}</td>
-                                <td>{{$totalAmountForAgent}}</td>
+                                <td>{{\App\Helpers\oldBalance($record->id, $totalAmountForAgent)}}</td>
+                                <td>{{  $totalAmountForAgent}}</td>
+                                <td>{{\App\Helpers\oldBalance($record->id, $totalAmountForAgent)+ $totalAmountForAgent}}</td>
 
                                 @foreach(\App\Models\VisaType::query()->get() as $visa)
                                     @php
@@ -108,9 +118,9 @@
                     <tr>
                         <td>Total </td>
                         <td>{{$totalDefaultVisaCount}}</td>
-                        <td>{{$records->total_previous_bal_sum}}</td>
-                        <td>{{$totalAmount - $records->total_previous_bal_sum}}</td>
-                        <td>{{$totalAmount}}</td>
+                        <td>{{$totalPreviousBalForAllAgents}}</td>
+                        <td>{{$totalNewSalesForAllAgents}}</td>
+                        <td>{{$totalForAllAgent}}</td>
 
                         @foreach(\App\Models\VisaType::query()->get() as $visa)
                             @php
