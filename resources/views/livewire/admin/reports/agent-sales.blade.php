@@ -48,6 +48,9 @@
             $totalPreviousBalForAllAgents = 0;
             $totalNewSalesForAllAgents =0;
             $totalForAllAgent =0;
+            $totalApplicationCount =0;
+            $totalApplicationVisaCount =0;
+            $totalServiceCount = 0;
 
             @endphp
             @if(isset($records) && count($records) > 0)
@@ -55,11 +58,11 @@
                     <thead>
                     <tr>
                         <th>Agent</th>
-                        <th>Default visa</th>
+                        <th>{{$defaultVisa->name}}</th>
                         <th>Previous Bal</th>
                         <th>New Sales</th>
                         <th>Total Amount</th>
-                        @foreach(\App\Models\VisaType::query()->get() as $visa)
+                        @foreach(\App\Models\VisaType::query()->where('id', '!=', $defaultVisa->id)->get() as $visa)
                             <th>{{$visa->name}}</th>
                         @endforeach
                         <th>Total Visas</th>
@@ -75,7 +78,9 @@
                         @foreach($records as $record)
 @php
     $totalAmountForAgent =  0;
-    $defaultVisaCount = \App\Models\Application::query()->where('visa_type_id', $defaultVisa->id)->where('travel_agent_id', $record->id)->count();
+    $defaultVisaCount = \App\Models\Application::query()->when($from && $to, function ($query) use ($from, $to) {
+                                            $query->whereDate('created_at', '>=', $from)->whereDate('created_at', '<=', $to);
+                                    })->where('visa_type_id', $defaultVisa->id)->where('travel_agent_id', $record->id)->count();
     $totalDefaultVisaCount += $defaultVisaCount;
     if(isset($from) & isset($to)){
         $totalAmountForAgent = \App\Helpers\totalAmount($record->id, $from, $to);
@@ -93,25 +98,46 @@
                                 <td>{{  $totalAmountForAgent}}</td>
                                 <td>{{\App\Helpers\oldBalance($record->id, $totalAmountForAgent)+ $totalAmountForAgent}}</td>
 
-                                @foreach(\App\Models\VisaType::query()->get() as $visa)
+                                @foreach(\App\Models\VisaType::query()->where('id', '!=', $defaultVisa->id)->get() as $visa)
                                     @php
-                                       $visaCountForAgent =  \App\Models\Application::query()->where('visa_type_id', $visa->id)->where('travel_agent_id', $record->id)->count();
+                                       $visaCountForAgent =  \App\Models\Application::query()->when($from && $to, function ($query) use($from, $to){
+                                            $query->whereDate('created_at', '>=', $from)->whereDate('created_at', '<=', $to);
+                                        })->where('visa_type_id', $visa->id)->where('travel_agent_id', $record->id)->count();
+
                                     @endphp
                                     <td>{{$visaCountForAgent}}</td>
                                 @endforeach
 
-                                <td>{{\App\Models\Application::query()->where('travel_agent_id', $record->id)->count()}}</td>
+                                @php
+                                   $countVisa =  \App\Models\Application::query()->when($from && $to, function ($query) use($from, $to){
+                                            $query->whereDate('created_at', '>=', $from)->whereDate('created_at', '<=', $to);
+                                        })->where('travel_agent_id', $record->id)->count();
+                                   $totalApplicationVisaCount +=$countVisa;
+                                @endphp
+                                <td>
+                                    {{$countVisa}}
+                                </td>
 
 
                                 @foreach(\App\Models\Service::query()->get() as $service)
                                     @php
-                                        $countServiceForAgent = \App\Models\ServiceTransaction::query()->where('service_id', $service->id)->where('agent_id', $record->id)->count();
+                                        $countServiceForAgent = \App\Models\ServiceTransaction::query()->when($from && $to, function ($query) use($from, $to){
+                                            $query->whereDate('created_at', '>=', $from)->whereDate('created_at', '<=', $to);
+                                        })->where('service_id', $service->id)->where('agent_id', $record->id)->count();
                                         $totalServices += $countServiceForAgent;
                                       @endphp
 
                                     <td>{{$countServiceForAgent}}</td>
                                 @endforeach
-                                <td>{{\App\Models\ServiceTransaction::query()->where('agent_id', $record->id)->count()}}</td>
+                                @php
+                                   $serviceCount = \App\Models\ServiceTransaction::query()->when($from && $to, function ($query) use($from, $to){
+                                            $query->whereDate('created_at', '>=', $from)->whereDate('created_at', '<=', $to);
+                                        })->where('agent_id', $record->id)->count();
+                                   $totalServiceCount +=$serviceCount;
+                                @endphp
+                                <td>
+                                    {{$serviceCount}}
+                                </td>
 
                             </tr>
                         @endforeach
@@ -125,29 +151,37 @@
                         <td>{{$totalNewSalesForAllAgents}}</td>
                         <td>{{$totalForAllAgent}}</td>
 
-                        @foreach(\App\Models\VisaType::query()->get() as $visa)
+
+                        @foreach(\App\Models\VisaType::query()->where('id', '!=', $defaultVisa->id)->get() as $visa)
                             @php
                                 $totalVisaCountForAllAgents = \App\Models\Application::query()
                                     ->where('visa_type_id', $visa->id)
+                                    ->when($from && $to, function ($query) use ($from, $to) {
+                                            $query->whereDate('created_at', '>=', $from)->whereDate('created_at', '<=', $to);
+                                    })
                                     ->whereIn('travel_agent_id', $records->pluck('id'))
                                     ->count();
                             @endphp
                             <td>{{$totalVisaCountForAllAgents}}</td>
                         @endforeach
 
-                        <td>{{$records->total_applications_count}}</td>
+                        <td>{{$totalApplicationVisaCount}}</td>
 
-                        @foreach(\App\Models\Service::query()->get() as $service)
+
+                    @foreach(\App\Models\Service::query()->get() as $service)
                             @php
                                 $totalServiceCountForAllAgents = \App\Models\ServiceTransaction::query()
                                     ->where('service_id', $service->id)
+                                    ->when($from && $to, function ($query) use($from, $to){
+                                            $query->whereDate('created_at', '>=', $from)->whereDate('created_at', '<=', $to);
+                                        })
                                     ->whereIn('agent_id', $records->pluck('id'))
                                     ->count();
                             @endphp
                             <td>{{$totalServiceCountForAllAgents}}</td>
                         @endforeach
 
-                        <td>{{$records->total_service_transactions_count}}</td>
+                        <td>{{$totalServiceCount}}</td>
                     </tr>
                     </tfoot>
 
