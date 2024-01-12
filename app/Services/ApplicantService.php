@@ -37,6 +37,9 @@ class ApplicantService
                 'passport_no' => $data['passport_no'],
                 'passport_expiry' => $data['expiry_date']
             ]);
+        }else{
+            $data['applicant_id'] = $applicant->id;
+            $this->update($data);
         }
         return $applicant;
     }
