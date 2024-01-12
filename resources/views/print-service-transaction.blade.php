@@ -50,7 +50,7 @@
         @php
             $total = ($serviceTransaction->service_fee) + ($serviceTransaction->dubai_fee) + $serviceTransaction->vat;
         @endphp
-        <div> Amount : {{$total}} USD ({{$serviceTransaction->payment_method}})</div>
+        <div> Amount : {{$total}} USD ({{$serviceTransaction->payment_method =='invoice' ? "Unpaid" : "Paid"}})</div>
 {{--        @if($serviceTransaction->vat >0)--}}
 {{--            <div>VAT : {{\App\Helpers\formatCurrency($serviceTransaction->vat)}} </div>--}}
 {{--        @endif--}}
