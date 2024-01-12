@@ -32,6 +32,13 @@ class AgentInvoiceExport implements FromCollection
         $totalApplicationAmount= 0;
         $totalServiceTransactionsAmount = 0;
         $totalPayment =0;
+
+        $totalApplicationAmount += \App\Models\Application::query()->sum('dubai_fee');
+        $totalApplicationAmount += \App\Models\Application::query()->sum('service_fee');
+        $totalApplicationAmount += \App\Models\Application::query()->sum('vat');
+        $totalServiceTransactionsAmount += \App\Models\ServiceTransaction::query()->sum('dubai_fee');
+        $totalServiceTransactionsAmount += \App\Models\ServiceTransaction::query()->sum('service_fee');
+        $totalServiceTransactionsAmount += \App\Models\ServiceTransaction::query()->sum('vat');
         $this->agent = Agent::query()->find($this->data['agents'][0]['agent']['id']);
 
 
@@ -68,12 +75,6 @@ class AgentInvoiceExport implements FromCollection
         foreach ($this->data['agents'] as $agent) {
             if (!is_null($agent['agent'])){
                 $totalPayment += \App\Models\PaymentTransaction::query()->where('agent_id', $agent['agent']['id'])->sum('amount');
-                $totalApplicationAmount += \App\Models\Application::query()->where('travel_agent_id', $agent['agent']['id'])->sum('dubai_fee');
-                $totalApplicationAmount += \App\Models\Application::query()->where('travel_agent_id', $agent['agent']['id'])->sum('service_fee');
-                $totalApplicationAmount += \App\Models\Application::query()->where('travel_agent_id', $agent['agent']['id'])->sum('vat');
-                $totalServiceTransactionsAmount += \App\Models\ServiceTransaction::query()->where('agent_id', $agent['agent']['id'])->sum('dubai_fee');
-                $totalServiceTransactionsAmount += \App\Models\ServiceTransaction::query()->where('agent_id', $agent['agent']['id'])->sum('service_fee');
-                $totalServiceTransactionsAmount += \App\Models\ServiceTransaction::query()->where('agent_id', $agent['agent']['id'])->sum('vat');
                 $oldBalance = ($totalApplicationAmount + $totalServiceTransactionsAmount) - $totalPayment - $totalAmount;
             }
         }
