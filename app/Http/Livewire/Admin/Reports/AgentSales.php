@@ -160,9 +160,8 @@ class AgentSales extends Component
 
     public function exportReport()
     {
-        $fileExport = (new \App\Exports\Reports\AgentSalesExport($this->getRecords()));
-        $this->from = null;
-        $this->to = null;
+        $fileExport = (new \App\Exports\Reports\AgentSalesExport($this->getRecords(), $this->from, $this->to));
+
         return Excel::download($fileExport, 'agent_sales.csv');
     }
 
