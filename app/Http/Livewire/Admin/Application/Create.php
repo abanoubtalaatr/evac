@@ -225,10 +225,9 @@ class Create extends Component
         if ($this->form['passport_no'] !== '') {
 
         $existingPassport = Applicant::where('passport_no', strtolower($this->form['passport_no']))->latest()->first();
-
             if ($existingPassport) {
 
-                $this->form['expiry_date'] = Carbon::parse($existingPassport->expiry_date)->format('Y-m-d');
+                $this->form['expiry_date'] = Carbon::parse($existingPassport->passport_expiry)->format('Y-m-d');
                 $this->form['first_name'] = $existingPassport->name;
                 $this->form['last_name'] = $existingPassport->surname;
 
