@@ -74,26 +74,30 @@ class DirectSale extends Component
         $data['applications']['invoices'] = Application::query()
             ->where('payment_method', 'invoice')
             ->where('travel_agent_id', null)
-            ->whereBetween('created_at', [$fromDate, $toDate])
-            ->get();
+            ->when($fromDate && $toDate, function ($query) use ($fromDate, $toDate) {
+                $query->whereDate('created_at', '>=', $fromDate)->whereDate('created_at', '<=', $toDate);
+            })            ->get();
 
         $data['applications']['cashes'] = Application::query()
             ->where('payment_method', 'cash')
             ->where('travel_agent_id', null)
-            ->whereBetween('created_at', [$fromDate, $toDate])
-            ->get();
+            ->when($fromDate && $toDate, function ($query) use ($fromDate, $toDate) {
+                $query->whereDate('created_at', '>=', $fromDate)->whereDate('created_at', '<=', $toDate);
+            })->get();
 
         $data['serviceTransactions']['invoices'] = ServiceTransaction::query()
             ->where('agent_id', null)
             ->where('payment_method', 'invoice')
-            ->whereBetween('created_at', [$fromDate, $toDate])
-            ->get();
+            ->when($fromDate && $toDate, function ($query) use ($fromDate, $toDate) {
+                $query->whereDate('created_at', '>=', $fromDate)->whereDate('created_at', '<=', $toDate);
+            })            ->get();
 
         $data['serviceTransactions']['cashes'] = ServiceTransaction::query()
             ->where('agent_id', null)
             ->where('payment_method', 'cashes')
-            ->whereBetween('created_at', [$fromDate, $toDate])
-            ->get();
+            ->when($fromDate && $toDate, function ($query) use ($fromDate, $toDate) {
+                $query->whereDate('created_at', '>=', $fromDate)->whereDate('created_at', '<=', $toDate);
+            })            ->get();
 
         return $data;
     }

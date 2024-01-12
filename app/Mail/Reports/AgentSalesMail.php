@@ -12,21 +12,17 @@ class AgentSalesMail extends Mailable
 {
     use Queueable, SerializesModels;
 
-    public $fromDate, $toDate,$attachmentPath;
+    public $fromDate, $toDate;
 
-    public function __construct($fromDate, $toDate, $attachmentPath)
+    public function __construct($fromDate, $toDate)
     {
         $this->fromDate = $fromDate;
         $this->toDate = $toDate;
-        $this->attachmentPath = $attachmentPath;
     }
 
     public function build()
     {
-        return $this->attach($this->attachmentPath, [
-            'as' => 'agent_sales_report.xlsx',
-            'mime' => 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
-        ])
+        return $this->attachData($this->generatePdf(), 'agent_sales.pdf')
             ->subject("EVAC - " . "Agent sales Report")
             ->view('emails.TravelAgent.agent-applications-body');
 
@@ -44,7 +40,7 @@ class AgentSalesMail extends Mailable
         $html = view('livewire.admin.PrintReports.agent_sales')->with([
             'from' => $this->fromDate,
             'toDate' => $this->toDate,
-            'email' => true,
+            'email' => true
         ])->render();
 
 
