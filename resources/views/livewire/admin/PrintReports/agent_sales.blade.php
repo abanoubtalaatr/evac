@@ -8,7 +8,7 @@
 
         @media print {
             body {
-                font-size: 10pt; /* Adjust the font size for printing */
+                font-size: 20pt; /* Adjust the font size for printing */
             }
 
             .table th,
