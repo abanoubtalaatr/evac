@@ -66,7 +66,7 @@
             margin-bottom: 0;
             background-color: #fff;
             border-collapse: collapse;
-            font-size: 7px;
+            font-size: 5px;
         }
 
         .table th, .table td {
