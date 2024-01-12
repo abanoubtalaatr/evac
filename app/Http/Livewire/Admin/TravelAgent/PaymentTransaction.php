@@ -68,9 +68,9 @@ class PaymentTransaction extends Component
                 })
                 ->select(
                     'agents.*',
-                    DB::raw('(SELECT SUM(amount) FROM applications WHERE applications.travel_agent_id = agents.id) as amount'),
+                    DB::raw('(SELECT SUM(dubai_fee + service_fee+ vat) FROM applications WHERE applications.travel_agent_id = agents.id) as amount'),
                     DB::raw('(SELECT SUM(COALESCE(amount, 0)) FROM payment_transactions WHERE payment_transactions.agent_id = agents.id) as amount_paid'),
-                    DB::raw('(SELECT SUM(COALESCE(amount, 0)) FROM service_transactions WHERE service_transactions.agent_id = agents.id) as amount_service')
+                    DB::raw('(SELECT SUM(COALESCE(dubai_fee + service_fee+ vat)) FROM service_transactions WHERE service_transactions.agent_id = agents.id) as amount_service')
                 )
                 ->groupBy('agents.id')
                 ->orderBy('agents.name') // Add this line to order by agent name
