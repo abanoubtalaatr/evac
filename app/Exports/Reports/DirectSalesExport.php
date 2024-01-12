@@ -25,7 +25,7 @@ class DirectSalesExport implements FromCollection, WithHeadings, ShouldAutoSize
                 'Date' => Carbon::parse($application->create_at)->format('Y-m-d'),
                 'Application name' =>   $application->first_name . ' ' . $application->last_name,
                 'Amount' => $application->amount,
-                'Payment' => $application->payment_method,
+                'Payment' => $application->payment_method =='invoice' ?"Unpaid" :"Paid",
                 'Type' => $application->visaType->name,
 
             ];
@@ -35,7 +35,7 @@ class DirectSalesExport implements FromCollection, WithHeadings, ShouldAutoSize
                 'Date' => Carbon::parse($serviceTransaction->create_at)->format('Y-m-d'),
                 'Application name' =>   $serviceTransaction->name . ' ' . $serviceTransaction->surname,
                 'Amount' => $serviceTransaction->amount,
-                'Payment' => $serviceTransaction->payment_method,
+                'Payment' => $serviceTransaction->payment_method =='invoice' ?"Unpaid" :"Paid",
                 'Type' => $serviceTransaction->service->name,
 
             ];
