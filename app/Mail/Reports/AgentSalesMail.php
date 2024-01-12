@@ -12,17 +12,21 @@ class AgentSalesMail extends Mailable
 {
     use Queueable, SerializesModels;
 
-    public $fromDate, $toDate;
+    public $fromDate, $toDate,$attachmentPath;
 
-    public function __construct($fromDate, $toDate)
+    public function __construct($fromDate, $toDate, $attachmentPath)
     {
         $this->fromDate = $fromDate;
         $this->toDate = $toDate;
+        $this->attachmentPath = $attachmentPath;
     }
 
     public function build()
     {
-        return $this->attachData($this->generatePdf(), 'agent_sales.pdf')
+        return $this->attach($this->attachmentPath, [
+            'as' => 'agent_sales_report.xlsx',
+            'mime' => 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+        ])
             ->subject("EVAC - " . "Agent sales Report")
             ->view('emails.TravelAgent.agent-applications-body');
 
