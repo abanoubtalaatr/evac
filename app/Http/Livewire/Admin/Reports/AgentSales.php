@@ -154,7 +154,7 @@ class AgentSales extends Component
         }
         $this->email = null;
         $this->message = null;
-        return redirect()->to(route('admin.report.agent_sales'));
+//        return redirect()->to(route('admin.report.agent_sales'));
     }
 
 
