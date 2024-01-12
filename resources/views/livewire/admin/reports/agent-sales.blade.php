@@ -74,7 +74,7 @@
                     <tbody>
                         @foreach($records as $record)
 @php
-    $totalAmountForAgent = $record->applications_sum_vat+ $record->applications_sum_dubai_fee+ $record->applications_sum_service_fee+ $record->service_transactions_sum_vat+ $record->service_transactions_sum_dubai_fee+ $record->service_transactions_sum_service_fee+ $record->applications_count+ $record->service_transactions_count;
+    $totalAmountForAgent = $record->applications_sum_vat+ $record->applications_sum_dubai_fee+ $record->applications_sum_service_fee+ $record->service_transactions_sum_vat+ $record->service_transactions_sum_dubai_fee+ $record->service_transactions_sum_service_fee;
     $defaultVisaCount = \App\Models\Application::query()->where('visa_type_id', $defaultVisa->id)->where('travel_agent_id', $record->id)->count();
     $totalDefaultVisaCount += $defaultVisaCount;
     $totalAmount += $totalAmountForAgent;

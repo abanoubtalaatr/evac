@@ -271,20 +271,18 @@ if (!function_exists('disableActionsWhereOpenClosed')) {
 if (!function_exists('oldBalance')) {
     function oldBalance($agentId, $totalAmountForAgent)
     {
-        $totalApplicationsAmountForAgent = 0;
-        $totalServiceTransactionsAmountForAgent = 0;
+        $totalApplicationAmount = 0;
+        $totalServiceTransactionsAmount = 0;
         $totalPayment = totalPayment($agentId);
 
-        $totalApplicationsAmountForAgent += \App\Models\Application::query()
-            ->where('travel_agent_id', $agentId)
-            ->selectRaw('SUM(service_fee + dubai_fee + vat) as total_amount')
-            ->value('total_amount');
-        $totalServiceTransactionsAmountForAgent += \App\Models\ServiceTransaction::query()
-            ->where('agent_id', $agentId)
-            ->selectRaw('SUM(service_fee + dubai_fee + vat) as total_amount')
-            ->value('total_amount');
 
-        return $totalServiceTransactionsAmountForAgent + $totalApplicationsAmountForAgent - ($totalPayment +$totalAmountForAgent);
+        $totalApplicationAmount += \App\Models\Application::query()->where('travel_agent_id', $agentId)->sum('dubai_fee');
+        $totalApplicationAmount += \App\Models\Application::query()->where('travel_agent_id', $agentId)->sum('service_fee');
+        $totalApplicationAmount += \App\Models\Application::query()->where('travel_agent_id', $agentId)->sum('vat');
+        $totalServiceTransactionsAmount += \App\Models\ServiceTransaction::query()->where('agent_id', $agentId)->sum('dubai_fee');
+        $totalServiceTransactionsAmount += \App\Models\ServiceTransaction::query()->where('agent_id', $agentId)->sum('service_fee');
+        $totalServiceTransactionsAmount += \App\Models\ServiceTransaction::query()->where('agent_id', $agentId)->sum('vat');
+        return $totalApplicationAmount + $totalServiceTransactionsAmount - $totalPayment - $totalAmountForAgent;
     }
 }
 
