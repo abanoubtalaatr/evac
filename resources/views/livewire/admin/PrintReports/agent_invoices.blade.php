@@ -160,14 +160,6 @@
                         $totalAmount = 0;
                         $totalApplicationAmount =0;
                         $totalServiceTransactionsAmount =0;
-
-                        $totalPayment += \App\Models\PaymentTransaction::query()->sum('amount');
-                        $totalApplicationAmount += \App\Models\Application::query()->sum('dubai_fee');
-                        $totalApplicationAmount += \App\Models\Application::query()->sum('service_fee');
-                        $totalApplicationAmount += \App\Models\Application::query()->sum('vat');
-                        $totalServiceTransactionsAmount += \App\Models\ServiceTransaction::query()->sum('dubai_fee');
-                        $totalServiceTransactionsAmount += \App\Models\ServiceTransaction::query()->sum('service_fee');
-                        $totalServiceTransactionsAmount += \App\Models\ServiceTransaction::query()->sum('vat');
                     @endphp
 
 
@@ -208,7 +200,18 @@
                             @endif
 
                     @php
-                        $oldBalance = ($totalApplicationAmount + $totalServiceTransactionsAmount) - $totalPayment - $totalAmount;
+                        foreach ($data['agents'] as $agent) {
+                if (!is_null($agent['agent'])){
+                    $totalPayment += \App\Models\PaymentTransaction::query()->where('agent_id', $agent['agent']['id'])->sum('amount');
+                    $totalApplicationAmount += \App\Models\Application::query()->where('travel_agent_id', $agent['agent']['id'])->sum('dubai_fee');
+                    $totalApplicationAmount += \App\Models\Application::query()->where('travel_agent_id', $agent['agent']['id'])->sum('service_fee');
+                    $totalApplicationAmount += \App\Models\Application::query()->where('travel_agent_id', $agent['agent']['id'])->sum('vat');
+                    $totalServiceTransactionsAmount += \App\Models\ServiceTransaction::query()->where('agent_id', $agent['agent']['id'])->sum('dubai_fee');
+                    $totalServiceTransactionsAmount += \App\Models\ServiceTransaction::query()->where('agent_id', $agent['agent']['id'])->sum('service_fee');
+                    $totalServiceTransactionsAmount += \App\Models\ServiceTransaction::query()->where('agent_id', $agent['agent']['id'])->sum('vat');
+                    $oldBalance = ($totalApplicationAmount + $totalServiceTransactionsAmount) - $totalPayment - $totalAmount;
+                }
+            }
                     @endphp
 
 
