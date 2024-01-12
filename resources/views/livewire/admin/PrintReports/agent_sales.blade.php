@@ -6,18 +6,7 @@
     <title>{{$title ?? 'Report'}}</title>
     <style>
 
-        @media print {
-            body {
-                font-size: 20pt; /* Adjust the font size for printing */
-            }
 
-            .table th,
-            .table td {
-                padding: 8px; /* Adjust the padding for table cells */
-            }
-
-            /* Adjust any other styles for printing */
-        }
         body {
             font-family: 'Arial', sans-serif;
             margin: 0;
