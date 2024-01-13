@@ -34,11 +34,11 @@
                     @foreach($dayReport['visaTypes'] as $visaType)
                         <tr>
                             <td>{{ $visaType->name }}</td>
-                            <td>{{ $visaType->applications->count() }}</td>
+                            <td>{{ $visaType->applications()->whereYear('created_at', now()->year)->count() }}</td>
                             @for ($month = 1; $month <= 12; $month++)
                                 <td>{{ $visaType->applications->where('created_at', '>=', $firstDayOfMonth->copy()->month($month))->where('created_at', '<=', $lastDayOfMonth->copy()->month($month))->count()}}</td>
                             @endfor
-                            <td>{{ $visaType->applications->sum('amount') }}</td>
+                            <td>{{ $visaType->applications()->whereYear('created_at', now()->year)->sum('dubai_fee') +$visaType->applications()->whereYear('created_at', now()->year)->sum('service_fee') +$visaType->applications()->whereYear('created_at', now()->year)->sum('vat') }}</td>
                         </tr>
                     @endforeach
                     </tbody>
@@ -46,14 +46,14 @@
                     <tr class="total-row">
                         <td>Total</td>
                         <td>
-                            {{\App\Models\Application::query()->count()}}
+                            {{\App\Models\Application::query()->whereYear('created_at', now()->year)->count()}}
                         </td>
                         @for ($month = 1; $month <= 12; $month++)
                             <td>
                                 {{ \App\Models\Application::whereMonth('created_at', $month)->whereYear('created_at', now()->year)->count() }}
                             </td>
                         @endfor
-                        <td>{{ \App\Models\Application::query()->sum('amount')}}</td>
+                        <td>{{ \App\Models\Application::query()->whereYear('created_at', now()->year)->sum('dubai_fee') + \App\Models\Application::query()->whereYear('created_at', now()->year)->sum('service_fee') + \App\Models\Application::query()->whereYear('created_at', now()->year)->sum('vat')}}</td>
                     </tr>
                     </tfoot>
                 </table>
@@ -95,11 +95,11 @@
                     @foreach($dayReport['services'] as $service)
                         <tr>
                             <td>{{ $service->name }}</td>
-                            <td>{{ $service->serviceTransactions->count() }}</td>
+                            <td>{{ $service->serviceTransactions()->whereYear('created_at', now()->year)->count() }}</td>
                             @for ($month = 1; $month <= 12; $month++)
                                 <td>{{ $service->serviceTransactions->where('created_at', '>=', $firstDayOfMonth->copy()->month($month))->where('created_at', '<=', $lastDayOfMonth->copy()->month($month))->count()}} </td>
                             @endfor
-                            <td>{{ $service->serviceTransactions->sum('amount') }}</td>
+                            <td>{{ $service->serviceTransactions()->whereYear('created_at', now()->year)->sum('dubai_fee') +  $service->serviceTransactions()->whereYear('created_at', now()->year)->sum('service_fee') + $service->serviceTransactions()->whereYear('created_at', now()->year)->sum('vat') }}</td>
                         </tr>
                     @endforeach
                     </tbody>
@@ -114,7 +114,7 @@
                                 {{ \App\Models\ServiceTransaction::whereMonth('created_at', $month)->whereYear('created_at', now()->year)->count() }}
                             </td>
                         @endfor
-                        <td>{{ \App\Models\ServiceTransaction::whereYear('created_at', now()->year)->sum('amount')}}</td>
+                        <td>{{ \App\Models\ServiceTransaction::whereYear('created_at', now()->year)->sum('dubai_fee') + \App\Models\ServiceTransaction::whereYear('created_at', now()->year)->sum('service_fee') + \App\Models\ServiceTransaction::whereYear('created_at', now()->year)->sum('vat')}}</td>
                     </tr>
                     </tfoot>
                 </table>
@@ -149,15 +149,20 @@
                 <!-- Add more rows as needed -->
                 <tr>
                     <td>Yearly total</td>
-                    <td>{{ \App\Models\Application::query()->count() +
+                    <td>{{ \App\Models\Application::query()->whereYear('created_at', now()->year)->count() +
                         \App\Models\ServiceTransaction::whereYear('created_at', now()->year)->count()}}</td>
                     @for ($month = 1; $month <= 12; $month++)
                         <td>
                             {{ \App\Models\ServiceTransaction::whereMonth('created_at', $month)->whereYear('created_at', now()->year)->count() +  \App\Models\Application::whereMonth('created_at', $month)->whereYear('created_at', now()->year)->count() }}
                         </td>
                     @endfor
+                    @php
+                    $totalForYear =0;
+                     $totalForYear += \App\Models\ServiceTransaction::whereYear('created_at', now()->year)->sum('dubai_fee') + \App\Models\ServiceTransaction::whereYear('created_at', now()->year)->sum('service_fee') + \App\Models\ServiceTransaction::whereYear('created_at', now()->year)->sum('vat');
+                     $totalForYear +=\App\Models\Application::query()->whereYear('created_at', now()->year)->sum('dubai_fee') + \App\Models\Application::query()->whereYear('created_at', now()->year)->sum('service_fee') + \App\Models\Application::query()->whereYear('created_at', now()->year)->sum('vat');
+                    @endphp
                     <td>
-                        {{ \App\Models\ServiceTransaction::whereYear('created_at', now()->year)->sum('amount') + \App\Models\Application::query()->sum('amount')}}
+                        {{ $totalForYear}}
                     </td>
                 </tr>
                 </tbody>
