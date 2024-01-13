@@ -98,9 +98,9 @@ $showSendEmailButton= false, $agent;
                     'email' => $email,
                     'className' => "App\\Http\\Controllers\\Admin\\Reports\\DailyReport\\PrintController",
                 ]);
+                (new SendEmailController())->send($request);
             }
 
-            (new SendEmailController())->send($request);
 
             $officeDay->update([
                 'end_time' => Carbon::now()->format('H:i:s'),
