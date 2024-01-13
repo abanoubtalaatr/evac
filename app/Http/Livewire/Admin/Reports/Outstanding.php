@@ -73,43 +73,39 @@ class Outstanding extends Component
         $toDate = $this->to;
 
         if (\App\Helpers\isOwner()) {
-            $agents = Agent::query();
+            $agents = Agent::query()->isActive();
         } else {
-            $agents = Agent::owner();
+            $agents = Agent::owner()->isActive();
         }
 
         $totalSalesByAgent = [];
         $totalSalesForAllAgent = 0;
         $totalUnPaidBal = 0;
 
-        if(!is_null($fromDate) && !is_null($toDate)) {
             foreach ($agents->get() as $agent) {
                 $paidBal = $agent->paymentTransactions->sum('amount');
 
                 $applicationSum = $agent->applications()
-                        ->whereBetween('created_at', [$fromDate, $toDate])
                         ->sum('vat') +
                     $agent->applications()
-                        ->whereBetween('created_at', [$fromDate, $toDate])
                         ->sum('dubai_fee') +
                     $agent->applications()
-                        ->whereBetween('created_at', [$fromDate, $toDate])
                         ->sum('service_fee');
 
                 // Sum for serviceTransactions
                 $serviceTransactionSum = $agent->serviceTransactions()
-                        ->whereBetween('created_at', [$fromDate, $toDate])
                         ->sum('vat') +
                     $agent->serviceTransactions()
-                        ->whereBetween('created_at', [$fromDate, $toDate])
                         ->sum('dubai_fee') +
                     $agent->serviceTransactions()
-                        ->whereBetween('created_at', [$fromDate, $toDate])
                         ->sum('service_fee');
 
-                $totalSales = $applicationSum + $serviceTransactionSum;
+                    $totalSales = $applicationSum + $serviceTransactionSum;
+
                 $totalSalesForAllAgent += $totalSales;
-                $totalUnPaidBal += $paidBal;
+                $totalUnPaidForEveryAgent = $totalSales - $paidBal;
+
+                $totalUnPaidBal += $totalUnPaidForEveryAgent;
 
                 $totalSalesByAgent[] = [
                     'agent_id' => $agent->id,
@@ -120,7 +116,7 @@ class Outstanding extends Component
 
             }
 
-            $applications = Application::query()->whereBetween('created_at', [$fromDate, $toDate])->whereNull('travel_agent_id')->get();
+            $applications = Application::query()->whereNull('travel_agent_id')->get();
             $totalDirectSales = 0;
             $totalUnPaidBalDirect =0;
             foreach ($applications as $application){
@@ -138,7 +134,7 @@ class Outstanding extends Component
                     'un_paid' => $unpaid,
                 ];
             }
-            $serviceTransactions = ServiceTransaction::query()->whereBetween('created_at', [$fromDate, $toDate])->whereNull('agent_id')->get();
+            $serviceTransactions = ServiceTransaction::query()->whereNull('agent_id')->get();
 
             foreach ($serviceTransactions as $serviceTransaction){
                 $totalAmount = $serviceTransaction->dubai_fee + $serviceTransaction->service_fee + $serviceTransaction->vat;
@@ -155,9 +151,6 @@ class Outstanding extends Component
                     'un_paid' => $unpaid,
                 ];
             }
-        }else{
-            return [];
-        }
 
         $data['agents'] = $totalSalesByAgent;
         $data['total_sales_for_all_agents'] = $totalSalesForAllAgent;

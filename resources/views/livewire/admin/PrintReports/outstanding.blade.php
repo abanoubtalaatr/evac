@@ -106,55 +106,50 @@
        $toDate = request()->toDate;
 
        if (\App\Helpers\isOwner()) {
-           $agents = \App\Models\Agent::query();
+           $agents = \App\Models\Agent::query()->isActive();
        } else {
-           $agents = \App\Models\Agent::owner();
+           $agents = \App\Models\Agent::owner()->isActive();
        }
 
        $totalSalesByAgent = [];
        $totalSalesForAllAgent = 0;
        $totalUnPaidBal = 0;
-       if(!is_null($fromDate) && !is_null($toDate)) {
 
-           foreach ($agents->get() as $agent) {
-               // Sum for applications
-               $paidBal = $agent->paymentTransactions->sum('amount');
+            foreach ($agents->get() as $agent) {
+                $paidBal = $agent->paymentTransactions->sum('amount');
 
-               $applicationSum = $agent->applications()
-                       ->whereBetween('created_at', [$fromDate, $toDate])
-                       ->sum('vat') +
-                   $agent->applications()
-                       ->whereBetween('created_at', [$fromDate, $toDate])
-                       ->sum('dubai_fee') +
-                   $agent->applications()
-                       ->whereBetween('created_at', [$fromDate, $toDate])
-                       ->sum('service_fee');
+                $applicationSum = $agent->applications()
+                        ->sum('vat') +
+                    $agent->applications()
+                        ->sum('dubai_fee') +
+                    $agent->applications()
+                        ->sum('service_fee');
 
-               // Sum for serviceTransactions
-               $serviceTransactionSum = $agent->serviceTransactions()
-                       ->whereBetween('created_at', [$fromDate, $toDate])
-                       ->sum('vat') +
-                   $agent->serviceTransactions()
-                       ->whereBetween('created_at', [$fromDate, $toDate])
-                       ->sum('dubai_fee') +
-                   $agent->serviceTransactions()
-                       ->whereBetween('created_at', [$fromDate, $toDate])
-                       ->sum('service_fee');
+                // Sum for serviceTransactions
+                $serviceTransactionSum = $agent->serviceTransactions()
+                        ->sum('vat') +
+                    $agent->serviceTransactions()
+                        ->sum('dubai_fee') +
+                    $agent->serviceTransactions()
+                        ->sum('service_fee');
 
-               $totalSales = $applicationSum + $serviceTransactionSum;
-               $totalSalesForAllAgent += $totalSales;
-               $totalUnPaidBal += $paidBal;
+                    $totalSales = $applicationSum + $serviceTransactionSum;
 
-               $totalSalesByAgent[] = [
-                   'agent_id' => $agent->id,
-                   'agent_name' => $agent->name,
-                   'total_sales' => $totalSales,
-                   'un_paid_bail' => $totalSales - $paidBal,
-               ];
+                $totalSalesForAllAgent += $totalSales;
+                $totalUnPaidForEveryAgent = $totalSales - $paidBal;
 
-           }
+                $totalUnPaidBal += $totalUnPaidForEveryAgent;
 
-           $applications = \App\Models\Application::query()->whereBetween('created_at', [$fromDate, $toDate])->whereNull('travel_agent_id')->get();
+                $totalSalesByAgent[] = [
+                    'agent_id' => $agent->id,
+                    'agent_name' => $agent->name,
+                    'total_sales' => $totalSales,
+                    'un_paid_bail' => $totalSales - $paidBal,
+                ];
+
+            }
+
+           $applications = \App\Models\Application::query()->whereNull('travel_agent_id')->get();
            $totalDirectSales = 0;
            $totalUnPaidBalDirect =0;
            foreach ($applications as $application){
@@ -172,7 +167,7 @@
                    'un_paid' => $unpaid,
                ];
            }
-           $serviceTransactions = \App\Models\ServiceTransaction::query()->whereBetween('created_at', [$fromDate, $toDate])->whereNull('agent_id')->get();
+           $serviceTransactions = \App\Models\ServiceTransaction::query()->whereNull('agent_id')->get();
 
            foreach ($serviceTransactions as $serviceTransaction){
                $totalAmount = $serviceTransaction->dubai_fee + $serviceTransaction->service_fee + $serviceTransaction->vat;
@@ -189,9 +184,7 @@
                    'un_paid' => $unpaid,
                ];
            }
-       }else{
-           return [];
-       }
+
 
        $data['agents'] = $totalSalesByAgent;
        $data['total_sales_for_all_agents'] = $totalSalesForAllAgent;
@@ -257,10 +250,29 @@
                         @endforeach
                         <tfoot>
                         <tr>
-                            {{--                        <td></td>--}}
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                        <tr>
                             <td colspan="2">Total </td>
                             <td class="text-center">{{$data['total_sales_for_direct']}}</td>
                             <td class="text-center">{{$data['total_un_paid_bal_for_direct']}}</td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td colspan="2">Total Sales</td>
+                            <td class="text-center">{{$data['total_sales_for_direct'] + $data['total_sales_for_all_agents']}}</td>
+                            <td class="text-center"></td>
+                        </tr>
+                        <tr>
+                            <td colspan="2">Total unpaid</td>
+                            <td class="text-center">{{$data['total_un_paid_bal_for_agents'] + $data['total_un_paid_bal_for_direct']}}</td>
+                            <td class="text-center"></td>
                         </tr>
                         </tfoot>
                         </tbody>

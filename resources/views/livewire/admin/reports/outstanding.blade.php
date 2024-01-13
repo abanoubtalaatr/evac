@@ -12,14 +12,14 @@
 
             <div class="row d-flex align-items-center my-3  p-2 rounded align form_wrapper">
 
-                <div class="form-group col-3 mt-2 form_wrapper">
-                    <label for="status-select">@lang('admin.from')</label>
-                    <input class="form-control border  contact-input" type="date" wire:model="from">
-                </div>
-                <div class="form-group col-3 mt-2 form_wrapper">
-                    <label for="status-select">@lang('admin.to')</label>
-                    <input class="form-control border  contact-input" type="date" wire:model="to">
-                </div>
+{{--                <div class="form-group col-3 mt-2 form_wrapper">--}}
+{{--                    <label for="status-select">@lang('admin.from')</label>--}}
+{{--                    <input class="form-control border  contact-input" type="date" wire:model="from">--}}
+{{--                </div>--}}
+{{--                <div class="form-group col-3 mt-2 form_wrapper">--}}
+{{--                    <label for="status-select">@lang('admin.to')</label>--}}
+{{--                    <input class="form-control border  contact-input" type="date" wire:model="to">--}}
+{{--                </div>--}}
 
 
                 <div class="my-2 form_wrapper">
@@ -98,6 +98,11 @@
                         <td colspan="2">Total </td>
                         <td class="text-center">{{$records['total_sales_for_direct']}}</td>
                         <td class="text-center">{{$records['total_un_paid_bal_for_direct']}}</td>
+                    </tr>
+                    <tr>
+                        <td></td>
+                        <td></td>
+                        <td></td>
                     </tr>
                     <tr>
                         <td colspan="2">Total Sales</td>
