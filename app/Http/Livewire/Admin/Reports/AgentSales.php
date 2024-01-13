@@ -151,7 +151,7 @@ class AgentSales extends Component
 
         $filePath = storage_path('app/reports/agent_sales_export.csv');
 
-        Excel::store($fileExport, $filePath);
+        Excel::store($fileExport, $filePath, 'public');
         $emails = explode(',', $this->email);
         foreach ($emails as $email){
             Mail::to($email)->send(new AgentSalesMail( $this->from, $this->to, $filePath));
