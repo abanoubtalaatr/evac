@@ -32,33 +32,4 @@ class AgentSalesMail extends Mailable
 
     }
 
-    private function generatePdf()
-    {
-        // Configure Dompdf
-        $options = new Options();
-        $options->set('isHtml5ParserEnabled', true);
-        $options->set('isPhpEnabled', true);
-
-        $dompdf = new Dompdf($options);
-        // Load HTML content
-        $html = view('livewire.admin.PrintReports.agent_sales')->with([
-            'from' => $this->fromDate,
-            'toDate' => $this->toDate,
-            'email' => true
-        ])->render();
-
-
-        // Load HTML to Dompdf
-        $dompdf->loadHtml($html);
-        // Set paper size
-        $dompdf->setPaper('A4', 'portrait');
-
-        // Render PDF (first pass to get total pages)
-        $dompdf->render();
-
-        // Output the generated PDF (second pass to generate final PDF with correct page count)
-        $output = $dompdf->output();
-
-        return $output;
-    }
 }
