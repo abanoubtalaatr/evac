@@ -55,7 +55,6 @@
             margin-bottom: 0;
             background-color: #fff;
             border-collapse: collapse;
-            font-size: <?php echo isset($email) ? '5' : '12'; ?>pt; /* Adjust the font size based on the existence of $email */
         }
 
         .table th, .table td {

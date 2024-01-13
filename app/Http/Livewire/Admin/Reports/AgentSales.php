@@ -147,10 +147,18 @@ class AgentSales extends Component
            'toDate' => $this->to,
         ]);
 
+        $fileExport = new \App\Exports\Reports\AgentSalesExport($this->getRecords(), $this->from, $this->to);
+
+        $filePath = storage_path('app/reports/agent_sales_export.csv');
+
+        Excel::store($fileExport, $filePath, 'public');
+
+// Generate a public URL for the stored file
+        $publicUrl = asset('storage/reports/agent_sales_export.csv');
 
         $emails = explode(',', $this->email);
         foreach ($emails as $email){
-            Mail::to($email)->send(new AgentSalesMail( $this->from, $this->to));
+            Mail::to($email)->send(new AgentSalesMail($this->from, $this->to, $publicUrl));
         }
         $this->email = null;
         $this->message = null;
