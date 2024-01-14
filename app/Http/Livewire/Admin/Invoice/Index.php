@@ -4,6 +4,8 @@ namespace App\Http\Livewire\Admin\Invoice;
 
 use App\Http\Livewire\Traits\ValidationTrait;
 use App\Models\Agent;
+use App\Models\PaymentTransaction;
+use App\Services\AgentInvoiceService;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Carbon;
 use Livewire\Component;
@@ -45,6 +47,32 @@ class Index extends Component
         $this->rowNumber = ($this->page - 1) * $this->perPage + 1;
     }
 
+    public function recalculateInvoice($id)
+    {
+        $invoice = \App\Models\AgentInvoice::query()->find($id);
+
+        $paymentForAgent = PaymentTransaction::query()
+            ->where('agent_id', $invoice->agent_id)
+            ->whereDate('created_at', '>=', $invoice->from)
+            ->whereDate('created_at', '<=', $invoice->to)
+            ->sum('amount');
+
+        $data = (new AgentInvoiceService())->getAgentData($invoice->agent_id, $invoice->from,$invoice->to);
+        $totalAmount =0;
+        foreach ($data['visas'] as $visa){
+            $totalAmount +=$visa->totalAmount;
+        }
+        foreach ($data['services'] as $service){
+            $totalAmount +=$service->totalAmount;
+        }
+        $invoice->update([
+            'total_amount' => $totalAmount,
+            'payment_received' => $paymentForAgent,
+        ]);
+
+        session()->flash('success',__('Recalculate successfully'));
+
+    }
     public function showInvoice($id)
     {
         $this->invoice = \App\Models\AgentInvoice::query()->find($id);

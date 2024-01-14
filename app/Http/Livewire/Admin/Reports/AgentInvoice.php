@@ -13,6 +13,7 @@ use App\Models\ServiceTransaction;
 use App\Models\Setting;
 use App\Models\VisaType;
 use App\Services\AgentInvoiceService;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
 use Livewire\Component;
@@ -37,6 +38,8 @@ class AgentInvoice extends Component
     {
         $this->page_title = __('admin.agent_invoices');
         $this->visaTypes = VisaType::query()->get();
+        $this->from = Carbon::now()->startOfWeek()->next(Carbon::FRIDAY)->format('Y-m-d');
+        $this->to = Carbon::parse($this->from)->addDays(6)->format('Y-m-d');
     }
 
     public function updatedAgentId()
@@ -46,6 +49,18 @@ class AgentInvoice extends Component
         }else{
             $this->showSendEmailButton = false;
         }
+    }
+
+    public function nextWeek()
+    {
+        $this->from = Carbon::parse($this->from)->addDays(7)->format('Y-m-d');
+        $this->to = Carbon::parse($this->to)->addDays(7)->format('Y-m-d');
+
+    }
+    public function previousWeek()
+    {
+        $this->from = Carbon::parse($this->from)->subDays(7)->format('Y-m-d');
+        $this->to = Carbon::parse($this->to)->subDays(7)->format('Y-m-d');
     }
 
     public function toggleShowModal($agent=null)
@@ -96,16 +111,17 @@ class AgentInvoice extends Component
                 $paymentForAgent = PaymentTransaction::query()
                     ->where('agent_id', $row['agent']['id'])
                     ->when($this->from && $this->to, function ($query) {
-                        return $query->whereBetween('created_at', [$this->from, $this->to]);
+                        return $query->whereDate('created_at', '>=', $this->from)
+                            ->whereDate('created_at', '<=', $this->to);
                     })
                     ->sum('amount');
 
                 foreach ($row['visas'] as $visa) {
-                    $totalFromVisas += $visa->total * $visa->qty;
+                    $totalFromVisas += $visa->totalAmount;
                 }
 
                 foreach ($row['services'] as $service) {
-                    $totalFromServices += $service->amount * $service->qty;
+                    $totalFromServices += $service->totalAmount;
                 }
 
                 // Check if there are existing records for the agent in agent_invoices table
@@ -118,30 +134,35 @@ class AgentInvoice extends Component
 
                 $lastTwoDigitsOfYear = substr(date('y'), -2);
 
-                $settings = Setting::query()->first();
-
                 if(!$lastRow){
-                    if($settings->invoice_start){
-                        $nextInvoiceNumber = $settings->invoice_start;
-                    }
-                }
-                if($lastRow){
-                    [$evac_name, $year, $count] = explode('/', $lastRow->invoice_title);
-                    if(intval(trim($year)) < intval(date('y'))){
-                        $nextInvoiceNumber = 1;
-                    }
+                    $nextInvoiceNumber = 1;
                 }
 
                 // Generate the invoice title with leading zeros
                 $invoiceTitle = 'EV / ' . $lastTwoDigitsOfYear . ' / ' . str_pad($nextInvoiceNumber, 3, '0', STR_PAD_LEFT);
 
-                // Create the AgentInvoice record
-                \App\Models\AgentInvoice::query()->create([
-                    'agent_id' => $row['agent']['id'],
-                    'invoice_title' => $invoiceTitle,
-                    'total_amount' => $totalFromServices + $totalFromVisas,
-                    'payment_received' => $paymentForAgent,
-                ]);
+                $rawExistBeforeForAgent = \App\Models\AgentInvoice::query()
+                    ->where('agent_id',$row['agent']['id'])
+                    ->where('from', $this->from)
+                    ->where('to', $this->to)
+                    ->first();
+
+                if(!is_null($rawExistBeforeForAgent)){
+                    $rawExistBeforeForAgent->update([
+                        'total_amount' => $totalFromServices + $totalFromVisas,
+                        'payment_received' => $paymentForAgent,
+                        ]);
+                }else{
+                    // Create the AgentInvoice record
+                    \App\Models\AgentInvoice::query()->create([
+                        'agent_id' => $row['agent']['id'],
+                        'invoice_title' => $invoiceTitle,
+                        'total_amount' => $totalFromServices + $totalFromVisas,
+                        'payment_received' => $paymentForAgent,
+                        'from' => $this->from,
+                        'to' => $this->to,
+                    ]);
+                }
             }
         }
         $this->showSaveInvoiceMessage = true;

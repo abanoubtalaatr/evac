@@ -40,6 +40,7 @@ class AgentSales extends Component
         $this->visaTypes = VisaType::query()->get();
     }
 
+
     public function updatedAgentId()
     {
         if(!is_null($this->agent)) {
