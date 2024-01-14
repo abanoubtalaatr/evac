@@ -15,15 +15,21 @@
                     <label for="status-select">@lang('admin.travel_agent')</label>
                     @include('livewire.admin.shared.agent_search_html')
                 </div>
-                <div class="form-group col-3 mt-2 form_wrapper">
-                    <label for="status-select">@lang('admin.from')</label>
-                    <input class="form-control border  contact-input" type="date" wire:model="from">
+                <div class="form-group col-2 mt-4 form_wrapper">
+                    <button class="btn btn-warning" wire:click="previousWeek"> Previous week</button>
                 </div>
-                <div class="form-group col-3 mt-2 form_wrapper">
-                    <label for="status-select">@lang('admin.to')</label>
-                    <input class="form-control border  contact-input" type="date" wire:model="to">
+                <div class="form-group col-2 mt-2 form_wrapper">
+                    <label for="status-select">@lang('admin.from')</label>
+                    <input class="form-control border contact-input" type="date" wire:model="from" readonly>
                 </div>
 
+                <div class="form-group col-2 mt-2 form_wrapper">
+                    <label for="status-select">@lang('admin.to')</label>
+                    <input class="form-control border contact-input" type="date" wire:model="to" readonly>
+                </div>
+                <div class="form-group col-2 mt-4 form_wrapper">
+                    <button class="btn btn-success" wire:click="nextWeek"> Next week</button>
+                </div>
                 <div class="my-2 form_wrapper d-flex">
                     @include('livewire.admin.travel-agent.popup.send-email')
 {{--                    <div class="form-group col-3 mx-2">--}}

@@ -8,6 +8,9 @@
             <a style='text-align:center;cursor:pointer' class="button btn-red big"  wire:click="emptyForm"  id="addInvoiceButton">@lang('site.create_new')</a>
 
         </div>
+        @if(session()->has('success'))
+            <div class="alert alert-info">{{session('success')}}</div>
+        @endif
         <div class="table-page-wrap">
 
             <div class="row d-flex align-items-center my-3 border p-2 rounded">
@@ -46,6 +49,7 @@
                             <td>
                                 <div class="actions">
 
+                                    <button class="btn btn-warning" wire:click="recalculateInvoice({{$record->id}})">Re calculate</button>
                                     @include('livewire.admin.invoice.edit', ['invoice' => $record])
                                     <a style="cursor:pointer;" wire:click="showInvoice({{$record->id}})" class="no-btn"><i
                                             class="far fa-edit blue"></i></a>
