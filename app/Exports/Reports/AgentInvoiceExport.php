@@ -76,8 +76,10 @@ class AgentInvoiceExport implements FromCollection
                 $totalServiceTransactionsAmount += \App\Models\ServiceTransaction::query()->where('agent_id', $agent['agent']['id'])->sum('vat');
             }
         }
-        $oldBalance = ($totalApplicationAmount + $totalServiceTransactionsAmount) - $totalPayment - $totalAmount;
 
+        $rawBalance = $totalApplicationAmount + $totalServiceTransactionsAmount - $totalPayment - $totalAmount;
+
+        $oldBalance = ($rawBalance < 0) ? -$rawBalance : $rawBalance;
         $dataRows[] = [
 
             'Item #' => '',

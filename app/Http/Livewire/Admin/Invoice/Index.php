@@ -49,11 +49,30 @@ class Index extends Component
 
     public function recalculateInvoice($id)
     {
+
         $invoice = \App\Models\AgentInvoice::query()->find($id);
+        $fromDate = '1970-01-01';
+
+        $totalAmountFromDayOneUntilEndOfInvoice = (new AgentInvoiceService())->getAgentData($invoice->agent_id, $fromDate,$invoice->to);
+
+        $allAmountFromDayOneUntilEndOfInvoice = PaymentTransaction::query()
+            ->where('agent_id', $invoice->agent_id)
+            ->whereDate('created_at', '>=', $fromDate)
+            ->whereDate('created_at', '<=', $invoice->to)
+            ->sum('amount');
+
+        $totalForInvoice = 0;
+
+        foreach ($totalAmountFromDayOneUntilEndOfInvoice['visas'] as $visa){
+            $totalForInvoice +=$visa->totalAmount;
+        }
+        foreach ($totalAmountFromDayOneUntilEndOfInvoice['services'] as $service){
+            $totalForInvoice +=$service->totalAmount;
+        }
 
         $paymentForAgent = PaymentTransaction::query()
             ->where('agent_id', $invoice->agent_id)
-            ->whereDate('created_at', '>=', $invoice->from)
+            ->whereDate('created_at', '>=', $fromDate)
             ->whereDate('created_at', '<=', $invoice->to)
             ->sum('amount');
 
@@ -65,9 +84,15 @@ class Index extends Component
         foreach ($data['services'] as $service){
             $totalAmount +=$service->totalAmount;
         }
+        $oldBalance = $totalForInvoice - $allAmountFromDayOneUntilEndOfInvoice - $totalAmount;
+        if($oldBalance < 0){
+            $oldBalance = -$oldBalance;
+        }
         $invoice->update([
             'total_amount' => $totalAmount,
             'payment_received' => $paymentForAgent,
+            'old_balance' => $oldBalance,
+            'grand_total' => $totalAmount + $oldBalance
         ]);
 
         session()->flash('success',__('Recalculate successfully'));
