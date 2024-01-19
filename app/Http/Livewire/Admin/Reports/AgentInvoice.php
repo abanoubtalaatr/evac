@@ -172,7 +172,7 @@ class AgentInvoice extends Component
                     $lastTwoDigitsOfYear = substr(date('y'), -2);
 
                     if ($settings->is_new_year == 1) {
-                        $lastTwoDigitsOfYear = substr(date('y'), -2) + 1;
+                        $lastTwoDigitsOfYear = substr(date('y'), -2) ;
 
                         if ($settings->invoice_start) {
                             $nextInvoiceNumber = intval($settings->invoice_start);
