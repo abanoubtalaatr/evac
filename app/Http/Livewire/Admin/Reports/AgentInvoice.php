@@ -100,14 +100,33 @@ class AgentInvoice extends Component
     }
     public function saveInvoices()
     {
-        $data = (new AgentInvoiceService())->getRecords(null,$this->from, $this->to);
+
+        $data = (new AgentInvoiceService())->getRecords(null, $this->from, $this->to);
+        $fromDate = '1970-01-01';
 
         foreach ($data['agents'] as $row) {
             $totalFromVisas = 0;
             $totalFromServices = 0;
-            $paymentForAgent = 0;
-
             if (!is_null($row['agent'])) {
+                $settings = Setting::query()->first();
+
+                $totalAmountFromDayOneUntilEndOfInvoice = (new AgentInvoiceService())->getAgentData($row['agent']['id'], $fromDate, $this->to);
+
+                $allAmountFromDayOneUntilEndOfInvoice = PaymentTransaction::query()
+                    ->where('agent_id', $row['agent']['id'])
+                    ->whereDate('created_at', '>=', $fromDate)
+                    ->whereDate('created_at', '<=', $this->to)
+                    ->sum('amount');
+
+                $totalForInvoice = 0;
+
+                foreach ($totalAmountFromDayOneUntilEndOfInvoice['visas'] as $visa) {
+                    $totalForInvoice += $visa->totalAmount;
+                }
+                foreach ($totalAmountFromDayOneUntilEndOfInvoice['services'] as $service) {
+                    $totalForInvoice += $service->totalAmount;
+                }
+
                 $paymentForAgent = PaymentTransaction::query()
                     ->where('agent_id', $row['agent']['id'])
                     ->when($this->from && $this->to, function ($query) {
@@ -124,43 +143,73 @@ class AgentInvoice extends Component
                     $totalFromServices += $service->totalAmount;
                 }
 
+                $oldBalance = $totalForInvoice - $allAmountFromDayOneUntilEndOfInvoice - ($totalFromServices + $totalFromVisas);
+                if ($oldBalance < 0) {
+                    $oldBalance = -$oldBalance;
+                }
+
+                // Check if it's a new year and reset the invoice number
+
                 // Check if there are existing records for the agent in agent_invoices table
                 $existingRecordsCount = \App\Models\AgentInvoice::query()
                     ->count();
 
-                $lastRow = \App\Models\AgentInvoice::query()->latest()->first();
+                $lastRow = \App\Models\AgentInvoice::query()->orderBy('invoice_title','desc')->latest()->first();
 
-                $nextInvoiceNumber = $existingRecordsCount + 1;
+                if ($lastRow) {
+                    $lastTwoDigitsOfYear = intval(trim(substr($lastRow->invoice_title, 4, 3)));
+                    $nextInvoiceNumber = intval(trim(substr($lastRow->invoice_title, 10, 3))) + 1;
 
-                $lastTwoDigitsOfYear = substr(date('y'), -2);
 
-                if(!$lastRow){
+                    if ($settings->is_new_year == 1) {
+                        $nextInvoiceNumber = 1;
+                        if ($settings->invoice_start) {
+                            $nextInvoiceNumber = intval($settings->invoice_start) +1;
+                        }
+                    }
+                } else {
                     $nextInvoiceNumber = 1;
+                    $lastTwoDigitsOfYear = substr(date('y'), -2);
+
+                    if ($settings->is_new_year == 1) {
+                        $lastTwoDigitsOfYear = substr(date('y'), -2) + 1;
+
+                        if ($settings->invoice_start) {
+                            $nextInvoiceNumber = intval($settings->invoice_start);
+                        }
+                    }
                 }
 
+                $settings->update(['is_new_year' => 0]);
                 // Generate the invoice title with leading zeros
                 $invoiceTitle = 'EV / ' . $lastTwoDigitsOfYear . ' / ' . str_pad($nextInvoiceNumber, 3, '0', STR_PAD_LEFT);
 
                 $rawExistBeforeForAgent = \App\Models\AgentInvoice::query()
-                    ->where('agent_id',$row['agent']['id'])
-                    ->where('from', $this->from)
-                    ->where('to', $this->to)
+                    ->where('agent_id', $row['agent']['id'])
+                    ->whereDate('from', $this->from)
+                    ->whereDate('to', $this->to)
                     ->first();
 
-                if(!is_null($rawExistBeforeForAgent)){
+                $totalAmount = $totalFromServices + $totalFromVisas;
+                if (!is_null($rawExistBeforeForAgent)) {
                     $rawExistBeforeForAgent->update([
-                        'total_amount' => $totalFromServices + $totalFromVisas,
+                        'total_amount' => $totalAmount,
                         'payment_received' => $paymentForAgent,
-                        ]);
-                }else{
+                        'old_balance' => $oldBalance,
+                        'grand_total' => $totalAmount + $oldBalance,
+                        'invoice_title' => $invoiceTitle, // Update invoice title
+                    ]);
+                } else {
                     // Create the AgentInvoice record
                     \App\Models\AgentInvoice::query()->create([
                         'agent_id' => $row['agent']['id'],
                         'invoice_title' => $invoiceTitle,
-                        'total_amount' => $totalFromServices + $totalFromVisas,
-                        'payment_received' => $paymentForAgent,
                         'from' => $this->from,
                         'to' => $this->to,
+                        'total_amount' => $totalAmount,
+                        'payment_received' => $paymentForAgent,
+                        'old_balance' => $oldBalance,
+                        'grand_total' => $totalAmount + $oldBalance
                     ]);
                 }
             }
@@ -171,6 +220,20 @@ class AgentInvoice extends Component
     public function hideSaveInvoiceMessage()
     {
         $this->showSaveInvoiceMessage= false;
+    }
+
+    public function endYear()
+    {
+        $this->from = Carbon::parse($this->from)->startOfWeek(Carbon::THURSDAY)->format('Y-m-d');
+        $this->to = Carbon::now()->format('Y-m-d');
+    }
+
+    public function startYear()
+    {
+        $this->from = Carbon::now()->format('Y-m-d');
+        $this->to = Carbon::parse($this->from)->addDays(7)->format('Y-m-d');
+        $settings = Setting::query()->first();
+        $settings->update(['is_new_year' => 1]);
     }
     public function setAgentToNull()
     {

@@ -31,7 +31,9 @@
                     <tr>
                         <th class="text-center">#</th>
                         <th class="text-center">@lang('admin.agent')</th>
-                        <th class="text-center">@lang('admin.date')</th>
+                        <th class="text-center">@lang('admin.from')</th>
+                        <th class="text-center">@lang('admin.to')</th>
+
                         <th class="text-center">@lang('admin.title_invoice')</th>
                         <th class="text-center">@lang('admin.total_amount')</th>
                         <th>@lang('site.actions')</th>
@@ -42,17 +44,19 @@
                         <tr>
                             <td>#{{$loop->index + 1}}</td>
                             <td class="text-center">{{$record->agent?$record->agent->name:""}}</td>
-                            <td class='text-center'>{{\Illuminate\Support\Carbon::parse($record->created_at)->format('Y-m-d')}}</td>
+                            <td class='text-center'>{{\Illuminate\Support\Carbon::parse($record->from)->format('Y-m-d')}}</td>
+                            <td class='text-center'>{{\Illuminate\Support\Carbon::parse($record->to)->format('Y-m-d')}}</td>
+
                             <td class='text-center'>{{$record->invoice_title}}</td>
                             <td class='text-center'>{{$record->total_amount}}</td>
 
                             <td>
                                 <div class="actions">
-
+                                    <a style="cursor:pointer;" wire:click="showInvoice({{$record->id}})" class="no-btn"><i
+                                            class="far fa-eye blue"></i></a>
                                     <button class="btn btn-warning" wire:click="recalculateInvoice({{$record->id}})">Re calculate</button>
                                     @include('livewire.admin.invoice.edit', ['invoice' => $record])
-                                    <a style="cursor:pointer;" wire:click="showInvoice({{$record->id}})" class="no-btn"><i
-                                            class="far fa-edit blue"></i></a>
+
                                     <button  style="cursor:pointer;" wire:click="destroy({{$record->id}})" class="btn btn-danger">Delete</button>
 
                                 </div>

@@ -13,9 +13,11 @@
             <div class="modal-body">
                 <div class="form-group my-2 ">
                     <label class="" for="agent">Travel agent : </label>
-                    <select wire:model="form.agent_id" class="form-control my-select-2" id="agent_id">
+                    <select wire:model="form.agent_id" class="form-control my-select-2" id="agent_id" readonly>
                         <option value="">Select Travel agent</option>
-                        @foreach ($agents as $agent)
+{{--                        <input type="text" readonly wire:model="form.agent_id" class="form-control" id="title_invoice">--}}
+
+                                                @foreach ($agents as $agent)
                             <option value="{{ $agent->id }}">{{ $agent->name }}</option>
                         @endforeach
                     </select>
@@ -23,24 +25,40 @@
                 </div>
                 <div class="form-group my-2">
                     <label for="title_invoice">Title invoice:</label>
-                    <input type="text" wire:model="form.invoice_title" class="form-control" id="title_invoice">
+                    <input type="text" readonly wire:model="form.invoice_title" class="form-control" id="title_invoice">
                     @error('form.invoice_title')<p style='color:red'> {{$message}} </p>@enderror
                 </div>
+
                 <div class="form-group my-2">
-                    <label for="date">Date :</label>
-                    <input type="date" wire:model="form.created_at" class="form-control" id="date">
-                    @error('form.created_at')<p style='color:red'> {{$message}} </p>@enderror
+                    <label for="date">From :</label>
+                    <input type="date" readonly wire:model="form.from" class="form-control" id="date">
+                    @error('form.from')<p style='color:red'> {{$message}} </p>@enderror
+                </div>
+                <div class="form-group my-2">
+                    <label for="date">To :</label>
+                    <input type="date" readonly wire:model="form.to" class="form-control" id="date">
+                    @error('form.from')<p style='color:red'> {{$message}} </p>@enderror
                 </div>
                 <div class="form-group my-2">
                     <label for="companyName">Total amount :</label>
-                    <input type="text" wire:model="form.total_amount" class="form-control" id="total_amount">
-                    @error('form.created_at')<p style='color:red'> {{$message}} </p>@enderror
+                    <input type="text" readonly wire:model="form.total_amount" class="form-control" id="total_amount">
+                    @error('form.total_amount')<p style='color:red'> {{$message}} </p>@enderror
+                </div>
+                <div class="form-group my-2">
+                    <label for="companyName">Old Balance :</label>
+                    <input type="text" readonly wire:model="form.old_balance" class="form-control" id="old_balance">
+                    @error('form.old_balance')<p style='color:red'> {{$message}} </p>@enderror
+                </div>
+                <div class="form-group my-2">
+                    <label for="companyName">Grand total :</label>
+                    <input type="text" readonly wire:model="form.grand_total" class="form-control" id="grand_total">
+                    @error('form.grand_total')<p style='color:red'> {{$message}} </p>@enderror
                 </div>
             </div>
 
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary"  onclick="$('#showInvoiceModal{{$invoice->id}}').modal('hide');" wire:click="emptyForm" data-dismiss="modal">Close</button>
-                <button type="submit" class="btn btn-primary" wire:click="update">Save</button>
+{{--                <button type="submit" class="btn btn-primary" wire:click="update">Save</button>--}}
             </div>
 
         </div>

@@ -214,8 +214,10 @@
                     @endphp
 
                     @php
-                        $oldBalance = ($totalApplicationAmount + $totalServiceTransactionsAmount) - $totalPayment - $totalAmount;
 
+                        $rawBalance = $totalApplicationAmount + $totalServiceTransactionsAmount - $totalPayment - $totalAmount;
+
+                        $oldBalance = ($rawBalance < 0) ? -$rawBalance : $rawBalance;
                     @endphp
 
                     {{-- Display total --}}

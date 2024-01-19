@@ -30,6 +30,7 @@
                 <div class="form-group col-2 mt-4 form_wrapper">
                     <button class="btn btn-success" wire:click="nextWeek"> Next week</button>
                 </div>
+                <hr>
                 <div class="my-2 form_wrapper d-flex">
                     @include('livewire.admin.travel-agent.popup.send-email')
 {{--                    <div class="form-group col-3 mx-2">--}}
@@ -45,7 +46,16 @@
                         <p class="text-danger my-2 p-2">Invoices saved successfully <button class="border-0 mx-3" wire:click="hideSaveInvoiceMessage">Ok</button></p>
                        @endif
                     </div>
+                    <div class="col-2 mx-2">
+                        <button class="btn btn-danger form-control contact-input" wire:click="endYear" >End of Year</button>
+                    </div>
+                    <div class="col-2 mx-2">
+                        <button @if(\App\Models\Setting::query()->first()->is_new_year ==1)disabled @endif class="btn btn-info form-control contact-input" wire:click="startYear" >Start new Year</button>
+                    </div>
+
 {{--                @include('livewire.admin.shared.reports.actions')--}}
+                    <hr>
+
                 </div>
                 <div class="form-group col-2 form_wrapper">
                     <button wire:click="resetData()"
@@ -145,7 +155,9 @@
                     @endforeach
 
                     @php
-                        $oldBalance = ($totalApplicationAmount + $totalServiceTransactionsAmount) - $totalPayment - $totalAmount;
+                        $rawBalance = $totalApplicationAmount + $totalServiceTransactionsAmount - $totalPayment - $totalAmount;
+
+                        $oldBalance = ($rawBalance < 0) ? -$rawBalance : $rawBalance;
                     @endphp
                     {{-- Display total --}}
                     <tr>
