@@ -101,17 +101,47 @@
                 $fromDate = request()->fromDate;
                 $toDate = request()->toDate;
 
-        $applicationServiceFees = \App\Models\Application::query()->whereBetween('created_at', [$fromDate, $toDate])->get()->sum('service_fee');
-        $applicationDubaiFees = \App\Models\Application::query()->whereBetween('created_at', [$fromDate, $toDate])->get()->sum('dubai_fee');
-        $applicationVats = \App\Models\Application::query()->whereBetween('created_at', [$fromDate, $toDate])->get()->sum('vat');
-        $serviceTransactionServiceFees = \App\Models\ServiceTransaction::query()->whereBetween('created_at', [$fromDate, $toDate])->get()->sum('service_fee');
-        $serviceTransactionDubaiFees = \App\Models\ServiceTransaction::query()->whereBetween('created_at', [$fromDate, $toDate])->get()->sum('dubai_fee');
-        $serviceTransactionVats = \App\Models\ServiceTransaction::query()->whereBetween('created_at', [$fromDate, $toDate])->get()->sum('vat');
-        $data['total_sales'] = $applicationServiceFees + $applicationDubaiFees + $applicationDubaiFees + $serviceTransactionServiceFees + $applicationVats + $serviceTransactionDubaiFees + $serviceTransactionVats;
-        $data['profit_loss'] = ($applicationServiceFees + $serviceTransactionServiceFees) - ($applicationVats + $serviceTransactionVats);
-        $data['vat'] = $applicationVats + $serviceTransactionVats;
-        $data['dubai_fee'] = $applicationDubaiFees + $serviceTransactionDubaiFees;
-        $data['payments_received'] = \App\Models\PaymentTransaction::query()->whereBetween('created_at', [$fromDate, $toDate])->sum('amount');
+            $applicationServiceFees =  \App\Models\Application::query()
+                ->whereDate('created_at', '>=', $fromDate)
+                ->whereDate('created_at', '<=', $toDate)
+                ->sum('service_fee');
+
+            $applicationDubaiFees =  \App\Models\Application::query()
+                ->whereDate('created_at', '>=', $fromDate)
+                ->whereDate('created_at', '<=', $toDate)
+                ->get()->sum('dubai_fee');
+
+            $applicationVats =  \App\Models\Application::query()->whereDate('created_at', '>=', $fromDate)
+                ->whereDate('created_at', '<=', $toDate)
+                ->get()->sum('vat');
+
+            $serviceTransactionServiceFees = \App\Models\ServiceTransaction::query()
+                ->whereDate('created_at', '>=', $fromDate)
+                ->whereDate('created_at', '<=', $toDate)
+                ->get()
+                ->sum('service_fee');
+
+            $serviceTransactionDubaiFees =  \App\Models\ServiceTransaction::query()
+                ->whereDate('created_at', '>=', $fromDate)
+                ->whereDate('created_at', '<=', $toDate)
+                ->get()
+                ->sum('dubai_fee');
+
+            $serviceTransactionVats =  \App\Models\ServiceTransaction::query()
+                ->whereDate('created_at', '>=', $fromDate)
+                ->whereDate('created_at', '<=', $toDate)
+                ->get()
+                ->sum('vat');
+
+            $totalSales = $applicationServiceFees  + $applicationDubaiFees  +  $serviceTransactionServiceFees  + $serviceTransactionDubaiFees ;
+            $data['total_sales'] = $totalSales;
+            $data['profit_loss'] = $totalSales - ($serviceTransactionDubaiFees + $applicationDubaiFees)- ($serviceTransactionVats+ $applicationVats);
+            $data['vat'] = $applicationVats + $serviceTransactionVats;
+            $data['dubai_fee'] = $applicationDubaiFees + $serviceTransactionDubaiFees;
+            $data['payments_received'] =  \App\Models\PaymentTransaction::query()
+                ->whereDate('created_at', '>=', $fromDate)
+                ->whereDate('created_at', '<=', $toDate)
+                ->sum('amount');
 
             @endphp
 
