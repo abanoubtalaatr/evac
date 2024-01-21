@@ -146,9 +146,6 @@ class AgentInvoice extends Component
 
 
                 $oldBalance = ($totalForInvoice) - $allAmountFromDayOneUntilEndOfInvoice;
-                if ($oldBalance < 0) {
-                    $oldBalance = -$oldBalance;
-                }
 
                 $lastRow = \App\Models\AgentInvoice::query()->orderBy('invoice_title','desc')->latest()->first();
 
