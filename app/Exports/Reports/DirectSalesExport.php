@@ -22,7 +22,7 @@ class DirectSalesExport implements FromCollection, WithHeadings, ShouldAutoSize
 
         foreach ($this->data['applications']['invoices'] as $application) {
             $dataRows[] = [
-                'Date' => Carbon::parse($application->create_at)->format('Y-m-d'),
+                'Date' => Carbon::parse($application->created_at)->format('Y-m-d'),
                 'Application name' =>   $application->first_name . ' ' . $application->last_name.  ' - ' . $application->passport_no,
                 'Amount' => $application->amount,
                 'Payment' => $application->payment_method =='invoice' ?"Unpaid" :"Paid",
@@ -32,7 +32,7 @@ class DirectSalesExport implements FromCollection, WithHeadings, ShouldAutoSize
         }
         foreach ($this->data['serviceTransactions']['invoices'] as $serviceTransaction) {
             $dataRows[] = [
-                'Date' => Carbon::parse($serviceTransaction->create_at)->format('Y-m-d'),
+                'Date' => Carbon::parse($serviceTransaction->created_at)->format('Y-m-d'),
                 'Application name' =>   $serviceTransaction->name . ' ' . $serviceTransaction->surname .  ' - ' . $serviceTransaction->passport_no,
                 'Amount' => $serviceTransaction->amount,
                 'Payment' => $serviceTransaction->payment_method =='invoice' ?"Unpaid" :"Paid",
@@ -43,7 +43,7 @@ class DirectSalesExport implements FromCollection, WithHeadings, ShouldAutoSize
 
         foreach ($this->data['applications']['cashes'] as $application) {
             $dataRows[] = [
-                'Date' => Carbon::parse($application->create_at)->format('Y-m-d'),
+                'Date' => Carbon::parse($application->created_at)->format('Y-m-d'),
                 'Application name' =>   $application->first_name . ' ' . $application->last_name .  ' - ' . $application->passport_no,
                 'Amount' => $application->amount,
                 'Payment' => $application->payment_method,
@@ -52,7 +52,7 @@ class DirectSalesExport implements FromCollection, WithHeadings, ShouldAutoSize
         }
         foreach ($this->data['serviceTransactions']['cashes'] as $serviceTransaction) {
             $dataRows[] = [
-                'Date' => Carbon::parse($serviceTransaction->create_at)->format('Y-m-d'),
+                'Date' => Carbon::parse($serviceTransaction->created_at)->format('Y-m-d'),
                 'Application name' =>   $serviceTransaction->name . ' ' . $serviceTransaction->surname.  ' - ' . $application->passport_no,
                 'Amount' => $serviceTransaction->amount,
                 'Payment' => $serviceTransaction->payment_method,
