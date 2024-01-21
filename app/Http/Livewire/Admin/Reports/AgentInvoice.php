@@ -223,8 +223,21 @@ class AgentInvoice extends Component
 
     public function endYear()
     {
-        $this->from = Carbon::parse($this->from)->startOfWeek(Carbon::THURSDAY)->format('Y-m-d');
-        $this->to = Carbon::now()->format('Y-m-d');
+        // Get the current date
+        $currentDate = Carbon::now();
+
+        // Determine the end of the previous or current year
+        if ($currentDate->month == 1) {
+
+            // If it's January, set from to the end of the previous year
+            $this->from = $currentDate->subYear()->endOfYear()->copy()->previous(Carbon::FRIDAY)->format('Y-m-d');
+        } else {
+            // If it's any other month, set from to the end of the current year
+            $this->from = $currentDate->endOfYear()->format('Y-m-d');
+        }
+
+        // Set to as the current date
+        $this->to = $currentDate->format('Y-m-d');
     }
 
     public function startYear()
