@@ -242,8 +242,17 @@ class AgentInvoice extends Component
 
     public function startYear()
     {
-        $this->from = Carbon::now()->format('Y-m-d');
-        $this->to = Carbon::parse($this->from)->addDays(7)->format('Y-m-d');
+        // Get the current year
+        $currentYear = Carbon::now()->year;
+
+        // Set "from" to January 1st of the current year
+        $this->from = Carbon::createFromDate($currentYear, 1, 1)->format('Y-m-d');
+
+        // Find the first Thursday in January of the current year
+        $this->to = Carbon::createFromDate($currentYear, 1, 1)
+            ->next(Carbon::THURSDAY)
+            ->format('Y-m-d');
+
         $settings = Setting::query()->first();
         $settings->update(['is_new_year' => 1]);
     }
