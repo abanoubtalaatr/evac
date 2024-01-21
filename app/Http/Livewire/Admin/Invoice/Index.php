@@ -3,14 +3,18 @@
 namespace App\Http\Livewire\Admin\Invoice;
 
 use App\Http\Livewire\Traits\ValidationTrait;
+use App\Mail\Reports\AgentInvoiceMail;
 use App\Models\Agent;
 use App\Models\PaymentTransaction;
 use App\Models\Setting;
 use App\Services\AgentInvoiceService;
+use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\Mail;
 use Livewire\Component;
 use Livewire\WithPagination;
+use Maatwebsite\Excel\Facades\Excel;
 use function App\Helpers\isOwner;
 
 class Index extends Component
@@ -26,6 +30,9 @@ class Index extends Component
     public $invoice;
     public $agent;
     public $agents;
+    public $email;
+    public $showSendEmail=false;
+    public $agentEmailed;
 
     protected $paginationTheme = 'bootstrap';
 
@@ -57,8 +64,72 @@ class Index extends Component
             ->whereDate('to', $to)
             ->first();
 
-        $url = route('admin.report.print.agent_invoices', ['agent' => $this->agentEmailed,'fromDate' => $this->from,'toDate' => $this->to, 'invoice' => $invoice->id]);
+        $url = route('admin.report.print.agent_invoices', ['agent' => $this->agentEmailed,'fromDate' => $from,'toDate' => $to, 'invoice' => $invoice->id]);
         $this->emit('printTable', $url);
+    }
+
+    public function toggleShowModal($agent=null, $from, $to)
+    {
+        $this->email = null;
+        $this->showSendEmail = !$this->showSendEmail;
+        $this->agentEmailed = $agent;
+        $this->from = $from;
+        $this->to = $to;
+    }
+
+    public function sendEmail(Request $request)
+    {
+        $invoice = \App\Models\AgentInvoice::query()
+            ->where('agent_id', $this->agentEmailed)
+            ->whereDate('from', $this->from)
+            ->whereDate('to', $this->to)
+            ->first();
+
+        if(is_null($this->agentEmailed) || $this->agentEmailed =='no_result') {
+            $this->message = "You must choose travel agent";
+            return;
+        }
+
+        $agent = Agent::query()->find($this->agentEmailed);
+
+        $request->merge([
+            'agent' => $this->agentEmailed,
+            'fromDate' => $this->from,
+            'toDate' => $this->to,
+            'invoice' => $invoice->id
+        ]);
+
+
+        $emails = explode(',', $this->email);
+        foreach ($emails as $email){
+            Mail::to($email)->send(new AgentInvoiceMail($agent, $this->from, $this->to));
+        }
+        $this->showSendEmail = !$this->showSendEmail;
+
+//        $this->agent = null;
+//        return redirect()->to(route('admin.report.agent_invoices'));
+    }
+
+
+    public function exportReport($id, $from, $to, Request $request)
+    {
+        $data = (new AgentInvoiceService())->getRecords($id, $from, $to);
+
+        $invoice = \App\Models\AgentInvoice::query()
+            ->where('agent_id', $id)
+            ->whereDate('from', $from)
+            ->whereDate('to', $to)
+            ->first();
+
+        $request->merge([
+            'agent' => $id,
+            'fromDate' => $from,
+            'toDate' => $to,
+            'invoice' => $invoice->id
+        ]);
+
+        $fileExport = (new \App\Exports\Reports\AgentInvoiceExport($data));
+        return Excel::download($fileExport, 'agent_invoice.csv');
     }
 
     public function recalculateInvoice($id)
