@@ -335,7 +335,6 @@ class AgentInvoice extends Component
            'agent' => $this->agentEmailed,
            'fromDate' => $this->from,
            'toDate' => $this->to,
-            'invoice' => $invoice->id
         ]);
 
 
