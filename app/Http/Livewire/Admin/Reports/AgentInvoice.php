@@ -318,6 +318,12 @@ class AgentInvoice extends Component
     {
         $this->validate();
 
+        $invoice = \App\Models\AgentInvoice::query()
+            ->where('agent_id', $this->agentEmailed)
+            ->whereDate('from', $this->from)
+            ->whereDate('to', $this->to)
+            ->first();
+
         if(is_null($this->agentEmailed) || $this->agentEmailed =='no_result') {
             $this->message = "You must choose travel agent";
             return;
@@ -329,6 +335,7 @@ class AgentInvoice extends Component
            'agent' => $this->agentEmailed,
            'fromDate' => $this->from,
            'toDate' => $this->to,
+            'invoice' => $invoice->id
         ]);
 
 
