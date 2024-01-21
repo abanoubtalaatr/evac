@@ -23,7 +23,7 @@ class DirectSalesExport implements FromCollection, WithHeadings, ShouldAutoSize
         foreach ($this->data['applications']['invoices'] as $application) {
             $dataRows[] = [
                 'Date' => Carbon::parse($application->create_at)->format('Y-m-d'),
-                'Application name' =>   $application->first_name . ' ' . $application->last_name,
+                'Application name' =>   $application->first_name . ' ' . $application->last_name.  ' - ' . $application->passport_no,
                 'Amount' => $application->amount,
                 'Payment' => $application->payment_method =='invoice' ?"Unpaid" :"Paid",
                 'Type' => $application->visaType->name,
@@ -33,7 +33,7 @@ class DirectSalesExport implements FromCollection, WithHeadings, ShouldAutoSize
         foreach ($this->data['serviceTransactions']['invoices'] as $serviceTransaction) {
             $dataRows[] = [
                 'Date' => Carbon::parse($serviceTransaction->create_at)->format('Y-m-d'),
-                'Application name' =>   $serviceTransaction->name . ' ' . $serviceTransaction->surname,
+                'Application name' =>   $serviceTransaction->name . ' ' . $serviceTransaction->surname .  ' - ' . $serviceTransaction->passport_no,
                 'Amount' => $serviceTransaction->amount,
                 'Payment' => $serviceTransaction->payment_method =='invoice' ?"Unpaid" :"Paid",
                 'Type' => $serviceTransaction->service->name,
@@ -44,7 +44,7 @@ class DirectSalesExport implements FromCollection, WithHeadings, ShouldAutoSize
         foreach ($this->data['applications']['cashes'] as $application) {
             $dataRows[] = [
                 'Date' => Carbon::parse($application->create_at)->format('Y-m-d'),
-                'Application name' =>   $application->first_name . ' ' . $application->last_name,
+                'Application name' =>   $application->first_name . ' ' . $application->last_name .  ' - ' . $application->passport_no,
                 'Amount' => $application->amount,
                 'Payment' => $application->payment_method,
                 'Type' => $application->visaType->name,
@@ -53,7 +53,7 @@ class DirectSalesExport implements FromCollection, WithHeadings, ShouldAutoSize
         foreach ($this->data['serviceTransactions']['cashes'] as $serviceTransaction) {
             $dataRows[] = [
                 'Date' => Carbon::parse($serviceTransaction->create_at)->format('Y-m-d'),
-                'Application name' =>   $serviceTransaction->name . ' ' . $serviceTransaction->surname,
+                'Application name' =>   $serviceTransaction->name . ' ' . $serviceTransaction->surname.  ' - ' . $application->passport_no,
                 'Amount' => $serviceTransaction->amount,
                 'Payment' => $serviceTransaction->payment_method,
                 'Type' => $serviceTransaction->service->name,
