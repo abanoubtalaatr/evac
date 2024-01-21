@@ -48,7 +48,7 @@ class AgentInvoiceMail extends Mailable
             'from' => $this->fromDate,
             'toDate' => $this->toDate,
             'agent' => $this->agent,
-            'invoice' => $invoice->id
+//            'invoice' => $invoice->id
 
         ])->render();
 
