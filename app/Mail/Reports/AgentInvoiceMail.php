@@ -38,17 +38,18 @@ class AgentInvoiceMail extends Mailable
         $options->set('isPhpEnabled', true);
 
         $invoice = \App\Models\AgentInvoice::query()
-            ->where('agent_id', $this->agent)
+            ->where('agent_id', $this->agent->id)
             ->whereDate('from', $this->fromDate)
             ->whereDate('to', $this->toDate)
             ->first();
+
         $dompdf = new Dompdf($options);
-        // Load HTML content
+        // Load HTML con
         $html = view('livewire.admin.PrintReports.agent_invoices')->with([
             'from' => $this->fromDate,
             'toDate' => $this->toDate,
             'agent' => $this->agent,
-//            'invoice' => $invoice->id
+            'invoice' => $invoice->id
 
         ])->render();
 

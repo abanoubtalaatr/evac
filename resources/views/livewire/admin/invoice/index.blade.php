@@ -14,6 +14,7 @@
         <div class="table-page-wrap">
 
             <div class="row d-flex align-items-center my-3 border p-2 rounded">
+                @include('livewire.admin.travel-agent.popup.send-email')
 
                     <div class="col-3 form-group form_wrapper">
                         <label for="status-select">@lang('admin.travel_agent')</label>
@@ -58,12 +59,11 @@
                                     @include('livewire.admin.invoice.edit', ['invoice' => $record])
 
                                     <button  style="cursor:pointer;" wire:click="destroy({{$record->id}})" class="btn btn-danger">Delete</button>
-                                    <td class="text-center">
-{{--                                        <button class="btn btn-primary" wire:click="printData('{{ $record['agent_id'] }}', '{{ $record['from'] }}', '{{ $record['to'] }}')">Print</button>--}}
-{{--                                        <button class="btn btn-secondary" wire:click="exportReport('{{$agent['agent']['id']}}')">CSV</button>--}}
-{{--                                        <button class="btn btn-info" wire:click="toggleShowModal('{{$agent['agent']['id']}}')">Email</button>--}}
+                                        <button class="btn btn-primary" wire:click="printData('{{ $record['agent_id'] }}', '{{ $record['from'] }}', '{{ $record['to'] }}')">Print</button>
+                                        <button class="btn btn-secondary" wire:click="exportReport('{{ $record['agent_id'] }}', '{{ $record['from'] }}', '{{ $record['to'] }}')">CSV</button>
+                                        <button class="btn btn-info" wire:click="toggleShowModal('{{ $record['agent_id'] }}', '{{ $record['from'] }}', '{{ $record['to'] }}')">Email</button>
 
-                                    </td>
+
                                 </div>
                             </td>
                             @endforeach
