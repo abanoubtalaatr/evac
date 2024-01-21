@@ -161,9 +161,9 @@
                     @endforeach
 
                     @php
-                        $rawBalance = $totalApplicationAmount + $totalServiceTransactionsAmount - $totalPayment;
+                        $oldBalance = $totalApplicationAmount + $totalServiceTransactionsAmount - $totalPayment;
 
-                       $oldBalance = ($rawBalance < 0) ? -$rawBalance : $rawBalance;
+//                       $oldBalance = ($rawBalance < 0) ? -$rawBalance : $rawBalance;
                     @endphp
                     {{-- Display total --}}
                     <tr>
