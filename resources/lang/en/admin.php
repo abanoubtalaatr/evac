@@ -129,7 +129,7 @@ return [
     'agent_sales' => "Agent sales",
     'agent_statement' => "Agent statement",
     "invoice_start" => 'Invoice start',
-    "management_invoice" => "Management invoices",
+    "management_invoice" => "manage invoices",
     "title_invoice" => "Title invoice",
     "total_amount" => "Total amount",
     "service_ref" => "Service ref"

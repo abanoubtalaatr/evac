@@ -2,6 +2,7 @@
 
 namespace App\Exports\Reports;
 use App\Models\Agent;
+use App\Models\AgentInvoice;
 use App\Models\PaymentTransaction;
 use App\Models\Setting;
 use Illuminate\Support\Carbon;
@@ -67,17 +68,22 @@ class AgentInvoiceExport implements FromCollection
 
         foreach ($this->data['agents'] as $agent) {
             if (!is_null($agent['agent'])){
-                $totalPayment += \App\Models\PaymentTransaction::query()->where('agent_id', $agent['agent']['id'])->sum('amount');
-                $totalApplicationAmount += \App\Models\Application::query()->where('travel_agent_id', $agent['agent']['id'])->sum('dubai_fee');
-                $totalApplicationAmount += \App\Models\Application::query()->where('travel_agent_id', $agent['agent']['id'])->sum('service_fee');
-                $totalApplicationAmount += \App\Models\Application::query()->where('travel_agent_id', $agent['agent']['id'])->sum('vat');
-                $totalServiceTransactionsAmount += \App\Models\ServiceTransaction::query()->where('agent_id', $agent['agent']['id'])->sum('dubai_fee');
-                $totalServiceTransactionsAmount += \App\Models\ServiceTransaction::query()->where('agent_id', $agent['agent']['id'])->sum('service_fee');
-                $totalServiceTransactionsAmount += \App\Models\ServiceTransaction::query()->where('agent_id', $agent['agent']['id'])->sum('vat');
+                $carbonFrom = \Illuminate\Support\Carbon::parse(request()->fromDate);
+                $carbonFrom->subDay();
+                $fromDate = '1970-01-01';
+
+                $totalPayment += \App\Models\PaymentTransaction::query()->whereDate('created_at', '>=', $fromDate)
+                    ->whereDate('created_at', '<=', request()->toDate)->where('agent_id', $agent['agent']['id'])->sum('amount');
+                $totalApplicationAmount += \App\Models\Application::query()->whereDate('created_at', '>=', $fromDate)->whereDate('created_at', '<=', $carbonFrom)->where('travel_agent_id', $agent['agent']['id'])->sum('dubai_fee');
+
+                $totalApplicationAmount += \App\Models\Application::query()->whereDate('created_at', '>=', $fromDate)->whereDate('created_at', '<=', $carbonFrom)->where('travel_agent_id', $agent['agent']['id'])->sum('service_fee');
+                $totalApplicationAmount += \App\Models\Application::query()->whereDate('created_at', '>=', $fromDate)->whereDate('created_at', '<=', $carbonFrom)->where('travel_agent_id', $agent['agent']['id'])->sum('vat');
+                $totalServiceTransactionsAmount += \App\Models\ServiceTransaction::query()->whereDate('created_at', '>=', $fromDate)->whereDate('created_at', '<=', $carbonFrom)->where('agent_id', $agent['agent']['id'])->sum('dubai_fee');
+                $totalServiceTransactionsAmount += \App\Models\ServiceTransaction::query()->whereDate('created_at', '>=', $fromDate)->whereDate('created_at', '<=', $carbonFrom)->where('agent_id', $agent['agent']['id'])->sum('service_fee');
+                $totalServiceTransactionsAmount += \App\Models\ServiceTransaction::query()->whereDate('created_at', '>=', $fromDate)->whereDate('created_at', '<=', $carbonFrom)->where('agent_id', $agent['agent']['id'])->sum('vat');
             }
         }
-
-        $rawBalance = $totalApplicationAmount + $totalServiceTransactionsAmount - $totalPayment - $totalAmount;
+        $rawBalance = $totalApplicationAmount + $totalServiceTransactionsAmount - $totalPayment;
 
         $oldBalance = ($rawBalance < 0) ? -$rawBalance : $rawBalance;
         $dataRows[] = [
@@ -253,7 +259,7 @@ class AgentInvoiceExport implements FromCollection
                 'Amount'=>""
             ];
             $dataRows[] = [
-                "Item #" =>    "INV No : " . Carbon::parse(now())->format('Y/m/d'),
+                "Item #" =>    "INV No : " . AgentInvoice::query()->find(request()->invoice)->invoice_title,
                 "Description"  => "",
                 "Qty" => "",
                 'Unit price' => "",

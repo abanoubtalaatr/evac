@@ -58,7 +58,12 @@
                                     @include('livewire.admin.invoice.edit', ['invoice' => $record])
 
                                     <button  style="cursor:pointer;" wire:click="destroy({{$record->id}})" class="btn btn-danger">Delete</button>
+                                    <td class="text-center">
+{{--                                        <button class="btn btn-primary" wire:click="printData('{{ $record['agent_id'] }}', '{{ $record['from'] }}', '{{ $record['to'] }}')">Print</button>--}}
+{{--                                        <button class="btn btn-secondary" wire:click="exportReport('{{$agent['agent']['id']}}')">CSV</button>--}}
+{{--                                        <button class="btn btn-info" wire:click="toggleShowModal('{{$agent['agent']['id']}}')">Email</button>--}}
 
+                                    </td>
                                 </div>
                             </td>
                             @endforeach
@@ -98,5 +103,43 @@
      });
 </script>
 @include('livewire.admin.shared.agent_search_script')
+<script>
+    document.addEventListener('livewire:load', function () {
+        Livewire.on('printTable', function (url) {
+            printPage(url);
+        });
+    });
+
+    function printPage(url) {
+        // Create an iframe element
+        var iframe = document.createElement('iframe');
+        // Set the source URL of the iframe
+        iframe.src = url;
+
+        // Set styles to hide the iframe
+        iframe.style.position = 'absolute';
+        iframe.style.top = '-9999px';
+        iframe.style.left = '-9999px';
+        iframe.style.width = '0';
+        iframe.style.height = '0';
+
+        // Append the iframe to the document body
+        document.body.appendChild(iframe);
+
+        iframe.onload = function() {
+            try {
+                iframe.contentWindow.print();
+            } catch (error) {
+                // Handle errors
+                console.error('Error printing:', error);
+            } finally {
+                // Remove the iframe after printing or in case of an error
+                console.log('Removing iframe');
+                // document.body.removeChild(iframe);
+            }
+        };
+    }
+
+</script>
 
 

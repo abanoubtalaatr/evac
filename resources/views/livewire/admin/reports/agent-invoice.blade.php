@@ -142,22 +142,28 @@
                             @endforeach
                         @endif
                         @php
-                            $totalPayment += \App\Models\PaymentTransaction::query()->where('agent_id', $agent['agent']['id'])->sum('amount');
-                            $totalApplicationAmount += \App\Models\Application::query()->where('travel_agent_id', $agent['agent']['id'])->sum('dubai_fee');
-                            $totalApplicationAmount += \App\Models\Application::query()->where('travel_agent_id', $agent['agent']['id'])->sum('service_fee');
-                            $totalApplicationAmount += \App\Models\Application::query()->where('travel_agent_id', $agent['agent']['id'])->sum('vat');
-                            $totalServiceTransactionsAmount += \App\Models\ServiceTransaction::query()->where('agent_id', $agent['agent']['id'])->sum('dubai_fee');
-                            $totalServiceTransactionsAmount += \App\Models\ServiceTransaction::query()->where('agent_id', $agent['agent']['id'])->sum('service_fee');
-                            $totalServiceTransactionsAmount += \App\Models\ServiceTransaction::query()->where('agent_id', $agent['agent']['id'])->sum('vat');
+                            $carbonFrom = \Illuminate\Support\Carbon::parse($this->from);
+    $carbonFrom->subDay();
+            $fromDate = '1970-01-01';
+
+        $totalPayment += \App\Models\PaymentTransaction::query()->whereDate('created_at', '>=', $fromDate)
+->whereDate('created_at', '<=', $this->to)->where('agent_id', $agent['agent']['id'])->sum('amount');
+        $totalApplicationAmount += \App\Models\Application::query()->whereDate('created_at', '>=', $fromDate)->whereDate('created_at', '<=', $carbonFrom)->where('travel_agent_id', $agent['agent']['id'])->sum('dubai_fee');
+
+        $totalApplicationAmount += \App\Models\Application::query()->whereDate('created_at', '>=', $fromDate)->whereDate('created_at', '<=', $carbonFrom)->where('travel_agent_id', $agent['agent']['id'])->sum('service_fee');
+        $totalApplicationAmount += \App\Models\Application::query()->whereDate('created_at', '>=', $fromDate)->whereDate('created_at', '<=', $carbonFrom)->where('travel_agent_id', $agent['agent']['id'])->sum('vat');
+        $totalServiceTransactionsAmount += \App\Models\ServiceTransaction::query()->whereDate('created_at', '>=', $fromDate)->whereDate('created_at', '<=', $carbonFrom)->where('agent_id', $agent['agent']['id'])->sum('dubai_fee');
+        $totalServiceTransactionsAmount += \App\Models\ServiceTransaction::query()->whereDate('created_at', '>=', $fromDate)->whereDate('created_at', '<=', $carbonFrom)->where('agent_id', $agent['agent']['id'])->sum('service_fee');
+        $totalServiceTransactionsAmount += \App\Models\ServiceTransaction::query()->whereDate('created_at', '>=', $fromDate)->whereDate('created_at', '<=', $carbonFrom)->where('agent_id', $agent['agent']['id'])->sum('vat');
                         @endphp
                         @endif
 
                     @endforeach
 
                     @php
-                        $rawBalance = $totalApplicationAmount + $totalServiceTransactionsAmount - $totalPayment - $totalAmount;
+                        $rawBalance = $totalApplicationAmount + $totalServiceTransactionsAmount - $totalPayment;
 
-                        $oldBalance = ($rawBalance < 0) ? -$rawBalance : $rawBalance;
+                       $oldBalance = ($rawBalance < 0) ? -$rawBalance : $rawBalance;
                     @endphp
                     {{-- Display total --}}
                     <tr>

@@ -112,7 +112,7 @@
 
            @php
            $agent = \App\Models\Agent::query()->find(request()->agent);
-
+           $invoice = \App\Models\AgentInvoice::query()->find(request()->invoice);
            @endphp
         @if($agent)
             <div class="mt-4" style="margin-bottom: 10px;margin-top: 10px;">
@@ -123,8 +123,8 @@
                 <strong class="span-block">Account No: {{$agent->account_number}}</strong>
             </div>
             @endif
-            <strong class="span-block">Date : {{\Illuminate\Support\Carbon::today()->format('Y-m-d')}}</strong>
-            <strong class="span-block">INV No: {{\Illuminate\Support\Carbon::parse(now())->format('Y/m/d')}}</strong>
+{{--            <strong class="span-block">Date : {{\Illuminate\Support\Carbon::today()->format('Y-m-d')}}</strong>--}}
+            <strong class="span-block">INV No: {{$invoice? $invoice->invoice_title:""}}</strong>
 
             @if(request()->fromDate && request()->toDate)
                 <h4>From : {{request()->fromDate}} - To : {{request()->toDate}}</h4>

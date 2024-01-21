@@ -5,6 +5,7 @@ namespace App\Http\Livewire\Admin\Invoice;
 use App\Http\Livewire\Traits\ValidationTrait;
 use App\Models\Agent;
 use App\Models\PaymentTransaction;
+use App\Models\Setting;
 use App\Services\AgentInvoiceService;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Carbon;
@@ -47,11 +48,26 @@ class Index extends Component
         $this->rowNumber = ($this->page - 1) * $this->perPage + 1;
     }
 
+    public function printData($agentId, $from, $to)
+    {
+        $this->agentEmailed = $agentId;
+        $invoice = \App\Models\AgentInvoice::query()
+            ->where('agent_id', $agentId)
+            ->whereDate('from', $from)
+            ->whereDate('to', $to)
+            ->first();
+
+        $url = route('admin.report.print.agent_invoices', ['agent' => $this->agentEmailed,'fromDate' => $this->from,'toDate' => $this->to, 'invoice' => $invoice->id]);
+        $this->emit('printTable', $url);
+    }
+
     public function recalculateInvoice($id)
     {
-
         $invoice = \App\Models\AgentInvoice::query()->find($id);
         $fromDate = '1970-01-01';
+        $carbonFrom = \Carbon\Carbon::parse($invoice->from);
+        $carbonFrom->subDay();
+        $carbonFrom->format('Y-m-d');
 
         $totalAmountFromDayOneUntilEndOfInvoice = (new AgentInvoiceService())->getAgentData($invoice->agent_id, $fromDate,$invoice->to);
 
