@@ -105,12 +105,23 @@ class AgentInvoice extends Component
         $fromDate = '1970-01-01';
 
         foreach ($data['agents'] as $row) {
-            $totalFromVisas = 0;
-            $totalFromServices = 0;
+            $totalAmount = 0;
             if (!is_null($row['agent'])) {
                 $settings = Setting::query()->first();
 
-                $totalAmountFromDayOneUntilEndOfInvoice = (new AgentInvoiceService())->getAgentData($row['agent']['id'], $fromDate, $this->to);
+                $carbonFrom = Carbon::parse($this->from);
+                $carbonFrom->subDay();
+
+                $totalAmountFromDayOneUntilEndOfInvoice = (new AgentInvoiceService())->getAgentData(
+                    $row['agent']['id'],
+                    $fromDate,
+                    $carbonFrom->format('Y-m-d')
+                );
+                $getTotalAmount = (new AgentInvoiceService())->getAgentData(
+                    $row['agent']['id'],
+                    $this->from,
+                    $this->to
+                );
 
                 $allAmountFromDayOneUntilEndOfInvoice = PaymentTransaction::query()
                     ->where('agent_id', $row['agent']['id'])
@@ -126,40 +137,32 @@ class AgentInvoice extends Component
                 foreach ($totalAmountFromDayOneUntilEndOfInvoice['services'] as $service) {
                     $totalForInvoice += $service->totalAmount;
                 }
-
-                $paymentForAgent = PaymentTransaction::query()
-                    ->where('agent_id', $row['agent']['id'])
-                    ->when($this->from && $this->to, function ($query) {
-                        return $query->whereDate('created_at', '>=', $this->from)
-                            ->whereDate('created_at', '<=', $this->to);
-                    })
-                    ->sum('amount');
-
-                foreach ($row['visas'] as $visa) {
-                    $totalFromVisas += $visa->totalAmount;
+                foreach ($getTotalAmount['visas'] as $visa) {
+                    $totalAmount += $visa->totalAmount;
+                }
+                foreach ($getTotalAmount['services'] as $service) {
+                    $totalAmount += $service->totalAmount;
                 }
 
-                foreach ($row['services'] as $service) {
-                    $totalFromServices += $service->totalAmount;
-                }
 
-                $oldBalance = $totalForInvoice - $allAmountFromDayOneUntilEndOfInvoice - ($totalFromServices + $totalFromVisas);
+                $oldBalance = ($totalForInvoice) - $allAmountFromDayOneUntilEndOfInvoice;
                 if ($oldBalance < 0) {
                     $oldBalance = -$oldBalance;
                 }
 
-                // Check if it's a new year and reset the invoice number
-
-                // Check if there are existing records for the agent in agent_invoices table
-                $existingRecordsCount = \App\Models\AgentInvoice::query()
-                    ->count();
-
                 $lastRow = \App\Models\AgentInvoice::query()->orderBy('invoice_title','desc')->latest()->first();
 
+                $year = substr($this->to, 2, 2);
+
                 if ($lastRow) {
+
                     $lastTwoDigitsOfYear = intval(trim(substr($lastRow->invoice_title, 4, 3)));
                     $nextInvoiceNumber = intval(trim(substr($lastRow->invoice_title, 10, 3))) + 1;
 
+                    if($year != $lastTwoDigitsOfYear){
+                        $lastTwoDigitsOfYear = $year;
+                        $nextInvoiceNumber = 1;
+                    }
 
                     if ($settings->is_new_year == 1) {
                         $nextInvoiceNumber = 1;
@@ -169,10 +172,11 @@ class AgentInvoice extends Component
                     }
                 } else {
                     $nextInvoiceNumber = 1;
-                    $lastTwoDigitsOfYear = substr(date('y'), -2);
+
+                    $lastTwoDigitsOfYear = $year;
 
                     if ($settings->is_new_year == 1) {
-                        $lastTwoDigitsOfYear = substr(date('y'), -2) ;
+                        $lastTwoDigitsOfYear = $year;
 
                         if ($settings->invoice_start) {
                             $nextInvoiceNumber = intval($settings->invoice_start);
@@ -190,14 +194,12 @@ class AgentInvoice extends Component
                     ->whereDate('to', $this->to)
                     ->first();
 
-                $totalAmount = $totalFromServices + $totalFromVisas;
                 if (!is_null($rawExistBeforeForAgent)) {
                     $rawExistBeforeForAgent->update([
                         'total_amount' => $totalAmount,
-                        'payment_received' => $paymentForAgent,
+                        'payment_received' => $allAmountFromDayOneUntilEndOfInvoice,
                         'old_balance' => $oldBalance,
                         'grand_total' => $totalAmount + $oldBalance,
-                        'invoice_title' => $invoiceTitle, // Update invoice title
                     ]);
                 } else {
                     // Create the AgentInvoice record
@@ -207,7 +209,7 @@ class AgentInvoice extends Component
                         'from' => $this->from,
                         'to' => $this->to,
                         'total_amount' => $totalAmount,
-                        'payment_received' => $paymentForAgent,
+                        'payment_received' => $allAmountFromDayOneUntilEndOfInvoice,
                         'old_balance' => $oldBalance,
                         'grand_total' => $totalAmount + $oldBalance
                     ]);
@@ -243,12 +245,22 @@ class AgentInvoice extends Component
     public function printData($agentId)
     {
         $this->agentEmailed = $agentId;
-        $url = route('admin.report.print.agent_invoices', ['agent' => $this->agentEmailed,'fromDate' => $this->from,'toDate' => $this->to]);
+        $this->saveInvoices();
+        $invoice = \App\Models\AgentInvoice::query()
+            ->where('agent_id', $agentId)
+            ->whereDate('from', $this->from)
+            ->whereDate('to', $this->to)
+            ->first();
+
+        $url = route('admin.report.print.agent_invoices', ['agent' => $this->agentEmailed,'fromDate' => $this->from,'toDate' => $this->to, 'invoice' => $invoice->id]);
         $this->emit('printTable', $url);
     }
 
     public function getRecords($export= false, $agent = null, $from = null, $to = null)
     {
+
+        $carbonFrom = Carbon::parse($this->from);
+        $carbonFrom->subDay();
         if(!$this->agent && !$this->from && !$this->to){
             return [];
         }
@@ -335,10 +347,17 @@ class AgentInvoice extends Component
     {
         $data = (new AgentInvoiceService())->getRecords($id, $this->from, $this->to);
 
+        $invoice = \App\Models\AgentInvoice::query()
+            ->where('agent_id', $id)
+            ->whereDate('from', $this->from)
+            ->whereDate('to', $this->to)
+            ->first();
+
         $request->merge([
             'agent' => $id,
             'fromDate' => $this->from,
             'toDate' => $this->to,
+            'invoice' => $invoice->id
         ]);
 
         $fileExport = (new \App\Exports\Reports\AgentInvoiceExport($data));
