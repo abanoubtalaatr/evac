@@ -83,9 +83,9 @@ class AgentInvoiceExport implements FromCollection
                 $totalServiceTransactionsAmount += \App\Models\ServiceTransaction::query()->whereDate('created_at', '>=', $fromDate)->whereDate('created_at', '<=', $carbonFrom)->where('agent_id', $agent['agent']['id'])->sum('vat');
             }
         }
-        $rawBalance = $totalApplicationAmount + $totalServiceTransactionsAmount - $totalPayment;
+        $oldBalance = $totalApplicationAmount + $totalServiceTransactionsAmount - $totalPayment;
 
-        $oldBalance = ($rawBalance < 0) ? -$rawBalance : $rawBalance;
+//        $oldBalance = ($rawBalance < 0) ? -$rawBalance : $rawBalance;
         $dataRows[] = [
 
             'Item #' => '',

@@ -68,7 +68,7 @@ class Index extends Component
         $this->emit('printTable', $url);
     }
 
-    public function toggleShowModal($agent=null, $from, $to)
+    public function toggleShowModal($agent=null, $from=null, $to=null)
     {
         $this->email = null;
         $this->showSendEmail = !$this->showSendEmail;
