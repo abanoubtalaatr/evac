@@ -127,6 +127,7 @@ class AgentInvoiceExport implements FromCollection
         }
 
         $numberConvert = $oldBalance+$totalAmount;
+
         $dataRows[] = [
           'Item #' => "Amount due in words : " . convertNumberToWorldsInUsd($numberConvert) ,
           'Description' => '',

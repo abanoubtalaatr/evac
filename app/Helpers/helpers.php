@@ -101,6 +101,10 @@ if (!function_exists('convertNumberToWorldsInUsd')) {
         $decimal = round($number - ($no = floor($number)), 2) * 100;
         $hundred = null;
         $digits_length = strlen($no);
+        if ($number < 0) {
+            // If the number is negative, prepend "Minus" and convert the absolute value
+            return "Minus " . convertNumberToWorldsInUsd(abs($number));
+        }
         $i = 0;
         $str = array();
         $words = array('0' => '', '1' => 'One', '2' => 'Two',
@@ -120,6 +124,7 @@ if (!function_exists('convertNumberToWorldsInUsd')) {
             if ($number) {
                 $plural = (($counter = count($str)) && $number > 9) ? 's' : null;
                 $hundred = ($counter == 1 && $str[0]) ? ' and ' : null;
+
                 $str [] = ($number < 20) ? $words[$number] . " " . $digits[$counter] . $plural . " " . $hundred :
                     $words2[floor($number / 10)] . " " . $words[$number % 10] . " " . $digits[$counter] . $plural . " " . $hundred;
             } else
