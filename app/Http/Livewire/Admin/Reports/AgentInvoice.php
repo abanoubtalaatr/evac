@@ -38,8 +38,10 @@ class AgentInvoice extends Component
     {
         $this->page_title = __('admin.agent_invoices');
         $this->visaTypes = VisaType::query()->get();
-        $this->from = Carbon::now()->startOfWeek()->next(Carbon::FRIDAY)->format('Y-m-d');
-        $this->to = Carbon::parse($this->from)->addDays(6)->format('Y-m-d');
+        $this->from = Carbon::now()->startOfWeek()->previous(Carbon::FRIDAY)->format('Y-m-d');
+
+        // Set $this->to to the last day of the week (Saturday)
+        $this->to = Carbon::now()->next(Carbon::THURSDAY)->format('Y-m-d');
     }
 
     public function updatedAgentId()
@@ -53,14 +55,13 @@ class AgentInvoice extends Component
 
     public function nextWeek()
     {
-        $this->from = Carbon::parse($this->from)->addDays(7)->format('Y-m-d');
-        $this->to = Carbon::parse($this->to)->addDays(7)->format('Y-m-d');
-
+        $this->from = Carbon::parse($this->from)->next(Carbon::FRIDAY)->format('Y-m-d');
+        $this->to = Carbon::parse($this->from)->next(Carbon::THURSDAY)->format('Y-m-d');
     }
     public function previousWeek()
     {
-        $this->from = Carbon::parse($this->from)->subDays(7)->format('Y-m-d');
-        $this->to = Carbon::parse($this->to)->subDays(7)->format('Y-m-d');
+        $this->from = Carbon::parse($this->from)->previous(Carbon::FRIDAY)->format('Y-m-d');
+        $this->to = Carbon::parse($this->to)->previous(Carbon::THURSDAY)->format('Y-m-d');
     }
 
     public function toggleShowModal($agent=null)
