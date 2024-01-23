@@ -192,11 +192,10 @@ class AgentInvoice extends Component
                 $year = substr($this->to, 2, 2);
 
                 if ($lastRow) {
-
                     $lastTwoDigitsOfYear = intval(trim(substr($lastRow->invoice_title, 4, 3)));
                     $nextInvoiceNumber = intval(trim(substr($lastRow->invoice_title, 10, 3))) + 1;
 
-                    if($year != $lastTwoDigitsOfYear){
+                    if(intval($year) != $lastTwoDigitsOfYear){
                         $lastTwoDigitsOfYear = $year;
                         $nextInvoiceNumber = 1;
                     }
