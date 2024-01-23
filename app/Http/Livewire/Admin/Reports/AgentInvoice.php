@@ -32,6 +32,7 @@ class AgentInvoice extends Component
         $showSendEmail = false,
         $showSendEmailButton= false,
         $agentEmailed = null,
+        $goToNextYear = 0,
         $message= null, $agent, $payment_method, $disableSendForAdminsButton= false, $showSaveInvoiceMessage=false;
 
     public function mount()
@@ -52,17 +53,55 @@ class AgentInvoice extends Component
             $this->showSendEmailButton = false;
         }
     }
-
     public function nextWeek()
     {
+        // Move to the next Friday and Thursday
         $this->from = Carbon::parse($this->from)->next(Carbon::FRIDAY)->format('Y-m-d');
         $this->to = Carbon::parse($this->from)->next(Carbon::THURSDAY)->format('Y-m-d');
+
+        // Check if the new week is in a different month
+        while (Carbon::parse($this->from)->month != Carbon::parse($this->to)->month) {
+            // Move to the next Friday and Thursday until we are back in the same month
+            $this->from = Carbon::parse($this->from)->next(Carbon::FRIDAY)->format('Y-m-d');
+            $this->to = Carbon::parse($this->from)->next(Carbon::THURSDAY)->format('Y-m-d');
+        }
+
+        // Check if both from and to are in the last week of the year
+        if (Carbon::parse($this->from)->weekOfYear === Carbon::now()->endOfYear()->weekOfYear &&
+            Carbon::parse($this->to)->weekOfYear === Carbon::now()->endOfYear()->weekOfYear) {
+            // Set to '31-12' of this year and from to the Friday of this week
+            $this->to = Carbon::now()->endOfYear()->format('Y-m-d');
+            $this->from = Carbon::parse($this->to)->previous(Carbon::FRIDAY)->format('Y-m-d');
+        }
     }
+
+
     public function previousWeek()
     {
+        // Set $this->from to the previous Friday
         $this->from = Carbon::parse($this->from)->previous(Carbon::FRIDAY)->format('Y-m-d');
+
+        // Set $this->to to the previous Thursday
         $this->to = Carbon::parse($this->to)->previous(Carbon::THURSDAY)->format('Y-m-d');
+
+        // Check if $this->from is in the previous year
+        if (Carbon::parse($this->to)->year != Carbon::parse($this->from)->year) {
+            // If so, set $this->from to the last day of the previous year
+            $this->to = Carbon::parse($this->from)->endOfYear()->format('Y-m-d');
+        }
+
+        $isFromLastWeek = Carbon::parse($this->from)->weekOfYear === Carbon::parse($this->from)->endOfYear()->weekOfYear;
+
+        // Check if $this->to is in the last week of the year
+        $isToLastWeek = Carbon::parse($this->to)->weekOfYear === Carbon::parse($this->to)->endOfYear()->weekOfYear;
+
+        if($isFromLastWeek && $isToLastWeek){
+            $this->to = Carbon::parse($this->to)->endOfYear()->format('Y-m-d');
+        }
+
+
     }
+
 
     public function toggleShowModal($agent=null)
     {
