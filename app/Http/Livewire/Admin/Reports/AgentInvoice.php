@@ -55,51 +55,82 @@ class AgentInvoice extends Component
     }
     public function nextWeek()
     {
-        // Move to the next Friday and Thursday
-        $this->from = Carbon::parse($this->from)->next(Carbon::FRIDAY)->format('Y-m-d');
-        $this->to = Carbon::parse($this->from)->next(Carbon::THURSDAY)->format('Y-m-d');
 
-        // Check if the new week is in a different month
-        while (Carbon::parse($this->from)->month != Carbon::parse($this->to)->month) {
-            // Move to the next Friday and Thursday until we are back in the same month
+        $year = Carbon::parse($this->to)->format('Y');
+        $month = Carbon::parse($this->to)->format('m');
+        $day = Carbon::parse($this->to)->format('d');
+        $endOfYear = ($year . '-'. '12'. '-'.'31');
+
+        if($this->to ==$endOfYear){
+            $this->from = Carbon::createFromDate(Carbon::parse($this->from)->addYear()->year, 1, 1)->format('Y-m-d');
+            $this->to = Carbon::parse($this->from)->next(Carbon::THURSDAY)->format('Y-m-d');
+        }elseif ($this->isLastThursdayInYear($this->to)){
+            $this->from = Carbon::parse($this->from)->next(Carbon::FRIDAY)->format('Y-m-d');
+            $this->to = Carbon::parse($this->to)->endOfYear()->format('Y-m-d');
+
+        } else{
+            // Move to the next Friday and Thursday
             $this->from = Carbon::parse($this->from)->next(Carbon::FRIDAY)->format('Y-m-d');
             $this->to = Carbon::parse($this->from)->next(Carbon::THURSDAY)->format('Y-m-d');
-        }
 
-        // Check if both from and to are in the last week of the year
-        if (Carbon::parse($this->from)->weekOfYear === Carbon::now()->endOfYear()->weekOfYear &&
-            Carbon::parse($this->to)->weekOfYear === Carbon::now()->endOfYear()->weekOfYear) {
-            // Set to '31-12' of this year and from to the Friday of this week
-            $this->to = Carbon::now()->endOfYear()->format('Y-m-d');
-            $this->from = Carbon::parse($this->to)->previous(Carbon::FRIDAY)->format('Y-m-d');
+            // Check if the current week is the last week of the year
+            if (Carbon::parse($this->from)->weekOfYear === Carbon::parse($this->from)->weeksInYear) {
+                // Set start date to January 1st of the next year
+                $this->from = Carbon::parse($this->from)->addYear()->startOfYear()->next(Carbon::THURSDAY)->format('Y-m-d');
+                // Move to the next Thursday
+                $this->to = Carbon::parse($this->from)->next(Carbon::THURSDAY)->format('Y-m-d');
+            }
         }
     }
 
+    public function isLastThursdayInYear($to)
+    {
+        $lastDayOfYear = Carbon::parse($to)->endOfYear();
 
+        // Find the last Thursday before the last day of the year
+        $lastThursday = $lastDayOfYear->previous(Carbon::THURSDAY);
+
+        // Check if the provided date is the same as the last Thursday
+        return $to === $lastThursday->format('Y-m-d');
+    }
+
+    public function isFirstFridayOfYear($date)
+    {
+        $parsedDate = Carbon::parse($date);
+
+        // Check if the date is a Friday and it belongs to the first week of the year
+        return $parsedDate->dayOfWeek === Carbon::FRIDAY && $parsedDate->weekOfYear === 1;
+    }
     public function previousWeek()
     {
-        // Set $this->from to the previous Friday
-        $this->from = Carbon::parse($this->from)->previous(Carbon::FRIDAY)->format('Y-m-d');
+        if($this->isFirstFridayOfYear($this->from)){
+            $this->from = Carbon::parse($this->from)->startOfYear()->format('Y-m-d');
 
-        // Set $this->to to the previous Thursday
-        $this->to = Carbon::parse($this->to)->previous(Carbon::THURSDAY)->format('Y-m-d');
+            // Set $this->to to the first Thursday of the current year
+            $this->to = Carbon::parse($this->from)->next(Carbon::THURSDAY)->format('Y-m-d');
+        }else{
+            // Set $this->from to the previous Friday
+            $this->from = Carbon::parse($this->from)->previous(Carbon::FRIDAY)->format('Y-m-d');
 
-        // Check if $this->from is in the previous year
-        if (Carbon::parse($this->to)->year != Carbon::parse($this->from)->year) {
-            // If so, set $this->from to the last day of the previous year
-            $this->to = Carbon::parse($this->from)->endOfYear()->format('Y-m-d');
+            // Set $this->to to the previous Thursday
+            $this->to = Carbon::parse($this->to)->previous(Carbon::THURSDAY)->format('Y-m-d');
+
+            // Check if $this->from is in the previous year
+            if (Carbon::parse($this->to)->year != Carbon::parse($this->from)->year) {
+                // If so, set $this->from to the last day of the previous year
+                $this->to = Carbon::parse($this->from)->endOfYear()->format('Y-m-d');
+            }
+
+            $isFromLastWeek = Carbon::parse($this->from)->weekOfYear === Carbon::parse($this->from)->endOfYear()->weekOfYear;
+
+            // Check if $this->to is in the last week of the year
+            $isToLastWeek = Carbon::parse($this->to)->weekOfYear === Carbon::parse($this->to)->endOfYear()->weekOfYear;
+
+            if($isFromLastWeek && $isToLastWeek){
+                $this->to = Carbon::parse($this->to)->endOfYear()->format('Y-m-d');
+            }
+
         }
-
-        $isFromLastWeek = Carbon::parse($this->from)->weekOfYear === Carbon::parse($this->from)->endOfYear()->weekOfYear;
-
-        // Check if $this->to is in the last week of the year
-        $isToLastWeek = Carbon::parse($this->to)->weekOfYear === Carbon::parse($this->to)->endOfYear()->weekOfYear;
-
-        if($isFromLastWeek && $isToLastWeek){
-            $this->to = Carbon::parse($this->to)->endOfYear()->format('Y-m-d');
-        }
-
-
     }
 
 
@@ -192,10 +223,11 @@ class AgentInvoice extends Component
                 $year = substr($this->to, 2, 2);
 
                 if ($lastRow) {
+
                     $lastTwoDigitsOfYear = intval(trim(substr($lastRow->invoice_title, 4, 3)));
                     $nextInvoiceNumber = intval(trim(substr($lastRow->invoice_title, 10, 3))) + 1;
 
-                    if(intval($year) != $lastTwoDigitsOfYear){
+                    if($year != $lastTwoDigitsOfYear){
                         $lastTwoDigitsOfYear = $year;
                         $nextInvoiceNumber = 1;
                     }
@@ -203,7 +235,7 @@ class AgentInvoice extends Component
                     if ($settings->is_new_year == 1) {
                         $nextInvoiceNumber = 1;
                         if ($settings->invoice_start) {
-                            $nextInvoiceNumber = intval($settings->invoice_start) +1;
+                            $nextInvoiceNumber = intval($settings->invoice_start);
                         }
                     }
                 } else {
@@ -277,6 +309,7 @@ class AgentInvoice extends Component
 
         // Set to as the current date
         $this->to = $currentDate->format('Y-m-d');
+        $this->saveInvoices();
     }
 
     public function startYear()
