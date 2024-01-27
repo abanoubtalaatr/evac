@@ -56,9 +56,9 @@ class AgentSalesExport implements FromCollection, WithHeadings
 
             $totalAmountForAgent = \App\Helpers\totalAmount($record->id, $from, $to);
 
-            $totalPreviousBalForAllAgents += \App\Helpers\oldBalance($record->id, $totalAmountForAgent);
+            $totalPreviousBalForAllAgents += \App\Helpers\oldBalance($record->id, $totalAmountForAgent,$from, $to);
             $totalNewSalesForAllAgents += $totalAmountForAgent;
-            $totalForAllAgent += \App\Helpers\oldBalance($record->id, $totalAmountForAgent) + $totalAmountForAgent;
+            $totalForAllAgent += \App\Helpers\oldBalance($record->id, $totalAmountForAgent, $from,$to) + $totalAmountForAgent;
 
             $visaCounts = [];
 
@@ -86,9 +86,9 @@ class AgentSalesExport implements FromCollection, WithHeadings
             $dataRows[] = array_merge([
                 'Agent' => $record->name,
                 'Default visa' => $defaultVisaCount,
-                'Previous Bal' => \App\Helpers\oldBalance($record->id, $totalAmountForAgent),
+                'Previous Bal' => \App\Helpers\oldBalance($record->id, $totalAmountForAgent, $from, $to),
                 'New Sales' => $totalAmountForAgent,
-                'Total Amounts' => \App\Helpers\oldBalance($record->id, $totalAmountForAgent) + $totalAmountForAgent,
+                'Total Amounts' => \App\Helpers\oldBalance($record->id, $totalAmountForAgent,$from, $to) + $totalAmountForAgent,
             ], $visaCounts, [
                 array_sum($visaCounts) + $defaultVisaCount, // Total Visas
             ], $serviceCounts, [
