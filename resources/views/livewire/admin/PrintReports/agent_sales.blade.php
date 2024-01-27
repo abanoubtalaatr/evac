@@ -228,18 +228,18 @@
                             if(isset(request()->fromDate) & isset(request()->toDate)){
                                 $totalAmountForAgent = \App\Helpers\totalAmount($record->id, request()->fromDate, request()->toDate);
 
-                                $totalPreviousBalForAllAgents += \App\Helpers\oldBalance($record->id, $totalAmountForAgent);
+                                $totalPreviousBalForAllAgents += \App\Helpers\oldBalance($record->id, $totalAmountForAgent, request()->fromDate, request()->toDate);
                                 $totalNewSalesForAllAgents += $totalAmountForAgent;
-                                $totalForAllAgent += \App\Helpers\oldBalance($record->id, $totalAmountForAgent)+ $totalAmountForAgent;
+                                $totalForAllAgent += \App\Helpers\oldBalance($record->id, $totalAmountForAgent,request()->fromDate, request()->toDate)+ $totalAmountForAgent;
                             }
 
                         @endphp
                         <tr>
                             <td>{{$record->name}}</td>
                             <td>{{$defaultVisaCount}}</td>
-                            <td>{{\App\Helpers\oldBalance($record->id, $totalAmountForAgent)}}</td>
+                            <td>{{\App\Helpers\oldBalance($record->id, $totalAmountForAgent,request()->fromDate, request()->toDate)}}</td>
                             <td>{{  $totalAmountForAgent}}</td>
-                            <td>{{\App\Helpers\oldBalance($record->id, $totalAmountForAgent)+ $totalAmountForAgent}}</td>
+                            <td>{{\App\Helpers\oldBalance($record->id, $totalAmountForAgent,request()->fromDate, request()->toDate)+ $totalAmountForAgent}}</td>
 
                             @foreach(\App\Models\VisaType::query()->where('id', '!=', $defaultVisa->id)->get() as $visa)
                                 @php

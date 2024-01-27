@@ -73,9 +73,9 @@ class Outstanding extends Component
         $toDate = $this->to;
 
         if (\App\Helpers\isOwner()) {
-            $agents = Agent::query()->isActive();
+            $agents = Agent::query()->isActive()->orderBy('name');
         } else {
-            $agents = Agent::owner()->isActive();
+            $agents = Agent::owner()->isActive()->orderBy('name');
         }
 
         $totalSalesByAgent = [];

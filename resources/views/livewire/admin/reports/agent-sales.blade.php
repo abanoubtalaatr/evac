@@ -85,18 +85,18 @@
     if(isset($from) & isset($to)){
         $totalAmountForAgent = \App\Helpers\totalAmount($record->id, $from, $to);
 
-        $totalPreviousBalForAllAgents += \App\Helpers\oldBalance($record->id, $totalAmountForAgent);
+        $totalPreviousBalForAllAgents += \App\Helpers\oldBalance($record->id, $totalAmountForAgent,$from, $to);
         $totalNewSalesForAllAgents += $totalAmountForAgent;
-        $totalForAllAgent += \App\Helpers\oldBalance($record->id, $totalAmountForAgent)+ $totalAmountForAgent;
+        $totalForAllAgent += \App\Helpers\oldBalance($record->id, $totalAmountForAgent,$from, $to)+ $totalAmountForAgent;
     }
 
 @endphp
                             <tr>
                                 <td>{{$record->name}}</td>
                                 <td>{{$defaultVisaCount}}</td>
-                                <td>{{\App\Helpers\oldBalance($record->id, $totalAmountForAgent)}}</td>
+                                <td>{{\App\Helpers\oldBalance($record->id, $totalAmountForAgent,$from, $to)}}</td>
                                 <td>{{  $totalAmountForAgent}}</td>
-                                <td>{{\App\Helpers\oldBalance($record->id, $totalAmountForAgent)+ $totalAmountForAgent}}</td>
+                                <td>{{\App\Helpers\oldBalance($record->id, $totalAmountForAgent,$from, $to)+ $totalAmountForAgent}}</td>
 
                                 @foreach(\App\Models\VisaType::query()->where('id', '!=', $defaultVisa->id)->get() as $visa)
                                     @php

@@ -278,26 +278,66 @@ if (!function_exists('disableActionsWhereOpenClosed')) {
 }
 
 if (!function_exists('oldBalance')) {
-    function oldBalance($agentId, $totalAmountForAgent)
+    function oldBalance($agentId, $totalAmountForAgent, $from, $toDate)
     {
+        $fromDate = '1970-01-01';
+        $carbonFrom = Carbon::parse($from);
+        $carbonFrom->subDay();
+
         $totalApplicationAmount = 0;
         $totalServiceTransactionsAmount = 0;
         $totalPayment =0;
-        $totalPayment = totalPayment($agentId);
 
-        $totalApplicationAmount += \App\Models\Application::query()->where('travel_agent_id', $agentId)->sum('dubai_fee');
-        $totalApplicationAmount += \App\Models\Application::query()->where('travel_agent_id', $agentId)->sum('service_fee');
-        $totalApplicationAmount += \App\Models\Application::query()->where('travel_agent_id', $agentId)->sum('vat');
-        $totalServiceTransactionsAmount += \App\Models\ServiceTransaction::query()->where('agent_id', $agentId)->sum('dubai_fee');
-        $totalServiceTransactionsAmount += \App\Models\ServiceTransaction::query()->where('agent_id', $agentId)->sum('service_fee');
-        $totalServiceTransactionsAmount += \App\Models\ServiceTransaction::query()->where('agent_id', $agentId)->sum('vat');
-        return ($totalApplicationAmount + $totalServiceTransactionsAmount) - $totalPayment - $totalAmountForAgent;
+        $totalPayment = totalPayment($agentId,$from, $toDate);
+
+        $totalApplicationAmount += \App\Models\Application::query()
+            ->whereDate('created_at', '>=', $fromDate)
+            ->whereDate('created_at', '<=', $carbonFrom)
+            ->where('travel_agent_id', $agentId)
+            ->sum('dubai_fee');
+
+        $totalApplicationAmount += \App\Models\Application::query()
+            ->where('travel_agent_id', $agentId)
+            ->whereDate('created_at', '>=', $fromDate)
+            ->whereDate('created_at', '<=', $carbonFrom)
+            ->sum('service_fee');
+
+        $totalApplicationAmount += \App\Models\Application::query()
+            ->whereDate('created_at', '>=', $fromDate)
+            ->whereDate('created_at', '<=', $carbonFrom)
+            ->where('travel_agent_id', $agentId)
+            ->sum('vat');
+
+        $totalServiceTransactionsAmount += \App\Models\ServiceTransaction::query()
+            ->whereDate('created_at', '>=', $fromDate)
+            ->whereDate('created_at', '<=', $carbonFrom)
+            ->where('agent_id', $agentId)
+            ->sum('dubai_fee');
+
+        $totalServiceTransactionsAmount += \App\Models\ServiceTransaction::query()
+            ->whereDate('created_at', '>=', $fromDate)
+            ->whereDate('created_at', '<=', $carbonFrom)
+            ->where('agent_id', $agentId)
+            ->sum('service_fee');
+        $totalServiceTransactionsAmount += \App\Models\ServiceTransaction::query()
+            ->whereDate('created_at', '>=', $fromDate)
+            ->whereDate('created_at', '<=', $carbonFrom)
+            ->where('agent_id', $agentId)
+            ->sum('vat');
+
+        return ($totalApplicationAmount + $totalServiceTransactionsAmount) - $totalPayment;
     }
 }
 
 if (!function_exists('totalPayment')) {
-    function totalPayment($agentId){
-        return PaymentTransaction::query()->where('agent_id', $agentId)->sum('amount');
+    function totalPayment($agentId, $fromDate, $toDate)
+    {
+        $fromDate = '1970-01-01';
+        return PaymentTransaction::query()
+            ->whereDate('created_at', '>=', $fromDate)
+            ->whereDate('created_at', '<=', $toDate)
+            ->where('agent_id', $agentId)
+            ->sum('amount');
     }
 }
 
@@ -305,6 +345,9 @@ if (!function_exists('totalPayment')) {
 if (!function_exists('totalAmount')) {
     function totalAmount($agentId, $fromDate, $toDate ){
         $agent = Agent::query()->find($agentId);
+        $carbonFrom = \Illuminate\Support\Carbon::parse($fromDate);
+        $carbonFrom->subDay();
+        $fromDate = '1970-01-01';
     if($fromDate & $toDate){
 
         $totalAmount = $agent->applications()
