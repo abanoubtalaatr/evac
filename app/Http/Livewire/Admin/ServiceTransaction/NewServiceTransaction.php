@@ -64,7 +64,7 @@ class NewServiceTransaction extends Component
             $value = (int) filter_var($setting->vat_rate, FILTER_SANITIZE_NUMBER_INT);
 
             $amount = $service->dubai_fee + $service->service_fee + ($value / 100 * $service->service_fee);
-            $vat = $value / 100 * $service->service_fee;
+            $vat git  $value / 100 * $service->service_fee;
             $this->form['amount'] = $amount;
             $this->form['vat'] = $vat;
         }
@@ -105,6 +105,7 @@ class NewServiceTransaction extends Component
 
             $this->form['vat'] = $vat;
             $this->form['service_fee'] = $serviceFee;
+            $this->form['amount'] = $this->form['vat'] + $this->form['service_fee']+ $this->form['dubai_fee'];
         }
     }
     public function updatedFormPassportNo()

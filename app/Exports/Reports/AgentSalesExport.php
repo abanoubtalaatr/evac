@@ -13,6 +13,7 @@ use Maatwebsite\Excel\Concerns\WithStyles;
 use Maatwebsite\Excel\Events\BeforeSheet;
 use PhpOffice\PhpSpreadsheet\Worksheet\Worksheet;
 use function App\Helpers\totalAmount;
+use function App\Helpers\totalAmountBetweenTwoDate;
 
 class AgentSalesExport implements FromCollection, WithHeadings
 {
@@ -55,7 +56,7 @@ class AgentSalesExport implements FromCollection, WithHeadings
             $totalVisaCountForDefaultVisa += $defaultVisaCount; // Increment the total count for the default visa type
 
             $totalAmountForAgent = \App\Helpers\totalAmount($record->id, $from, $to);
-
+            $totalSalesForApplicationAndServiceTransactions = totalAmountBetweenTwoDate($record->id, $from, $to);
             $totalPreviousBalForAllAgents += \App\Helpers\oldBalance($record->id, $totalAmountForAgent,$from, $to);
             $totalNewSalesForAllAgents += $totalAmountForAgent;
             $totalForAllAgent += \App\Helpers\oldBalance($record->id, $totalAmountForAgent, $from,$to) + $totalAmountForAgent;
@@ -87,7 +88,7 @@ class AgentSalesExport implements FromCollection, WithHeadings
                 'Agent' => $record->name,
                 'Default visa' => $defaultVisaCount,
                 'Previous Bal' => \App\Helpers\oldBalance($record->id, $totalAmountForAgent, $from, $to),
-                'New Sales' => $totalAmountForAgent,
+                'New Sales' => $totalSalesForApplicationAndServiceTransactions,
                 'Total Amounts' => \App\Helpers\oldBalance($record->id, $totalAmountForAgent,$from, $to) + $totalAmountForAgent,
             ], $visaCounts, [
                 array_sum($visaCounts) + $defaultVisaCount, // Total Visas

@@ -238,7 +238,7 @@
                             <td>{{$record->name}}</td>
                             <td>{{$defaultVisaCount}}</td>
                             <td>{{\App\Helpers\oldBalance($record->id, $totalAmountForAgent,request()->fromDate, request()->toDate)}}</td>
-                            <td>{{  $totalAmountForAgent}}</td>
+                            <td>{{ \App\Helpers\totalAmountBetweenTwoDate($record->id, $fromDate, $toDate)}}</td>
                             <td>{{\App\Helpers\oldBalance($record->id, $totalAmountForAgent,request()->fromDate, request()->toDate)+ $totalAmountForAgent}}</td>
 
                             @foreach(\App\Models\VisaType::query()->where('id', '!=', $defaultVisa->id)->get() as $visa)

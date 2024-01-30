@@ -354,29 +354,78 @@ if (!function_exists('totalAmount')) {
             ->whereDate('created_at', '>=', $fromDate)
             ->whereDate('created_at', '<=', $toDate)
             ->sum('service_fee');
+
         $totalAmount += $agent->applications()
             ->whereDate('created_at', '>=', $fromDate)
             ->whereDate('created_at', '<=', $toDate)
             ->sum('dubai_fee');
+
         $totalAmount += $agent->applications()
             ->whereDate('created_at', '>=', $fromDate)
             ->whereDate('created_at', '<=', $toDate)
             ->sum('vat');
+
         $totalAmount += $agent->serviceTransactions()
             ->whereDate('created_at', '>=', $fromDate)
             ->whereDate('created_at', '<=', $toDate)
             ->sum('service_fee');
+
         $totalAmount += $agent->serviceTransactions()
             ->whereDate('created_at', '>=', $fromDate)
             ->whereDate('created_at', '<=', $toDate)
             ->sum('dubai_fee');
+
         $totalAmount += $agent->serviceTransactions()
             ->whereDate('created_at', '>=', $fromDate)
             ->whereDate('created_at', '<=', $toDate)
             ->sum('vat');
 
+
         return $totalAmount;
     }
     return 0;
+    }
+}
+
+if (!function_exists('totalAmountBetweenTwoDate')) {
+    function totalAmountBetweenTwoDate($agentId, $fromDate, $toDate ){
+        $agent = Agent::query()->find($agentId);
+
+        if($fromDate & $toDate){
+
+            $totalAmount = $agent->applications()
+                ->whereDate('created_at', '>=', $fromDate)
+                ->whereDate('created_at', '<=', $toDate)
+                ->sum('service_fee');
+
+            $totalAmount += $agent->applications()
+                ->whereDate('created_at', '>=', $fromDate)
+                ->whereDate('created_at', '<=', $toDate)
+                ->sum('dubai_fee');
+
+            $totalAmount += $agent->applications()
+                ->whereDate('created_at', '>=', $fromDate)
+                ->whereDate('created_at', '<=', $toDate)
+                ->sum('vat');
+
+
+            $totalAmount += $agent->serviceTransactions()
+                ->whereDate('created_at', '>=', $fromDate)
+                ->whereDate('created_at', '<=', $toDate)
+                ->sum('service_fee');
+
+            $totalAmount += $agent->serviceTransactions()
+                ->whereDate('created_at', '>=', $fromDate)
+                ->whereDate('created_at', '<=', $toDate)
+                ->sum('dubai_fee');
+
+            $totalAmount += $agent->serviceTransactions()
+                ->whereDate('created_at', '>=', $fromDate)
+                ->whereDate('created_at', '<=', $toDate)
+                ->sum('vat');
+
+            return $totalAmount;
+        }
+        return 0;
     }
 }
