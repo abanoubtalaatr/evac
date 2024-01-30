@@ -169,10 +169,14 @@ class AgentInvoice extends Component
 //
 //        return redirect()->to(route('admin.report.agent_invoices'));
     }
-    public function saveInvoices()
+    public function saveInvoices($agent=null)
     {
 
-        $data = (new AgentInvoiceService())->getRecords(null, $this->from, $this->to);
+        if($agent){
+            $data = (new AgentInvoiceService())->getRecords($agent, $this->from, $this->to);
+        }else{
+            $data = (new AgentInvoiceService())->getRecords(null, $this->from, $this->to);
+        }
         $fromDate = '1970-01-01';
 
         foreach ($data['agents'] as $row) {
@@ -335,13 +339,15 @@ class AgentInvoice extends Component
     }
     public function printData($agentId)
     {
+
         $this->agentEmailed = $agentId;
-        $this->saveInvoices();
+        $this->saveInvoices($agentId);
         $invoice = \App\Models\AgentInvoice::query()
             ->where('agent_id', $agentId)
             ->whereDate('from', $this->from)
             ->whereDate('to', $this->to)
             ->first();
+
 
         $url = route('admin.report.print.agent_invoices', ['agent' => $this->agentEmailed,'fromDate' => $this->from,'toDate' => $this->to, 'invoice' => $invoice->id]);
         $this->emit('printTable', $url);

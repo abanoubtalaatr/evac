@@ -200,34 +200,38 @@
                             @endif
 
                     @php
+                        $allAmountFromDayOneUntilEndOfInvoice =0;
+                        $totalForInvoice = 0;
                         foreach ($data['agents'] as $agent) {
-                if (!is_null($agent['agent'])){
-                    $carbonFrom = \Illuminate\Support\Carbon::parse(request()->fromDate);
-    $carbonFrom->subDay();
-            $fromDate = '1970-01-01';
+                            if (!is_null($agent['agent'])){
+                                $carbonFrom = \Illuminate\Support\Carbon::parse(request()->fromDate);
+                                $carbonFrom->subDay();
+                                $fromDate = '1970-01-01';
+                                $totalAmountFromDayOneUntilEndOfInvoice = (new \App\Services\AgentInvoiceService())->getAgentData(
+                                    $agent['agent']['id'],
+                                    $fromDate,
+                                    $carbonFrom->format('Y-m-d'));
 
-        $totalPayment += \App\Models\PaymentTransaction::query()->whereDate('created_at', '>=', $fromDate)
-->whereDate('created_at', '<=', request()->toDate)->where('agent_id', $agent['agent']['id'])->sum('amount');
-        $totalApplicationAmount += \App\Models\Application::query()->whereDate('created_at', '>=', $fromDate)->whereDate('created_at', '<=', $carbonFrom)->where('travel_agent_id', $agent['agent']['id'])->sum('dubai_fee');
+                                $allAmountFromDayOneUntilEndOfInvoice = \App\Models\PaymentTransaction::query()
+                                ->where('agent_id', $agent['agent']['id'])
+                                ->whereDate('created_at', '>=', $fromDate)
+                                ->whereDate('created_at', '<=', request()->toDate)
+                                ->sum('amount');
 
-        $totalApplicationAmount += \App\Models\Application::query()->whereDate('created_at', '>=', $fromDate)->whereDate('created_at', '<=', $carbonFrom)->where('travel_agent_id', $agent['agent']['id'])->sum('service_fee');
-        $totalApplicationAmount += \App\Models\Application::query()->whereDate('created_at', '>=', $fromDate)->whereDate('created_at', '<=', $carbonFrom)->where('travel_agent_id', $agent['agent']['id'])->sum('vat');
-        $totalServiceTransactionsAmount += \App\Models\ServiceTransaction::query()->whereDate('created_at', '>=', $fromDate)->whereDate('created_at', '<=', $carbonFrom)->where('agent_id', $agent['agent']['id'])->sum('dubai_fee');
-        $totalServiceTransactionsAmount += \App\Models\ServiceTransaction::query()->whereDate('created_at', '>=', $fromDate)->whereDate('created_at', '<=', $carbonFrom)->where('agent_id', $agent['agent']['id'])->sum('service_fee');
-        $totalServiceTransactionsAmount += \App\Models\ServiceTransaction::query()->whereDate('created_at', '>=', $fromDate)->whereDate('created_at', '<=', $carbonFrom)->where('agent_id', $agent['agent']['id'])->sum('vat');
-                }
-            }
+                                foreach ($totalAmountFromDayOneUntilEndOfInvoice['visas'] as $visa) {
+                                    $totalForInvoice += $visa->totalAmount;
+                                }
 
+                                foreach ($totalAmountFromDayOneUntilEndOfInvoice['services'] as $service) {
+                                    $totalForInvoice += $service->totalAmount;
+                                }
+                            }
+                        }
                     @endphp
-
                     @php
-
-                        $oldBalance = $totalApplicationAmount + $totalServiceTransactionsAmount - $totalPayment;
-
-//                        $oldBalance = ($rawBalance < 0) ? -$rawBalance : $rawBalance;
+                        $oldBalance = $totalForInvoice - $allAmountFromDayOneUntilEndOfInvoice;
                     @endphp
 
-                    {{-- Display total --}}
                     <tr>
                         <td></td>
                         <td></td>
