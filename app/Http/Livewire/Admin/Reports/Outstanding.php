@@ -116,42 +116,79 @@ class Outstanding extends Component
 
             }
 
-            $applications = Application::query()->whereNull('travel_agent_id')->get();
+            $applications = Application::query()->whereNull('travel_agent_id')->groupBy('first_name', 'last_name')->get();
             $totalDirectSales = 0;
             $totalUnPaidBalDirect =0;
-            foreach ($applications as $application){
-                $totalAmount = $application->dubai_fee + $application->service_fee + $application->vat;
-                $totalDirectSales += $totalAmount;
+            $unpaid = 0;
+            $totalAmount = 0;
 
+        foreach ($applications as $row) {
+            $applicationsForPersons = Application::query()
+                ->where('first_name', $row->first_name)
+                ->where('last_name', $row->last_name)
+                ->get();
+
+            foreach ($applicationsForPersons as $applicationsForPerson) {
+                $totalAmount = $applicationsForPerson->dubai_fee + $applicationsForPerson->service_fee + $applicationsForPerson->vat;
+                $totalDirectSales += $totalAmount;
                 $unpaid = 0;
-                if($application->payment_method == 'invoice'){
+
+                if ($applicationsForPerson->payment_method == 'invoice') {
                     $unpaid = $totalAmount;
                     $totalUnPaidBalDirect += $totalAmount;
                 }
-                $data['directs'][] = [
-                    'name' => $application->first_name . ' '. $application->last_name,
-                    'total' => $totalAmount,
-                    'un_paid' => $unpaid,
-                ];
+
+                $key = $row->first_name . $row->last_name;
+
+                if (isset($data['directs'][$key])) {
+                    // Key exists, add total amount to existing total
+                    $data['directs'][$key]['total'] += $totalAmount;
+                    $data['directs'][$key]['un_paid'] += $unpaid;
+                } else {
+                    // Key doesn't exist, create a new entry
+                    $data['directs'][$key] = [
+                        'name' => $row->first_name . ' ' . $row->last_name,
+                        'total' => $totalAmount,
+                        'un_paid' => $unpaid,
+                    ];
+                }
             }
-            $serviceTransactions = ServiceTransaction::query()->whereNull('agent_id')->get();
+        }
 
-            foreach ($serviceTransactions as $serviceTransaction){
-                $totalAmount = $serviceTransaction->dubai_fee + $serviceTransaction->service_fee + $serviceTransaction->vat;
+        $serviceTransactions = ServiceTransaction::query()->groupBy('name', 'surname')->whereNull('agent_id')->get();
+
+        foreach ($serviceTransactions as $row) {
+            $serviceTransactionsForPersons = ServiceTransaction::query()
+                ->where('name', $row->name)
+                ->where('surname', $row->surname)
+                ->get();
+
+            foreach ($serviceTransactionsForPersons as $serviceTransactionsForPerson) {
+                $totalAmount = $serviceTransactionsForPerson->dubai_fee + $serviceTransactionsForPerson->service_fee + $serviceTransactionsForPerson->vat;
                 $totalDirectSales += $totalAmount;
-
                 $unpaid = 0;
-                if($serviceTransaction->payment_method == 'invoice'){
+
+                if ($serviceTransactionsForPerson->payment_method == 'invoice') {
                     $unpaid = $totalAmount;
                     $totalUnPaidBalDirect += $totalAmount;
                 }
-                $data['directs'][] = [
-                    'name' => $serviceTransaction->name . ' '. $serviceTransaction->surname,
-                    'total' => $totalAmount,
-                    'un_paid' => $unpaid,
-                ];
-            }
 
+                $key = $row->name . $row->surname;
+
+                if (isset($data['directs'][$key])) {
+                    // Key exists, add total amount to existing total
+                    $data['directs'][$key]['total'] += $totalAmount;
+                    $data['directs'][$key]['un_paid'] += $unpaid;
+                } else {
+                    // Key doesn't exist, create a new entry
+                    $data['directs'][$key] = [
+                        'name' => $row->name . ' ' . $row->surname,
+                        'total' => $totalAmount,
+                        'un_paid' => $unpaid,
+                    ];
+                }
+            }
+        }
         $data['agents'] = $totalSalesByAgent;
         $data['total_sales_for_all_agents'] = $totalSalesForAllAgent;
         $data['total_un_paid_bal_for_agents'] = $totalUnPaidBal;
@@ -180,8 +217,12 @@ class Outstanding extends Component
     }
 
 
-    public function exportReport()
+    public function exportReport(Request $request)
     {
+        $request->merge([
+           'fromDate' => $this->from,
+           'toDate' => $this->to,
+        ]);
         $fileExport = (new \App\Exports\Reports\OutstandingExport($this->getRecords()));
         return Excel::download($fileExport, 'outstanding.csv');
     }

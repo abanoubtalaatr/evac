@@ -94,7 +94,7 @@ class DirectSale extends Component
 
         $data['serviceTransactions']['cashes'] = ServiceTransaction::query()
             ->where('agent_id', null)
-            ->where('payment_method', 'cashes')
+            ->where('payment_method', 'cash')
             ->when($fromDate && $toDate, function ($query) use ($fromDate, $toDate) {
                 $query->whereDate('created_at', '>=', $fromDate)->whereDate('created_at', '<=', $toDate);
             })            ->get();
@@ -121,8 +121,12 @@ class DirectSale extends Component
     }
 
 
-    public function exportReport()
+    public function exportReport(Request  $request)
     {
+        $request->merge([
+            'fromDate' => $this->from,
+            'toDate' => $this->to,
+        ]);
         $fileExport = (new \App\Exports\Reports\DirectSalesExport($this->getRecords()));
         return Excel::download($fileExport, 'sales.csv');
     }
