@@ -266,25 +266,27 @@ class AgentInvoice extends Component
                     ->whereDate('to', $this->to)
                     ->first();
 
-                if (!is_null($rawExistBeforeForAgent)) {
-                    $rawExistBeforeForAgent->update([
-                        'total_amount' => $totalAmount,
-                        'payment_received' => $allAmountFromDayOneUntilEndOfInvoice,
-                        'old_balance' => $oldBalance,
-                        'grand_total' => $totalAmount + $oldBalance,
-                    ]);
-                } else {
-                    // Create the AgentInvoice record
-                    \App\Models\AgentInvoice::query()->create([
-                        'agent_id' => $row['agent']['id'],
-                        'invoice_title' => $invoiceTitle,
-                        'from' => $this->from,
-                        'to' => $this->to,
-                        'total_amount' => $totalAmount,
-                        'payment_received' => $allAmountFromDayOneUntilEndOfInvoice,
-                        'old_balance' => $oldBalance,
-                        'grand_total' => $totalAmount + $oldBalance
-                    ]);
+                if($totalAmount > 0){
+                    if (!is_null($rawExistBeforeForAgent)) {
+                        $rawExistBeforeForAgent->update([
+                            'total_amount' => $totalAmount,
+                            'payment_received' => $allAmountFromDayOneUntilEndOfInvoice,
+                            'old_balance' => $oldBalance,
+                            'grand_total' => $totalAmount + $oldBalance,
+                        ]);
+                    } else {
+                        // Create the AgentInvoice record
+                        \App\Models\AgentInvoice::query()->create([
+                            'agent_id' => $row['agent']['id'],
+                            'invoice_title' => $invoiceTitle,
+                            'from' => $this->from,
+                            'to' => $this->to,
+                            'total_amount' => $totalAmount,
+                            'payment_received' => $allAmountFromDayOneUntilEndOfInvoice,
+                            'old_balance' => $oldBalance,
+                            'grand_total' => $totalAmount + $oldBalance
+                        ]);
+                    }
                 }
             }
         }
