@@ -126,7 +126,7 @@
 
             $data['serviceTransactions']['cashes'] =  \App\Models\ServiceTransaction::query()
                 ->where('agent_id', null)
-                ->where('payment_method', 'cashes')
+                ->where('payment_method', 'cash')
 ->when($fromDate && $toDate, function ($query) use ($fromDate, $toDate) {
                 $query->whereDate('created_at', '>=', $fromDate)->whereDate('created_at', '<=', $toDate);
             })                ->get();
@@ -166,6 +166,14 @@
                             <td class='text-center'>{{$record->service->name}}</td>
                         </tr>
                     @endforeach
+                    <tr>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                    </tr>
                     @foreach($data['applications']['cashes'] as $record)
                         <tr>
                             <td>#{{$loop->index + 1}}</td>
