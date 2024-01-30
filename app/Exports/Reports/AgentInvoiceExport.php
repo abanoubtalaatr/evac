@@ -5,6 +5,7 @@ use App\Models\Agent;
 use App\Models\AgentInvoice;
 use App\Models\PaymentTransaction;
 use App\Models\Setting;
+use App\Services\AgentInvoiceService;
 use Illuminate\Support\Carbon;
 use Maatwebsite\Excel\Concerns\FromCollection;
 use Maatwebsite\Excel\Concerns\WithHeadings;
@@ -66,26 +67,40 @@ class AgentInvoiceExport implements FromCollection
             }
         }
 
+        $totalForInvoice = 0;
+        $allAmountFromDayOneUntilEndOfInvoice = 0;
+
         foreach ($this->data['agents'] as $agent) {
             if (!is_null($agent['agent'])){
+
                 $carbonFrom = \Illuminate\Support\Carbon::parse(request()->fromDate);
                 $carbonFrom->subDay();
                 $fromDate = '1970-01-01';
 
-                $totalPayment += \App\Models\PaymentTransaction::query()->whereDate('created_at', '>=', $fromDate)
-                    ->whereDate('created_at', '<=', request()->toDate)->where('agent_id', $agent['agent']['id'])->sum('amount');
-                $totalApplicationAmount += \App\Models\Application::query()->whereDate('created_at', '>=', $fromDate)->whereDate('created_at', '<=', $carbonFrom)->where('travel_agent_id', $agent['agent']['id'])->sum('dubai_fee');
+                $totalAmountFromDayOneUntilEndOfInvoice = (new AgentInvoiceService())->getAgentData(
+                    $agent['agent']['id'],
+                    $fromDate,
+                    $carbonFrom->format('Y-m-d')
+                );
 
-                $totalApplicationAmount += \App\Models\Application::query()->whereDate('created_at', '>=', $fromDate)->whereDate('created_at', '<=', $carbonFrom)->where('travel_agent_id', $agent['agent']['id'])->sum('service_fee');
-                $totalApplicationAmount += \App\Models\Application::query()->whereDate('created_at', '>=', $fromDate)->whereDate('created_at', '<=', $carbonFrom)->where('travel_agent_id', $agent['agent']['id'])->sum('vat');
-                $totalServiceTransactionsAmount += \App\Models\ServiceTransaction::query()->whereDate('created_at', '>=', $fromDate)->whereDate('created_at', '<=', $carbonFrom)->where('agent_id', $agent['agent']['id'])->sum('dubai_fee');
-                $totalServiceTransactionsAmount += \App\Models\ServiceTransaction::query()->whereDate('created_at', '>=', $fromDate)->whereDate('created_at', '<=', $carbonFrom)->where('agent_id', $agent['agent']['id'])->sum('service_fee');
-                $totalServiceTransactionsAmount += \App\Models\ServiceTransaction::query()->whereDate('created_at', '>=', $fromDate)->whereDate('created_at', '<=', $carbonFrom)->where('agent_id', $agent['agent']['id'])->sum('vat');
+                $allAmountFromDayOneUntilEndOfInvoice = PaymentTransaction::query()
+                    ->where('agent_id', $agent['agent']['id'])
+                    ->whereDate('created_at', '>=', $fromDate)
+                    ->whereDate('created_at', '<=', request()->toDate)
+                    ->sum('amount');
+
+                foreach ($totalAmountFromDayOneUntilEndOfInvoice['visas'] as $visa) {
+                    $totalForInvoice += $visa->totalAmount;
+                }
+                foreach ($totalAmountFromDayOneUntilEndOfInvoice['services'] as $service) {
+                    $totalForInvoice += $service->totalAmount;
+                }
+
             }
         }
-        $oldBalance = $totalApplicationAmount + $totalServiceTransactionsAmount - $totalPayment;
 
-//        $oldBalance = ($rawBalance < 0) ? -$rawBalance : $rawBalance;
+        $oldBalance = ($totalForInvoice) - $allAmountFromDayOneUntilEndOfInvoice;
+
         $dataRows[] = [
 
             'Item #' => '',
