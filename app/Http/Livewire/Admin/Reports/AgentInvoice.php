@@ -415,6 +415,7 @@ class AgentInvoice extends Component
     {
         $this->validate();
 
+        $this->saveInvoices($this->agentEmailed);
         $invoice = \App\Models\AgentInvoice::query()
             ->where('agent_id', $this->agentEmailed)
             ->whereDate('from', $this->from)
@@ -451,6 +452,7 @@ class AgentInvoice extends Component
     {
         $data = (new AgentInvoiceService())->getRecords($id, $this->from, $this->to);
 
+        $this->saveInvoices($id);
         $invoice = \App\Models\AgentInvoice::query()
             ->where('agent_id', $id)
             ->whereDate('from', $this->from)
