@@ -105,6 +105,7 @@ class NewServiceTransaction extends Component
 
             $this->form['vat'] = $vat;
             $this->form['service_fee'] = $serviceFee;
+            $this->form['amount'] = $this->form['vat'] + $this->form['service_fee']+ $this->form['dubai_fee'];
         }
     }
     public function updatedFormPassportNo()
