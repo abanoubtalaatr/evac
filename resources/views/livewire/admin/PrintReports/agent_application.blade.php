@@ -85,16 +85,16 @@
         .table td:nth-child(2),
         .table th:nth-child(3),
         .table td:nth-child(3) {
-            width: 33.33%; /* Equal width for each column */
+            /*width: 33.33%; !* Equal width for each column *!*/
         }
     </style>
 </head>
 <body>
 
 <main>
-    @include('livewire.admin.shared.reports.header')
+{{--    @include('livewire.admin.shared.reports.header')--}}
     <!--dashboard-->
-    <section class="dashboard">
+    <section class="dashboard" style="margin-bottom: 20px">
         <div class="row">
             @php
                 $agent = \App\Models\Agent::query()->find(request()->agent);
@@ -169,39 +169,37 @@
                 <table class="table-page table">
                     <thead>
                     <tr>
-                        <th class="text-center">#</th>
-                        <th class="text-center" >@lang('admin.description')</th>
-                        <th class="text-center">@lang('admin.type')</th>
-                        <th class="text-center">@lang('admin.date')</th>
+                        <th class="text-center" width="5%">#</th>
+                        <th class="text-center" width="40%">@lang('admin.description')</th>
+                        <th class="text-center" width="30%">@lang('admin.type')</th>
+                        <th class="text-center" width="25%">@lang('admin.date')</th>
                     </tr>
                     </thead>
                     <tbody>
                     @foreach($data['applications'] as $record)
                         <tr>
-                            <td>#{{$loop->index + 1}}</td>
-                            <td class='text-center'>{{$record->application_ref . ' - '. $record->first_name . ' ' . $record->last_name }}(application)</td>
-                            <td class='text-center'>{{ $record->visaType->name}}</td>
-                            <td class='text-center'><button class="border-0">{{\Illuminate\Support\Carbon::parse($record->created_at)->format('Y-m-d')}}</button></td>
-
+                            <td width="5%">#{{$loop->index + 1}}</td>
+                            <td class='text-center' width="40%">{{$record->application_ref . ' - '. $record->first_name . ' ' . $record->last_name }}(application)</td>
+                            <td class='text-center' width="30%">{{ $record->visaType->name}}</td>
+                            <td width="25%" class='text-center'>{{\Illuminate\Support\Carbon::parse($record->created_at)->format('Y-m-d')}}</td>
                         </tr>
                     @endforeach
                     @foreach($data['serviceTransactions'] as $record)
                         <tr>
-                            <td>#{{$loop->index + 1}}</td>
-                            <td class='text-center'>{{$record->service_ref . ' - '. $record->name . ' - '. $record->surname }} (service)</td>
-                            <td class='text-center'>{{ $record->service->name}}</td>
-                            <td class='text-center'><button class="border-0">{{\Illuminate\Support\Carbon::parse($record->created_at)->format('Y-m-d')}}</button></td>
-
+                            <td width="5%">#{{$loop->index + 1}}</td>
+                            <td class='text-center' width="40%">{{$record->service_ref . ' - '. $record->name . ' - '. $record->surname }} (service)</td>
+                            <td class='text-center' width="30%">{{ $record->service->name}}</td>
+                            <td width="25%" class='text-center'>{{\Illuminate\Support\Carbon::parse($record->created_at)->format('Y-m-d')}}</td>
                         </tr>
                     @endforeach
                     </tbody>
                 </table>
-
             @else
                 <div class="row" style='margin-top:10px'>
                     <div class="alert alert-warning">@lang('site.no_data_to_display')</div>
                 </div>
             @endif
+
         </div>
     </section>
     @include('livewire.admin.shared.reports.footer')
