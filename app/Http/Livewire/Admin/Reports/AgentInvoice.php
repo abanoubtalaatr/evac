@@ -222,7 +222,7 @@ class AgentInvoice extends Component
 
                 $oldBalance = ($totalForInvoice) - $allAmountFromDayOneUntilEndOfInvoice;
 
-                $lastRow = \App\Models\AgentInvoice::query()->orderBy('invoice_title','desc')->latest()->first();
+                $lastRow = \App\Models\AgentInvoice::query()->where('last_valid_invoice', 1)->orderBy('invoice_title','desc')->latest()->first();
 
                 $year = substr($this->to, 2, 2);
 
@@ -266,6 +266,7 @@ class AgentInvoice extends Component
                     ->whereDate('to', $this->to)
                     ->first();
 
+
                 if($totalAmount > 0){
                     if (!is_null($rawExistBeforeForAgent)) {
                         $rawExistBeforeForAgent->update([
@@ -275,12 +276,23 @@ class AgentInvoice extends Component
                             'grand_total' => $totalAmount + $oldBalance,
                         ]);
                     } else {
+                        $checkAgentIsHidden = Agent::query()->find($row['agent']['id']);
+
+                        $lastValidInvoice = 1;
+
+                        if($checkAgentIsHidden->is_visible == 0 ){
+
+                            $invoiceTitle = $checkAgentIsHidden->name . ' '. $this->from. ' - ' . $this->to;
+                            $lastValidInvoice = 0;
+                        }
+
                         // Create the AgentInvoice record
                         \App\Models\AgentInvoice::query()->create([
                             'agent_id' => $row['agent']['id'],
                             'invoice_title' => $invoiceTitle,
                             'from' => $this->from,
                             'to' => $this->to,
+                            'last_valid_invoice' => $lastValidInvoice,
                             'total_amount' => $totalAmount,
                             'payment_received' => $allAmountFromDayOneUntilEndOfInvoice,
                             'old_balance' => $oldBalance,

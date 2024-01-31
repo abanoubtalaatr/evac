@@ -48,8 +48,12 @@
         @php
             $total = $serviceTransaction->service_fee + $serviceTransaction->dubai_fee + $serviceTransaction->vat;
         @endphp
-        <div> Amount : {{$total}} USD ({{$serviceTransaction->payment_method =='invoice' ? "UnPaid" :"Paid"}})</div>
-
+        <div> Amount : {{$total - $serviceTransaction->vat}} USD ({{$serviceTransaction->payment_method =='invoice' ? "UnPaid" :"Paid"}})</div>
+        @if($serviceTransaction->vat > 0 )
+            <div>
+                <span>VAT  {{$settings->vat_rate}}  : {{$serviceTransaction->vat}}  </span>
+            </div>
+        @endif
         <div>Fees in words : {{\App\Helpers\convertNumberToWorldsInUsd($total)}} </div>
         <div class="mt-2">
             <p>{{$settings->invoice_footer}}</p>

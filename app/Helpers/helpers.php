@@ -127,7 +127,7 @@ if (!function_exists('convertNumberToWorldsInUsd')) {
             $i += $divider == 10 ? 1 : 2;
             if ($number) {
                 $plural = (($counter = count($str)) && $number > 9) ? 's' : null;
-                $hundred = ($counter == 1 && $str[0]) ? ' and ' : null;
+                $hundred = ($counter == 1 && $str[0]) ? ' & ' : null;
                 $str [] = ($number < 20) ? $words[$number] . " " . $digits[$counter] . $plural . " " . $hundred :
                     $words2[floor($number / 10)] . " " . $words[$number % 10] . " " . $digits[$counter] . $plural . " " . $hundred;
             } else
@@ -136,8 +136,8 @@ if (!function_exists('convertNumberToWorldsInUsd')) {
         $str = array_reverse($str);
         $result = implode('', $str);
         $points = ($decimal) ?
-            "." . ($words[$decimal / 10] . " " . $words[$decimal % 10]) . " Cents" : '';
-        return $result . "USD only" . $points;
+            " & " . ($words[$decimal / 10] . " " . $words[$decimal % 10]) . " Cents" : '';
+        return $result . "dollars " . $points . ' only';
     }
 }
 

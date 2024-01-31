@@ -323,11 +323,6 @@
 
                 @else
                     @can('Manage travel agents')
-
-                        <li class=" ">
-                            <i class="fa fa-suitcase mr-5"></i>
-                            <span class="ml-2">@lang('admin.travel_agents')</span>
-                        </li>
                         <li style="line-height: 20px;margin-left: 4px;padding-left: 0px;text-indent: 0" class="border-bottom pb-2 {{ request()->routeIs('admin.travel_agents') ? 'active' : '' }}">
                             <a href="{{route('admin.travel_agents')}}" class="text-white ">
                                 @lang('admin.travel_agents')
