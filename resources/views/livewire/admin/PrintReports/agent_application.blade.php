@@ -92,7 +92,7 @@
 <body>
 
 <main>
-{{--    @include('livewire.admin.shared.reports.header')--}}
+    @include('livewire.admin.shared.reports.header')
     <!--dashboard-->
     <section class="dashboard" style="margin-bottom: 20px">
         <div class="row">

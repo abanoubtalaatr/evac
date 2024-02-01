@@ -1,11 +1,13 @@
-    @php
-        $settings = \App\Models\Setting::query()->first();
-       $logoPath = public_path('uploads/pics/' . $settings->logo);
+@php
+    $settings = \App\Models\Setting::query()->first();
+    $logoPath = $settings->logo ? public_path('uploads/pics/' . $settings->logo) : null;
+@endphp
 
-    @endphp
-    <div class="my-2 text-center">
+<div class="my-2 text-center">
+    @if($logoPath && file_exists($logoPath))
         <img width="200" height="200" src="data:image/png;base64,{{ base64_encode(file_get_contents($logoPath)) }}">
-    </div>
+    @endif
+</div>
 
     <span class="span-block"><strong>Evac</strong></span>
     <span class="span-block"><strong>{{$settings->address}}</strong> </span>

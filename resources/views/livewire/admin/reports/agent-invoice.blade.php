@@ -101,10 +101,11 @@
                             <td></td>
                             <td></td>
                             <td class="text-center">
+                                @if(\App\Helpers\totalAmountBetweenTwoDate($agent['agent']['id'], $from, $to) > 0)
                                 <button class="btn btn-primary" wire:click="printData('{{$agent['agent']['id']}}')">Print</button>
                                 <button class="btn btn-secondary" wire:click="exportReport('{{$agent['agent']['id']}}')">CSV</button>
                                 <button class="btn btn-info" wire:click="toggleShowModal('{{$agent['agent']['id']}}')">Email</button>
-
+                                @endif
                             </td>
                         </tr>
                         {{-- Display Visa information --}}
@@ -127,8 +128,6 @@
                         {{-- Display Service information --}}
                         @if(isset($agent['services']) && count($agent['services']) > 0)
                             @foreach($agent['services'] as $service)
-
-
                                 <tr>
                                     @php
                                         $totalAmount += $service->totalAmount;
@@ -143,30 +142,25 @@
                         @endif
                         @php
                             $totalForInvoice =0;
+                            $carbonFrom = \Illuminate\Support\Carbon::parse($from);
+                            $carbonFrom->subDay();
+                            $fromDate = '1970-01-01';
 
-                $carbonFrom = \Illuminate\Support\Carbon::parse($from);
-                    $carbonFrom->subDay();
-                    $fromDate = '1970-01-01';
+                            $totalAmountFromDayOneUntilEndOfInvoice = (new \App\Services\AgentInvoiceService())->getAgentData($agent['agent']['id'],$fromDate,$carbonFrom->format('Y-m-d'));
 
-                    $totalAmountFromDayOneUntilEndOfInvoice = (new \App\Services\AgentInvoiceService())->getAgentData(
-                        $agent['agent']['id'],
-                        $fromDate,
-                        $carbonFrom->format('Y-m-d')
-                    );
+                            $allAmountFromDayOneUntilEndOfInvoice = \App\Models\PaymentTransaction::query()
+                            ->where('agent_id', $agent['agent']['id'])
+                            ->whereDate('created_at', '>=', $fromDate)
+                            ->whereDate('created_at', '<=', $to)
+                            ->sum('amount');
 
-                    $allAmountFromDayOneUntilEndOfInvoice = \App\Models\PaymentTransaction::query()
-                        ->where('agent_id', $agent['agent']['id'])
-                        ->whereDate('created_at', '>=', $fromDate)
-                        ->whereDate('created_at', '<=', $to)
-                        ->sum('amount');
-
-                        foreach ($totalAmountFromDayOneUntilEndOfInvoice['visas'] as $visa) {
-                            $totalForInvoice += $visa->totalAmount;
-                        }
-                        foreach ($totalAmountFromDayOneUntilEndOfInvoice['services'] as $service) {
-                            $totalForInvoice += $service->totalAmount;
-                        }
-                        @endphp
+                            foreach ($totalAmountFromDayOneUntilEndOfInvoice['visas'] as $visa) {
+                                $totalForInvoice += $visa->totalAmount;
+                            }
+                            foreach ($totalAmountFromDayOneUntilEndOfInvoice['services'] as $service) {
+                                $totalForInvoice += $service->totalAmount;
+                            }
+                            @endphp
                         @endif
 
                     @endforeach

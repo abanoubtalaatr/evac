@@ -29,7 +29,7 @@ class SendEmailController extends Controller
 
         Mail::send([], [], function ($message) use ($pdf, $request) {
             $message->to($request->email)
-                ->subject('Report')
+                ->subject('Daily Report ' . now()->format('d/m/Y'))
                 ->attach('report.pdf', ['as' => 'attachment.pdf', 'mime' => 'application/pdf']);
         });
 
