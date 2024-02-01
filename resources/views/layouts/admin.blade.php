@@ -193,6 +193,80 @@
                 @endcan
             @endif
 
+
+
+            <li class="sidebar-toggle">
+                <i class="fa fa-suitcase mr-5"></i>
+                <span class="ml-2">@lang('admin.travel_agents')</span>
+                <i class="fas fa-plus"></i>
+            </li>
+            <ul class="sidebar-menu">
+                @if(auth('admin')->user()->id == 1)
+
+                    <li style="line-height: 20px;margin-left: 4px;padding-left: 0px;text-indent: 0" class="border-bottom pb-2 {{ request()->routeIs('admin.travel_agents') ? 'active' : '' }}">
+                        <a href="{{route('admin.travel_agents')}}" class="text-white ">
+                            @lang('admin.travel_agents')
+                        </a>
+                    </li>
+
+                    <li style="line-height: 20px;margin-left: 4px;padding-left: 0px;text-indent: 0" class="border-bottom pb-2 {{ request()->routeIs('admin.travel_agent_payment_transactions') ? 'active' : '' }}">
+                        <a href="{{route('admin.travel_agent_payment_transactions')}}" class="text-white ">
+                            @lang('admin.travel_agent_payment_transactions')
+                        </a>
+                    </li>
+
+                @else
+                    @can('Manage travel agents')
+                        <li style="line-height: 20px;margin-left: 4px;padding-left: 0px;text-indent: 0" class="border-bottom pb-2 {{ request()->routeIs('admin.travel_agents') ? 'active' : '' }}">
+                            <a href="{{route('admin.travel_agents')}}" class="text-white ">
+                                @lang('admin.travel_agents')
+                            </a>
+                        </li>
+                        <li style="line-height: 20px;margin-left: 4px;padding-left: 0px;text-indent: 0" class="border-bottom pb-2 {{ request()->routeIs('admin.travel_agent_payment_transactions') ? 'active' : '' }}">
+                            <a href="{{route('admin.travel_agent_payment_transactions')}}" class="text-white ">
+                                @lang('admin.travel_agent_payment_transactions')
+                            </a>
+                        </li>
+                    @endcan
+                @endif
+            </ul>
+
+
+            <li class="sidebar-toggle">
+                <i class="fa fa-suitcase mr-5"></i>
+                <span class="ml-2">@lang('admin.direct_client_applications')</span>
+                <i class="fas fa-plus"></i>
+            </li>
+
+            <ul class="sidebar-menu">
+                @if(auth('admin')->user()->id == 1)
+                    <li style="line-height: 20px;margin-left: 4px;padding-left: 0px;text-indent: 0" class="border-bottom pb-2 {{ request()->routeIs('admin.applications.un_paid') ? 'active' : '' }}">
+                        <a href="{{route('admin.applications.un_paid')}}" class="text-white ">
+                            @lang('admin.payment_applications')
+                        </a>
+                    </li>
+                    <li style="line-height: 20px;margin-left: 4px;padding-left: 0px;text-indent: 0" class="border-bottom pb-2 {{ request()->routeIs('admin.service_transactions.invoices') ? 'active' : '' }}">
+                        <a href="{{route('admin.service_transactions.invoices')}}" class="text-white ">
+                            @lang('admin.payment_services')
+                        </a>
+                    </li>
+                @else
+                    @can('Manage travel agents')
+                        <li style="line-height: 20px;margin-left: 4px;padding-left: 0px;text-indent: 0" class="border-bottom pb-2 {{ request()->routeIs('admin.applications.un_paid') ? 'active' : '' }}">
+                            <a href="{{route('admin.applications.un_paid')}}" class="text-white ">
+                                @lang('admin.payment_applications')
+                            </a>
+                        </li>
+
+                        <li style="line-height: 20px;margin-left: 4px;padding-left: 0px;text-indent: 0" class="border-bottom pb-2 {{ request()->routeIs('admin.service_transactions.invoices') ? 'active' : '' }}">
+                            <a href="{{route('admin.service_transactions.invoices')}}" class="text-white ">
+                                @lang('admin.payment_services')
+                            </a>
+                        </li>
+                @endcan
+            @endif
+            </ul>
+
             @if(auth('admin')->user()->id ==1 || auth('admin')->user()->id ==46)
 
                 <li class="sidebar-toggle">
@@ -246,7 +320,7 @@
                         </a>
                     </li>
                 </ul>
-                @else
+            @else
                 @can('Manage reports')
 
                     <li class="sidebar-toggle">
@@ -300,80 +374,26 @@
             @endif
 
 
-
-            <li class="sidebar-toggle">
-                <i class="fa fa-suitcase mr-5"></i>
-                <span class="ml-2">@lang('admin.travel_agents')</span>
-                <i class="fas fa-plus"></i>
-            </li>
-            <ul class="sidebar-menu">
-                @if(auth('admin')->user()->id == 1)
-
-                    <li style="line-height: 20px;margin-left: 4px;padding-left: 0px;text-indent: 0" class="border-bottom pb-2 {{ request()->routeIs('admin.travel_agents') ? 'active' : '' }}">
-                        <a href="{{route('admin.travel_agents')}}" class="text-white ">
-                            @lang('admin.travel_agents')
-                        </a>
-                    </li>
-
-                    <li style="line-height: 20px;margin-left: 4px;padding-left: 0px;text-indent: 0" class="border-bottom pb-2 {{ request()->routeIs('admin.travel_agent_payment_transactions') ? 'active' : '' }}">
-                        <a href="{{route('admin.travel_agent_payment_transactions')}}" class="text-white ">
-                            @lang('admin.travel_agent_payment_transactions')
-                        </a>
-                    </li>
-
-                @else
-                    @can('Manage travel agents')
-                        <li style="line-height: 20px;margin-left: 4px;padding-left: 0px;text-indent: 0" class="border-bottom pb-2 {{ request()->routeIs('admin.travel_agents') ? 'active' : '' }}">
-                            <a href="{{route('admin.travel_agents')}}" class="text-white ">
-                                @lang('admin.travel_agents')
-                            </a>
-                        </li>
-                        <li style="line-height: 20px;margin-left: 4px;padding-left: 0px;text-indent: 0" class="border-bottom pb-2 {{ request()->routeIs('admin.travel_agent_payment_transactions') ? 'active' : '' }}">
-                            <a href="{{route('admin.travel_agent_payment_transactions')}}" class="text-white ">
-                                @lang('admin.travel_agent_payment_transactions')
-                            </a>
-                        </li>
-                    @endcan
-                @endif
-            </ul>
-
-
-            <li class="sidebar-toggle">
-                <i class="fa fa-suitcase mr-5"></i>
-                <span class="ml-2">@lang('admin.direct_client_applications')</span>
-                <i class="fas fa-plus"></i>
-            </li>
-            <ul class="sidebar-menu">
             @if(auth('admin')->user()->id == 1)
-
-                <li style="line-height: 20px;margin-left: 4px;padding-left: 0px;text-indent: 0" class="border-bottom pb-2 {{ request()->routeIs('admin.applications.un_paid') ? 'active' : '' }}">
-                    <a href="{{route('admin.applications.un_paid')}}" class="text-white ">
-                        @lang('admin.payment_applications')
-                    </a>
-                </li>
-                <li style="line-height: 20px;margin-left: 4px;padding-left: 0px;text-indent: 0" class="border-bottom pb-2 {{ request()->routeIs('admin.service_transactions.invoices') ? 'active' : '' }}">
-                    <a href="{{route('admin.service_transactions.invoices')}}" class="text-white ">
-                        @lang('admin.payment_services')
+                <li class="{{ request()->routeIs('admin.applicants') ? 'active' : '' }}">
+                    <a href="{{route('admin.applicants')}}" class="text-white  ">
+                        <i class="fa fa-suitcase mr-5"></i>
+                        <span class="ml-2">@lang('admin.applicants')</span>
                     </a>
                 </li>
 
             @else
-                @can('Manage travel agents')
-                    <li style="line-height: 20px;margin-left: 4px;padding-left: 0px;text-indent: 0" class="border-bottom pb-2 {{ request()->routeIs('admin.applications.un_paid') ? 'active' : '' }}">
-                        <a href="{{route('admin.applications.un_paid')}}" class="text-white ">
-                            @lang('admin.payment_applications')
-                        </a>
-                    </li>
-                    <li style="line-height: 20px;margin-left: 4px;padding-left: 0px;text-indent: 0" class="border-bottom pb-2 {{ request()->routeIs('admin.service_transactions.invoices') ? 'active' : '' }}">
-                        <a href="{{route('admin.service_transactions.invoices')}}" class="text-white ">
-                            @lang('admin.payment_services')
+                @can('Manage applicants')
+                    <li class="{{ request()->routeIs('admin.applicants') ? 'active' : '' }}">
+                        <a href="{{route('admin.applicants')}}" class="text-white  ">
+                            <i class="fa fa-suitcase mr-5"></i>
+                            <span class="ml-2">@lang('admin.applicants')</span>
                         </a>
                     </li>
                 @endcan
             @endif
-            </ul>
 
-            @if(auth('admin')->user()->id == 1)
+        @if(auth('admin')->user()->id == 1)
                 <li class="{{ request()->routeIs('admin.visa_types') ? 'active' : '' }}">
                     <a href="{{route('admin.visa_types')}}" class="text-white  ">
                         <i class="fa fa-suitcase mr-5"></i>
@@ -430,24 +450,6 @@
 {{--                @endcan--}}
 {{--            @endif--}}
 
-            @if(auth('admin')->user()->id == 1)
-                <li class="{{ request()->routeIs('admin.applicants') ? 'active' : '' }}">
-                    <a href="{{route('admin.applicants')}}" class="text-white  ">
-                        <i class="fa fa-suitcase mr-5"></i>
-                        <span class="ml-2">@lang('admin.applicants')</span>
-                    </a>
-                </li>
-
-            @else
-                @can('Manage applicants')
-                    <li class="{{ request()->routeIs('admin.applicants') ? 'active' : '' }}">
-                        <a href="{{route('admin.applicants')}}" class="text-white  ">
-                            <i class="fa fa-suitcase mr-5"></i>
-                            <span class="ml-2">@lang('admin.applicants')</span>
-                        </a>
-                    </li>
-                @endcan
-            @endif
 
             <li class="sidebar-toggle">
                 <i class="fa fa-suitcase mr-5"></i>
