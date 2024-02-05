@@ -76,12 +76,14 @@ class AgentStatement extends Component
 
                 // Add date range filters if provided
                 if ($this->from && $this->to) {
-                    $invoiceQuery->whereBetween('created_at', [$this->from, $this->to]);
-                    $paymentQuery->whereBetween('created_at', [$this->from, $this->to]);
+                    $invoiceQuery->whereDate('created_at', '>=', $this->from)
+                        ->whereDate('created_at', '<=', $this->to);
+                    $paymentQuery->whereDate('created_at', '>=', $this->from)
+                        ->whereDate('created_at', '<=', $this->to);
                 }
 
-                $data['invoices'] = $invoiceQuery->latest()->get();
-                $data['payment_received'] = $paymentQuery->latest()->get();
+                $data['invoices'] = $invoiceQuery->get();
+                $data['payment_received'] = $paymentQuery->get();
             }
         }else{
             if (isset($this->agent)) {
@@ -98,12 +100,14 @@ class AgentStatement extends Component
 
                 // Add date range filters if provided
                 if ($this->from && $this->to) {
-                    $invoiceQuery->whereBetween('created_at', [$this->from, $this->to]);
-                    $paymentQuery->whereBetween('created_at', [$this->from, $this->to]);
+                    $invoiceQuery->whereDate('created_at', '>=', $this->from)
+                        ->whereDate('created_at', '<=', $this->to);
+                    $paymentQuery->whereDate('created_at', '>=', $this->from)
+                        ->whereDate('created_at', '<=', $this->to);
                 }
 
-                $data['invoices'] = $invoiceQuery->latest()->get();
-                $data['payment_received'] = $paymentQuery->latest()->get();
+                $data['invoices'] = $invoiceQuery->get();
+                $data['payment_received'] = $paymentQuery->get();
             }
         }
 

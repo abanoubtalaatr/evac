@@ -222,15 +222,25 @@ class AgentInvoice extends Component
 
                 $oldBalance = ($totalForInvoice) - $allAmountFromDayOneUntilEndOfInvoice;
 
-                $lastRow = \App\Models\AgentInvoice::query()->where('last_valid_invoice', 1)->orderBy('invoice_title','desc')->latest()->first();
-
                 $year = substr($this->to, 2, 2);
+                $twoDigitYear = substr($this->to, 2, 2);
+
+// Convert the two-digit year to a full four-digit year
+                $fourDigitYear = Carbon::createFromFormat('y', $twoDigitYear)->year;
+
+                $lastRow = \App\Models\AgentInvoice::query()
+                    ->where('last_valid_invoice', 1)
+                    ->whereYear('from', $fourDigitYear)
+                    ->orderBy('invoice_title','desc')
+                    ->latest()
+                    ->first();
 
                 if ($lastRow) {
 
                     $lastTwoDigitsOfYear = intval(trim(substr($lastRow->invoice_title, 4, 3)));
                     $nextInvoiceNumber = intval(trim(substr($lastRow->invoice_title, 10, 3))) + 1;
 
+                    //in case this is a new year not past year
                     if($year != $lastTwoDigitsOfYear){
                         $lastTwoDigitsOfYear = $year;
                         $nextInvoiceNumber = 1;

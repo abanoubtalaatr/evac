@@ -85,7 +85,7 @@
         .table td:nth-child(2),
         .table th:nth-child(3),
         .table td:nth-child(3) {
-            width: 33.33%; /* Equal width for each column */
+            /*width: 33.33%; !* Equal width for each column *!*/
         }
         table {
             width: 100%;
@@ -130,12 +130,14 @@
 
                 // Add date range filters if provided
                 if (request()->from && request()->to) {
-                    $invoiceQuery->whereBetween('created_at', [request()->from, request()->to]);
-                    $paymentQuery->whereBetween('created_at', [request()->from, request()->to]);
+                    $invoiceQuery->whereDate('created_at', '>=', request()->fromDate)
+                        ->whereDate('created_at', '<=', request()->toDate);;
+                    $paymentQuery->whereDate('created_at', '>=', request()->fromDate)
+                        ->whereDate('created_at', '<=', request()->toDate);;
                 }
 
-                $records['invoices'] = $invoiceQuery->latest()->get();
-                $records['payment_received'] = $paymentQuery->latest()->get();
+                $records['invoices'] = $invoiceQuery->get();
+                $records['payment_received'] = $paymentQuery->get();
             }
         }else{
             if (isset(request()->agent)) {
@@ -152,12 +154,14 @@
 
                 // Add date range filters if provided
                 if (request()->from && request()->to) {
-                    $invoiceQuery->whereBetween('created_at', [request()->from, request()->to]);
-                    $paymentQuery->whereBetween('created_at', [request()->from, request()->to]);
+                    $invoiceQuery->whereDate('created_at', '>=', request()->fromDate)
+                        ->whereDate('created_at', '<=', request()->toDate);;
+                    $paymentQuery->whereDate('created_at', '>=', request()->fromDate)
+                        ->whereDate('created_at', '<=', request()->toDate);
                 }
 
-                $records['invoices'] = $invoiceQuery->latest()->get();
-                $records['payment_received'] = $paymentQuery->latest()->get();
+                $records['invoices'] = $invoiceQuery->get();
+                $records['payment_received'] = $paymentQuery->get();
             }
         }
 
