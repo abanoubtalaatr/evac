@@ -50,12 +50,12 @@
         @php
             $total = ($serviceTransaction->service_fee) + ($serviceTransaction->dubai_fee) + $serviceTransaction->vat;
         @endphp
-        <div> Amount : {{\App\Helpers\formatCurrency($total - $serviceTransaction->vat)}} USD ({{$serviceTransaction->payment_method =='invoice' ? "Unpaid" : "Paid"}})</div>
+        <div> Amount : $ {{\App\Helpers\formatCurrency($total - $serviceTransaction->vat)}} USD ({{$serviceTransaction->payment_method =='invoice' ? "Unpaid" : "Paid"}})</div>
         @if($serviceTransaction->vat >0)
             <div>VAT  : $ {{\App\Helpers\formatCurrency($serviceTransaction->vat)}} </div>
         @endif
 
-        <div> Total Amount : {{\App\Helpers\formatCurrency($total)}} USD </div>
+        <div> Total Amount : $ {{\App\Helpers\formatCurrency($total)}} USD </div>
 
         <div class="font-weight-bolder py-3 fa-1x text-center" ><strong>Total Fees : {{\App\Helpers\formatCurrency($total)}} USD  ({{\App\Helpers\convertNumberToWorldsInUsd($total)}} )  {!! $serviceTransaction->payment_method =='invoice'? "<strong class='text-danger'>Unpaid</strong>" :"<strong>Paid</strong>"  !!}</strong> </div>
 
