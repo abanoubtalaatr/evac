@@ -56,7 +56,7 @@
         @endif
         <div> Total Amount : $ {{\App\Helpers\formatCurrency($total)}} USD </div>
 
-        <div>Fees in words : $ {{\App\Helpers\convertNumberToWorldsInUsd($total)}} </div>
+        <div>Fees in words :  {{\App\Helpers\convertNumberToWorldsInUsd($total)}} </div>
         <div class="mt-2">
             <p>{{$settings->invoice_footer}}</p>
         </div>
