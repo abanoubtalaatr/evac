@@ -123,7 +123,7 @@
             @php
                 $totalDrCount= 0;
                 $totalCrCount = 0;
- if(isOwner()){
+ if(\App\Helpers\isOwner()){
             if (isset(request()->agent)) {
                 $invoiceQuery = \App\Models\AgentInvoice::query()->where('agent_id', request()->agent);
                 $paymentQuery = \App\Models\PaymentTransaction::query()->where('agent_id', request()->agent);
