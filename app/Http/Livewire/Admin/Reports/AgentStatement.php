@@ -82,7 +82,7 @@ class AgentStatement extends Component
                         ->whereDate('created_at', '<=', $this->to);
                 }
 
-                $data['invoices'] = $invoiceQuery->get();
+                $data['invoices'] = $invoiceQuery->orderBy('from')->get();
                 $data['payment_received'] = $paymentQuery->get();
             }
         }else{
@@ -106,7 +106,7 @@ class AgentStatement extends Component
                         ->whereDate('created_at', '<=', $this->to);
                 }
 
-                $data['invoices'] = $invoiceQuery->get();
+                $data['invoices'] = $invoiceQuery->orderBy('from')->get();
                 $data['payment_received'] = $paymentQuery->get();
             }
         }

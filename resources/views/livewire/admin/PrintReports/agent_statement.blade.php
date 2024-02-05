@@ -136,7 +136,7 @@
                         ->whereDate('created_at', '<=', request()->toDate);;
                 }
 
-                $records['invoices'] = $invoiceQuery->get();
+                $records['invoices'] = $invoiceQuery->orderBy('from')->get();
                 $records['payment_received'] = $paymentQuery->get();
             }
         }else{
@@ -160,7 +160,7 @@
                         ->whereDate('created_at', '<=', request()->toDate);
                 }
 
-                $records['invoices'] = $invoiceQuery->get();
+                $records['invoices'] = $invoiceQuery->orderBy('from')->get();
                 $records['payment_received'] = $paymentQuery->get();
             }
         }
