@@ -114,7 +114,7 @@ Route::group([
             Route::get('/agents/search', function(Request $request){
                 $query = $request->input('query');
                 if(\App\Helpers\isOwner()){
-                    $searchResults = Agent::where('name', 'like', '%' . $query . '%')->isActive()->get();
+                    $searchResults = Agent::isActive()->where('name', 'like', '%' . $query . '%')->get();
                 }else{
                     $searchResults = Agent::owner()->isActive()->where('name', 'like', '%' . $query . '%')->get();
                 }
