@@ -181,7 +181,7 @@
 
                     @foreach($records['invoices'] as $record)
                         <tr>
-                            <td class="text-center">{{\Illuminate\Support\Carbon::parse($record->created_at)->format('Y-m-d')}}</td>
+                            <td class="text-center">{{$record['from'] . ' - ' . $record['to']}}</td>
                             <td class =text-center>{{$record->invoice_title}}</td>
                             @php
                                 $totalDrCount += $record->total_amount;
