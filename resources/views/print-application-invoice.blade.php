@@ -82,19 +82,19 @@
                 </div>
                 @if($application->vat > 0 )
                     <div>
-                    <span>VAT  {{$settings->vat_rate}}  : {{$application->vat}}  </span>
+                    <span>VAT  : $ {{$settings->vat_rate}}  : {{\App\Helpers\formatCurrency($application->vat)}}  </span>
                     </div>
                 @endif
             </div>
         </div>
 
-
-
         @php
               $total = ($application->dubai_fee + $application->service_fee + $application->vat);
         @endphp
 
-        <div class="font-weight-bolder py-3 fa-4x text-center"  style="font-weight: bolder;font-size: 19px">Total Fees : {{$total}} USD  ({{\App\Helpers\convertNumberToWorldsInUsd($total)}} )  {!! $application->payment_method =='invoice'? "<strong class='text-danger'>Unpaid</strong>" :"<strong>Paid</strong>"  !!} </div>
+        <div> Total Amount : {{\App\Helpers\formatCurrency($total)}} USD </div>
+
+        <div class="font-weight-bolder py-3 fa-4x text-center"  style="font-weight: bolder;font-size: 19px">Total Fees : {{\App\Helpers\formatCurrency($total)}} USD  ({{\App\Helpers\convertNumberToWorldsInUsd($total)}} )  {!! $application->payment_method =='invoice'? "<strong class='text-danger'>Unpaid</strong>" :"<strong>Paid</strong>"  !!} </div>
 
         <div class="text-start">
             <strong> {{$settings->invoice_footer}}</strong>
