@@ -140,8 +140,9 @@ class AgentStatement extends Component
 
         $this->email = null;
         $this->message = null;
-        $this->agent = null;
-        return redirect()->to(route('admin.report.agent_statement'));
+//        $this->agent = null;
+        $this->toggleShowModal();
+//        return redirect()->to(route('admin.report.agent_statement'));
     }
 
 
