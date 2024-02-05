@@ -94,7 +94,6 @@ if (!function_exists('displayTextInNavbarForOfficeTime')) {
     }
 }
 
-
 if (!function_exists('convertNumberToWorldsInUsd')) {
     function convertNumberToWorldsInUsd($number)
     {
@@ -120,6 +119,12 @@ if (!function_exists('convertNumberToWorldsInUsd')) {
             '5' => 'Fifty', '6' => 'Sixty', '7' => 'Seventy', '8' => 'Eighty', '9' => 'Ninety'
         );
         $digits = array('', 'Hundred', 'Thousand', 'Million', 'Billion', 'Trillion');
+
+        // Function to format cents as two digits
+        $formatCents = function ($decimal) {
+            return sprintf('%02d', $decimal);
+        };
+
         while ($i < $digits_length) {
             $divider = ($i == 2) ? 10 : 100;
             $number = floor($no % $divider);
@@ -128,18 +133,22 @@ if (!function_exists('convertNumberToWorldsInUsd')) {
             if ($number) {
                 $plural = (($counter = count($str)) && $number > 9) ? 's' : null;
                 $hundred = ($counter == 1 && $str[0]) ? ' & ' : null;
-                $str [] = ($number < 20) ? $words[$number] . " " . $digits[$counter] . $plural . " " . $hundred :
+                $str[] = ($number < 20) ? $words[$number] . " " . $digits[$counter] . $plural . " " . $hundred :
                     $words2[floor($number / 10)] . " " . $words[$number % 10] . " " . $digits[$counter] . $plural . " " . $hundred;
-            } else
+            } else {
                 $str[] = null;
+            }
         }
+
         $str = array_reverse($str);
         $result = implode('', $str);
         $points = ($decimal) ?
-            " & " . ($words[$decimal / 10] . " " . $words[$decimal % 10]) . " Cents" : '';
-        return $result . "dollars " . $points . ' only';
+            " & " . ($words2[floor($decimal / 10)] . " " . $words[$decimal % 10]) . " Cents" : '';
+
+        return $result . " dollars " . $points . ' only';
     }
 }
+
 
 if (!function_exists('vatRate')) {
     function vatRate($visaTypeId)
