@@ -114,9 +114,9 @@ Route::group([
             Route::get('/agents/search', function(Request $request){
                 $query = $request->input('query');
                 if(\App\Helpers\isOwner()){
-                    $searchResults = Agent::isActive()->where('name', 'like', '%' . $query . '%')->get();
+                    $searchResults = Agent::isActive()->where('name', 'like', '%' . $query . '%')->orderBy('name')->get();
                 }else{
-                    $searchResults = Agent::owner()->isActive()->where('name', 'like', '%' . $query . '%')->get();
+                    $searchResults = Agent::owner()->isActive()->where('name', 'like', '%' . $query . '%')->orderBy('name')->get();
                 }
 
                 return response()->json($searchResults);
