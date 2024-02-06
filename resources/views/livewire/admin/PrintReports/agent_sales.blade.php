@@ -229,7 +229,7 @@
                                 $totalAmountForAgent = \App\Helpers\totalAmount($record->id, request()->fromDate, request()->toDate);
 
                                 $totalPreviousBalForAllAgents += \App\Helpers\oldBalance($record->id, $totalAmountForAgent, request()->fromDate, request()->toDate);
-                                $totalNewSalesForAllAgents += $totalAmountForAgent;
+                                $totalNewSalesForAllAgents += \App\Helpers\totalAmountBetweenTwoDate($record->id, request()->fromDate, request()->toDate);
                                 $totalForAllAgent += \App\Helpers\oldBalance($record->id, $totalAmountForAgent,request()->fromDate, request()->toDate)+ $totalAmountForAgent;
                             }
 
