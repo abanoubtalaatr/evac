@@ -1,0 +1,14 @@
+[
+{"type":"header","version":"5.2.1","comment":"Export to JSON plugin for PHPMyAdmin"},
+{"type":"database","name":"evac03_old"},
+{"type":"table","name":"visa_providers","database":"evac03_old","data":
+[
+{"providerID":"15","providerName":"RAYNA","status":"I"},
+{"providerID":"16","providerName":"LAMA DESERT","status":"I"},
+{"providerID":"17","providerName":"LAMA","status":"I"},
+{"providerID":"18","providerName":"DARINA","status":"I"},
+{"providerID":"19","providerName":"ARAM","status":"I"},
+{"providerID":"20","providerName":"MARHABA","status":"A"}
+]
+}
+]
