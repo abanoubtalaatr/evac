@@ -48,16 +48,16 @@
                         <tr>
                             <td>#{{$loop->index + 1}}</td>
                             <td class='text-center'>{{$record['agent_name'] }}</td>
-                            <td class='text-center'>$ {{$record['total_sales'] }}</td>
-                            <td class='text-center'>$ {{$record['un_paid_bail'] }}</td>
+                            <td class='text-center'>$ {{\App\Helpers\formatCurrency($record['total_sales']) }}</td>
+                            <td class='text-center'>$ {{ \App\Helpers\formatCurrency($record['un_paid_bail'] ) }}</td>
                         </tr>
                     @endforeach
                     <tfoot>
                     <tr>
 {{--                        <td></td>--}}
                         <td colspan="2">Total </td>
-                        <td class="text-center">{{$records['total_sales_for_all_agents']}}</td>
-                        <td class="text-center">{{$records['total_un_paid_bal_for_agents']}}</td>
+                        <td class="text-center">{{ \App\Helpers\formatCurrency($records['total_sales_for_all_agents']) }}</td>
+                        <td class="text-center">{{ \App\Helpers\formatCurrency($records['total_un_paid_bal_for_agents']) }}</td>
                     </tr>
                     </tfoot>
                     </tbody>
@@ -84,8 +84,8 @@
                         <tr>
                             <td>#{{$loop->index + 1}}</td>
                             <td class='text-center'>{{$record['name'] }}</td>
-                            <td class='text-center'>$ {{$record['total'] }}</td>
-                            <td class='text-center'>$ {{$record['un_paid'] }}</td>
+                            <td class='text-center'>$ {{ \App\Helpers\formatCurrency($record['total'])  }}</td>
+                            <td class='text-center'>$ {{ \App\Helpers\formatCurrency($record['un_paid'])  }}</td>
                         </tr>
                     @endforeach
                     <tfoot>
@@ -96,8 +96,8 @@
                     </tr>
                     <tr>
                         <td colspan="2">Total </td>
-                        <td class="text-center">{{$records['total_sales_for_direct']}}</td>
-                        <td class="text-center">{{$records['total_un_paid_bal_for_direct']}}</td>
+                        <td class="text-center">{{ \App\Helpers\formatCurrency($records['total_sales_for_direct']) }}</td>
+                        <td class="text-center">{{ \App\Helpers\formatCurrency($records['total_un_paid_bal_for_direct']) }}</td>
                     </tr>
                     <tr>
                         <td></td>
@@ -106,12 +106,12 @@
                     </tr>
                     <tr>
                         <td colspan="2">Total Sales</td>
-                        <td class="text-center">{{$records['total_sales_for_direct'] + $records['total_sales_for_all_agents']}}</td>
+                        <td class="text-center">{{ \App\Helpers\formatCurrency($records['total_sales_for_direct'] + $records['total_sales_for_all_agents']) }}</td>
                         <td class="text-center"></td>
                     </tr>
                     <tr>
                         <td colspan="2">Total unpaid</td>
-                        <td class="text-center">{{$records['total_un_paid_bal_for_agents'] + $records['total_un_paid_bal_for_direct']}}</td>
+                        <td class="text-center">{{ \App\Helpers\formatCurrency($records['total_un_paid_bal_for_agents'] + $records['total_un_paid_bal_for_direct']) }}</td>
                         <td class="text-center"></td>
                     </tr>
                     </tfoot>

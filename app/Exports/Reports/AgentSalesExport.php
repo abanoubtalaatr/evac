@@ -12,6 +12,7 @@ use Maatwebsite\Excel\Concerns\ShouldAutoSize;
 use Maatwebsite\Excel\Concerns\WithStyles;
 use Maatwebsite\Excel\Events\BeforeSheet;
 use PhpOffice\PhpSpreadsheet\Worksheet\Worksheet;
+use function App\Helpers\formatCurrency;
 use function App\Helpers\totalAmount;
 use function App\Helpers\totalAmountBetweenTwoDate;
 
@@ -87,9 +88,9 @@ class AgentSalesExport implements FromCollection, WithHeadings
             $dataRows[] = array_merge([
                 'Agent' => $record->name,
                 'Default visa' => $defaultVisaCount,
-                'Previous Bal' => \App\Helpers\oldBalance($record->id, $totalAmountForAgent, $from, $to),
-                'New Sales' => $totalSalesForApplicationAndServiceTransactions,
-                'Total Amounts' => \App\Helpers\oldBalance($record->id, $totalAmountForAgent,$from, $to) + $totalAmountForAgent,
+                'Previous Bal' =>'$ '. formatCurrency(\App\Helpers\oldBalance($record->id, $totalAmountForAgent, $from, $to)),
+                'New Sales' => '$ '.formatCurrency($totalSalesForApplicationAndServiceTransactions),
+                'Total Amounts' => '$ '.formatCurrency(\App\Helpers\oldBalance($record->id, $totalAmountForAgent,$from, $to) + $totalAmountForAgent),
             ], $visaCounts, [
                 array_sum($visaCounts) + $defaultVisaCount, // Total Visas
             ], $serviceCounts, [
@@ -130,10 +131,10 @@ class AgentSalesExport implements FromCollection, WithHeadings
 
         $dataRows[] = array_merge([
             'Total',
-            $totalDefaultVisaCount,
-            $totalPreviousBalForAllAgents,
-            $totalNewSalesForAllAgents,
-            $totalForAllAgent,
+            '$ '.formatCurrency($totalDefaultVisaCount),
+            '$ '. formatCurrency($totalPreviousBalForAllAgents),
+            '$ '. formatCurrency($totalNewSalesForAllAgents),
+            '$ '.formatCurrency($totalForAllAgent),
         ], $totalVisaCountForAllAgents, [
             array_sum($totalVisaCountForAllAgents) +$totalDefaultVisaCountForAll, // Total Visas
         ], $totalServiceCountForAllAgents, [

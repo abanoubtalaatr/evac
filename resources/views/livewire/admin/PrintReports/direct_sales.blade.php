@@ -151,7 +151,7 @@
                             <td>#{{$loop->index + 1}}</td>
                             <td class='text-center'>{{\Illuminate\Support\Carbon::parse($record->created_at)->format('Y-m-d') }}</td>
                             <td class='text-center'>{{ $record->first_name . ' '. $record->last_name.  ' - ' . $record->passport_no}}</td>
-                            <td class='text-center'>{{$record->amount}}</td>
+                            <td class='text-center'>{{\App\Helpers\formatCurrency($record->amount)}}</td>
                             <td class='text-center'>{{$record->payment_method}}</td>
                             <td class='text-center'>{{$record->visaType->name}}</td>
                         </tr>
@@ -161,7 +161,7 @@
                             <td>#{{$loop->index + 1}}</td>
                             <td class='text-center'>{{\Illuminate\Support\Carbon::parse($record->created_at)->format('Y-m-d') }}</td>
                             <td class='text-center'>{{ $record->name . ' '. $record->surname.  ' - ' . $record->passport_no}}</td>
-                            <td class='text-center'>{{$record->amount}}</td>
+                            <td class='text-center'>{{\App\Helpers\formatCurrency($record->amount)}}</td>
                             <td class='text-center'>{{$record->payment_method}}</td>
                             <td class='text-center'>{{$record->service->name}}</td>
                         </tr>
@@ -179,7 +179,7 @@
                             <td>#{{$loop->index + 1}}</td>
                             <td class='text-center'>{{\Illuminate\Support\Carbon::parse($record->created_at)->format('Y-m-d') }}</td>
                             <td class='text-center'>{{ $record->first_name . ' '. $record->last_name.  ' - ' . $record->passport_no}}</td>
-                            <td class='text-center'>{{$record->amount}}</td>
+                            <td class='text-center'>{{\App\Helpers\formatCurrency($record->amount)}}</td>
                             <td class='text-center'>{{$record->payment_method}}</td>
                             <td class='text-center'>{{$record->visaType->name}}</td>
                         </tr>
@@ -189,7 +189,7 @@
                             <td>#{{$loop->index + 1}}</td>
                             <td class='text-center'>{{\Illuminate\Support\Carbon::parse($record->created_at)->format('Y-m-d') }}</td>
                             <td class='text-center'>{{ $record->name . ' '. $record->surname.  ' - ' . $record->passport_no}}</td>
-                            <td class='text-center'>{{$record->amount}}</td>
+                            <td class='text-center'>{{\App\Helpers\formatCurrency($record->amount)}}</td>
                             <td class='text-center'>{{$record->payment_method}}</td>
                             <td class='text-center'>{{$record->service->name}}</td>
                         </tr>

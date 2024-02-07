@@ -27,6 +27,5 @@ class VisaTypeSeeder extends Seeder
                 'total' => $item['dubaiPriceInUSD'] + $item['directPriceInUSD']
             ]);
         }
-
     }
 }

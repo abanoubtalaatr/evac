@@ -15,7 +15,7 @@
                     @if($agent->paymentTransactions->count() > 0)
                         @foreach($agent->paymentTransactions()->latest('created_at')->get() as $payment)
                     <div class="d-flex gap-2">
-                        <div>Amount : {{$payment->amount}} $ =></div>
+                        <div>Amount : {{ \App\Helpers\formatCurrency($payment->amount) }} $ =></div>
                         <div>Date : {{\Carbon\Carbon::parse($payment->created_at)->format('d-m-Y h:m')}}</div>
                     </div>
                         <hr>

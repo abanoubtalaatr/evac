@@ -237,9 +237,9 @@
                         <tr>
                             <td>{{$record->name}}</td>
                             <td>{{$defaultVisaCount}}</td>
-                            <td>{{\App\Helpers\oldBalance($record->id, $totalAmountForAgent,request()->fromDate, request()->toDate)}}</td>
-                            <td>{{ \App\Helpers\totalAmountBetweenTwoDate($record->id, $fromDate, $toDate)}}</td>
-                            <td>{{\App\Helpers\oldBalance($record->id, $totalAmountForAgent,request()->fromDate, request()->toDate)+ $totalAmountForAgent}}</td>
+                            <td>{{\App\Helpers\formatCurrency(\App\Helpers\oldBalance($record->id, $totalAmountForAgent,request()->fromDate, request()->toDate))}}</td>
+                            <td>{{\App\Helpers\formatCurrency( \App\Helpers\totalAmountBetweenTwoDate($record->id, $fromDate, $toDate))}}</td>
+                            <td>{{\App\Helpers\formatCurrency(\App\Helpers\oldBalance($record->id, $totalAmountForAgent,request()->fromDate, request()->toDate)+ $totalAmountForAgent)}}</td>
 
                             @foreach(\App\Models\VisaType::query()->where('id', '!=', $defaultVisa->id)->get() as $visa)
                                 @php
@@ -289,10 +289,10 @@
                     <tfoot>
                     <tr>
                         <td>Total </td>
-                        <td>{{$totalDefaultVisaCount}}</td>
-                        <td>{{$totalPreviousBalForAllAgents}}</td>
-                        <td>{{$totalNewSalesForAllAgents}}</td>
-                        <td>{{$totalForAllAgent}}</td>
+                        <td>{{\App\Helpers\formatCurrency($totalDefaultVisaCount)}}</td>
+                        <td>{{\App\Helpers\formatCurrency($totalPreviousBalForAllAgents)}}</td>
+                        <td>{{\App\Helpers\formatCurrency($totalNewSalesForAllAgents)}}</td>
+                        <td>{{\App\Helpers\formatCurrency($totalForAllAgent)}}</td>
 
 
                         @foreach(\App\Models\VisaType::query()->where('id', '!=', $defaultVisa->id)->get() as $visa)

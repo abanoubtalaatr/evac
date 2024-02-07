@@ -155,23 +155,23 @@
                 <tbody>
                 <tr>
                     <td>Total sales  : </td>
-                    <td>{{$data['total_sales']}} $</td>
+                    <td>{{isset($data['total_sales'])?\App\Helpers\formatCurrency($data['total_sales']):""}} $</td>
                 </tr>
                 <tr>
                     <td>Less dubai fee :</td>
-                    <td> {{$data['dubai_fee']}} $</td>
+                    <td> {{isset($data['dubai_fee'])?\App\Helpers\formatCurrency($data['dubai_fee'])?""}} $</td>
                 </tr>
                 <tr>
                     <td>VAT : </td>
-                    <td>{{$data['vat']}} $</td>
+                    <td>{{isset($data['vat'])?\App\Helpers\formatCurrency($data['vat']):""}} $</td>
                 </tr>
                 <tr>
                     <td>P&L : </td>
-                    <td>{{$data['profit_loss']}} $</td>
+                    <td>{{isset($data['profit_loss'])?\App\Helpers\formatCurrency($data['profit_loss'])?""}} $</td>
                 </tr>
                 <tr>
                     <td>Payment received :  </td>
-                    <td>{{$data['payments_received']}} $</td>
+                    <td>{{isset($data['payments_received'])?\App\Helpers\formatCurrency($data['payments_received']):""}} $</td>
                 </tr>
                 </tbody>
             </table>
