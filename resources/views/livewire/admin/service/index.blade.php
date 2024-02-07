@@ -40,9 +40,9 @@
                         <tr>
                             <td>#{{$loop->index + 1}}</td>
                             <td class='text-center'>{{$record->name}}</td>
-                            <td class='text-center'>{{$record->dubai_fee}}</td>
-                            <td class='text-center'>{{$record->service_fee}}</td>
-                            <td class='text-center'>{{$record->amount}}</td>
+                            <td class='text-center'>{{ \App\Helpers\formatCurrency($record->dubai_fee) }}</td>
+                            <td class='text-center'>{{ \App\Helpers\formatCurrency($record->service_fee) }}</td>
+                            <td class='text-center'>{{ \App\Helpers\formatCurrency($record->amount) }}</td>
                             <td>
                                 <div class="actions">
 

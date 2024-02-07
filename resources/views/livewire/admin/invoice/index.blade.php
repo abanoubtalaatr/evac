@@ -49,7 +49,7 @@
                             <td class='text-center'>{{\Illuminate\Support\Carbon::parse($record->to)->format('Y-m-d')}}</td>
 
                             <td class='text-center'>{{$record->invoice_title}}</td>
-                            <td class='text-center'>{{$record->total_amount}}</td>
+                            <td class='text-center'>{{\App\Helpers\formatCurrency($record->total_amount)}}</td>
 
                             <td>
                                 <div class="actions">

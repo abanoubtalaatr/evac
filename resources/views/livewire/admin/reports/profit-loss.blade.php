@@ -42,23 +42,23 @@
                     <tbody>
                     <tr>
                         <td>Total sales  : </td>
-                        <td>{{isset($records['total_sales'])?$records['total_sales']:''}} $</td>
+                        <td>{{isset($records['total_sales'])?\App\Helpers\formatCurrency($records['total_sales']):''}} $</td>
                     </tr>
                     <tr>
                         <td>Less dubai fee :</td>
-                        <td> {{isset($records['dubai_fee'])?$records['dubai_fee']:""}} $</td>
+                        <td> {{isset($records['dubai_fee'])?\App\Helpers\formatCurrency($records['dubai_fee']):""}} $</td>
                     </tr>
                     <tr>
                         <td>VAT : </td>
-                        <td>{{isset($records['vat'])?$records['vat']:''}} $</td>
+                        <td>{{isset($records['vat'])?\App\Helpers\formatCurrency($records['vat']):''}} $</td>
                     </tr>
                     <tr>
                         <td>P&L : </td>
-                        <td>{{isset($records['profit_loss'])?$records['profit_loss']:""}} $</td>
+                        <td>{{isset($records['profit_loss'])?\App\Helpers\formatCurrency($records['profit_loss']):""}} $</td>
                     </tr>
                     <tr>
                         <td>Payment received :  </td>
-                        <td>{{isset($records['payments_received'])?$records['payments_received']:""}} $</td>
+                        <td>{{isset($records['payments_received'])?\App\Helpers\formatCurrency($records['payments_received']):""}} $</td>
                     </tr>
                     </tbody>
                 </table>

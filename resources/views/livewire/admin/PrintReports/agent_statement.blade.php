@@ -186,7 +186,7 @@
                             @php
                                 $totalDrCount += $record->total_amount;
                             @endphp
-                            <td class="text-center">{{$record->total_amount}}</td>
+                            <td class="text-center">{{\App\Helpers\formatCurrency($record->total_amount)}}</td>
                             <td></td>
                         </tr>
                     @endforeach
@@ -195,7 +195,7 @@
                             <td class="text-center">{{\Illuminate\Support\Carbon::parse($record->created_at)->format('Y-m-d')}}</td>
                             <td class='text-center'>Payment received</td>
                             <td class="text-center"></td>
-                            <td class="text-center">{{$record->amount}}</td>
+                            <td class="text-center">{{\App\Helpers\formatCurrency($record->amount)}}</td>
                             @php
                                 $totalCrCount += $record->amount;
                             @endphp
@@ -204,8 +204,8 @@
                     <tr>
                         <td></td>
                         <td class="text-center">Totals</td>
-                        <td  class="text-center">{{$totalDrCount}}</td>
-                        <td class="text-center">{{$totalCrCount}}</td>
+                        <td  class="text-center">{{\App\Helpers\formatCurrency($totalDrCount)}}</td>
+                        <td class="text-center">{{\App\Helpers\formatCurrency($totalCrCount)}}</td>
                         <td></td>
                     </tr>
 

@@ -12,6 +12,7 @@ use Maatwebsite\Excel\Concerns\WithStyles;
 use Maatwebsite\Excel\Events\BeforeSheet;
 use PhpOffice\PhpSpreadsheet\Worksheet\Worksheet;
 use function App\Helpers\convertNumberToWorldsInUsd;
+use function App\Helpers\formatCurrency;
 
 class AgentStatementExport implements FromCollection
 {
@@ -42,7 +43,7 @@ class AgentStatementExport implements FromCollection
                 $dataRows[] = [
                     'Date' => Carbon::parse($invoice->created_at)->format('Y-m-d'),
                     'Description' => $invoice->invoice_title,
-                    'Dr' => $invoice->total_amount,
+                    'Dr' => "$" . formatCurrency($invoice->total_amount),
                     'Cr' => '',
                 ];
             }
@@ -57,7 +58,7 @@ class AgentStatementExport implements FromCollection
                     $dataRows[] = [
                         'Date' => Carbon::parse($payment->created_at)->format('Y-m-d'),
                         'Description' =>"Payment received",
-                        'Dr' => $payment->amount,
+                        'Dr' => "$" . formatCurrency($payment->amount),
                         'Cr' => '',
                     ];
                 }
@@ -79,14 +80,14 @@ class AgentStatementExport implements FromCollection
         $dataRows[] = [
             'Date' => '',
             'Description' => 'Totals',
-            'Dr' => $totalDrCount,
-            'Cr' => $totalCrCount,
+            'Dr' => '$' . formatCurrency($totalDrCount),
+            'Cr' => "$ " . formatCurrency($totalCrCount),
         ];
 
         $dataRows[] = [
             'Date' => '',
             'Description' => 'Outstanding bal',
-            'Dr' => $totalDrCount -  $totalCrCount,
+            'Dr' => "$ " . formatCurrency($totalDrCount -  $totalCrCount),
             'Cr' => '',
         ];
 
@@ -99,7 +100,7 @@ class AgentStatementExport implements FromCollection
             ];
         }
         $dataRows[] = [
-            'Date' => "Amount due in words : " . convertNumberToWorldsInUsd($totalDrCount) ,
+            'Date' => "Amount due in words : " . convertNumberToWorldsInUsd(formatCurrency($totalDrCount)) ,
             'Description' => '',
             'Dr' => '',
             'Cr' => '',

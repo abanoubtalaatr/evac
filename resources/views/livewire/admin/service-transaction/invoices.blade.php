@@ -68,7 +68,7 @@
                             <td>#{{$loop->index + 1}}</td>
                             <td class='text-center'>{{$record->service? $record->service->name:"--"}}</td>
                             <td class='text-center'>{{$record->service_ref}}</td>
-                            <td class='text-center'>{{$record->vat + $record->dubai_fee + $record->service_fee}}
+                            <td class='text-center'>{{ \App\Helpers\formatCurrency($record->vat + $record->dubai_fee + $record->service_fee) }}
 
 
                             <td class='text-center'>{{$record->agent ? $record->agent->name :"--"}}</td>

@@ -149,9 +149,9 @@ class AgentStatement extends Component
     public function exportReport()
     {
         $fileExport = (new \App\Exports\Reports\AgentStatementExport($this->getRecords(), $this->agent));
-        $this->agent = null;
-        $this->from = null;
-        $this->to = null;
+//        $this->agent = null;
+//        $this->from = null;
+//        $this->to = null;
         return Excel::download($fileExport, 'agent_statement.csv');
     }
 

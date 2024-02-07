@@ -45,10 +45,10 @@
                             <td>#{{$record->id}}</td>
                             <td class='text-center'>{{$record->name}}</td>
 
-                            <td class="text-center" >{{$totalAmount??0}}</td>
-                            <td class="text-center" >{{$record->amount_paid??0}}</td>
+                            <td class="text-center" >{{$totalAmount? \App\Helpers\formatCurrency($totalAmount):0}}</td>
+                            <td class="text-center" >{{$record->amount_paid? \App\Helpers\formatCurrency($record->amount_paid):0}}</td>
                             <td class="text-center" >
-                                {{$totalAmount - $record->amount_paid}}</td>
+                                {{ \App\Helpers\formatCurrency($totalAmount - $record->amount_paid) }}</td>
                             <td>
                                 <div class="actions">
                                     @if(($totalAmount - $record->amount_paid) > 0)

@@ -72,7 +72,7 @@
 
                     <div class="col-12 ">
                         <label for="amount" class="">Amount:</label>
-                        <input class="border-0" value="{{$application->amount}}">
+                        <input class="border-0" value="{{ \App\Helpers\formatCurrency($application->amount) }}">
                     </div>
 
                 </div>

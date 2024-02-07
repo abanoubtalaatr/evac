@@ -176,8 +176,8 @@
                                         <td class="text-center">#{{ $rowsCount++ }}</td>
                                         <td class="text-center">{{ $visa->name }}</td>
                                         <td class="text-center">{{ $visa->qty }}</td>
-                                        <td class="text-center">{{ $visa->total }}</td>
-                                        <td class="text-center">{{ $visa->totalAmount }}</td>
+                                        <td class="text-center">{{ \App\Helpers\formatCurrency($visa->total) }}</td>
+                                        <td class="text-center">{{ \App\Helpers\formatCurrency($visa->totalAmount) }}</td>
                                     </tr>
                                 @endforeach
                             @endif
@@ -193,8 +193,8 @@
                                         <td class="text-center">#{{ $rowsCount++ }}</td>
                                         <td class="text-center">{{ $service->name }}</td>
                                         <td class="text-center">{{ $service->qty }}</td>
-                                        <td class="text-center">{{ $service->amount }}</td>
-                                        <td class="text-center">{{ $service->totalAmount }}</td>
+                                        <td class="text-center">{{ \App\Helpers\formatCurrency($service->amount) }}</td>
+                                        <td class="text-center">{{ \App\Helpers\formatCurrency($service->totalAmount) }}</td>
                                     </tr>
                                 @endforeach
                             @endif
@@ -246,7 +246,7 @@
                         <td></td>
                         <td></td>
                         <td class="text-center"><strong>Total USD</strong></td>
-                        <td class="text-center"><strong>$ {{ $totalAmount }}</strong></td>
+                        <td class="text-center"><strong>$ {{ \App\Helpers\formatCurrency($totalAmount) }}</strong></td>
                         <td></td>
                     </tr>
                     <tr>
@@ -254,7 +254,7 @@
                         <td></td>
                         <td></td>
                         <td class="text-center"><strong>Old balance</strong></td>
-                        <td class="text-center"><strong>$ {{ $oldBalance }}</strong></td>
+                        <td class="text-center"><strong>$ {{ \App\Helpers\formatCurrency($oldBalance) }}</strong></td>
                         <td></td>
                     </tr>
                     <tr>
@@ -262,7 +262,7 @@
                         <td></td>
                         <td></td>
                         <td class="text-center"><strong>Grand total </strong></td>
-                        <td class="text-center"><strong>$ {{ $oldBalance + $totalAmount }}</strong></td>
+                        <td class="text-center"><strong>$ {{ \App\Helpers\formatCurrency($oldBalance + $totalAmount) }}</strong></td>
                         <td></td>
                     </tr>
                     </tfoot>

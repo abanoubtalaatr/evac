@@ -14,6 +14,7 @@ use Maatwebsite\Excel\Concerns\WithStyles;
 use Maatwebsite\Excel\Events\BeforeSheet;
 use PhpOffice\PhpSpreadsheet\Worksheet\Worksheet;
 use function App\Helpers\convertNumberToWorldsInUsd;
+use function App\Helpers\formatCurrency;
 
 class AgentInvoiceExport implements FromCollection
 {
@@ -47,8 +48,8 @@ class AgentInvoiceExport implements FromCollection
                     'Item #' => $rowCount++,
                     'Description' => $visa->name,
                     'Qty' => $visa->qty,
-                    'Unit price' => $visa->total,
-                    'Amount' => $visa->totalAmount,
+                    'Unit price' =>'$ '. formatCurrency($visa->total),
+                    'Amount' =>"$ ".  formatCurrency($visa->totalAmount),
                 ];
             $totalAmount += $visa->totalAmount;
             }
@@ -60,8 +61,8 @@ class AgentInvoiceExport implements FromCollection
                     'Item #' => $rowCount++,
                     'Description' => $service->name,
                     'Qty' => $service->qty,
-                    'Unit price' => $service->amount,
-                    'Amount' => $service->totalAmount,
+                    'Unit price' =>"$ " . formatCurrency($service->amount),
+                    'Amount' => "$ ". formatCurrency($service->totalAmount),
                 ];
                 $totalAmount += $service->totalAmount;
             }
@@ -69,6 +70,7 @@ class AgentInvoiceExport implements FromCollection
 
         $totalForInvoice = 0;
         $allAmountFromDayOneUntilEndOfInvoice = 0;
+
 
         foreach ($this->data['agents'] as $agent) {
             if (!is_null($agent['agent'])){
@@ -114,21 +116,21 @@ class AgentInvoiceExport implements FromCollection
           'Description' => "",
           'Qty' => "",
           'Unit price' => 'Total USD',
-          'Amount' => $totalAmount
+          'Amount' => '$ '.formatCurrency($totalAmount)
         ];
         $dataRows[] = [
             'Item #' => '',
             'Description' => "",
             'Qty' => "",
             'Unit price' => 'Old balance',
-            'Amount' => $oldBalance
+            'Amount' =>'$ '. formatCurrency($oldBalance)
         ];
         $dataRows[] = [
             'Item #' => '',
             'Description' => "",
             'Qty' => "",
             'Unit price' => 'Grand total',
-            'Amount' => $oldBalance + $totalAmount
+            'Amount' => '$ '. formatCurrency($oldBalance + $totalAmount)
         ];
         for($i =0 ; $i < 3; $i++){
             $dataRows[] = [
@@ -144,7 +146,7 @@ class AgentInvoiceExport implements FromCollection
         $numberConvert = $oldBalance+$totalAmount;
 
         $dataRows[] = [
-          'Item #' => "Amount due in words : " . convertNumberToWorldsInUsd($numberConvert) ,
+          'Item #' => "Amount due in words : " . convertNumberToWorldsInUsd(formatCurrency($numberConvert)) ,
           'Description' => '',
           'Qty' => '',
           'Unit price' => '',

@@ -69,7 +69,7 @@
                             <td class='text-center'>{{$record->application_ref}}</td>
 
                             <td class='text-center'>{{$record->first_name . ' ' . $record->last_name}}</td>
-                            <td class='text-center'>{{$record->vat + $record->dubai_fee + $record->service_fee}}</td>
+                            <td class='text-center'>{{ \App\Helpers\formatCurrency($record->vat + $record->dubai_fee + $record->service_fee) }}</td>
 
                             {{--                            <td class='text-center'>{{$record->application_ref}}</td>--}}
 {{--                            <td class='text-center'>{{$record->travelAgent ? $record->travelAgent->name :''}}</td>--}}
