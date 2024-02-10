@@ -11,7 +11,7 @@ class UnPaidApplication extends Component
 {
     use PayInvoiceTrait;
 
-    public $passport, $search, $visaTypes, $visaType, $status, $firstName,$lastName, $paymentMethod, $from, $to,$application;
+    public $passport, $search, $visaTypes, $visaType, $status, $firstName,$lastName, $paymentMethod, $from, $to,$application, $form;
     protected $listeners = [ 'showApplicationInvoice'];
 
     public function mount()

@@ -19,9 +19,17 @@ trait PayInvoiceTrait
     }
     public function payInvoice()
     {
+
         $application = Application::query()->find($this->payInvoiceRecordId);
 
-        $application->update(['payment_method' => 'cash']);
+        $data['payment_method'] = 'cash';
+        if(isset($this->form['createdDate'])){
+            $data['created_at'] = $this->form['createdDate'];
+            $data['updated_at'] = $this->form['createdDate'];
+        }
+        $application->update($data);
+
+        $this->toggleConfirmPayInvoice();
     }
 
 }

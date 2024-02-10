@@ -20,7 +20,7 @@
                                 <input type="text" readonly class="form-control" value="{{$record->application_ref}}">
                             </div>
                             <div class="form-group my-2 ">
-                                <label class="my-2">Password No : </label>
+                                <label class="my-2">Pasport No : </label>
                                 <input type="text" readonly class="form-control" value="{{$record->passport_no}}">
                             </div>
                             <div class="form-group my-2 ">
@@ -30,6 +30,10 @@
                             <div class="form-group my-2 ">
                                 <label class="my-2">Applicant : </label>
                                 <input type="text" readonly class="form-control" value="{{$record->first_name . ' ' . $record->last_name}}">
+                            </div>
+                            <div class="form-group my-2 ">
+                                <label class="my-2">Create at : </label>
+                                <input type="date" wire:model="form.createdDate" class="form-control" >
                             </div>
                         </div>
                     </div>
