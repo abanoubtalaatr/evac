@@ -117,7 +117,7 @@ class PaymentTransaction extends Component
 
         $this->form = [];
 
-$this->emit('hideAddPaymentHistoryModal');
+        $this->emit('hideAddPaymentHistoryModal');
     }
 
     public function getRules(){

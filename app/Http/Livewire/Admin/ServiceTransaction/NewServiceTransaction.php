@@ -226,6 +226,10 @@ class NewServiceTransaction extends Component
 // Assuming $today is already defined in your code as the current date in ddmmyyyy format
         $today = date('dmY');
 
+        if(isset($this->form['created_at'])){
+            $today = Carbon::parse($this->form['created_at'])->format('dmY');
+        }
+
         $currentSerial = ServiceTransaction::where('service_ref', 'like', 'EVLB/' . $today . '/%')
             ->max('service_ref');
 

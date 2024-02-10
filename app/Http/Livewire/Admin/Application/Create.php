@@ -119,12 +119,16 @@ class Create extends Component
 
             return;
         }
-
         $today = Carbon::now()->format('dmY');
+        if(isset($this->form['created_at'])){
+            $today = Carbon::parse($this->form['created_at'])->format('dmY');
+        }
+
         $currentSerial = Application::where('application_ref', 'like', 'EVLB/' . $today . '/%')
             ->max('application_ref');
         $nextSerial = $currentSerial ? (int)substr($currentSerial, -4) + 1 : 1;
         $applicationReference = 'EVLB/' . $today . '/' . str_pad($nextSerial, 4, '0', STR_PAD_LEFT);
+
 
         $data['application_ref'] = $applicationReference;
         if(isset($this->form['agent_id'])) {
