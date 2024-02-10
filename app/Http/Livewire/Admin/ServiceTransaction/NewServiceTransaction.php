@@ -243,6 +243,10 @@ class NewServiceTransaction extends Component
         }
 
         $this->form['status']=  "new";
+        if(isset($this->from['created_at'])){
+            $this->from['updated_at'] = $this->from['created_at'];
+        }
+
         ServiceTransaction::query()->create($this->form);
 
         session()->flash('success',__('admin.create_successfully'));
@@ -260,6 +264,7 @@ class NewServiceTransaction extends Component
             'form.surname' => ['required', 'string'],
             'form.notes' => ['nullable'],
             'form.vat' => ['nullable'],
+            'form.created_at' => ['nullable'],
         ];
     }
     public function render()

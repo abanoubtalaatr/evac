@@ -120,6 +120,8 @@
                         @error('form.amount')<p style="color: red;">{{ $message }}</p>@enderror
                     </div>
 
+
+
                 </div>
 
             </div>

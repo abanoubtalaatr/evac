@@ -109,16 +109,21 @@ class PaymentTransaction extends Component
     public function store(Request $request)
     {
         $this->validate();
+        if(isset($this->form['created_at'])){
+            $this->form['updated_at'] = $this->form['created_at'];
+        }
 
         \App\Models\PaymentTransaction::query()->create($this->form);
 
         $this->form = [];
+
 $this->emit('hideAddPaymentHistoryModal');
     }
 
     public function getRules(){
         return [
             'form.amount'=>'required',
+            'form.created_at' => ['nullable']
         ];
     }
 

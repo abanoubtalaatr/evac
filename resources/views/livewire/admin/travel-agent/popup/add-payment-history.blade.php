@@ -17,6 +17,12 @@
                     @error("form.amount")<p class="text-danger">{{$message}}</p> @enderror
                 </div>
 
+                <div class="form-group my-2 ">
+                    <label>Created at : </label>
+                    <input wire:model="form.created_at" type="date" class="form-control">
+                    @error("form.created_at")<p class="text-danger">{{$message}}</p> @enderror
+                </div>
+
             </div>
 
             <div class="modal-footer">
