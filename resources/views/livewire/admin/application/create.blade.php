@@ -151,6 +151,16 @@
                 @error('form.amount')<p style="color: red;">{{ $message }}</p>@enderror
             </div>
 
+                <div class="col-6 my-2">
+                    <div class="form-group ">
+                        <label for="created_at"> Created at :</label>
+                        <div>
+                            <input class="form-control" type="date" wire:model="form.created_at">
+                        </div>
+
+                    </div>
+                    @error('form.created_at')<p style="color: red;">{{ $message }}</p>@enderror
+                </div>
 
 
             <div class="col-12 text-center my-2">

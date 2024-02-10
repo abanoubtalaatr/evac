@@ -136,6 +136,10 @@ class Create extends Component
 
         $visaType = VisaType::query()->find($this->form['visa_type_id']);
         $data['applicant_id'] = $applicant->id;
+        if(isset($this->form['created_at'])){
+            $data['updated_at']  = $this->form['created_at'];
+        }
+
 
         $application = Application::query()->create($data);
 
@@ -156,6 +160,7 @@ class Create extends Component
         $this->form['expiry_date'] = null;
         $this->form['travel_agent_id'] =null;
         $this->form['agent_id'] = null;
+        $this->form['created_at'] = null;
     }
 
     public function checkPassportNumber()
@@ -191,6 +196,7 @@ class Create extends Component
             'form.title' => ['nullable', 'in:Mr,Mrs,Ms'],
             'form.notes' => 'nullable|max:500',
             'form.amount' => 'nullable|numeric|max:500',
+            'form.created_at' => ['nullable', 'date']
         ];
     }
     public function showAgent($id)
