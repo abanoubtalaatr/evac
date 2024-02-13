@@ -106,12 +106,29 @@ class ProfitLoss extends Component
                 ->get()
                 ->sum('vat');
 
-            $totalSales = $applicationServiceFees  + $applicationDubaiFees  +  $serviceTransactionServiceFees  + $serviceTransactionDubaiFees ;
+            $totalSales = $applicationServiceFees  + $applicationDubaiFees  +  $serviceTransactionServiceFees  + $serviceTransactionDubaiFees + $serviceTransactionVats + $applicationVats;
             $data['total_sales'] = $totalSales;
             $data['profit_loss'] = $totalSales - ($serviceTransactionDubaiFees + $applicationDubaiFees)- ($serviceTransactionVats+ $applicationVats);
             $data['vat'] = $applicationVats + $serviceTransactionVats;
             $data['dubai_fee'] = $applicationDubaiFees + $serviceTransactionDubaiFees;
-            $data['payments_received'] = PaymentTransaction::query()
+
+            $data['payments_received'] = Application::query()->whereDate('created_at', '>=', $fromDate)
+                ->whereDate('created_at', '<=', $toDate)->whereNull('travel_agent_id')->where('payment_method', 'cash')->sum('service_fee');
+            $data['payments_received'] += Application::query()->whereDate('created_at', '>=', $fromDate)
+                ->whereDate('created_at', '<=', $toDate)->whereNull('travel_agent_id')->where('payment_method', 'cash')->sum('dubai_fee');
+            $data['payments_received'] += Application::query()->whereDate('created_at', '>=', $fromDate)
+                ->whereDate('created_at', '<=', $toDate)->whereNull('travel_agent_id')->where('payment_method', 'cash')->sum('vat');
+
+            $data['payments_received'] += ServiceTransaction::query()->whereDate('created_at', '>=', $fromDate)
+                ->whereDate('created_at', '<=', $toDate)->whereNull('agent_id')->where('payment_method', 'cash')->sum('service_fee');
+
+            $data['payments_received'] += ServiceTransaction::query()->whereDate('created_at', '>=', $fromDate)
+                ->whereDate('created_at', '<=', $toDate)->whereNull('agent_id')->where('payment_method', 'cash')->sum('dubai_fee');
+
+            $data['payments_received'] += ServiceTransaction::query()->whereDate('created_at', '>=', $fromDate)
+                ->whereDate('created_at', '<=', $toDate)->whereNull('agent_id')->where('payment_method', 'cash')->sum('vat');
+
+            $data['payments_received'] += PaymentTransaction::query()
                 ->whereDate('created_at', '>=', $fromDate)
                 ->whereDate('created_at', '<=', $toDate)
                 ->sum('amount');
