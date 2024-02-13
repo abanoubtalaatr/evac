@@ -239,7 +239,7 @@
                             <td>{{$defaultVisaCount}}</td>
                             <td>{{\App\Helpers\formatCurrency(\App\Helpers\oldBalance($record->id, $totalAmountForAgent,request()->fromDate, request()->toDate))}}</td>
                             <td>{{\App\Helpers\formatCurrency( \App\Helpers\totalAmountBetweenTwoDate($record->id, $fromDate, $toDate))}}</td>
-                            <td>{{\App\Helpers\formatCurrency(\App\Helpers\oldBalance($record->id, $totalAmountForAgent,request()->fromDate, request()->toDate)+ $totalAmountForAgent)}}</td>
+                            <td>{{\App\Helpers\formatCurrency(\App\Helpers\oldBalance($record->id, $totalAmountForAgent,request()->fromDate, request()->toDate) + \App\Helpers\totalAmountBetweenTwoDate($record->id, $fromDate, $toDate))}}</td>
 
                             @foreach(\App\Models\VisaType::query()->where('id', '!=', $defaultVisa->id)->get() as $visa)
                                 @php
@@ -292,7 +292,7 @@
                         <td>{{\App\Helpers\formatCurrency($totalDefaultVisaCount)}}</td>
                         <td>{{\App\Helpers\formatCurrency($totalPreviousBalForAllAgents)}}</td>
                         <td>{{\App\Helpers\formatCurrency($totalNewSalesForAllAgents)}}</td>
-                        <td>{{\App\Helpers\formatCurrency($totalForAllAgent)}}</td>
+                        <td>{{\App\Helpers\formatCurrency($totalNewSalesForAllAgents + $totalPreviousBalForAllAgents )}}</td>
 
 
                         @foreach(\App\Models\VisaType::query()->where('id', '!=', $defaultVisa->id)->get() as $visa)

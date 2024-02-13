@@ -90,7 +90,7 @@ class AgentSalesExport implements FromCollection, WithHeadings
                 'Default visa' => $defaultVisaCount,
                 'Previous Bal' =>'$ '. formatCurrency(\App\Helpers\oldBalance($record->id, $totalAmountForAgent, $from, $to)),
                 'New Sales' => '$ '.formatCurrency($totalSalesForApplicationAndServiceTransactions),
-                'Total Amounts' => '$ '.formatCurrency(\App\Helpers\oldBalance($record->id, $totalAmountForAgent,$from, $to) + $totalAmountForAgent),
+                'Total Amounts' => '$ '.formatCurrency($totalSalesForApplicationAndServiceTransactions +\App\Helpers\oldBalance($record->id, $totalAmountForAgent, $from, $to) ),
             ], $visaCounts, [
                 array_sum($visaCounts) + $defaultVisaCount, // Total Visas
             ], $serviceCounts, [
@@ -134,7 +134,7 @@ class AgentSalesExport implements FromCollection, WithHeadings
             '$ '.formatCurrency($totalDefaultVisaCount),
             '$ '. formatCurrency($totalPreviousBalForAllAgents),
             '$ '. formatCurrency($totalNewSalesForAllAgents),
-            '$ '.formatCurrency($totalForAllAgent),
+            '$ '.formatCurrency($totalNewSalesForAllAgents +$totalPreviousBalForAllAgents ),
         ], $totalVisaCountForAllAgents, [
             array_sum($totalVisaCountForAllAgents) +$totalDefaultVisaCountForAll, // Total Visas
         ], $totalServiceCountForAllAgents, [

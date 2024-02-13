@@ -90,6 +90,8 @@
                         $totalAmount = 0;
                         $totalServiceTransactionsAmount =0;
                         $totalApplicationAmount =0;
+                        $totalForInvoice= 0;
+                        $allAmountFromDayOneUntilEndOfInvoice =0;
                     @endphp
 
                     @foreach($records['agents'] as $agent)
@@ -166,6 +168,7 @@
                     @endforeach
 
                     @php
+
                         $oldBalance = $totalForInvoice - $allAmountFromDayOneUntilEndOfInvoice;
 
 //                       $oldBalance = ($rawBalance < 0) ? -$rawBalance : $rawBalance;
