@@ -43,7 +43,7 @@
                         <option value>@lang('admin.choose')</option>
                         <option value="new">New</option>
                         <option value="appraised">Appraised</option>
-                        <option value="canceled">Canceled</option>
+                        <option value="cancelled">Cancelled</option>
                     </select>
                 </div>
 

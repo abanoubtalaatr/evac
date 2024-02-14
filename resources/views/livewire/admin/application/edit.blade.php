@@ -134,7 +134,7 @@
                     <select wire:model="form.status" class="form-control" id="status">
                         <option value="new">New</option>
                         <option value="appraised">appraised</option>
-                        <option value="canceled">Canceled</option>
+                        <option value="cancelled">Cancelled</option>
                     </select>
                 </div>
                 @error('form.status')<p style="color: red;">{{ $message }}</p>@enderror
