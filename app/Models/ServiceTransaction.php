@@ -11,6 +11,14 @@ class ServiceTransaction extends Model
 
     protected $guarded=[];
 
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::addGlobalScope('excludeDeleted', function ($query) {
+            $query->where('status', '!=', 'deleted');
+        });
+    }
     public function service()
     {
         return $this->belongsTo(Service::class, 'service_id');

@@ -93,11 +93,11 @@ class Outstanding extends Component
                         ->sum('service_fee');
 
                 // Sum for serviceTransactions
-                $serviceTransactionSum = $agent->serviceTransactions()
+                $serviceTransactionSum = $agent->serviceTransactions()->where('status', '!=', 'deleted')
                         ->sum('vat') +
-                    $agent->serviceTransactions()
+                    $agent->serviceTransactions()->where('status', '!=', 'deleted')
                         ->sum('dubai_fee') +
-                    $agent->serviceTransactions()
+                    $agent->serviceTransactions()->where('status', '!=', 'deleted')
                         ->sum('service_fee');
 
                     $totalSales = $applicationSum + $serviceTransactionSum;
@@ -155,10 +155,10 @@ class Outstanding extends Component
             }
         }
 
-        $serviceTransactions = ServiceTransaction::query()->groupBy('name', 'surname')->whereNull('agent_id')->get();
+        $serviceTransactions = ServiceTransaction::query()->where('status', '!=', 'deleted')->groupBy('name', 'surname')->whereNull('agent_id')->get();
 
         foreach ($serviceTransactions as $row) {
-            $serviceTransactionsForPersons = ServiceTransaction::query()
+            $serviceTransactionsForPersons = ServiceTransaction::query()->where('status', '!=', 'deleted')
                 ->where('name', $row->name)
                 ->where('surname', $row->surname)
                 ->get();

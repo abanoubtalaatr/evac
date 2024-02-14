@@ -69,6 +69,7 @@ class AgentInvoiceService
 
         foreach ($services as $service) {
             $serviceTransactions = ServiceTransaction::query()
+                ->where('status', '!=', 'deleted')
                 ->where('agent_id', $agentId)
                 ->where('service_id', $service->id);
 
@@ -110,6 +111,8 @@ class AgentInvoiceService
 
             // Get all agents with service transactions
             $agentsWithServiceTransactions = ServiceTransaction::whereDate('created_at', '>=', $from)
+                ->where('status', '!=', 'deleted')
+
                 ->whereDate('created_at', '<=', $to)
                 ->pluck('agent_id')
                 ->unique();
@@ -118,7 +121,8 @@ class AgentInvoiceService
             $agentsWithApplications = Application::pluck('travel_agent_id')->unique();
 
             // Get all agents with service transactions
-            $agentsWithServiceTransactions = ServiceTransaction::pluck('agent_id')->unique();
+            $agentsWithServiceTransactions = ServiceTransaction::pluck('agent_id')->where('status', '!=', 'deleted')
+                ->unique();
         }
 
         $allAgents = $agentsWithApplications->merge($agentsWithServiceTransactions)->unique();
