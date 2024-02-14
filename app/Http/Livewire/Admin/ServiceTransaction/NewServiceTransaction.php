@@ -57,7 +57,6 @@ class NewServiceTransaction extends Component
     public function updatedFormServiceId()
     {
         if(isset($this->form['service_id']) && !empty($this->form['service_id'])){
-
             $service = Service::query()->find($this->form['service_id']);
             $setting = Setting::query()->first();
 
@@ -67,6 +66,7 @@ class NewServiceTransaction extends Component
             $vat = $value / 100 * $service->service_fee;
             $this->form['amount'] = $amount;
             $this->form['vat'] = $vat;
+            $this->form['service_fee'] = $service->service_fee;
         }
     }
 
@@ -166,6 +166,7 @@ class NewServiceTransaction extends Component
     public function getRecords()
     {
         $query = ServiceTransaction::query()
+            ->withoutGlobalScope('excludeDeleted')
             ->when(!empty($this->name), function ($query) {
                 $query->where('name', 'like', '%' . $this->name . '%');
             })

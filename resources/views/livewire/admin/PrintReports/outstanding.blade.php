@@ -115,6 +115,7 @@
        $totalSalesForAllAgent = 0;
        $totalUnPaidBal = 0;
 
+
             foreach ($agents->get() as $agent) {
                 $paidBal = $agent->paymentTransactions->sum('amount');
 
@@ -126,11 +127,11 @@
                         ->sum('service_fee');
 
                 // Sum for serviceTransactions
-                $serviceTransactionSum = $agent->serviceTransactions()
+                $serviceTransactionSum = $agent->serviceTransactions()->where('status', '!=', 'deleted')
                         ->sum('vat') +
-                    $agent->serviceTransactions()
+                    $agent->serviceTransactions()->where('status', '!=', 'deleted')
                         ->sum('dubai_fee') +
-                    $agent->serviceTransactions()
+                    $agent->serviceTransactions()->where('status', '!=', 'deleted')
                         ->sum('service_fee');
 
                     $totalSales = $applicationSum + $serviceTransactionSum;
@@ -149,48 +150,85 @@
 
             }
 
-           $applications = \App\Models\Application::query()->whereNull('travel_agent_id')->get();
-           $totalDirectSales = 0;
-           $totalUnPaidBalDirect =0;
-           foreach ($applications as $application){
-               $totalAmount = $application->dubai_fee + $application->service_fee + $application->vat;
-               $totalDirectSales += $totalAmount;
+            $applications = \App\Models\Application::query()->whereNull('travel_agent_id')->groupBy('first_name', 'last_name')->get();
+            $totalDirectSales = 0;
+            $totalUnPaidBalDirect =0;
+            $unpaid = 0;
+            $totalAmount = 0;
 
-               $unpaid = 0;
-               if($application->payment_method == 'invoice'){
-                   $unpaid = $totalAmount;
-                   $totalUnPaidBalDirect += $totalAmount;
-               }
-               $data['directs'][] = [
-                   'name' => $application->first_name . ' '. $application->last_name,
-                   'total' => $totalAmount,
-                   'un_paid' => $unpaid,
-               ];
-           }
-           $serviceTransactions = \App\Models\ServiceTransaction::query()->whereNull('agent_id')->get();
+        foreach ($applications as $row) {
+            $applicationsForPersons = \App\Models\Application::query()
+                ->where('first_name', $row->first_name)
+                ->where('last_name', $row->last_name)
+                ->get();
 
-           foreach ($serviceTransactions as $serviceTransaction){
-               $totalAmount = $serviceTransaction->dubai_fee + $serviceTransaction->service_fee + $serviceTransaction->vat;
-               $totalDirectSales += $totalAmount;
+            foreach ($applicationsForPersons as $applicationsForPerson) {
+                $totalAmount = $applicationsForPerson->dubai_fee + $applicationsForPerson->service_fee + $applicationsForPerson->vat;
+                $totalDirectSales += $totalAmount;
+                $unpaid = 0;
 
-               $unpaid = 0;
-               if($serviceTransaction->payment_method == 'invoice'){
-                   $unpaid = $totalAmount;
-                   $totalUnPaidBalDirect += $totalAmount;
-               }
-               $data['directs'][] = [
-                   'name' => $serviceTransaction->name . ' '. $serviceTransaction->surname,
-                   'total' => $totalAmount,
-                   'un_paid' => $unpaid,
-               ];
-           }
+                if ($applicationsForPerson->payment_method == 'invoice') {
+                    $unpaid = $totalAmount;
+                    $totalUnPaidBalDirect += $totalAmount;
+                }
 
+                $key = $row->first_name . $row->last_name;
 
-       $data['agents'] = $totalSalesByAgent;
-       $data['total_sales_for_all_agents'] = $totalSalesForAllAgent;
-       $data['total_un_paid_bal_for_agents'] = $totalUnPaidBal;
-       $data['total_sales_for_direct'] = $totalDirectSales;
-       $data['total_un_paid_bal_for_direct'] = $totalUnPaidBalDirect;
+                if (isset($data['directs'][$key])) {
+                    // Key exists, add total amount to existing total
+                    $data['directs'][$key]['total'] += $totalAmount;
+                    $data['directs'][$key]['un_paid'] += $unpaid;
+                } else {
+                    // Key doesn't exist, create a new entry
+                    $data['directs'][$key] = [
+                        'name' => $row->first_name . ' ' . $row->last_name,
+                        'total' => $totalAmount,
+                        'un_paid' => $unpaid,
+                    ];
+                }
+            }
+        }
+
+        $serviceTransactions = \App\Models\ServiceTransaction::query()->where('status', '!=', 'deleted')->groupBy('name', 'surname')->whereNull('agent_id')->get();
+
+        foreach ($serviceTransactions as $row) {
+            $serviceTransactionsForPersons = \App\Models\ServiceTransaction::query()->where('status', '!=', 'deleted')
+                ->where('name', $row->name)
+                ->where('surname', $row->surname)
+                ->get();
+
+            foreach ($serviceTransactionsForPersons as $serviceTransactionsForPerson) {
+                $totalAmount = $serviceTransactionsForPerson->dubai_fee + $serviceTransactionsForPerson->service_fee + $serviceTransactionsForPerson->vat;
+                $totalDirectSales += $totalAmount;
+                $unpaid = 0;
+
+                if ($serviceTransactionsForPerson->payment_method == 'invoice') {
+                    $unpaid = $totalAmount;
+                    $totalUnPaidBalDirect += $totalAmount;
+                }
+
+                $key = $row->name . $row->surname;
+
+                if (isset($data['directs'][$key])) {
+                    // Key exists, add total amount to existing total
+                    $data['directs'][$key]['total'] += $totalAmount;
+                    $data['directs'][$key]['un_paid'] += $unpaid;
+                } else {
+                    // Key doesn't exist, create a new entry
+                    $data['directs'][$key] = [
+                        'name' => $row->name . ' ' . $row->surname,
+                        'total' => $totalAmount,
+                        'un_paid' => $unpaid,
+                    ];
+                }
+            }
+        }
+        $data['agents'] = $totalSalesByAgent;
+        $data['total_sales_for_all_agents'] = $totalSalesForAllAgent;
+        $data['total_un_paid_bal_for_agents'] = $totalUnPaidBal;
+        $data['total_sales_for_direct'] = $totalDirectSales;
+        $data['total_un_paid_bal_for_direct'] = $totalUnPaidBalDirect;
+
             @endphp
                 @if(isset($data['agents']) && count($data['agents']) )
                     <table class="table-page table">

@@ -9,6 +9,7 @@ use Maatwebsite\Excel\Concerns\WithHeadings;
 use Maatwebsite\Excel\Concerns\ShouldAutoSize;
 use Maatwebsite\Excel\Concerns\WithStyles;
 use PhpOffice\PhpSpreadsheet\Worksheet\Worksheet;
+use function App\Helpers\formatCurrency;
 
 class ProfitLossExport implements FromCollection, WithHeadings, ShouldAutoSize, WithStyles
 {
@@ -23,22 +24,27 @@ class ProfitLossExport implements FromCollection, WithHeadings, ShouldAutoSize, 
     {
         $dataRows[] = [
             'Description' => "Total sales",
-            'Amount' => $this->data['total_sales'],
-        ];
-        $dataRows[] = [
-            'Description' => "Less dubai fee",
-            'Amount' => $this->data['dubai_fee'],
+            'Amount' =>'$' . formatCurrency($this->data['total_sales']),
         ];
 
+        $dataRows[] = [
+            'Description' => "Less dubai fee",
+            'Amount' => '$' . formatCurrency($this->data['dubai_fee']),
+        ];
+
+        $dataRows[] = [
+            'Description' => "Vat",
+            'Amount' => '$' . formatCurrency($this->data['vat']),
+        ];
 
         $dataRows[] = [
             'Description' => "P & L",
-            'Amount' => $this->data['profit_loss'],
+            'Amount' => '$' . formatCurrency($this->data['profit_loss']),
         ];
 
         $dataRows[] = [
             'Description' => "Payments Received *",
-            'Amount' => $this->data['payments_received'],
+            'Amount' => '$'  . formatCurrency($this->data['payments_received']),
         ];
 
         return collect($dataRows);

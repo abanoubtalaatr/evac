@@ -74,6 +74,8 @@ class AgentSales extends Component
 
     public function getRecords()
     {
+        set_time_limit(300); // Set maximum execution time to 60 seconds
+
         $fromDate = $this->from;
         $toDate = $this->to;
 
