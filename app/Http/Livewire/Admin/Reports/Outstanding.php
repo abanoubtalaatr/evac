@@ -72,6 +72,7 @@ class Outstanding extends Component
     {
         $fromDate = $this->from;
         $toDate = $this->to;
+        set_time_limit(300);
 
         if (\App\Helpers\isOwner()) {
             $agents = Agent::query()->isActive()->orderBy('name');
@@ -84,39 +85,42 @@ class Outstanding extends Component
         $totalUnPaidBal = 0;
 
         foreach ($agents->get() as $agent) {
-                $paidBal = $agent->paymentTransactions->sum('amount');
+            $paidBal = $agent->paymentTransactions->sum('amount');
 
-                $applicationSum = $agent->applications()
-                        ->sum('vat') +
-                    $agent->applications()
-                        ->sum('dubai_fee') +
-                    $agent->applications()
-                        ->sum('service_fee');
+            $applicationSum = $agent->applications()
+                    ->sum('vat') +
+                $agent->applications()
+                    ->sum('dubai_fee') +
+                $agent->applications()
+                    ->sum('service_fee');
 
-                // Sum for serviceTransactions
-                $serviceTransactionSum = $agent->serviceTransactions()->where('status', '!=', 'deleted')
-                        ->sum('vat') +
-                    $agent->serviceTransactions()->where('status', '!=', 'deleted')
-                        ->sum('dubai_fee') +
-                    $agent->serviceTransactions()->where('status', '!=', 'deleted')
-                        ->sum('service_fee');
+            // Sum for serviceTransactions
+            $serviceTransactionSum = $agent->serviceTransactions()->where('status', '!=', 'deleted')
+                    ->sum('vat') +
+                $agent->serviceTransactions()->where('status', '!=', 'deleted')
+                    ->sum('dubai_fee') +
+                $agent->serviceTransactions()->where('status', '!=', 'deleted')
+                    ->sum('service_fee');
 
-                    $totalSales = $applicationSum + $serviceTransactionSum;
+            $totalSales = $applicationSum + $serviceTransactionSum;
 
-                $totalSalesForAllAgent += $totalSales;
-                $totalUnPaidForEveryAgent = $totalSales - $paidBal;
-
-                $totalUnPaidBal += $totalUnPaidForEveryAgent;
-
-                $totalSalesByAgent[] = [
-                    'agent_id' => $agent->id,
-                    'agent_name' => $agent->name,
-                    'total_sales' => $totalSales,
-                    'un_paid_bail' => $totalSales - $paidBal,
-                ];
-
+            // Skip agents with total sales equal to 0
+            if ($totalSales == 0) {
+                continue;
             }
 
+            $totalSalesForAllAgent += $totalSales;
+            $totalUnPaidForEveryAgent = $totalSales - $paidBal;
+
+            $totalUnPaidBal += $totalUnPaidForEveryAgent;
+
+            $totalSalesByAgent[] = [
+                'agent_id' => $agent->id,
+                'agent_name' => $agent->name,
+                'total_sales' => $totalSales,
+                'un_paid_bail' => $totalSales - $paidBal,
+            ];
+        }
         $dataDirect = DB::table(DB::raw('(SELECT name, surname, vat, service_fee, dubai_fee FROM service_transactions WHERE status != "deleted" AND agent_id IS NULL
                     UNION ALL
                     SELECT first_name AS name, last_name AS surname, vat, service_fee, dubai_fee FROM applications WHERE travel_agent_id IS NULL) AS combined_data'))

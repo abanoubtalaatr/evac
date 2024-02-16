@@ -44,40 +44,35 @@ class PaymentTransaction extends Component
     }
     public function getRecords()
     {
-
         if(\App\Helpers\isOwner()){
             $agents = Agent::query();
         }else{
             $agents= Agent::owner();
         }
-        if($this->showAll || !is_null($this->agent)){
-            return $agents->when($this->agent, function ($query) {
-                if($this->agent =='no_result'){
-                    return $query->where('agents.id', '>', 0);
+            if($this->showAll || !is_null($this->agent)){
+                return $agents->when($this->agent, function ($query) {
+                    return $this->agent == 'no_result' ? $query->where('agents.id', '>', 0) : $query->where('agents.id', $this->agent);
+                })
+                    ->leftJoin('applications', 'agents.id', '=', 'applications.travel_agent_id')
+                    ->leftJoin('payment_transactions', 'agents.id', '=', 'payment_transactions.agent_id')
+                    ->leftJoin('service_transactions', function ($join) {
+                        $join->on('agents.id', '=', 'service_transactions.agent_id')
+                            ->where('service_transactions.status', '!=', 'deleted');
+                    })
+                    ->select(
+                        'agents.*',
+                        DB::raw('(SELECT COALESCE(SUM(dubai_fee + service_fee + vat), 0) FROM applications WHERE applications.travel_agent_id = agents.id) as amount'),
+                        DB::raw('(SELECT COALESCE(SUM(amount), 0) FROM payment_transactions WHERE payment_transactions.agent_id = agents.id) as amount_paid'),
+                        DB::raw('(SELECT COALESCE(SUM(dubai_fee + service_fee + vat), 0) FROM service_transactions WHERE service_transactions.agent_id = agents.id AND service_transactions.status != "deleted") as amount_service')
+                    )
+                    ->groupBy('agents.id')
+                    ->havingRaw('amount_paid > 0 OR amount_service > 0 OR amount > 0') // Filter based on your conditions
+                    ->orderBy('agents.name')
+                    ->latest()
+                    ->paginate(50);
 
-                } else {
-                    return $query->where('agents.id', $this->agent);
-                }
-            })
-                ->leftJoin('applications', 'agents.id', '=', 'applications.travel_agent_id')
-                ->leftJoin('payment_transactions', function ($join) {
-                    $join->on('agents.id', '=', 'payment_transactions.agent_id');
-                })
-                ->leftJoin('service_transactions', function ($join) {
-                    $join->on('agents.id', '=', 'service_transactions.agent_id')
-                        ->where('service_transactions.status', '!=', 'deleted');
-                })
-                ->select(
-                    'agents.*',
-                    DB::raw('(SELECT SUM(dubai_fee + service_fee + vat) FROM applications WHERE applications.travel_agent_id = agents.id) as amount'),
-                    DB::raw('(SELECT SUM(COALESCE(amount, 0)) FROM payment_transactions WHERE payment_transactions.agent_id = agents.id) as amount_paid'),
-                    DB::raw('(SELECT SUM(COALESCE(dubai_fee + service_fee + vat, 0)) FROM service_transactions WHERE service_transactions.agent_id = agents.id AND service_transactions.status != "deleted") as amount_service')
-                )
-                ->groupBy('agents.id')
-                ->orderBy('agents.name')
-                ->latest()
-                ->paginate(50);
-        }
+            }
+
 
         if(is_null($this->agent)){
             return [];

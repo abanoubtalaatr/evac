@@ -52,6 +52,8 @@
                             <td class='text-center'>$ {{ \App\Helpers\formatCurrency($record['un_paid_bail'] ) }}</td>
                         </tr>
                     @endforeach
+
+
                     <tfoot>
                     <tr>
 {{--                        <td></td>--}}
