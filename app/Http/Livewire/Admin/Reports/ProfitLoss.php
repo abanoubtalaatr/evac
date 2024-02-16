@@ -79,6 +79,7 @@ class ProfitLoss extends Component
             $applicationFee = Application::whereBetween('created_at', [$fromDate, $toDate])
                 ->sum(DB::raw('service_fee + dubai_fee + vat'));
 
+
             $serviceTransactionFee = ServiceTransaction::whereBetween('created_at', [$fromDate, $toDate])
                 ->where('status', '!=', 'deleted')
                 ->sum(DB::raw('service_fee + dubai_fee + vat'));
@@ -116,7 +117,9 @@ class ProfitLoss extends Component
                 ->whereDate('created_at', '<=', $toDate)
                 ->sum('vat');
 
+
             $totalSales = $applicationFee + $serviceTransactionFee;
+
 
             $data['total_sales'] = $totalSales;
             $data['profit_loss'] = $totalSales - ($serviceTransactionDubaiFees + $applicationDubaiFees)- ($serviceTransactionVats+ $applicationVats);

@@ -72,7 +72,7 @@ class NewServiceTransaction extends Component
 
     public function downloadCSV($id)
     {
-        $application = \App\Models\ServiceTransaction::query()->find($id);
+        $application = \App\Models\ServiceTransaction::query()->withoutGlobalScope('excludeDeleted')->find($id);
         return Excel::download(new ReceiptServiceTransactionExport($application), 'serviceReceipt.csv');
     }
 
@@ -87,7 +87,7 @@ class NewServiceTransaction extends Component
 
     public function toggleShowModal($id =null)
     {
-        $this->serviceTransactionThatSendByEmail = ServiceTransaction::find($id);
+        $this->serviceTransactionThatSendByEmail = ServiceTransaction::withoutGlobalScope('excludeDeleted')->find($id);
         $this->showSendEmail = !$this->showSendEmail;
     }
     public function emptyForm()
@@ -128,14 +128,15 @@ class NewServiceTransaction extends Component
 
     public function showServiceTransaction($id)
     {
-        $this->serviceTransaction = ServiceTransaction::query()->find($id);
+        $this->serviceTransaction = ServiceTransaction::query()->withoutGlobalScope('excludeDeleted')
+            ->find($id);
         $this->form = $this->serviceTransaction->toArray();
 
         $this->emit("showServiceTransactionModal", $id);
     }
     public function showServiceTransactionInvoice($id)
     {
-        $this->serviceTransaction = ServiceTransaction::query()->find($id);
+        $this->serviceTransaction = ServiceTransaction::query()->withoutGlobalScope('excludeDeleted')->find($id);
         $this->formInvoice['payment_method'] = $this->serviceTransaction->payment_method;
         $this->formInvoice['amount'] = $this->serviceTransaction->amount;
 
@@ -213,7 +214,7 @@ class NewServiceTransaction extends Component
         $this->validate();
         $data = Arr::except($this->form,['id', 'updated_at', 'created_at']);
 
-        ServiceTransaction::query()->find($this->form['id'])->update($data);
+        ServiceTransaction::query()->withoutGlobalScope('excludeDeleted')->find($this->form['id'])->update($data);
 
         $this->form = [];
         session()->flash('success',__('admin.edit_successfully'));

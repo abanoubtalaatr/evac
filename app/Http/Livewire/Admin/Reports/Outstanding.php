@@ -11,6 +11,7 @@ use App\Models\Application;
 use App\Models\ServiceTransaction;
 use App\Models\VisaType;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Mail;
 use Livewire\Component;
 use Maatwebsite\Excel\Facades\Excel;
@@ -71,6 +72,7 @@ class Outstanding extends Component
     {
         $fromDate = $this->from;
         $toDate = $this->to;
+        set_time_limit(300);
 
         if (\App\Helpers\isOwner()) {
             $agents = Agent::query()->isActive()->orderBy('name');
@@ -82,118 +84,83 @@ class Outstanding extends Component
         $totalSalesForAllAgent = 0;
         $totalUnPaidBal = 0;
 
-            foreach ($agents->get() as $agent) {
-                $paidBal = $agent->paymentTransactions->sum('amount');
+        foreach ($agents->get() as $agent) {
+            $paidBal = $agent->paymentTransactions->sum('amount');
 
-                $applicationSum = $agent->applications()
-                        ->sum('vat') +
-                    $agent->applications()
-                        ->sum('dubai_fee') +
-                    $agent->applications()
-                        ->sum('service_fee');
+            $applicationSum = $agent->applications()
+                    ->sum('vat') +
+                $agent->applications()
+                    ->sum('dubai_fee') +
+                $agent->applications()
+                    ->sum('service_fee');
 
-                // Sum for serviceTransactions
-                $serviceTransactionSum = $agent->serviceTransactions()->where('status', '!=', 'deleted')
-                        ->sum('vat') +
-                    $agent->serviceTransactions()->where('status', '!=', 'deleted')
-                        ->sum('dubai_fee') +
-                    $agent->serviceTransactions()->where('status', '!=', 'deleted')
-                        ->sum('service_fee');
+            // Sum for serviceTransactions
+            $serviceTransactionSum = $agent->serviceTransactions()->where('status', '!=', 'deleted')
+                    ->sum('vat') +
+                $agent->serviceTransactions()->where('status', '!=', 'deleted')
+                    ->sum('dubai_fee') +
+                $agent->serviceTransactions()->where('status', '!=', 'deleted')
+                    ->sum('service_fee');
 
-                    $totalSales = $applicationSum + $serviceTransactionSum;
+            $totalSales = $applicationSum + $serviceTransactionSum;
 
-                $totalSalesForAllAgent += $totalSales;
-                $totalUnPaidForEveryAgent = $totalSales - $paidBal;
-
-                $totalUnPaidBal += $totalUnPaidForEveryAgent;
-
-                $totalSalesByAgent[] = [
-                    'agent_id' => $agent->id,
-                    'agent_name' => $agent->name,
-                    'total_sales' => $totalSales,
-                    'un_paid_bail' => $totalSales - $paidBal,
-                ];
-
+            // Skip agents with total sales equal to 0
+            if ($totalSales == 0) {
+                continue;
             }
 
-            $applications = Application::query()->whereNull('travel_agent_id')->groupBy('first_name', 'last_name')->get();
-            $totalDirectSales = 0;
-            $totalUnPaidBalDirect =0;
-            $unpaid = 0;
-            $totalAmount = 0;
+            $totalSalesForAllAgent += $totalSales;
+            $totalUnPaidForEveryAgent = $totalSales - $paidBal;
 
-        foreach ($applications as $row) {
-            $applicationsForPersons = Application::query()
-                ->where('first_name', $row->first_name)
-                ->where('last_name', $row->last_name)
-                ->get();
+            $totalUnPaidBal += $totalUnPaidForEveryAgent;
 
-            foreach ($applicationsForPersons as $applicationsForPerson) {
-                $totalAmount = $applicationsForPerson->dubai_fee + $applicationsForPerson->service_fee + $applicationsForPerson->vat;
-                $totalDirectSales += $totalAmount;
-                $unpaid = 0;
+            $totalSalesByAgent[] = [
+                'agent_id' => $agent->id,
+                'agent_name' => $agent->name,
+                'total_sales' => $totalSales,
+                'un_paid_bail' => $totalSales - $paidBal,
+            ];
+        }
+        $dataDirect = DB::table(DB::raw('(SELECT name, surname, vat, service_fee, dubai_fee FROM service_transactions WHERE status != "deleted" AND agent_id IS NULL
+                    UNION ALL
+                    SELECT first_name AS name, last_name AS surname, vat, service_fee, dubai_fee FROM applications WHERE travel_agent_id IS NULL) AS combined_data'))
+            ->select('name', 'surname', DB::raw('SUM(vat + service_fee + dubai_fee) AS total_combined_fee'))
+            ->groupBy('name', 'surname')
+            ->orderBy('name')
+            ->get();
 
-                if ($applicationsForPerson->payment_method == 'invoice') {
-                    $unpaid = $totalAmount;
-                    $totalUnPaidBalDirect += $totalAmount;
-                }
+        $totalDirectSales =0;
+        $totalUnPaidBalDirect =0;
+        foreach ($dataDirect as $item) {
 
-                $key = $row->first_name . $row->last_name;
+            $unpaidAmount = Application::where('first_name', $item->name)
+                ->where('last_name', $item->surname)
+                ->where('payment_method', 'invoice')
+                ->whereNull('travel_agent_id')
+                ->sum(DB::raw('service_fee + vat + dubai_fee'));
 
-                if (isset($data['directs'][$key])) {
-                    // Key exists, add total amount to existing total
-                    $data['directs'][$key]['total'] += $totalAmount;
-                    $data['directs'][$key]['un_paid'] += $unpaid;
-                } else {
-                    // Key doesn't exist, create a new entry
-                    $data['directs'][$key] = [
-                        'name' => $row->first_name . ' ' . $row->last_name,
-                        'total' => $totalAmount,
-                        'un_paid' => $unpaid,
-                    ];
-                }
-            }
+            $unpaidAmount += ServiceTransaction::where('name', $item->name)
+                ->where('surname', $item->surname)
+                ->where('status', '!=', 'deleted')
+                ->whereNull('agent_id')
+                ->where('payment_method', 'invoice')
+                ->sum(DB::raw('service_fee + vat + dubai_fee'));
+
+            $data['directs'][] = [
+                'name' => $item->name . ' ' . $item->surname,
+                'total' => $item->total_combined_fee,
+                'un_paid' => $unpaidAmount,
+            ];
+
+            $totalDirectSales += $item->total_combined_fee;
+            $totalUnPaidBalDirect += $unpaidAmount;
         }
 
-        $serviceTransactions = ServiceTransaction::query()->where('status', '!=', 'deleted')->groupBy('name', 'surname')->whereNull('agent_id')->get();
-
-        foreach ($serviceTransactions as $row) {
-            $serviceTransactionsForPersons = ServiceTransaction::query()->where('status', '!=', 'deleted')
-                ->where('name', $row->name)
-                ->where('surname', $row->surname)
-                ->get();
-
-            foreach ($serviceTransactionsForPersons as $serviceTransactionsForPerson) {
-                $totalAmount = $serviceTransactionsForPerson->dubai_fee + $serviceTransactionsForPerson->service_fee + $serviceTransactionsForPerson->vat;
-                $totalDirectSales += $totalAmount;
-                $unpaid = 0;
-
-                if ($serviceTransactionsForPerson->payment_method == 'invoice') {
-                    $unpaid = $totalAmount;
-                    $totalUnPaidBalDirect += $totalAmount;
-                }
-
-                $key = $row->name . $row->surname;
-
-                if (isset($data['directs'][$key])) {
-                    // Key exists, add total amount to existing total
-                    $data['directs'][$key]['total'] += $totalAmount;
-                    $data['directs'][$key]['un_paid'] += $unpaid;
-                } else {
-                    // Key doesn't exist, create a new entry
-                    $data['directs'][$key] = [
-                        'name' => $row->name . ' ' . $row->surname,
-                        'total' => $totalAmount,
-                        'un_paid' => $unpaid,
-                    ];
-                }
-            }
-        }
+        $data['total_sales_for_direct'] = $totalDirectSales;
+        $data['total_un_paid_bal_for_direct'] = $totalUnPaidBalDirect;
         $data['agents'] = $totalSalesByAgent;
         $data['total_sales_for_all_agents'] = $totalSalesForAllAgent;
         $data['total_un_paid_bal_for_agents'] = $totalUnPaidBal;
-        $data['total_sales_for_direct'] = $totalDirectSales;
-        $data['total_un_paid_bal_for_direct'] = $totalUnPaidBalDirect;
         return $data;
     }
 

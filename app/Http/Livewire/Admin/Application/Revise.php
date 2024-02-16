@@ -124,8 +124,8 @@ class Revise extends Component
                 $query->whereDate('created_at', '>=', $this->from)
                     ->whereDate('created_at', '<=', $this->to);
             })
-            ->latest()->paginate(50)
-            ;
+            ->latest()
+            ->get();
 
         if (
             is_null($this->passport) &&

@@ -23,15 +23,23 @@ class ApplicantSeeder extends Seeder
         $dataArray = json_decode($jsonContent, true);
 
         foreach ($dataArray as $item){
-            Applicant::query()->create([
-                'id' => $item['applicantID'],
-                'name' => $item['firstName'],
-                'surname' => $item['lastName'],
-                'passport_no' => $item['passportNumber'],
-                'passport_expiry' => $item['expiryDate'],
-                'created_at' => $item['date_inserted'],
-                'updated_at' => $item['date_modified'],
-            ]);
+            $expiryDate = $item['expiryDate'];
+            $comparisonDate = "2021-12-31";
+
+            $expiryDateTime = new \DateTime($expiryDate);
+            $comparisonDateTime = new \DateTime($comparisonDate);
+
+            if($item['officeID'] == '1' && $expiryDateTime >= $comparisonDateTime){
+                Applicant::query()->create([
+                    'id' => $item['applicantID'],
+                    'name' => $item['firstName'],
+                    'surname' => $item['lastName'],
+                    'passport_no' => $item['passportNumber'],
+                    'passport_expiry' => $item['expiryDate'],
+                    'created_at' => $item['date_inserted'],
+                    'updated_at' => $item['date_modified'],
+                ]);
+            }
         }
     }
 }

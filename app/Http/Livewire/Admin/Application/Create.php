@@ -227,6 +227,7 @@ class Create extends Component
         $this->form['vat'] = (new InvoiceService())->recalculateVat($this->form['amount'], $visaType->dubai_fee);
         $this->form['service_fee'] = $newServiceFee;
     }
+
     public function updatedFormPassportNo()
     {
 

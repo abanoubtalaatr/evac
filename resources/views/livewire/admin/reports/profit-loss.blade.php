@@ -42,6 +42,7 @@
                     <tbody>
                     <tr>
                         <td>Total sales  : </td>
+
                         <td>{{isset($records['total_sales'])?\App\Helpers\formatCurrency($records['total_sales']):''}} $</td>
                     </tr>
                     <tr>

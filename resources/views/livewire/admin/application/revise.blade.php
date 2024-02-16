@@ -125,6 +125,8 @@
                     @endforeach
                     </tbody>
                 </table>
+{{--                {{$records->links()}}--}}
+
             @else
                 <div class="row" style='margin-top:10px'>
                     <div class="alert alert-warning">@lang('site.no_data_to_display')</div>
