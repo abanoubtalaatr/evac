@@ -15,6 +15,7 @@ use App\Services\InvoiceService;
 use Carbon\Carbon;
 use Illuminate\Support\Arr;
 use Livewire\Component;
+use function App\Helpers\vatRate;
 
 class Edit extends Component
 {
@@ -70,14 +71,14 @@ class Edit extends Component
 
     public function updatedFormVisaTypeId()
     {
-        $setting = Setting::query()->first();
-
-        $value = (int) filter_var($setting->vat_rate, FILTER_SANITIZE_NUMBER_INT);
-
+        $vatRate = vatRate($this->form['visa_type_id']);
         $visaType = VisaType::query()->find($this->form['visa_type_id']);
-        $amount = $visaType->dubai_fee + $visaType->service_fee + ($value / 100 * $visaType->service_fee);
+        $amount = $visaType->dubai_fee + $visaType->service_fee + $vatRate;
 
+        $this->form['vat'] = $vatRate;
         $this->form['amount'] = $amount;
+        $this->form['dubai_fee'] = $visaType->dubai_fee;
+        $this->form['service_fee'] = $visaType->service_fee;
     }
     public function store()
     {
