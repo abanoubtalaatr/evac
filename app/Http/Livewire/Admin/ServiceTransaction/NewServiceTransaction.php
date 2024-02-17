@@ -132,6 +132,8 @@ class NewServiceTransaction extends Component
             ->find($id);
         $this->form = $this->serviceTransaction->toArray();
 
+        $this->form['created_at'] = Carbon::parse($this->serviceTransaction->created_at)->format('Y-m-d');
+
         $this->emit("showServiceTransactionModal", $id);
     }
     public function showServiceTransactionInvoice($id)
@@ -212,7 +214,7 @@ class NewServiceTransaction extends Component
     public function update()
     {
         $this->validate();
-        $data = Arr::except($this->form,['id', 'updated_at', 'created_at']);
+        $data = Arr::except($this->form,['id', 'updated_at']);
 
         ServiceTransaction::query()->withoutGlobalScope('excludeDeleted')->find($this->form['id'])->update($data);
 
