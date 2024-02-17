@@ -50,6 +50,9 @@ class Edit extends Component
         $this->form = $application->toArray();
         $this->passportNumber = $application->passport_no;
         $this->form['expiry_date'] = Carbon::parse($application->expiry_date)->format('Y-m-d');
+        $this->form['created_at'] = Carbon::parse($application->created_at)->format('Y-m-d');
+
+
         $this->application = $application;
         $this->page_title = __('admin.applications_edit');
         if($application->travel_agent_id){
@@ -156,7 +159,7 @@ class Edit extends Component
         }
 
         (new ApplicantService())->update($data);
-        $this->application->update(Arr::except($data, ['created_at', 'updated_at']));
+        $this->application->update(Arr::except($data, ['updated_at']));
         session()->flash('success',__('admin.edit_successfully'));
 
         $this->redirect($this->previousPage);
@@ -199,6 +202,7 @@ class Edit extends Component
             'form.title' => ['nullable', 'in:Mr,Mrs,Ms'],
             'form.notes' => 'nullable|max:500',
             'form.amount' => 'nullable|numeric',
+            'form.created_at' => ['nullable']
         ];
     }
 

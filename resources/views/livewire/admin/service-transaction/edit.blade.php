@@ -67,6 +67,12 @@
                     <input type="text" wire:model="form.amount" class="form-control" id="amount">
                     @error('form.amount')<p style='color:red'> {{$message}} </p>@enderror
                 </div>
+
+                <div class="form-group my-2">
+                    <label for="created_at">Created at :</label>
+                    <input type="date" wire:model="form.created_at" class="form-control" id="created_at">
+                    @error('form.created_at')<p style='color:red'> {{$message}} </p>@enderror
+                </div>
                 <div class="form-group my-2 d-flex gap-5">
                     <label>Payment method:</label>
 
