@@ -46,9 +46,9 @@ class PaymentTransaction extends Component
     public function getRecords()
     {
         if (\App\Helpers\isOwner()) {
-            $agents = Agent::query();
+            $agents = Agent::query()->isActive();
         } else {
-            $agents = Agent::owner();
+            $agents = Agent::owner()->isActive();
         }
 
         if ($this->showAll || !is_null($this->agent)) {
