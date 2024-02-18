@@ -10,10 +10,10 @@
 
 
         <div class="table-page-wrap">
-            <div class="row d-flex align-items-center my-3 border p-2 rounded">
+            <div class="row d-flex align-items-center my-3 border p-2 rounded input-container">
                 <div class="form-group col-3">
                     <label for="status-select">@lang('validation.attributes.name')</label>
-                    <input wire:model='name' type="text" class="form-control contact-input">
+                    <input wire:model='name' type="text" class="form-control contact-input" autofocus>
                 </div>
                 <div class="form-group col-3">
                     <label for="status-select">@lang('site.status')</label>
@@ -24,7 +24,7 @@
                     </select>
                 </div>
 
-                <div class="form-group col-2">
+                <div class="form-group col-2 mt-4">
                     <button wire:click="resetData()" class="btn btn-primary form-control contact-input">@lang('site.reset')</button>
                 </div>
             </div>
@@ -79,3 +79,4 @@
         </div>
     </div>
 </main>
+@include('livewire.admin.shared.move_using_tab')

@@ -12,14 +12,15 @@
 
 
                 <div class="form-group col-3">
+                    <label for="status-select">@lang('admin.passport')</label>
+                    <input wire:model.defer='passport' type="text" class="form-control contact-input" autofocus>
+                </div>
+
+                <div class="form-group col-3">
                     <label for="status-select">@lang('admin.search')</label>
                     @include('livewire.admin.shared.agent_search_html')
                 </div>
 
-                <div class="form-group col-3">
-                    <label for="status-select">@lang('admin.passport')</label>
-                    <input wire:model.defer='passport' type="text" class="form-control contact-input" autofocus>
-                </div>
                 <div class="form-group col-3">
                     <label for="status-select">@lang('admin.full_name')</label>
                     <input wire:model.defer='fullName' type="text" class="form-control contact-input">
@@ -143,7 +144,7 @@
     </div>
 </main>
 @include('livewire.admin.shared.agent_search_script')
-@include('livewire.admin.shared.enter_search_button')
+@include('livewire.admin.shared.move_using_tab')
 
 <script>
     document.addEventListener('livewire:load', function () {

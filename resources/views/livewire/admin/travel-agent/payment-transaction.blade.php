@@ -8,7 +8,7 @@
         </div>
         <div class="table-page-wrap">
 
-            <div class="row d-flex align-items-center my-3 border p-2 rounded alig">
+            <div class="row d-flex align-items-center my-3 border p-2 rounded alig input-container">
 
                 <div class="form-group col-3">
                     <label for="status-select">@lang('admin.search')</label>

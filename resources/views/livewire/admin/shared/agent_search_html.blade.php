@@ -7,7 +7,7 @@
                 class="form-control contact-input"
                 placeholder="Search Travel Agent"
                 autocomplete="off"
-
+                autofocus
             />
             <ul class="autocomplete-results list-group position-absolute w-100" style="padding-left: 0px; margin-top: 51px;z-index: 200; display: none;">
             </ul>
