@@ -33,6 +33,12 @@ class Invoice extends Component
     {
         return redirect()->to(route('admin.service_transactions.invoices'));
     }
+
+    public function searchInvoices()
+    {
+
+        $this->getRecords();
+    }
     public function getRecords()
     {
         return ServiceTransaction::query()

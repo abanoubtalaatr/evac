@@ -91,6 +91,11 @@ class Revise extends Component
     }
     // Livewire Component
 
+    public function searchRevise()
+    {
+        // Fetch data based on search parameters
+        $this->getRecords();
+    }
     public function getRecords()
     {
         $records = Application::query()

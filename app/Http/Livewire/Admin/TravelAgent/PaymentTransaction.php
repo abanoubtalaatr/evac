@@ -43,6 +43,8 @@ class PaymentTransaction extends Component
         $this->emit('makeAgentNull');
     }
 
+
+
     public function getRecords()
     {
         if (\App\Helpers\isOwner()) {

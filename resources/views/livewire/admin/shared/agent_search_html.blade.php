@@ -16,3 +16,6 @@
     @error('form.agent_id')
     <p style="color: red;">{{ $message }}</p>
     @enderror
+    <style>
+
+    </style>

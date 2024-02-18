@@ -8,34 +8,41 @@
         </div>
         <div class="table-page-wrap">
 
-            <div class="row d-flex align-items-center my-3 border p-2 rounded">
+            <div class="row d-flex align-items-center my-3 border p-2 rounded input-container">
 
                 <div class="form-group col-3">
                     <label for="status-select">@lang('admin.passport')</label>
-                    <input wire:model='passport' type="text" class="form-control contact-input">
+                    <input wire:model.defer='passport' type="text" class="form-control contact-input" autofocus>
                 </div>
                 <div class="form-group col-3">
                     <label for="status-select">@lang('admin.first_name')</label>
-                    <input wire:model='firstName' type="text" class="form-control contact-input">
+                    <input wire:model.defer='firstName' type="text" class="form-control contact-input">
                 </div>
                 <div class="form-group col-3">
                     <label for="status-select">@lang('admin.surname')</label>
-                    <input wire:model='lastName' type="text" class="form-control contact-input">
+                    <input wire:model.defer='lastName' type="text" class="form-control contact-input">
                 </div>
 
                 <div class="form-group col-3 mt-2">
                     <label for="status-select">@lang('admin.from')</label>
-                    <input class="form-control border  contact-input" type="date" wire:model="from">
+                    <input class="form-control border  contact-input" type="date" wire:model.defer="from">
                 </div>
                 <div class="form-group col-3 mt-2">
                     <label for="status-select">@lang('admin.to')</label>
-                    <input class="form-control border  contact-input" type="date" wire:model="to">
+                    <input class="form-control border  contact-input" type="date" wire:model.defer="to">
                 </div>
 
+
+
+                <div class="form-group col-2 mt-4">
+                    <button wire:click="searchUnPaidApplication()" id="searchButton"
+                            class="btn btn-primary form-control contact-input">@lang('site.search')</button>
+                </div>
                 <div class="form-group col-2 mt-4">
                     <button wire:click="resetData()"
-                            class="btn btn-primary form-control contact-input">@lang('site.reset')</button>
+                            class="btn btn-warning form-control contact-input">@lang('site.reset')</button>
                 </div>
+
 
             </div>
 
@@ -114,6 +121,9 @@
         @include('livewire.admin.application.popup.pay-invoice')
     </div>
 </main>
+
+@include('livewire.admin.shared.enter_search_button')
+
 <script>
     document.addEventListener('livewire:load', function () {
         Livewire.on('showApplicationInvoiceModal', function (application) {
@@ -127,4 +137,5 @@
         });
     });
 </script>
+
 

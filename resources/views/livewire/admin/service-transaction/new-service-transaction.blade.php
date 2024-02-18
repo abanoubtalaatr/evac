@@ -16,15 +16,15 @@
         </div>
         <div class="table-page-wrap">
 
-            <div class="row d-flex align-items-center my-3 border p-2 rounded">
+            <div class="row d-flex align-items-center my-3 border p-2 rounded input-container" id="input-container">
 
                 <div class="form-group col-3">
                     <label for="status-select">@lang('admin.name')</label>
-                    <input wire:model='name' type="text" class="form-control contact-input">
+                    <input wire:model.defer='name' type="text" class="form-control contact-input" autofocus>
                 </div>
                 <div class="form-group col-3">
                     <label for="status-select">@lang('admin.surname')</label>
-                    <input wire:model='surname' type="text" class="form-control contact-input">
+                    <input wire:model.defer='surname' type="text" class="form-control contact-input">
                 </div>
                 <div class="form-group col-3">
                     <label>Agent</label>
@@ -33,19 +33,19 @@
                 </div>
                 <div class="form-group col-3">
                     <label for="status-select">@lang('admin.service')</label>
-                    <input wire:model='service' type="text" class="form-control contact-input">
+                    <input wire:model.defer='service' type="text" class="form-control contact-input">
                 </div>
                 <div class="form-group col-3 mt-2">
                     <label for="status-select">@lang('admin.from')</label>
-                    <input class="form-control border  contact-input" type="date" wire:model="from">
+                    <input class="form-control border  contact-input" type="date" wire:model.defer="from">
                 </div>
                 <div class="form-group col-3 mt-2">
                     <label for="status-select">@lang('admin.to')</label>
-                    <input class="form-control border  contact-input" type="date" wire:model="to">
+                    <input class="form-control border  contact-input" type="date" wire:model.defer="to">
                 </div>
                 <div class="form-group col-3">
                     <label for="status-select">@lang('admin.status')</label>
-                    <select wire:model='status' id='status-select' class="form-control border  contact-input">
+                    <select wire:model.defer='status' id='status-select' class="form-control border  contact-input">
                         <option value="all">@lang('admin.choose')</option>
                         <option value="new">new</option>
 
@@ -54,9 +54,15 @@
                         <option value="deleted">Deleted</option>
                     </select>
                 </div>
+
                 <div class="form-group col-2 mt-4">
-                    <button wire:click="resetData()" class="btn btn-primary form-control contact-input">@lang('site.reset')</button>
+                    <button wire:click="searchPayment()" id="searchButton"
+                            class="btn btn-primary form-control contact-input">@lang('site.search')</button>
                 </div>
+                <div class="form-group col-2 mt-4">
+                    <button wire:click="resetData()" class="btn btn-warning form-control contact-input">@lang('site.reset')</button>
+                </div>
+
 
             </div>
 
@@ -150,6 +156,7 @@
 @endpush
 
 @include('livewire.admin.shared.agent_search_script')
+@include('livewire.admin.shared.enter_search_button')
 
 <script>
     document.getElementById('addServiceTransactionButton').addEventListener('click', function() {
