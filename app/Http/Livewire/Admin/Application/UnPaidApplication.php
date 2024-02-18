@@ -20,6 +20,11 @@ class UnPaidApplication extends Component
         $this->visaTypes = VisaType::query()->get();
     }
 
+    public function searchUnPaidApplication()
+    {
+        $this->getRecords();
+    }
+
     public function getRecords()
     {
         return Application::query()

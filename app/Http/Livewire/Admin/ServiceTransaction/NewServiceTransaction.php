@@ -166,6 +166,12 @@ class NewServiceTransaction extends Component
     {
         $this->reset(['agent', 'service', 'name', 'surname', 'from', 'to']);
     }
+
+    public function searchPayment()
+    {
+        // Fetch data based on search parameters
+        $this->getRecords();
+    }
     public function getRecords()
     {
         $query = ServiceTransaction::query()
