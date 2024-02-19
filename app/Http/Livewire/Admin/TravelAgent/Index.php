@@ -75,6 +75,7 @@ class Index extends Component
             ->orderBy('name')
             ->latest()
             ->paginate(50);
+
     }
 
     public function emptyForm()
