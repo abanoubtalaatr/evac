@@ -85,6 +85,11 @@
                             @lang('admin.appraisal')
                         </a>
                     </li>
+                    <li style="line-height: 20px;margin-left: 4px;padding-left: 0px;text-indent: 0" class="border-bottom pb-2 {{ request()->routeIs('admin.service_transactions.new') ? 'active' : '' }}">
+                        <a href="{{route('admin.service_transactions.new')}}" class="text-white ">
+                            @lang('admin.new_service_transactions')
+                        </a>
+                    </li>
                     {{--                <li style="line-height: 20px;margin-left: 4px;padding-left: 0px;text-indent: 0" class="border-bottom pb-2">--}}
                     {{--                    <a href="{{ route('admin.applications.appraised') }}" class="text-white ">--}}
                     {{--                        @lang('admin.appraised')--}}
@@ -116,6 +121,11 @@
                                 @lang('admin.appraisal')
                             </a>
                         </li>
+                            <li style="line-height: 20px;margin-left: 4px;padding-left: 0px;text-indent: 0" class="border-bottom pb-2 {{ request()->routeIs('admin.service_transactions.new') ? 'active' : '' }}">
+                                <a href="{{route('admin.service_transactions.new')}}" class="text-white ">
+                                    @lang('admin.new_service_transactions')
+                                </a>
+                            </li>
                     @endcan
                     {{--                @can("Manage appraised")--}}
                     {{--                    <li style="line-height: 20px;margin-left: 4px;padding-left: 0px;text-indent: 0" class="border-bottom pb-2">--}}
@@ -143,12 +153,12 @@
 
             @if(auth('admin')->user()->id ==1 || auth('admin')->user()->id ==46)
 
-                <li class="sidebar-toggle">
-                    <i class="fa fa-suitcase mr-5"></i>
-                    <span class="ml-2">@lang('admin.service_transactions')</span>
-                    <i class="fas fa-plus"></i>
-                </li>
-                <ul class="sidebar-menu">
+{{--                <li class="sidebar-toggle">--}}
+{{--                    <i class="fa fa-suitcase mr-5"></i>--}}
+{{--                    <span class="ml-2">@lang('admin.service_transactions')</span>--}}
+{{--                    <i class="fas fa-plus"></i>--}}
+{{--                </li>--}}
+{{--                <ul class="sidebar-menu">--}}
 {{--                    <li style="line-height: 20px;margin-left: 4px;padding-left: 0px;text-indent: 0" class="border-bottom pb-2 {{ request()->routeIs('admin.service_transactions') ? 'active' : '' }}">--}}
 {{--                        <a href="{{route('admin.service_transactions')}}" class="text-white ">--}}
 {{--                            @lang('admin.service_transactions')--}}
@@ -156,41 +166,27 @@
 {{--                    </li>--}}
 
 
-                    <li style="line-height: 20px;margin-left: 4px;padding-left: 0px;text-indent: 0" class="border-bottom pb-2 {{ request()->routeIs('admin.services') ? 'active' : '' }}">
-                        <a href="{{route('admin.services')}}" class="text-white  ">
-                            <span class="ml-2">Add service</span>
-                        </a>
-                    </li>
-                    <li style="line-height: 20px;margin-left: 4px;padding-left: 0px;text-indent: 0" class="border-bottom pb-2 {{ request()->routeIs('admin.service_transactions.new') ? 'active' : '' }}">
-                        <a href="{{route('admin.service_transactions.new')}}" class="text-white ">
-                            @lang('admin.new_service_transactions')
-                        </a>
-                    </li>
 
-                </ul>
+
+{{--                </ul>--}}
             @else
-                @can('Manage service transactions')
-                    <li class="sidebar-toggle">
-                        <i class="fa fa-suitcase mr-5"></i>
-                        <span class="ml-2">@lang('admin.service_transactions')</span>
-                        <i class="fas fa-plus"></i>
-                    </li>
-                    <ul class="sidebar-menu">
+{{--                @can('Manage service transactions')--}}
+{{--                    <li class="sidebar-toggle">--}}
+{{--                        <i class="fa fa-suitcase mr-5"></i>--}}
+{{--                        <span class="ml-2">@lang('admin.service_transactions')</span>--}}
+{{--                        <i class="fas fa-plus"></i>--}}
+{{--                    </li>--}}
+{{--                    <ul class="sidebar-menu">--}}
 
-                        <li style="line-height: 20px;margin-left: 4px;padding-left: 0px;text-indent: 0" class="border-bottom pb-2 {{ request()->routeIs('admin.services') ? 'active' : '' }}">
-                            <a href="{{route('admin.services')}}" class="text-white  ">
-                                <span class="ml-2">Add service</span>
-                            </a>
-                        </li>
-                        <li style="line-height: 20px;margin-left: 4px;padding-left: 0px;text-indent: 0" class="border-bottom pb-2 {{ request()->routeIs('admin.service_transactions.new') ? 'active' : '' }}">
-                            <a href="{{route('admin.service_transactions.new')}}" class="text-white ">
-                                @lang('admin.new_service_transactions')
-                            </a>
-                        </li>
+{{--                        <li style="line-height: 20px;margin-left: 4px;padding-left: 0px;text-indent: 0" class="border-bottom pb-2 {{ request()->routeIs('admin.services') ? 'active' : '' }}">--}}
+{{--                            <a href="{{route('admin.services')}}" class="text-white  ">--}}
+{{--                                <span class="ml-2">Add service</span>--}}
+{{--                            </a>--}}
+{{--                        </li>--}}
 
-                    </ul>
+{{--                    </ul>--}}
 
-                @endcan
+{{--                @endcan--}}
             @endif
 
 
@@ -400,6 +396,13 @@
                         <span class="ml-2">@lang('admin.visa_types')</span>
                     </a>
                 </li>
+                <li style="line-height: 20px;margin-left: 4px;padding-left: 0px;text-indent: 0" class="border-bottom pb-2 {{ request()->routeIs('admin.services') ? 'active' : '' }}">
+                    <a href="{{route('admin.services')}}" class="text-white  ">
+                        <i class="fa fa-suitcase mr-5"></i>
+                        <span class="ml-2">Add service</span>
+                    </a>
+                </li>
+
 
             @else
                 @can('Manage visa types')
@@ -410,6 +413,13 @@
                         </a>
                     </li>
                 @endcan
+                    <li style="line-height: 20px;margin-left: 4px;padding-left: 0px;text-indent: 0" class="border-bottom pb-2 {{ request()->routeIs('admin.services') ? 'active' : '' }}">
+                        <a href="{{route('admin.services')}}" class="text-white  ">
+                            <i class="fa fa-suitcase mr-5"></i>
+                            <span class="ml-2">Add service</span>
+                        </a>
+                    </li>
+
             @endif
 
             @if(auth('admin')->user()->id == 1)

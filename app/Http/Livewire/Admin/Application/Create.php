@@ -150,7 +150,11 @@ class Create extends Component
 
         $this->resetData();
         $this->updateAmount();
-        $this->emit('closePopups');
+        $url = route('admin.applications.print', ['application' => $application->id]);
+        $this->emit('PrintApplication', $url);
+                $this->emit('closePopups');
+
+
     }
 
     public function resetData()

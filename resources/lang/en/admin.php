@@ -123,7 +123,7 @@ return [
     "outstanding" => "Outstanding",
     "total_sales" => "Total sales",
     'un_paid_bail' => "Unpaid Bal",
-    "new_service_transactions" => "Transactions",
+    "new_service_transactions" => "Services",
     'agent_invoices' => "Agent invoices",
     'payment_type' => "Payment method",
     'agent_sales' => "Agent sales",
