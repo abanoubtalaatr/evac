@@ -37,14 +37,14 @@
         <div>Date : {{\Carbon\Carbon::parse($serviceTransaction->created_at)->format('d-m-Y')}} </div>
         <div>Service : {{$serviceTransaction->service? $serviceTransaction->service->name:''}}</div>
         @if($serviceTransaction->agent)
-        <div class="border-dotted border-top-0 border-right-0 border-left-0 mt-3 text-center"><strong >Travel agent: {{$serviceTransaction->agent->name}}</strong></div>
+        <div class="border-dotted border-top-0 border-right-0 border-left-0 mt-3 text-center"><strong >Travel agent: <span style="font-size: 27px">{{$serviceTransaction->agent->name}}</span></strong></div>
             <div >Account number: {{$serviceTransaction->agent->account_number}}</div>
 
             <div class="fa-3x">---------------</div>
-        <div>Name : {{$serviceTransaction->name ." ". $serviceTransaction->surname}}</div>
+        <div>Name : <span style="font-size: 27px;">{{$serviceTransaction->name ." ". $serviceTransaction->surname}}</span></div>
         @else
             <a href="#" style="font-weight: bolder;padding-top:5px;background: lightblue;color:black;font-size: 20px">Direct</a>
-            <div>Name : {{$serviceTransaction->name ." ". $serviceTransaction->surname}}</div>
+            <div>Name : <span style="font-size: 27px">{{$serviceTransaction->name ." ". $serviceTransaction->surname}}</span></div>
 
         @endif
         @php
