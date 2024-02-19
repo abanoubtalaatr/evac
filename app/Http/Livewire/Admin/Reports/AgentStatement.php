@@ -68,8 +68,7 @@ class AgentStatement extends Component
     public function getRecords()
     {
         $data = [];
-
-        if(isOwner()){
+        if (isOwner()) {
             if (isset($this->agent)) {
                 $invoiceQuery = \App\Models\AgentInvoice::query()->where('agent_id', $this->agent);
                 $paymentQuery = PaymentTransaction::query()->where('agent_id', $this->agent);
@@ -82,18 +81,18 @@ class AgentStatement extends Component
                         ->whereDate('created_at', '<=', $this->to);
                 }
 
-                $data['invoices'] = $invoiceQuery->orderBy('from')->get();
+                $data['invoices'] = $invoiceQuery->get();
                 $data['payment_received'] = $paymentQuery->get();
             }
-        }else{
+        } else {
             if (isset($this->agent)) {
                 $invoiceQuery = \App\Models\AgentInvoice::query()
-                    ->whereHas('agent', function ($agent){
+                    ->whereHas('agent', function ($agent) {
                         $agent->where('is_visible', 1);
                     })
                     ->where('agent_id', $this->agent);
                 $paymentQuery = PaymentTransaction::query()
-                    ->whereHas('agent', function ($agent){
+                    ->whereHas('agent', function ($agent) {
                         $agent->where('is_visible', 1);
                     })
                     ->where('agent_id', $this->agent);
@@ -106,12 +105,42 @@ class AgentStatement extends Component
                         ->whereDate('created_at', '<=', $this->to);
                 }
 
-                $data['invoices'] = $invoiceQuery->orderBy('from')->get();
+                $data['invoices'] = $invoiceQuery->get();
                 $data['payment_received'] = $paymentQuery->get();
             }
         }
 
+// Combine and order the results
+        $combinedResults = collect($data['invoices'])
+            ->merge($data['payment_received'])
+            ->sortBy(function ($item) {
+                // Assuming 'created_at' for invoices and 'created_at' for payment_received
+                return $item instanceof \App\Models\AgentInvoice ? $item->from : $item->created_at;
+            })
+            ->values()
+            ->all();
 
+// Calculate the total sum of total_amount from invoices
+        $totalDrCount = collect($data['invoices'])->sum('total_amount');
+
+// Calculate the total sum of amount from payment_received
+        $totalCrCount = collect($data['payment_received'])->sum('amount');
+
+        $data['combined_results'] = $combinedResults;
+        $data['totalDrCount'] = $totalDrCount;
+        $data['totalCrCount'] = $totalCrCount;
+
+
+// Calculate the total sum of total_amount from invoices
+        $totalDrCount = collect($data['invoices'])->sum('total_amount');
+
+// Calculate the total sum of amount from payment_received
+        $totalCrCount = collect($data['payment_received'])->sum('amount');
+
+        $data['totalDrCount'] = $totalDrCount;
+        $data['totalCrCount'] = $totalCrCount;
+
+        $data['data'] = $combinedResults;
         return $data;
     }
 

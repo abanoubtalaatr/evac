@@ -34,6 +34,10 @@
 
             </div>
 
+            @php
+                $defaultVisa = \App\Models\VisaType::query()->where('is_default', 1)->first();
+
+            @endphp
             @if(count($records))
                 <table class="table-page table">
                     <thead>
@@ -50,15 +54,19 @@
                     </thead>
                     <tbody>
                     @foreach($records as $record)
-                        <tr>
-                            <td>#{{$loop->index + 1}}</td>
-                            <td class='text-center'>{{$record->application_ref}}</td>
-                            <td class='text-center'>{{$record->first_name .' '. $record->last_name}}</td>
-                            <td class="text-center">{{$record->passport_no}}</td>
-                            <td class='text-center'>{{$record->travelAgent ? $record->travelAgent->name :''}}</td>
-                            <td class="text-center">{{$record->visaType? $record->visaType->name:''}}</td>
+                        @php
+                            $notDefaultVisa = $record->visa_type_id != $defaultVisa->id;
+                        @endphp
 
-                            <td class='text-center'>{{$record->status}}</td>
+                        <tr style="@if($notDefaultVisa) background:blue  @endif">
+                            <td class="@if($notDefaultVisa) text-white  @endif ">#{{$loop->index + 1}}</td>
+                            <td class='text-center @if($notDefaultVisa) text-white  @endif'>{{$record->application_ref}}</td>
+                            <td class='text-center @if($notDefaultVisa) text-white  @endif'>{{$record->first_name .' '. $record->last_name}}</td>
+                            <td class="text-center @if($notDefaultVisa) text-white  @endif">{{$record->passport_no}}</td>
+                            <td class='text-center @if($notDefaultVisa) text-white  @endif'>{{$record->travelAgent ? $record->travelAgent->name :''}}</td>
+                            <td class="text-center @if($notDefaultVisa) text-white  @endif">{{$record->visaType? $record->visaType->name:''}}</td>
+
+                            <td class='text-center @if($notDefaultVisa) text-white  @endif'>{{$record->status}}</td>
 
                             <td>
                                 @include('livewire.admin.application.show',  ['application' => $record])
@@ -90,8 +98,8 @@
 
                                 </div>
                             </td>
-                            @endforeach
                         </tr>
+                    @endforeach
                     </tbody>
                 </table>
 
