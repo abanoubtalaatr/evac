@@ -121,91 +121,124 @@
             @endif
 
             @php
-                $totalDrCount= 0;
+                $totalDrCount = 0;
                 $totalCrCount = 0;
- if(\App\Helpers\isOwner()){
-            if (isset(request()->agent)) {
-                $invoiceQuery = \App\Models\AgentInvoice::query()->where('agent_id', request()->agent);
-                $paymentQuery = \App\Models\PaymentTransaction::query()->where('agent_id', request()->agent);
 
-                // Add date range filters if provided
-                if (request()->from && request()->to) {
-                    $invoiceQuery->whereDate('created_at', '>=', request()->fromDate)
-                        ->whereDate('created_at', '<=', request()->toDate);;
-                    $paymentQuery->whereDate('created_at', '>=', request()->fromDate)
-                        ->whereDate('created_at', '<=', request()->toDate);;
+                if (\App\Helpers\isOwner()) {
+                    if (isset($agent)) {
+                        $invoiceQuery = \App\Models\AgentInvoice::query()->where('agent_id', $agent->id);
+                        $paymentQuery = \App\Models\PaymentTransaction::query()->where('agent_id', $agent->id);
+
+                        // Add date range filters if provided
+                        if (request()->fromDate && request()->toDate) {
+                            $invoiceQuery->whereDate('created_at', '>=', request()->fromDate)
+                                ->whereDate('created_at', '<=', request()->toDate);
+                            $paymentQuery->whereDate('created_at', '>=', request()->fromDate)
+                                ->whereDate('created_at', '<=', request()->toDate);
+                        }
+
+                        $data['invoices'] = $invoiceQuery->get();
+                        $data['payment_received'] = $paymentQuery->get();
+                    }
+                } else {
+                    if (isset($agent)) {
+                        $invoiceQuery = \App\Models\AgentInvoice::query()
+                            ->whereHas('agent', function ($agent) {
+                                $agent->where('is_visible', 1);
+                            })
+                            ->where('agent_id', $agent->id);
+                        $paymentQuery = \App\Models\PaymentTransaction::query()
+                            ->whereHas('agent', function ($agent) {
+                                $agent->where('is_visible', 1);
+                            })
+                            ->where('agent_id', $agent->id);
+
+                        // Add date range filters if provided
+                        if (request()->fromDate && request()->toDate) {
+                            $invoiceQuery->whereDate('created_at', '>=', request()->fromDate)
+                                ->whereDate('created_at', '<=', request()->toDate);
+                            $paymentQuery->whereDate('created_at', '>=', request()->fromDate)
+                                ->whereDate('created_at', '<=', request()->toDate);
+                        }
+
+                        $data['invoices'] = $invoiceQuery->get();
+                        $data['payment_received'] = $paymentQuery->get();
+                    }
                 }
 
-                $records['invoices'] = $invoiceQuery->orderBy('from')->get();
-                $records['payment_received'] = $paymentQuery->get();
-            }
-        }else{
-            if (isset(request()->agent)) {
-                $invoiceQuery = \App\Models\AgentInvoice::query()
-                    ->whereHas('agent', function ($agent){
-                        $agent->where('is_visible', 1);
+                // Combine and order the results
+                $combinedResults = collect($data['invoices'])
+                    ->merge($data['payment_received'])
+                    ->sortBy(function ($item) {
+                        // Assuming 'from' for invoices and 'created_at' for payment_received
+                        return $item instanceof \App\Models\AgentInvoice ? $item->from : $item->created_at;
                     })
-                    ->where('agent_id', request()->agent);
-                $paymentQuery = \App\Models\PaymentTransaction::query()
-                    ->whereHas('agent', function ($agent){
-                        $agent->where('is_visible', 1);
-                    })
-                    ->where('agent_id', request()->agent);
+                    ->values()
+                    ->all();
 
-                // Add date range filters if provided
-                if (request()->from && request()->to) {
-                    $invoiceQuery->whereDate('created_at', '>=', request()->fromDate)
-                        ->whereDate('created_at', '<=', request()->toDate);;
-                    $paymentQuery->whereDate('created_at', '>=', request()->fromDate)
-                        ->whereDate('created_at', '<=', request()->toDate);
-                }
+                // Calculate the total sum of total_amount from invoices
+                $totalDrCount = collect($data['invoices'])->sum('total_amount');
 
-                $records['invoices'] = $invoiceQuery->orderBy('from')->get();
-                $records['payment_received'] = $paymentQuery->get();
-            }
-        }
+                // Calculate the total sum of amount from payment_received
+                $totalCrCount = collect($data['payment_received'])->sum('amount');
+
+                $records['totalDrCount'] = $totalDrCount;
+                $records['totalCrCount'] = $totalCrCount;
+
+                $records['data'] = $combinedResults;
 
             @endphp
-            @if(isset($records) && count($records) > 0)
+
+        @if(isset($records) && count($records) > 0)
                 <table class="table-page table">
                     <thead>
                     <tr>
                         <th class="text-center">Date</th>
                         <th class="text-center">@lang('admin.description')</th>
-                        <th class="text-center">Dr.</th>
+                        <th class="text-center">Db.</th>
                         <th class="text-center">Cr.</th>
 
                     </tr>
                     </thead>
                     <tbody>
 
-                    @foreach($records['invoices'] as $record)
-                        <tr>
-                            <td class="text-center">{{$record['from'] . ' - ' . $record['to']}}</td>
-                            <td class =text-center>{{$record->invoice_title}}</td>
-                            @php
-                                $totalDrCount += $record->total_amount;
-                            @endphp
-                            <td class="text-center">{{\App\Helpers\formatCurrency($record->total_amount)}}</td>
-                            <td></td>
-                        </tr>
+                    @foreach($records['data'] as $record)
+                        @if($record instanceof \App\Models\AgentInvoice)
+                            <tr>
+                                <td class="text-center">{{$record['from'] . ' - ' . $record['to']}}</td>
+                                <td class =text-center>{{$record->invoice_title}}</td>
+                                @php
+                                    $totalDrCount += $record->total_amount;
+                                @endphp
+                                <td class="text-center">{{\App\Helpers\formatCurrency($record->total_amount)}}</td>
+                                <td></td>
+                            </tr>
+                        @else
+                            <tr>
+                                <td class="text-center">{{\Illuminate\Support\Carbon::parse($record->created_at)->format('Y-m-d')}}</td>
+                                <td class='text-center'>Payment received</td>
+                                <td class="text-center"></td>
+                                <td class="text-center">{{\App\Helpers\formatCurrency($record->amount)}}</td>
+                                @php
+                                    $totalCrCount += $record->amount;
+                                @endphp
+                            </tr>
+                        @endif
+
                     @endforeach
-                    @foreach($records['payment_received'] as $record)
-                        <tr>
-                            <td class="text-center">{{\Illuminate\Support\Carbon::parse($record->created_at)->format('Y-m-d')}}</td>
-                            <td class='text-center'>Payment received</td>
-                            <td class="text-center"></td>
-                            <td class="text-center">{{\App\Helpers\formatCurrency($record->amount)}}</td>
-                            @php
-                                $totalCrCount += $record->amount;
-                            @endphp
-                        </tr>
-                    @endforeach
+
                     <tr>
                         <td></td>
                         <td class="text-center">Totals</td>
-                        <td  class="text-center">{{\App\Helpers\formatCurrency($totalDrCount)}}</td>
-                        <td class="text-center">{{\App\Helpers\formatCurrency($totalCrCount)}}</td>
+                        <td  class="text-center">{{\App\Helpers\formatCurrency($records['totalDrCount'])}}</td>
+                        <td class="text-center">{{\App\Helpers\formatCurrency($records['totalCrCount'])}}</td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td></td>
+                        <td class="text-center"><strong>Outstanding bal</strong></td>
+                        <td  class="text-center">{{\App\Helpers\formatCurrency($records['totalDrCount'] -  $records['totalCrCount'])}}</td>
+                        <td class="text-center"></td>
                         <td></td>
                     </tr>
 

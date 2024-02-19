@@ -33,61 +33,58 @@ class AgentStatementExport implements FromCollection
 
         $rowCount =1;
         $totalCrCount = 0;
-        $totalDrCount = 0;
+        $totalDbCount = 0;
 
         $dataRows = $this->heading();
-        if(isset($this->data['invoices'])){
-            foreach ($this->data['invoices'] as $invoice){
-                $totalDrCount += $invoice->total_amount;
-
-                $dataRows[] = [
-                    'Date' => Carbon::parse($invoice->created_at)->format('Y-m-d'),
-                    'Description' => $invoice->invoice_title,
-                    'Dr' => "$" . formatCurrency($invoice->total_amount),
-                    'Cr' => '',
-                ];
-            }
-        }
-
-        if(isset($this->data['payment_received'])) {
-
-            if($this->data['payment_received']){
-                foreach ($this->data['payment_received'] as $payment){
-                    $totalCrCount += $payment->amount;
+        if(isset($this->data['data'])){
+            foreach ($this->data['data'] as $item){
+                if( $item instanceof \App\Models\AgentInvoice){
+                    $totalDbCount += $item->total_amount;
 
                     $dataRows[] = [
-                        'Date' => Carbon::parse($payment->created_at)->format('Y-m-d'),
+                        'Date' => Carbon::parse($item->created_at)->format('Y-m-d'),
+                        'Description' => $item->invoice_title,
+                        'Db' => "$" . formatCurrency($item->total_amount),
+                        'Cr' => '',
+                    ];
+                }else{
+                    $totalCrCount += $item->amount;
+
+                    $dataRows[] = [
+                        'Date' => Carbon::parse($item->created_at)->format('Y-m-d'),
                         'Description' =>"Payment received",
-                        'Dr' => "$" . formatCurrency($payment->amount),
+                        'Db' => "$" . formatCurrency($item->amount),
                         'Cr' => '',
                     ];
                 }
+
             }
         }
+
         $dataRows[] = [
             'Date' => '',
             'Description' => '',
-            'Dr' => '',
+            'Db' => '',
             'Cr' => '',
         ];
 
         $dataRows[] = [
             'Date' => '',
             'Description' => '',
-            'Dr' => '',
+            'Db' => '',
             'Cr' => '',
         ];
         $dataRows[] = [
             'Date' => '',
             'Description' => 'Totals',
-            'Dr' => '$' . formatCurrency($totalDrCount),
+            'Db' => '$' . formatCurrency($totalDbCount),
             'Cr' => "$ " . formatCurrency($totalCrCount),
         ];
 
         $dataRows[] = [
             'Date' => '',
             'Description' => 'Outstanding bal',
-            'Dr' => "$ " . formatCurrency($totalDrCount -  $totalCrCount),
+            'Db' => "$ " . formatCurrency($totalDbCount -  $totalCrCount),
             'Cr' => '',
         ];
 
@@ -95,14 +92,14 @@ class AgentStatementExport implements FromCollection
             $dataRows[] = [
                 'Date' => '',
                 'Description' => "",
-                'Dr' => "",
+                'Db' => "",
                 'Cr' => "",
             ];
         }
         $dataRows[] = [
-            'Date' => "Amount due in words : " . convertNumberToWorldsInUsd(formatCurrency($totalDrCount)) ,
+            'Date' => "Amount due in words : " . convertNumberToWorldsInUsd(formatCurrency($totalDbCount)) ,
             'Description' => '',
-            'Dr' => '',
+            'Db' => '',
             'Cr' => '',
         ];
 
@@ -111,7 +108,7 @@ class AgentStatementExport implements FromCollection
         $dataRows[] = [
             'Date' =>  $settings->invoice_footer,
             'Description' => '',
-            'Dr' => '',
+            'Db' => '',
             'Cr' => '',
         ];
         return collect($dataRows);
@@ -122,7 +119,7 @@ class AgentStatementExport implements FromCollection
         return [
             'Date',
             'Description',
-            'Dr',
+            'Db',
             'Cr',
         ];
     }
@@ -132,14 +129,14 @@ class AgentStatementExport implements FromCollection
         $dataRows[] = [
             'Date' => "EVAC",
             'Description' => "",
-            'Dr' => "",
+            'Db' => "",
             'Cr' => "",
         ];
         for ($i = 0 ; $i< 1; $i++){
             $dataRows[] = [
                 'Date' => "",
                 'Description' => "",
-                'Dr' => "",
+                'Db' => "",
                 'Cr' => "",
             ];
         }
@@ -147,14 +144,14 @@ class AgentStatementExport implements FromCollection
         $dataRows[] = [
             'Date' => "Diyarna Center - Zekrit - Lebanon",
             'Description' => "",
-            'Dr' => "",
+            'Db' => "",
             'Cr' => "",
         ];
         for ($i = 0 ; $i< 1; $i++){
             $dataRows[] = [
                 'Date' => "",
                 'Description' => "",
-                'Dr' => "",
+                'Db' => "",
                 'Cr' => "",
             ];
         }
@@ -164,28 +161,28 @@ class AgentStatementExport implements FromCollection
         $dataRows[] = [
             'Date' => "Reg No : " . $settings->registration_no,
             'Description' => "",
-            'Dr' => "",
+            'Db' => "",
             'Cr' => "",
         ];
         for ($i = 0 ; $i< 1; $i++){
             $dataRows[] = [
                 'Date' => "",
                 'Description' => "",
-                'Dr' => "",
+                'Db' => "",
                 'Cr' => "",
             ];
         }
         $dataRows[] = [
             'Date' => "Tel : " . $settings->mobile,
             'Description' => "",
-            'Dr' => "",
+            'Db' => "",
             'Cr' => "",
         ];
         for ($i = 0 ; $i< 1; $i++){
             $dataRows[] = [
                 'Date' => "",
                 'Description' => "",
-                'Dr' => "",
+                'Db' => "",
                 'Cr' => "",
             ];
         }
@@ -194,63 +191,63 @@ class AgentStatementExport implements FromCollection
             $dataRows[] = [
                 'Date' => "Agent : " . $this->agent->name,
                 'Description' => "",
-                'Dr' => "",
+                'Db' => "",
                 'Cr' => "",
             ];
             for ($i = 0 ; $i< 1; $i++){
                 $dataRows[] = [
                     'Date' => "",
                     'Description' => "",
-                    'Dr' => "",
+                    'Db' => "",
                     'Cr' => "",
                 ];
             }
             $dataRows[] = [
-                'Date' => "Agent Address : " . $this->agent->address,
+                'Date' => "Agent AdDbess : " . $this->agent->adDbess,
                 'Description' => "",
-                'Dr' => "",
+                'Db' => "",
                 'Cr' => "",
             ];
             for ($i = 0 ; $i< 1; $i++){
                 $dataRows[] = [
                     'Date' => "",
                     'Description' => "",
-                    'Dr' => "",
+                    'Db' => "",
                     'Cr' => "",
                 ];
             }
             $dataRows[] = [
                 'Date' => "Financial No : " . $this->agent->financial_no,
                 'Description' => "",
-                'Dr' => "",
+                'Db' => "",
                 'Cr' => "",
             ];
             for ($i = 0 ; $i< 1; $i++){
                 $dataRows[] = [
                     'Date' => "",
                     'Description' => "",
-                    'Dr' => "",
+                    'Db' => "",
                     'Cr' => "",
                 ];
             }
             $dataRows[] = [
                 'Date' => "Tel : " . $this->agent->telephone,
                 'Description' => "",
-                'Dr' => "",
+                'Db' => "",
                 'Cr' => "",
             ];
             for ($i = 0 ; $i< 1; $i++){
                 $dataRows[] = [
                     'Date' => "",
                     'Description' => "",
-                    'Dr' => "",
+                    'Db' => "",
                     'Cr' => "",
                 ];
             }
             $dataRows[] = [
                 'Date' => "Agent statement",
                 'Description' => "",
-                'Dr' => "",
+                'Db' => "",
                 'Cr' => "",
             ];
 
@@ -258,35 +255,35 @@ class AgentStatementExport implements FromCollection
                 $dataRows[] = [
                     'Date' => "",
                     'Description' => "",
-                    'Dr' => "",
+                    'Db' => "",
                     'Cr' => "",
                 ];
             }
             $dataRows[] = [
                 'Date' => "Account no : ". $this->agent->account_no,
                 'Description' => "",
-                'Dr' => "",
+                'Db' => "",
                 'Cr' => "",
             ];
             for ($i = 0 ; $i< 1; $i++){
                 $dataRows[] = [
                     'Date' => "",
                     'Description' => "",
-                    'Dr' => "",
+                    'Db' => "",
                     'Cr' => "",
                 ];
             }
             $dataRows[] = [
                 'Date' => "Date : " . Carbon::parse(now())->format('Y-m-d'),
                 'Description' => "",
-                'Dr' => "",
+                'Db' => "",
                 'Cr' => "",
             ];
             for ($i = 0 ; $i< 1; $i++){
                 $dataRows[] = [
                     'Date' => "",
                     'Description' => "",
-                    'Dr' => "",
+                    'Db' => "",
                     'Cr' => "",
                 ];
             }
@@ -295,7 +292,7 @@ class AgentStatementExport implements FromCollection
         $dataRows[] = [
             'Date' => "Date",
             'Description' => "Description",
-            'Dr' => "Dr",
+            'Db' => "Db",
             'Cr' => "Cr",
         ];
         return $dataRows;

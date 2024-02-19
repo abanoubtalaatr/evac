@@ -46,47 +46,51 @@
                     <tr>
                         <th class="text-center">Date</th>
                         <th class="text-center">@lang('admin.description')</th>
-                        <th class="text-center">Dr.</th>
+                        <th class="text-center">Db.</th>
                         <th class="text-center">Cr.</th>
 
                     </tr>
                     </thead>
                     <tbody>
 
-                    @foreach($records['invoices'] as $record)
-                        <tr>
-                            <td class="text-center">{{$record['from'] . ' - ' . $record['to']}}</td>
-                            <td class="text-center">{{$record->invoice_title}}</td>
-                            @php
-                                $totalDrCount += $record->total_amount;
-                            @endphp
-                            <td class="text-center">{{\App\Helpers\formatCurrency($record->total_amount)}}</td>
-                            <td></td>
-                        </tr>
+                    @foreach($records['data'] as $record)
+                        @if($record instanceof \App\Models\AgentInvoice)
+
+                            <tr>
+                                <td class="text-center">{{$record['from'] . ' - ' . $record['to']}}</td>
+                                <td class="text-center">{{$record->invoice_title}}</td>
+                                @php
+                                    $totalDrCount += $record->total_amount;
+                                @endphp
+                                <td class="text-center">{{\App\Helpers\formatCurrency($record->total_amount)}}</td>
+                                <td></td>
+                            </tr>
+                        @else
+                            <tr>
+                                <td class="text-center">{{\Illuminate\Support\Carbon::parse($record->created_at)->format('Y-m-d')}}</td>
+                                <td class='text-center'>Payment received</td>
+                                <td class="text-center"></td>
+                                <td class="text-center">{{\App\Helpers\formatCurrency($record->amount)}}</td>
+                                @php
+                                    $totalCrCount += $record->amount;
+                                @endphp
+                            </tr>
+                        @endif
+
                     @endforeach
-                    @foreach($records['payment_received'] as $record)
-                        <tr>
-                            <td class="text-center">{{\Illuminate\Support\Carbon::parse($record->created_at)->format('Y-m-d')}}</td>
-                            <td class='text-center'>Payment received</td>
-                            <td class="text-center"></td>
-                            <td class="text-center">{{\App\Helpers\formatCurrency($record->amount)}}</td>
-                            @php
-                            $totalCrCount += $record->amount;
-                            @endphp
-                        </tr>
-                    @endforeach
+
                     <tfoot>
                     <tr>
                         <td></td>
                         <td class="text-center"><strong>Totals</strong></td>
-                        <td  class="text-center">{{\App\Helpers\formatCurrency($totalDrCount)}}</td>
-                        <td class="text-center">{{\App\Helpers\formatCurrency($totalCrCount)}}</td>
+                        <td  class="text-center">{{\App\Helpers\formatCurrency($records['totalDrCount'])}}</td>
+                        <td class="text-center">{{\App\Helpers\formatCurrency($records['totalCrCount'])}}</td>
                         <td></td>
                     </tr>
                     <tr>
                         <td></td>
                         <td class="text-center"><strong>Outstanding bal</strong></td>
-                        <td  class="text-center">{{\App\Helpers\formatCurrency($totalDrCount -  $totalCrCount)}}</td>
+                        <td  class="text-center">{{\App\Helpers\formatCurrency($records['totalDrCount'] -  $records['totalCrCount'])}}</td>
                         <td class="text-center"></td>
                         <td></td>
                     </tr>
