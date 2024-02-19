@@ -44,6 +44,14 @@ class Appraisal extends Component
         $this->reset(['visaType']);
     }
 
+    public function appraiseAll()
+    {
+        if($this->getRecords()->count() > 0 ){
+            foreach ($this->getRecords() as $application){
+                $application->update(['status' => 'appraised']);
+            }
+        }
+    }
     public function appraisal(Application $application)
     {
         $application->update(['status' => 'appraised']);
