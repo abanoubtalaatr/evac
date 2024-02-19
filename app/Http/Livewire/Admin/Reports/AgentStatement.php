@@ -110,37 +110,40 @@ class AgentStatement extends Component
             }
         }
 
+        if($data){
+
 // Combine and order the results
-        $combinedResults = collect($data['invoices'])
-            ->merge($data['payment_received'])
-            ->sortBy(function ($item) {
-                // Assuming 'created_at' for invoices and 'created_at' for payment_received
-                return $item instanceof \App\Models\AgentInvoice ? $item->from : $item->created_at;
-            })
-            ->values()
-            ->all();
+            $combinedResults = collect($data['invoices'])
+                ->merge($data['payment_received'])
+                ->sortBy(function ($item) {
+                    // Assuming 'created_at' for invoices and 'created_at' for payment_received
+                    return $item instanceof \App\Models\AgentInvoice ? $item->from : $item->created_at;
+                })
+                ->values()
+                ->all();
 
 // Calculate the total sum of total_amount from invoices
-        $totalDrCount = collect($data['invoices'])->sum('total_amount');
+            $totalDrCount = collect($data['invoices'])->sum('total_amount');
 
 // Calculate the total sum of amount from payment_received
-        $totalCrCount = collect($data['payment_received'])->sum('amount');
+            $totalCrCount = collect($data['payment_received'])->sum('amount');
 
-        $data['combined_results'] = $combinedResults;
-        $data['totalDrCount'] = $totalDrCount;
-        $data['totalCrCount'] = $totalCrCount;
+            $data['combined_results'] = $combinedResults;
+            $data['totalDrCount'] = $totalDrCount;
+            $data['totalCrCount'] = $totalCrCount;
 
 
 // Calculate the total sum of total_amount from invoices
-        $totalDrCount = collect($data['invoices'])->sum('total_amount');
+            $totalDrCount = collect($data['invoices'])->sum('total_amount');
 
 // Calculate the total sum of amount from payment_received
-        $totalCrCount = collect($data['payment_received'])->sum('amount');
+            $totalCrCount = collect($data['payment_received'])->sum('amount');
 
-        $data['totalDrCount'] = $totalDrCount;
-        $data['totalCrCount'] = $totalCrCount;
+            $data['totalDrCount'] = $totalDrCount;
+            $data['totalCrCount'] = $totalCrCount;
 
-        $data['data'] = $combinedResults;
+            $data['data'] = $combinedResults;
+        }
         return $data;
     }
 

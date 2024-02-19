@@ -148,7 +148,7 @@
 
 
             <div class="col-12 text-center my-2">
-                <button type="submit" class="btn btn-primary" wire:click="store">Save</button>
+                <button type="submit" class="btn btn-primary" wire:click="store">Save & Print</button>
             </div>
             <hr>
 @include('livewire.admin.application.popup.passportHasMoreThanOne')
@@ -157,7 +157,15 @@
         </div>
     </div>
 </main>
-
+<script>
+    document.addEventListener('livewire:load', function () {
+        Livewire.on('PrintApplication', function (url) {
+            // Handle the event, e.g., call the printPage function
+            printPage(url);
+            console.log('fdslkfjsd');
+        });
+    });
+</script>
 <script>
     document.addEventListener('livewire:load', function () {
       Livewire.on('closePopups', function () {
@@ -305,6 +313,8 @@
     </script>
 
 @endpush
+
+
 @push('styles')
     <link href="{{asset('css/select2.min.css')}}" rel="stylesheet"/>
     <style>

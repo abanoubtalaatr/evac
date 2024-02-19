@@ -195,7 +195,10 @@ class NewServiceTransaction extends Component
                     ->whereDate('created_at', '<=', $this->to);
             })
             ->when(isset($this->status), function ($query) {
-                if ($this->status == "all") {
+                if ($this->status == "new") {
+                    // If status is "new", filter transactions created today
+                    $query->whereDate('created_at', Carbon::today());
+                } elseif ($this->status == "all") {
                     if (!empty($this->agent) && $this->agent != 'no_result') {
                         // If agent is provided, get all service transactions for that agent
                         $query->where('agent_id', $this->agent);
@@ -212,8 +215,10 @@ class NewServiceTransaction extends Component
         return $query->latest()->paginate(50);
     }
 
-    public function unDestroy(ServiceTransaction $serviceTransaction)
+    public function unDestroy( $serviceTransaction)
     {
+        $serviceTransaction = ServiceTransaction::query()->withoutGlobalScope('excludeDeleted')->find($serviceTransaction);
+
         $serviceTransaction->update(['status' => null]);
     }
 

@@ -43,7 +43,11 @@
 {{--            @endif--}}
 
             @foreach($data as $item)
-             <span class="d-block text-success fa-3 my-3">{{$item['prefix']}} <strong> {{$item['user']}}</strong> on {{$item['day'] .' '. $item['time']}} </span>
+             <span  class="d-block text-success fa-3 my-3 @if($item['prefix'] == 'Day closed by') text-danger @endif">
+                  <span class=""> {{$item['prefix']}}</span>
+                 <strong> {{$item['user']}}</strong>
+                 on {{$item['day'] .' '. $item['time']}}
+             </span>
             @endforeach
         </div>
     </div>
