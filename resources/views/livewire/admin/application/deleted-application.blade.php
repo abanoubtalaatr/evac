@@ -8,7 +8,7 @@
         </div>
         <div class="table-page-wrap">
 
-            <div class="row d-flex align-items-center my-3 border p-2 rounded">
+            <div class="row d-flex align-items-center my-3 border p-2 rounded input-container">
 
                 <div class="form-group col-3">
                     <label for="status-select">@lang('admin.passport')</label>
@@ -83,6 +83,7 @@
 
     </div>
 </main>
+@include('livewire.admin.shared.move_using_tab')
 <script>
     document.addEventListener('livewire:load', function () {
         Livewire.on('showApplicationModal', function (applicationId) {

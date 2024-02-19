@@ -26,7 +26,7 @@
                     </select>
                 </div>
 
-                <div class="form-group col-2">
+                <div class="form-group col-2 mt-4">
                     <button wire:click="resetData()"
                             class="btn btn-primary form-control contact-input">@lang('site.reset')</button>
                 </div>

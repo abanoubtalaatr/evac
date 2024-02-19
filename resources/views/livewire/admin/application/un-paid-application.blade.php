@@ -122,7 +122,7 @@
     </div>
 </main>
 
-@include('livewire.admin.shared.enter_search_button')
+@include('livewire.admin.shared.move_using_tab')
 
 <script>
     document.addEventListener('livewire:load', function () {

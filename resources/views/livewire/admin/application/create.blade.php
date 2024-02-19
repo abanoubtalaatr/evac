@@ -15,47 +15,39 @@
 
         </div>
 
-        <div class="row mt-30">
+        <div class="row mt-30 input-container">
             @if($showPrint)
-            <div class="col-12 text-center my-2">
-                <button class="btn btn-success mt-2"> Application created successfully you can print </button>     <button class="btn btn-primary mt-2" onclick="printPage('{{route('admin.applications.print', ['application' => $record->id])}}')">Print</button>
-            </div>
-        @endif
+                <div class="col-12 text-center my-2">
+                    <button class="btn btn-success mt-2">Application created successfully you can print</button>
+                    <button class="btn btn-primary mt-2" onclick="printPage('{{route('admin.applications.print', ['application' => $record->id])}}')">Print</button>
+                </div>
+            @endif
             <div class="col-6">
                 <div class="form-group my-2 ">
                     <label class="" for="visaType">Visa Type:</label>
-                    <select wire:model="form.visa_type_id" class="form-control" id="visaType">
-{{--                        <option value="">Select Visa Type</option>--}}
-
+                    <select wire:model="form.visa_type_id" class="form-control" id="visaType" autofocus>
+                        {{-- <option value="">Select Visa Type</option> --}}
                         @foreach ($visaTypes as $visaType)
                             <option value="{{ $visaType->id }}">{{ $visaType->name }}</option>
                         @endforeach
                     </select>
                 </div>
-                @error('form.visa_type_id')<p style="color: red;">{{ $message }}</p>@enderror
-            </div>
-            <div class="col-6 mt-3">
-                <input type="checkbox" id="showTravelAgent"  onclick="toggleShowTravelAgent()"> Show Travel Agent
-
-                <div class="col-12 form-group my-2 hidden" wire:ignore  id="travelAgentContainer">
-                    <div class="input-group">
-                        <input
-                            id="agent_search"
-                            type="text"
-                            class="form-control contact-input"
-                            placeholder="Search Travel Agent"
-                            autocomplete="off"
-
-                        />
-                        <ul class="autocomplete-results list-group position-absolute w-100" style="padding-left: 0px; margin-top: 51px;z-index: 200; display: none;">
-                        </ul>
-                    </div>
-                </div>
-                @error('form.agent_id')
+                @error('form.visa_type_id')
                 <p style="color: red;">{{ $message }}</p>
                 @enderror
             </div>
-
+                <div class="col-6 mt-3">
+                    <input type="checkbox" id="showTravelAgent" onclick="toggleShowTravelAgent()" tabindex="1"> Show Travel Agent
+                    <div class="col-12 form-group my-2 hidden" wire:ignore id="travelAgentContainer" tabindex="2">
+                        <div class="input-group">
+                            <input id="agent_search" type="text" class="form-control contact-input" placeholder="Search Travel Agent" autocomplete="off" tabindex="3" />
+                            <ul class="autocomplete-results list-group position-absolute w-100" style="padding-left: 0px; margin-top: 51px;z-index: 200; display: none;"></ul>
+                        </div>
+                    </div>
+                    @error('form.agent_id')
+                    <p style="color: red;">{{ $message }}</p>
+                    @enderror
+                </div>
             <div class="col-6">
                 <div class="form-group my-2">
                     <label for="visaProvider">Visa Provider:</label>
@@ -67,46 +59,37 @@
                             </label>
                         @endforeach
                     </div>
-                    @error('form.visa_provider_id')<p style="color: red;">{{ $message }}</p>@enderror
+                    @error('form.visa_provider_id')
+                    <p style="color: red;">{{ $message }}</p>
+                    @enderror
                 </div>
             </div>
-
-
-
             <div class="col-6">
                 <label for="passport_no" class="">Passport no:</label>
-                <input type="text" class="form-control" wire:model="form.passport_no" >
-                @error('form.passport_no')<p style="color: red;">{{ $message }}</p>@enderror
+                <input type="text" class="form-control" wire:model="form.passport_no">
+                @error('form.passport_no')
+                <p style="color: red;">{{ $message }}</p>
+                @enderror
             </div>
 
-{{--            <div class="col-6 my-2">--}}
-{{--                <div class="form-group my-2 ">--}}
-{{--                    <label for="title">Title:</label>--}}
-{{--                    <select wire:model="form.title" class="form-control" id="title">--}}
-{{--                        <option value="">Select Title</option>--}}
-{{--                        <option value="Mr">Mr.</option>--}}
-{{--                        <option value="Mrs">Mrs.</option>--}}
-{{--                        <option value="Ms">Ms.</option>--}}
-{{--                    </select>--}}
-{{--                </div>--}}
-{{--                @error('form.title')<p style="color: red;">{{ $message }}</p>@enderror--}}
-{{--            </div>--}}
-
-
-                <div class="col-6">
-                    <div class="form-group my-2">
-                        <label for="first_name" class="">First name:</label>
-                        <input type="text" wire:model="form.first_name"  class="form-control">
-                        @error('form.first_name')<p style="color: red;">{{ $message }}</p>@enderror
-                    </div>
+            <div class="col-6">
+                <div class="form-group my-2">
+                    <label for="first_name" class="">First name:</label>
+                    <input type="text" wire:model="form.first_name" class="form-control">
+                    @error('form.first_name')
+                    <p style="color: red;">{{ $message }}</p>
+                    @enderror
                 </div>
-                <div class="col-6">
-                    <div class="form-group my-2">
-                        <label for="last_name">Last name:</label>
-                        <input type="text" wire:model="form.last_name" class="form-control">
-                        @error('form.last_name')<p style="color: red;">{{ $message }}</p>@enderror
-                    </div>
+            </div>
+            <div class="col-6">
+                <div class="form-group my-2">
+                    <label for="last_name">Last name:</label>
+                    <input type="text" wire:model="form.last_name" class="form-control">
+                    @error('form.last_name')
+                    <p style="color: red;">{{ $message }}</p>
+                    @enderror
                 </div>
+            </div>
 
             <div class="col-6">
                 <div class="form-group ">
@@ -115,9 +98,10 @@
                         <input class="form-control" type="date" wire:model="form.expiry_date">
                     </div>
                 </div>
-                @error('form.expiry_date')<p style="color: red;">{{ $message }}</p>@enderror
+                @error('form.expiry_date')
+                <p style="color: red;">{{ $message }}</p>
+                @enderror
             </div>
-
             <div class="col-6">
                 <label for="notes" class="">Note:</label>
                 <textarea class="form-control" wire:model="form.notes"></textarea>
@@ -271,7 +255,7 @@
         });
     </script>
 @endpush
-
+@include('livewire.admin.shared.enter_search_button')
 
 @push('scripts')
     <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>

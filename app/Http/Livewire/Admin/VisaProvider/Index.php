@@ -50,6 +50,11 @@ class Index extends Component
         $this->resetValidation();
     }
 
+    public function resetData()
+    {
+        return redirect()->to(route('admin.visa_providers'));
+    }
+
     public function makeDefault(VisaProvider $visaProvider)
     {
         VisaProvider::where('is_default', 1)->update(['is_default' => 0]);

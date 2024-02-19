@@ -156,7 +156,7 @@
 @endpush
 
 @include('livewire.admin.shared.agent_search_script')
-@include('livewire.admin.shared.enter_search_button')
+@include('livewire.admin.shared.move_using_tab')
 
 <script>
     document.getElementById('addServiceTransactionButton').addEventListener('click', function() {

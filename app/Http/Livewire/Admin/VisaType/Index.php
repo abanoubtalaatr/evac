@@ -69,6 +69,12 @@ class Index extends Component
         $this->form =[];
         $this->resetValidation();
     }
+
+    public function resetData()
+    {
+        return redirect()->to(route('admin.visa_types'));
+
+    }
     public function update()
     {
         $this->validate();

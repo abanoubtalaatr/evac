@@ -27,6 +27,11 @@
                             class="btn btn-primary form-control contact-input">@lang('site.reset')</button>
                 </div>
 
+                <div class="form-group col-2">
+                    <button wire:click="appraiseAll()"
+                            class="btn btn-warning form-control contact-input">Appraise All</button>
+                </div>
+
             </div>
 
             @if(count($records))

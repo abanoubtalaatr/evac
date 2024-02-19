@@ -35,6 +35,8 @@ class Appraised extends Component
     }
 
 
+
+
     public function resetData()
     {
         $this->reset(['visaType']);

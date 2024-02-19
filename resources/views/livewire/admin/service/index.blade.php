@@ -3,24 +3,24 @@
     <x-admin.head/>
     <!--table-->
     <div class="border-div">
-        <div class="b-btm flex-div-2">
-            <h4>{{$page_title}}</h4>
-            <a style='text-align:center;cursor:pointer' class="button btn-red big" id="addServiceButton">@lang('site.create_new')</a>
+        <div class="input-container">
+            <div class="b-btm flex-div-2">
+                <h4>{{$page_title}}</h4>
+                <a style='text-align:center;cursor:pointer' class="button btn-red big" id="addServiceButton" autofocus tabindex="4">@lang('site.create_new')</a>            </div>
 
+            <div class="row d-flex align-items-center my-3 border p-2 rounded">
+                <div class="form-group col-3">
+                    <label for="status-select">@lang('admin.search')</label>
+                    <input wire:model='search' type="text" class="form-control contact-input" >
+                </div>
+
+                <div class="form-group col-2 mt-4">
+                    <button wire:click="resetData()" class="btn btn-primary form-control contact-input">@lang('site.reset')</button>
+                </div>
+            </div>
         </div>
         <div class="table-page-wrap">
 
-            <div class="row d-flex align-items-center my-3 border p-2 rounded">
-
-                <div class="form-group col-3">
-                    <label for="status-select">@lang('admin.search')</label>
-                    <input wire:model='search' type="text" class="form-control contact-input">
-                </div>
-                <div class="form-group col-2">
-                    <button wire:click="resetData()" class="btn btn-primary form-control contact-input">@lang('site.reset')</button>
-                </div>
-
-            </div>
 
             @if(count($records))
                 <table class="table-page table">
@@ -69,6 +69,7 @@
     </div>
 </main>
 
+@include('livewire.admin.shared.move_using_tab')
 <script>
     document.getElementById('addServiceButton').addEventListener('click', function() {
         $('#serviceModal').modal('show');

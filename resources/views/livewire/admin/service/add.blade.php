@@ -1,6 +1,6 @@
 
 <div wire:ignore.self class="modal fade" id="serviceModal" tabindex="-1" role="dialog" aria-labelledby="serviceModalLabel" aria-hidden="true">
-    <div class="modal-dialog" role="document">
+    <div class="modal-dialog input-container" role="document">
         <div class="modal-content">
             <!-- Add your modal content here -->
             <div class="modal-header">

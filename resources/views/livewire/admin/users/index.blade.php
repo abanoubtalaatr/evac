@@ -9,11 +9,11 @@
         </div>
         <div class="table-page-wrap">
 
-            <div class="row d-flex align-items-center my-3 border p-2 rounded">
+            <div class="row d-flex align-items-center my-3 border p-2 rounded input-container">
 
                 <div class="form-group col-3">
                     <label for="status-select">@lang('validation.attributes.username')</label>
-                    <input wire:model='username' type="text" class="form-control contact-input">
+                    <input wire:model='username' type="text" class="form-control contact-input" autofocus>
                 </div>
                 <div class="form-group col-3">
                     <label for="status-select">@lang('validation.attributes.email')</label>
@@ -29,7 +29,7 @@
                     </select>
                 </div>
 
-                <div class="form-group col-3">
+                <div class="form-group col-3 mt-4">
                     <button wire:click="resetData()" class="btn btn-primary form-control contact-input">@lang('site.reset')</button>
                 </div>
             </div>

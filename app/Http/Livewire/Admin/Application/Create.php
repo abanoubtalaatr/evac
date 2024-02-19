@@ -7,8 +7,6 @@ use App\Http\Livewire\Traits\ValidationTrait;
 use App\Models\Agent;
 use App\Models\Applicant;
 use App\Models\Application;
-use App\Models\BlackListPassport;
-use App\Models\Setting;
 use App\Models\VisaProvider;
 use App\Models\VisaType;
 use App\Services\ApplicantService;
