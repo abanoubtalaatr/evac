@@ -17,7 +17,9 @@
                     <div class="d-flex gap-2">
                         <div>Amount : {{ \App\Helpers\formatCurrency($payment->amount) }} $ =></div>
                         <div>Date : {{\Carbon\Carbon::parse($payment->created_at)->format('d-m-Y h:m')}}</div>
-                        <div><strong>Note</strong> : {{$payment->note}}</div>
+                        @if($payment->note)
+                            <div><strong>Note</strong> : {{$payment->note}}</div>
+                        @endif
                     </div>
                         <hr>
 
