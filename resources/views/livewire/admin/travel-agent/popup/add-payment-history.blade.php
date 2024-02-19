@@ -23,6 +23,12 @@
                     @error("form.created_at")<p class="text-danger">{{$message}}</p> @enderror
                 </div>
 
+                <div class="form-group my-2 ">
+                    <label>Note : </label>
+                    <textarea wire:model="form.note"  class="form-control"></textarea>
+                    @error("form.note")<p class="text-danger">{{$message}}</p> @enderror
+                </div>
+
             </div>
 
             <div class="modal-footer">
