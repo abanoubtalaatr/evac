@@ -61,12 +61,12 @@
        <div class="mt-4" style="text-align: center">
         @if($application->travelAgent)
         <div class="border-dotted border-top-0 border-right-0 border-left-0 mt-4 py-1">
-            <strong>TRAVEL AGENT: {{$application->travelAgent->name}} / ACC NBR : {{$application->travelAgent->account_number}} / {{$application->travelAgent->address}}</strong>
+            <strong>TRAVEL AGENT: <span style="font-size: 27px">{{$application->travelAgent->name}}</span>  / ACC NBR : {{$application->travelAgent->account_number}} / {{$application->travelAgent->address}}</strong>
         </div>
-               <div><strong class="text-uppercase py-2">APPLICANT NAME: {{$application->first_name . ' '. $application->last_name}}</strong></div>
+               <div><strong class="text-uppercase py-2">APPLICANT NAME: <span style="font-size: 27px">{{$application->first_name . ' '. $application->last_name}}</span></strong></div>
         @else
                <a href="#" style="" class="btn text-uppercase"><strong>Direct</strong></a>
-               <div><strong class="text-uppercase py-2">APPLICANT NAME: {{$application->first_name . ' '. $application->last_name}}</strong></div>
+               <div><strong class="text-uppercase py-2">APPLICANT NAME: <span style="font-size: 27px">{{$application->first_name . ' '. $application->last_name}}</span></strong></div>
 
            @endif
            <div><strong class="text-uppercase py-2">Passport: {{$application->passport_no}} </strong></div>

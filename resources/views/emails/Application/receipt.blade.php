@@ -37,12 +37,12 @@
             @if($application->travelAgent)
 
                 <div class="border-dotted border-top-0 border-right-0 border-left-0 mt-4">
-                    <strong >Travel agent: {{$application->travelAgent->name}}</strong>
+                    <strong >Travel agent: <span style="font-size: 27px">{{$application->travelAgent->name}}</span></strong>
                 </div>
                 <div class="fa-3x">---------------</div>
                 <div >Account number: {{$application->travelAgent->account_number}}</div>
 
-                <div>Name: {{$application->first_name . ' '. $application->last_name}}</div>
+                <div>Name: <span style="font-size: 27px">{{$application->first_name . ' '. $application->last_name}}</span></div>
             @else
                 Direct
             @endif
