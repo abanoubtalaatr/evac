@@ -30,7 +30,7 @@ class Appraisal extends Component
             ->where('status', 'new')
             ->when(!empty($this->visaType), function ($query) {
                 return  $query->where('visa_type_id', $this->visaType);
-            })
+            })->orderBy('application_ref')
             ->latest()
             ->paginate(50);
     }
