@@ -77,3 +77,11 @@
         };
     }
 </script>
+<script>
+    document.addEventListener('livewire:load', function () {
+        Livewire.on('payInvoiceAndPrint', function (url) {
+            // Handle the event, e.g., call the printPage function
+            printPage(url);
+        });
+    });
+</script>
