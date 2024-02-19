@@ -43,8 +43,6 @@ class PaymentTransaction extends Component
         $this->emit('makeAgentNull');
     }
 
-
-
     public function getRecords()
     {
         if (\App\Helpers\isOwner()) {
@@ -115,7 +113,8 @@ class PaymentTransaction extends Component
     public function getRules(){
         return [
             'form.amount'=>'required',
-            'form.created_at' => ['nullable']
+            'form.created_at' => ['nullable'],
+            'form.note' => ['nullable']
         ];
     }
 
