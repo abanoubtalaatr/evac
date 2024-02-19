@@ -30,6 +30,8 @@ trait PayInvoiceTrait
             $data['created_at'] = $this->form['createDate'];
             $data['updated_at'] = $this->form['createDate'];
         }
+        $url = route('admin.service_transactions.print', ['service_transaction' => $this->payInvoiceRecordId]);
+        $this->emit('payInvoiceAndPrint', $url);
         $serviceTransaction->update($data);
         $this->toggleConfirmPayInvoice();;
     }

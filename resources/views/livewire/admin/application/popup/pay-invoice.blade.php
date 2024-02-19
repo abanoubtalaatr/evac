@@ -43,7 +43,7 @@
                     <button wire:click="toggleConfirmPayInvoice" type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                     <button class="btn btn-primary" onclick="printPage('{{route('admin.applications.print', ['application' => $record->id])}}')">Print</button>
 
-                    <button wire:click="payInvoice({{$record->id}})" type="button" class="btn btn-warning">Pay invoice</button>
+                    <button wire:click="payInvoice({{$record->id}})" type="button" class="btn btn-warning">Pay & Print</button>
                 </div>
             </div>
         </div>
@@ -77,3 +77,12 @@
     }
 </script>
 @endpush
+
+<script>
+    document.addEventListener('livewire:load', function () {
+        Livewire.on('payInvoiceAndPrint', function (url) {
+            // Handle the event, e.g., call the printPage function
+            printPage(url);
+        });
+    });
+</script>
