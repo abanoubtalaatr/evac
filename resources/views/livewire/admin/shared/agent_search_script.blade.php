@@ -5,7 +5,7 @@
 
         $('#agent_search').on('input', function () {
             var query = $(this).val();
-
+            var agentStatus = @this.get('is_active');
             // Check if the previous query was not empty and the current query is empty
             if (previousQuery.trim() !== '' && query.trim() === '') {
                 // Update Livewire property to "no_result"
@@ -17,7 +17,7 @@
                 $.ajax({
                     url: '/admin/agents/search', // Replace with your actual endpoint
                     method: 'GET',
-                    data: { query: query },
+                    data: { query: query , agentStatus: agentStatus},
                     success: function (data) {
                         // Update the search results dynamically
                         var resultsContainer = $('.autocomplete-results');

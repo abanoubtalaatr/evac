@@ -113,6 +113,16 @@ Route::group([
 
             Route::get('/agents/search', function(Request $request){
                 $query = $request->input('query');
+
+                if($request->has('agentStatus') && $request->input('agentStatus') =='not_active'){
+                    if(\App\Helpers\isOwner()){
+                        $searchResults = Agent::where('is_active' ,'0')->where('name', 'like', '%' . $query . '%')->orderBy('name')->get();
+                    }else{
+                        $searchResults = Agent::owner()->where('is_active' ,'0')->where('name', 'like', '%' . $query . '%')->orderBy('name')->get();
+                    }
+                    return response()->json($searchResults);
+
+                }
                 if(\App\Helpers\isOwner()){
                     $searchResults = Agent::isActive()->where('name', 'like', '%' . $query . '%')->orderBy('name')->get();
                 }else{
