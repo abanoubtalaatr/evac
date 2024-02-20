@@ -51,6 +51,7 @@ class Create extends Component
         $defaultVisaType = VisaType::query()->where('is_default', 1)->first();
         $defaultVisaProvider = VisaProvider::query()->where('is_default', 1)->first();
         $this->form['payment_method'] ="invoice";
+        $this->form['created_at'] = \Illuminate\Support\Carbon::parse( now())->format('Y-m-d');
         if($defaultVisaType){
             $this->defaultVisaTypeId =$defaultVisaType->id;
             $this->form['visa_type_id'] = $defaultVisaType->id;
@@ -166,7 +167,7 @@ class Create extends Component
         $this->form['expiry_date'] = null;
         $this->form['travel_agent_id'] =null;
         $this->form['agent_id'] = null;
-        $this->form['created_at'] = null;
+
     }
 
     public function checkPassportNumber()
