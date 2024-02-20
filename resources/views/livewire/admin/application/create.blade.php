@@ -16,12 +16,12 @@
         </div>
 
         <div class="row mt-30 input-container">
-            @if($showPrint)
-                <div class="col-12 text-center my-2">
-                    <button class="btn btn-success mt-2">Application created successfully you can print</button>
-                    <button class="btn btn-primary mt-2" onclick="printPage('{{route('admin.applications.print', ['application' => $record->id])}}')">Print</button>
-                </div>
-            @endif
+{{--            @if($showPrint)--}}
+{{--                <div class="col-12 text-center my-2">--}}
+{{--                    <button class="btn btn-success mt-2">Application created successfully you can print</button>--}}
+{{--                    <button class="btn btn-primary mt-2" onclick="printPage('{{route('admin.applications.print', ['application' => $record->id])}}')">Print</button>--}}
+{{--                </div>--}}
+{{--            @endif--}}
             <div class="col-6">
                 <div class="form-group my-2 ">
                     <label class="" for="visaType">Visa Type:</label>
