@@ -96,7 +96,19 @@ class NewServiceTransaction extends Component
         $this->resetValidation();
     }
 
-    public function updatedFormAmount()
+//    public function updatedFormAmount()
+//    {
+//        if(isset($this->form['service_id'])) {
+//            $service = Service::query()->find($this->form['service_id']);
+//            $vat = (new InvoiceService())->recalculateVat($this->form['amount'], $service->dubai_fee);
+//            $serviceFee = (new InvoiceService())->recalculateServiceFee($this->form['amount'], $service->dubai_fee);
+//
+//            $this->form['vat'] = $vat;
+//            $this->form['service_fee'] = $serviceFee;
+//            $this->form['amount'] = $this->form['vat'] + $this->form['service_fee']+ $service->dubai_fee;
+//        }
+//    }
+    public function updateAmount()
     {
         if(isset($this->form['service_id'])) {
             $service = Service::query()->find($this->form['service_id']);
@@ -105,7 +117,8 @@ class NewServiceTransaction extends Component
 
             $this->form['vat'] = $vat;
             $this->form['service_fee'] = $serviceFee;
-            $this->form['amount'] = $this->form['vat'] + $this->form['service_fee']+ $this->form['dubai_fee'];
+            $this->form['amount'] = $this->form['vat'] + $this->form['service_fee']+ $service->dubai_fee;
+
         }
     }
     public function updatedFormPassportNo()
@@ -227,7 +240,9 @@ class NewServiceTransaction extends Component
         $this->validate();
         $data = Arr::except($this->form,['id', 'updated_at']);
 
-        ServiceTransaction::query()->withoutGlobalScope('excludeDeleted')->find($this->form['id'])->update($data);
+        $this->updateAmount();
+
+        ServiceTransaction::query()->withoutGlobalScope('excludeDeleted')->find($this->form['id'])->update($this->form);
 
         $this->form = [];
         session()->flash('success',__('admin.edit_successfully'));
@@ -265,6 +280,8 @@ class NewServiceTransaction extends Component
         if(isset($this->from['created_at'])){
             $this->from['updated_at'] = $this->from['created_at'];
         }
+
+        $this->updateAmount();
 
         ServiceTransaction::query()->create($this->form);
 
