@@ -1,11 +1,11 @@
-
-<div wire:ignore.self class="modal fade" id="serviceTransactionModal" tabindex="-1" role="dialog" aria-labelledby="serviceTransactionModalLabel" aria-hidden="true">
+@if($showModal)
+<div  class="modal" id="ad" style="display: block">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <!-- Add your modal content here -->
             <div class="modal-header">
                 <h5 class="modal-title" id="serviceTransactionModalLabel">Add Service Transaction</h5>
-                <button type="button" onclick="$('#serviceTransactionModal').modal('hide');" class="close btn" data-dismiss="modal" aria-label="Close">
+                <button type="button"  wire:click="hideCreateModal()">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
@@ -86,10 +86,10 @@
             </div>
 
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" onclick="$('#serviceTransactionModal').modal('hide');" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-secondary" wire:click="hideCreateModal()">Close</button>
                 <button type="submit" class="btn btn-primary" wire:click="store">Save</button>
             </div>
         </div>
     </div>
 </div>
-
+@endif

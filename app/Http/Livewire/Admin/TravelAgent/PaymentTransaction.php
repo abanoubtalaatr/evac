@@ -4,6 +4,7 @@ namespace App\Http\Livewire\Admin\TravelAgent;
 
 use App\Http\Livewire\Traits\ValidationTrait;
 use App\Models\Agent;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Livewire\Component;
@@ -29,6 +30,7 @@ class PaymentTransaction extends Component
     public function mount()
     {
         $this->page_title = __('admin.travel_agent_payment_transactions');
+        $this->form['created_at'] = Carbon::parse(now())->format('Y-m-d');
     }
 
     public function updatedPage()

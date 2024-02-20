@@ -36,7 +36,7 @@ class NewServiceTransaction extends Component
     public $status = "new", $showSendEmail,$serviceTransactionThatSendByEmail, $email;
 
     protected $paginationTheme = 'bootstrap';
-
+    public $showModal = false;
     protected $listeners = ['showServiceTransaction', 'showServiceTransactionInvoice'];
 
     public function mount()
@@ -52,6 +52,8 @@ class NewServiceTransaction extends Component
         if(!$this->serviceTransaction){
             $this->form['payment_method'] = 'invoice';
         }
+
+        $this->form['created_at'] = Carbon::parse(now())->format('Y-m-d');
     }
 
     public function updatedFormServiceId()
@@ -83,6 +85,19 @@ class NewServiceTransaction extends Component
             $this->email = null;
             $this->showSendEmail = !$this->showSendEmail;
         }
+    }
+
+    public function showCreateModal()
+    {
+        $this->emptyForm();
+        $this->form['created_at'] = Carbon::parse(now())->format('Y-m-d');
+        $this->showModal = true;
+    }
+
+    public function hideCreateModal()
+    {
+        return redirect()->to(route('admin.service_transactions.new'));
+
     }
 
     public function toggleShowModal($id =null)
@@ -277,9 +292,9 @@ class NewServiceTransaction extends Component
         }
 
         $this->form['status']=  "new";
-        if(isset($this->from['created_at'])){
-            $this->from['updated_at'] = $this->from['created_at'];
-        }
+//        if(isset($this->from['created_at'])){
+//            $this->from['updated_at'] = $this->from['created_at'];
+//        }
 
         $this->updateAmount();
 
