@@ -69,6 +69,7 @@ class NewServiceTransaction extends Component
             $this->form['amount'] = $amount;
             $this->form['vat'] = $vat;
             $this->form['service_fee'] = $service->service_fee;
+            $this->form['dubai_fee'] = $service->dubai_fee;
         }
     }
 
@@ -111,18 +112,23 @@ class NewServiceTransaction extends Component
         $this->resetValidation();
     }
 
-//    public function updatedFormAmount()
-//    {
-//        if(isset($this->form['service_id'])) {
-//            $service = Service::query()->find($this->form['service_id']);
-//            $vat = (new InvoiceService())->recalculateVat($this->form['amount'], $service->dubai_fee);
-//            $serviceFee = (new InvoiceService())->recalculateServiceFee($this->form['amount'], $service->dubai_fee);
-//
-//            $this->form['vat'] = $vat;
-//            $this->form['service_fee'] = $serviceFee;
-//            $this->form['amount'] = $this->form['vat'] + $this->form['service_fee']+ $service->dubai_fee;
-//        }
-//    }
+    public function updatedFormAmount()
+    {
+        if(isset($this->form['service_id'])) {
+            $service = Service::query()->find($this->form['service_id']);
+            $vat = (new InvoiceService())->recalculateVat($this->form['amount'], $service->dubai_fee);
+            $serviceFee = (new InvoiceService())->recalculateServiceFee($this->form['amount'], $service->dubai_fee);
+$total = $this->form['vat'] + $this->form['service_fee']+ $service->dubai_fee;
+
+            if( $total!= $this->form['amount']){
+
+                $this->form['vat'] = $vat;
+                $this->form['service_fee'] = $service->service_fee;
+                $this->form['dubai_fee'] = $this->form['amount'] - ($service->service_fee + $vat);
+
+            }
+        }
+    }
     public function updateAmount()
     {
         if(isset($this->form['service_id'])) {
@@ -130,9 +136,11 @@ class NewServiceTransaction extends Component
             $vat = (new InvoiceService())->recalculateVat($this->form['amount'], $service->dubai_fee);
             $serviceFee = (new InvoiceService())->recalculateServiceFee($this->form['amount'], $service->dubai_fee);
 
-            $this->form['vat'] = $vat;
-            $this->form['service_fee'] = $serviceFee;
             $this->form['amount'] = $this->form['vat'] + $this->form['service_fee']+ $service->dubai_fee;
+
+            $this->form['vat'] = $vat;
+            $this->form['service_fee'] = $service->service_fee;
+            $this->form['dubai_fee'] = $this->form['amount'] - ($service->service_fee - $vat);
 
         }
     }
@@ -255,7 +263,6 @@ class NewServiceTransaction extends Component
         $this->validate();
         $data = Arr::except($this->form,['id', 'updated_at']);
 
-        $this->updateAmount();
 
         ServiceTransaction::query()->withoutGlobalScope('excludeDeleted')->find($this->form['id'])->update($this->form);
 
@@ -285,7 +292,7 @@ class NewServiceTransaction extends Component
         $this->form['service_ref'] = $applicationReference;
 
         $service = Service::query()->find($this->form['service_id']);
-        $this->form['dubai_fee'] = $service->dubai_fee;
+
 
         if (!isset($this->form['service_fee'])){
             $this->form['service_fee'] = $service->service_fee;
@@ -296,7 +303,6 @@ class NewServiceTransaction extends Component
 //            $this->from['updated_at'] = $this->from['created_at'];
 //        }
 
-        $this->updateAmount();
 
         ServiceTransaction::query()->create($this->form);
 
