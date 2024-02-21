@@ -92,6 +92,12 @@ $showSendEmailButton= false, $agent;
         if(canCloseDay(1)){
             $settings = Setting::query()->first();
 
+            $officeDay->update([
+                'end_time' => Carbon::now()->format('H:i:s'),
+                'day_status' => "0",
+                'end_admin_id' => auth('admin')->id()
+            ]);
+
             $emails = explode( ',',$settings->email);
             foreach($emails as $email){
                 $request->merge([
@@ -102,11 +108,6 @@ $showSendEmailButton= false, $agent;
             }
 
 
-            $officeDay->update([
-                'end_time' => Carbon::now()->format('H:i:s'),
-                'day_status' => "0",
-                'end_admin_id' => auth('admin')->id()
-            ]);
             return redirect()->to(route('admin.day_office'));
         }
         $this->message = "Please appraise applications";

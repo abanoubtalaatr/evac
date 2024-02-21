@@ -30,11 +30,16 @@
                     @php
                         $firstDayOfMonth = now()->firstOfMonth();
                         $lastDayOfMonth = now()->lastOfMonth();
+                        $yearVisaCount = 0;
                     @endphp
                     @foreach($dayReport['visaTypes'] as $visaType)
+                        @php
+                           $yearCount =  $visaType->applications()->whereYear('created_at', now()->year)->count();
+                           $yearVisaCount += $yearCount;
+                        @endphp
                         <tr>
                             <td>{{ $visaType->name }}</td>
-                            <td>{{ $visaType->applications()->whereYear('created_at', now()->year)->count() }}</td>
+                            <td>{{ $yearCount}}</td>
                             @for ($month = 1; $month <= 12; $month++)
                                 <td>{{ $visaType->applications->where('created_at', '>=', $firstDayOfMonth->copy()->month($month))->where('created_at', '<=', $lastDayOfMonth->copy()->month($month))->count()}}</td>
                             @endfor
