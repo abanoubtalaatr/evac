@@ -1,6 +1,6 @@
 
 @if($confirmingPayInvoice)
-    <div class="modal" tabindex="-1" role="dialog" style="display: block;">
+    <div class="modal" id="pay-invoice-application" style="display: block;">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
@@ -11,7 +11,10 @@
                 </div>
                 @php
                     $record = \App\Models\Application::query()->find($payInvoiceRecordId);
+
+
                 @endphp
+
                 <div class="modal-body">
                     <div class="row">
                         <div class="col-12">

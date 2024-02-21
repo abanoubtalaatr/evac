@@ -5,6 +5,7 @@ namespace App\Http\Livewire\Admin\ServiceTransaction;
 use App\Http\Livewire\Traits\Admin\ServiceTransaction\PayInvoiceTrait;
 use App\Http\Livewire\Traits\ValidationTrait;
 use App\Models\ServiceTransaction;
+use Carbon\Carbon;
 use Livewire\Component;
 use Livewire\WithPagination;
 
@@ -27,6 +28,8 @@ class Invoice extends Component
     public function mount()
     {
         $this->page_title = __('admin.service_transaction_invoices');
+        $this->form['createDate'] = Carbon::now()->format('Y-m-d');
+
     }
 
     public function resetData()

@@ -1,6 +1,6 @@
 
 @if($confirmingPayInvoice)
-    <div class="modal" tabindex="-1" role="dialog" style="display: block;">
+    <div class="modal" id="pay-invoice" style="display: block;">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">

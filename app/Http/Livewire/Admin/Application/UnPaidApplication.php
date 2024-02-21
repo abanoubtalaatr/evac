@@ -5,6 +5,7 @@ namespace App\Http\Livewire\Admin\Application;
 use App\Http\Livewire\Traits\Admin\Application\PayInvoiceTrait;
 use App\Models\Application;
 use App\Models\VisaType;
+use Carbon\Carbon;
 use Livewire\Component;
 
 class UnPaidApplication extends Component
@@ -18,6 +19,7 @@ class UnPaidApplication extends Component
     {
         $this->page_title = __('admin.payment_applications');
         $this->visaTypes = VisaType::query()->get();
+        $this->form['createdDate'] = Carbon::now()->format('Y-m-d');
     }
 
     public function searchUnPaidApplication()
