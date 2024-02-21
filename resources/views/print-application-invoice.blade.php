@@ -67,7 +67,7 @@
                    <strong class="text-uppercase py-2">APPLICANT NAME:
                        <span style="font-size: 27px">{{$application->first_name . ' '. $application->last_name}}</span>
                        @if($application->notes)
-                           <span class="text-lowercase">/  {{$application->notes}}</span>
+                           <span class="text-lowercase">/ co:  {{$application->notes}}</span>
                        @endif
                    </strong>
                </div>
@@ -77,7 +77,7 @@
                    <strong class="text-uppercase py-2">APPLICANT NAME:
                        <span style="font-size: 27px" > {{$application->first_name . ' '. $application->last_name}} </span>
                        @if($application->notes)
-                           <span class="text-lowercase"> /  {{$application->notes}}</span>
+                           <span class="text-lowercase"> / co: {{$application->notes}}</span>
                        @endif
                    </strong>
                </div>
