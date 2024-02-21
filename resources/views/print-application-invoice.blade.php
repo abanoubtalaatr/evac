@@ -63,10 +63,10 @@
         <div class="border-dotted border-top-0 border-right-0 border-left-0 mt-4 py-1">
             <strong>TRAVEL AGENT: <span style="font-size: 27px">{{$application->travelAgent->name}}</span>  / ACC NBR : {{$application->travelAgent->account_number}} / {{$application->travelAgent->address}}</strong>
         </div>
-               <div><strong class="text-uppercase py-2">APPLICANT NAME: <span style="font-size: 27px">{{$application->first_name . ' '. $application->last_name}}</span></strong></div>
+               <div><strong class="text-uppercase py-2">APPLICANT NAME: <span>{{$application->first_name . ' '. $application->last_name}}  @if($application->notes) /  {{$application->notes}}@endif</span></strong></div>
         @else
                <a href="#" style="" class="btn text-uppercase"><strong>Direct</strong></a>
-               <div><strong class="text-uppercase py-2">APPLICANT NAME: <span style="font-size: 27px">{{$application->first_name . ' '. $application->last_name}}</span></strong></div>
+               <div><strong class="text-uppercase py-2">APPLICANT NAME: <span >{{$application->first_name . ' '. $application->last_name}} @if($application->notes) /  {{$application->notes}}@endif</span></strong></div>
 
            @endif
            <div><strong class="text-uppercase py-2">Passport: {{$application->passport_no}} </strong></div>
