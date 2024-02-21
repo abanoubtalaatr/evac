@@ -21,11 +21,20 @@
                     </tr>
                     </thead>
                     <tbody>
+                    @php
+                        $totalVisaTypeDailyCount =0;
+                        $totalServicesDailyCount =0;
+
+                    @endphp
 
                     @foreach($dayReport['visaTypes'] as $visaType)
                         <tr>
+                            @php
+                                $countVisaTypeDaily = $visaType->applications()->whereDate('created_at', $today)->count();
+                                $totalVisaTypeDailyCount += $countVisaTypeDaily;
+                            @endphp
                             <td>{{$visaType->name}}</td>
-                            <td>{{$visaType->applications()->whereDate('created_at', $today)->count()}}</td>
+                            <td>{{$countVisaTypeDaily}}</td>
                             <td>$ {{$visaType->applications()->whereDate('created_at', $today)->sum('amount')}}</td>
                             @php
                                 $visaTypeTotal += $visaType->applications()->whereDate('created_at', $today)->sum('amount');
@@ -38,7 +47,8 @@
                     <!-- Total Row -->
                     <tfoot>
                     <tr class="total-row">
-                        <td colspan="2">Total</td>
+                        <td colspan="">Total</td>
+<td>{{$totalVisaTypeDailyCount}}</td>
                         <td>$ {{$visaTypeTotal}}</td>
                     </tr>
                     </tfoot>
@@ -63,11 +73,16 @@
                     <tbody>
                     @php
                     $todayServiceTotal = 0;
+                    $totalServicesDailyCount =0;
                     @endphp
                     @foreach($dayReport['services'] as $service)
                         <tr>
+                            @php
+                                $countService = $service->serviceTransactions()->whereDate('created_at', $today)->count();
+                                $totalServicesDailyCount += $countService;
+                            @endphp
                             <td>{{$service->name}}</td>
-                            <td>{{$service->serviceTransactions()->whereDate('created_at', $today)->count()}}</td>
+                            <td>{{$countService}}</td>
                             <td>$ {{$service->serviceTransactions()->whereDate('created_at', $today)->sum('amount')}}</td>
                             @php
                             $todayServiceTotal +=$service->serviceTransactions()->whereDate('created_at', $today)->sum('amount');
@@ -78,7 +93,8 @@
                     </tbody>
                     <tfoot>
                     <tr class="total-row">
-                        <td colspan="2">Total</td>
+                        <td colspan="">Total</td>
+                        <td>{{$totalServicesDailyCount}}</td>
                         <td>$ {{$todayServiceTotal}}</td>
                     </tr>
                     </tfoot>
@@ -91,7 +107,8 @@
             <table class="table total-table">
                 <tfoot>
                 <tr class="total-row">
-                    <td colspan="2">Daily totals</td>
+                    <td colspan="">Daily totals</td>
+                    <td>{{$totalServicesDailyCount + $totalVisaTypeDailyCount}}</td>
                     <td class="total-amount">$ {{$todayServiceTotal + $visaTypeTotal}}</td>
                 </tr>
                 </tfoot>

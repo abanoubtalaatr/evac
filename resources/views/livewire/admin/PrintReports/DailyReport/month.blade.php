@@ -20,12 +20,17 @@
                         $monthVisaTypeTotal = 0;
                         $firstDayOfMonth = \Illuminate\Support\Carbon::now()->startOfMonth();
                         $lastDayOfMonth = \Illuminate\Support\Carbon::now()->endOfMonth();
+                        $monthVisaTypeCount = 0;
 
                     @endphp
                     @foreach($dayReport['visaTypes'] as $visaType)
+                        @php
+                        $monthCount = $visaType->applications()->whereBetween('created_at', [$firstDayOfMonth, $lastDayOfMonth])->count();
+                        $monthVisaTypeCount += $monthCount;
+                        @endphp
                         <tr>
                             <td>{{$visaType->name}}</td>
-                            <td>{{$visaType->applications()->whereBetween('created_at', [$firstDayOfMonth, $lastDayOfMonth])->count()}}</td>
+                            <td>{{$monthCount}}</td>
                             <td>{{$visaType->applications()->whereBetween('created_at', [$firstDayOfMonth, $lastDayOfMonth])->sum('amount')}}</td>
                             @php
                                 $monthVisaTypeTotal += $visaType->applications()->whereBetween('created_at', [$firstDayOfMonth, $lastDayOfMonth])->sum('amount');
@@ -37,7 +42,8 @@
                     <!-- Total Row -->
                     <tfoot>
                     <tr class="total-row">
-                        <td colspan="2">Total</td>
+                        <td colspan="">Total</td>
+                        <td>{{$monthVisaTypeCount}}</td>
                         <td>$ {{$monthVisaTypeTotal}}</td>
                     </tr>
                     </tfoot>
@@ -62,11 +68,16 @@
                     <tbody>
                     @php
                         $monthServiceTotal = 0;
+                        $monthServiceCount =0;
                     @endphp
                     @foreach($dayReport['services'] as $service)
+                        @php
+                            $monthService = $service->serviceTransactions()->whereBetween('created_at', [$firstDayOfMonth, $lastDayOfMonth])->count();
+                            $monthServiceCount +=$monthService;
+                        @endphp
                         <tr>
                             <td>{{$service->name}}</td>
-                            <td>{{$service->serviceTransactions()->whereBetween('created_at', [$firstDayOfMonth, $lastDayOfMonth])->count()}}</td>
+                            <td>{{$monthService}}</td>
                             <td>$ {{$service->serviceTransactions()->whereBetween('created_at', [$firstDayOfMonth, $lastDayOfMonth])->sum('amount')}}</td>
                             @php
                                 $monthServiceTotal +=$service->serviceTransactions()->whereBetween('created_at', [$firstDayOfMonth, $lastDayOfMonth])->sum('amount');
@@ -79,7 +90,8 @@
                     <!-- Total Row -->
                     <tfoot>
                     <tr class="total-row">
-                        <td colspan="2">Total</td>
+                        <td colspan="">Total</td>
+                        <td>{{$monthServiceCount}}</td>
                         <td>$ {{$monthServiceTotal}}</td>
                     </tr>
                     </tfoot>
@@ -92,7 +104,8 @@
             <table class="table total-table">
                 <tfoot>
                 <tr class="total-row">
-                    <td colspan="2">Monthly totals</td>
+                    <td colspan="">Monthly totals</td>
+                    <td>{{$monthServiceCount + $monthVisaTypeCount}}</td>
                     <td class="total-amount">$ {{$monthServiceTotal + $monthVisaTypeTotal}}</td>
                 </tr>
                 </tfoot>

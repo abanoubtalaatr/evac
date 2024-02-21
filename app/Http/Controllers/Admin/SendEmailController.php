@@ -3,7 +3,12 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\Admin;
+use App\Models\Application;
+use App\Models\DayOffice;
+use App\Models\ServiceTransaction;
 use Barryvdh\DomPDF\Facade;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
 
@@ -27,10 +32,26 @@ class SendEmailController extends Controller
             ->setWarnings(false)
             ->save('report.pdf');
 
-        Mail::send([], [], function ($message) use ($pdf, $request) {
+        $closedBy = DayOffice::query()->where('day_status', "0")->latest()->first();
+        $today = Carbon::today();
+        $applications_created_today = Application::whereDate('created_at', $today)->count();
+        $serviceTransactionsToday = ServiceTransaction::whereDate('created_at', $today)->count();
+
+        $html ='';
+        if($closedBy){
+            $admin = Admin::query()->find($closedBy->end_admin_id);
+
+            $today = Carbon::parse(now())->format('Y-m-d');
+
+            $html .= "<p>Day closed by ( $admin->name - $today)</p>";
+            $html .="<p>{{Total visa applications today $applications_created_today}}</p>";
+            $html .="<p>{{Total services today $serviceTransactionsToday }}</p>";
+        }
+
+        Mail::send('emails.daily', ['html' => $html], function ($message) use ($pdf, $request) {
             $message->to($request->email)
                 ->subject('Daily Report ' . now()->format('d/m/Y'))
-                ->attach('report.pdf', ['as' => 'attachment.pdf', 'mime' => 'application/pdf']);
+                ->attachData($pdf->output(), 'attachment.pdf', ['mime' => 'application/pdf']);
         });
 
         unlink('report.pdf');
