@@ -48,7 +48,7 @@ class SendEmailController extends Controller
             $html .="<p>{{Total services today $serviceTransactionsToday }}</p>";
         }
 
-        Mail::send('emails.TravelAgent.agent-applications-body', ['html' => $html], function ($message) use ($pdf, $request) {
+        Mail::send('emails.daily', ['html' => $html], function ($message) use ($pdf, $request) {
             $message->to($request->email)
                 ->subject('Daily Report ' . now()->format('d/m/Y'))
                 ->attachData($pdf->output(), 'attachment.pdf', ['mime' => 'application/pdf']);
