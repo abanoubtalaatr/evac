@@ -310,7 +310,7 @@
 
                         <td>{{$totalApplicationVisaCount}}</td>
 
-                    @foreach(\App\Models\Service::query()->get() as $service)
+                        @foreach(\App\Models\Service::query()->get() as $service)
                             @php
                                 $totalServiceCountForAllAgents = \App\Models\ServiceTransaction::query()
                                     ->where('service_id', $service->id)

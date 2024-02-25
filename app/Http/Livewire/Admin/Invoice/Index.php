@@ -257,7 +257,7 @@ class Index extends Component
 
     public function destroy(\App\Models\AgentInvoice $invoice)
     {
-        $invoice->delete();
+        $invoice->update(['status' => 'cancelled','total_amount' => 0]);
     }
 
     public function resetData()

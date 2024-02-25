@@ -31,26 +31,26 @@
             </div>
             <hr class="form_wrapper">
             @php
-            $rowsCount= 1;
-            $totalAmount = 0;
-            $totalVisas =0;
-            $totalGrand = 0;
-            $totalPayment = 0;
-            $totalServices = 0;
-            $defaultVisa = \App\Models\VisaType::query()->where('is_default', 1)->first();
-            $totalDefaultVisaCount = 0;
-            $totalNewSales = 0;
-            $totalPreviousBal = 0;
-            $totalServiceTransactionsAmount =0;
-            $totalApplicationsAmount= 0;
-            $totalApplicationsAmountForAgent = 0;
-            $totalServiceTransactionsAmountForAgent = 0;
-            $totalPreviousBalForAllAgents = 0;
-            $totalNewSalesForAllAgents =0;
-            $totalForAllAgent =0;
-            $totalApplicationCount =0;
-            $totalApplicationVisaCount =0;
-            $totalServiceCount = 0;
+                $rowsCount= 1;
+                $totalAmount = 0;
+                $totalVisas =0;
+                $totalGrand = 0;
+                $totalPayment = 0;
+                $totalServices = 0;
+                $defaultVisa = \App\Models\VisaType::query()->where('is_default', 1)->first();
+                $totalDefaultVisaCount = 0;
+                $totalNewSales = 0;
+                $totalPreviousBal = 0;
+                $totalServiceTransactionsAmount =0;
+                $totalApplicationsAmount= 0;
+                $totalApplicationsAmountForAgent = 0;
+                $totalServiceTransactionsAmountForAgent = 0;
+                $totalPreviousBalForAllAgents = 0;
+                $totalNewSalesForAllAgents =0;
+                $totalForAllAgent =0;
+                $totalApplicationCount =0;
+                $totalApplicationVisaCount =0;
+                $totalServiceCount = 0;
 
             @endphp
             @if(isset($records) && count($records) > 0)
@@ -67,7 +67,7 @@
                         @endforeach
                         <th>Total Visas</th>
 
-                    @foreach(\App\Models\Service::query()->get() as $service)
+                        @foreach(\App\Models\Service::query()->get() as $service)
                             <th>{{$service->name}}</th>
                         @endforeach
                         <th>Total Services</th>
@@ -75,72 +75,72 @@
                     </tr>
                     </thead>
                     <tbody>
-                        @foreach($records as $record)
-@php
-    $totalAmountForAgent =  0;
-    $defaultVisaCount = \App\Models\Application::query()->when($from && $to, function ($query) use ($from, $to) {
-                                            $query->whereDate('created_at', '>=', $from)->whereDate('created_at', '<=', $to);
-                                    })->where('visa_type_id', $defaultVisa->id)->where('travel_agent_id', $record->id)->count();
-    $totalDefaultVisaCount += $defaultVisaCount;
-    if(isset($from) & isset($to)){
-        $totalAmountForAgent = \App\Helpers\totalAmount($record->id, $from, $to);
+                    @foreach($records as $record)
+                        @php
+                            $totalAmountForAgent =  0;
+                            $defaultVisaCount = \App\Models\Application::query()->when($from && $to, function ($query) use ($from, $to) {
+                                                                    $query->whereDate('created_at', '>=', $from)->whereDate('created_at', '<=', $to);
+                                                            })->where('visa_type_id', $defaultVisa->id)->where('travel_agent_id', $record->id)->count();
+                            $totalDefaultVisaCount += $defaultVisaCount;
+                            if(isset($from) & isset($to)){
+                                $totalAmountForAgent = \App\Helpers\totalAmount($record->id, $from, $to);
 
-        $totalPreviousBalForAllAgents += \App\Helpers\oldBalance($record->id, $totalAmountForAgent,$from, $to);
-        $totalNewSalesForAllAgents += \App\Helpers\totalAmountBetweenTwoDate($record->id, $from, $to);
-        $totalForAllAgent += \App\Helpers\oldBalance($record->id, $totalAmountForAgent,$from, $to)+ $totalAmountForAgent;
-    }
+                                $totalPreviousBalForAllAgents += \App\Helpers\oldBalance($record->id, $totalAmountForAgent,$from, $to);
+                                $totalNewSalesForAllAgents += \App\Helpers\totalAmountBetweenTwoDate($record->id, $from, $to);
+                                $totalForAllAgent += \App\Helpers\oldBalance($record->id, $totalAmountForAgent,$from, $to)+ $totalAmountForAgent;
+                            }
 
-@endphp
-                            <tr>
-                                <td>{{$record->name}}</td>
-                                <td>{{$defaultVisaCount}}</td>
-                                <td>{{\App\Helpers\formatCurrency(\App\Helpers\oldBalance($record->id, $totalAmountForAgent,$from, $to))}}</td>
-                                <td>{{  \App\Helpers\formatCurrency(\App\Helpers\totalAmountBetweenTwoDate($record->id, $from, $to))}}</td>
-                                <td>{{\App\Helpers\formatCurrency(\App\Helpers\oldBalance($record->id, $totalAmountForAgent,$from, $to) + \App\Helpers\totalAmountBetweenTwoDate($record->id, $from, $to) )}}</td>
+                        @endphp
+                        <tr>
+                            <td>{{$record->name}}</td>
+                            <td>{{$defaultVisaCount}}</td>
+                            <td>{{\App\Helpers\formatCurrency(\App\Helpers\oldBalance($record->id, $totalAmountForAgent,$from, $to))}}</td>
+                            <td>{{  \App\Helpers\formatCurrency(\App\Helpers\totalAmountBetweenTwoDate($record->id, $from, $to))}}</td>
+                            <td>{{\App\Helpers\formatCurrency(\App\Helpers\oldBalance($record->id, $totalAmountForAgent,$from, $to) + \App\Helpers\totalAmountBetweenTwoDate($record->id, $from, $to) )}}</td>
 
-                                @foreach(\App\Models\VisaType::query()->where('id', '!=', $defaultVisa->id)->get() as $visa)
-                                    @php
-                                       $visaCountForAgent =  \App\Models\Application::query()->when($from && $to, function ($query) use($from, $to){
-                                            $query->whereDate('created_at', '>=', $from)->whereDate('created_at', '<=', $to);
-                                        })->where('visa_type_id', $visa->id)->where('travel_agent_id', $record->id)->count();
-
-                                    @endphp
-                                    <td>{{$visaCountForAgent}}</td>
-                                @endforeach
-
+                            @foreach(\App\Models\VisaType::query()->where('id', '!=', $defaultVisa->id)->get() as $visa)
                                 @php
-                                   $countVisa =  \App\Models\Application::query()->when($from && $to, function ($query) use($from, $to){
-                                            $query->whereDate('created_at', '>=', $from)->whereDate('created_at', '<=', $to);
-                                        })->where('travel_agent_id', $record->id)->count();
-                                   $totalApplicationVisaCount +=$countVisa;
+                                    $visaCountForAgent =  \App\Models\Application::query()->when($from && $to, function ($query) use($from, $to){
+                                         $query->whereDate('created_at', '>=', $from)->whereDate('created_at', '<=', $to);
+                                     })->where('visa_type_id', $visa->id)->where('travel_agent_id', $record->id)->count();
+
                                 @endphp
-                                <td>
-                                    {{$countVisa}}
-                                </td>
+                                <td>{{$visaCountForAgent}}</td>
+                            @endforeach
+
+                            @php
+                                $countVisa =  \App\Models\Application::query()->when($from && $to, function ($query) use($from, $to){
+                                         $query->whereDate('created_at', '>=', $from)->whereDate('created_at', '<=', $to);
+                                     })->where('travel_agent_id', $record->id)->count();
+                                $totalApplicationVisaCount +=$countVisa;
+                            @endphp
+                            <td>
+                                {{$countVisa}}
+                            </td>
 
 
-                                @foreach(\App\Models\Service::query()->get() as $service)
-                                    @php
-                                        $countServiceForAgent = \App\Models\ServiceTransaction::query()->when($from && $to, function ($query) use($from, $to){
-                                            $query->whereDate('created_at', '>=', $from)->whereDate('created_at', '<=', $to);
-                                        })->where('service_id', $service->id)->where('agent_id', $record->id)->count();
-                                        $totalServices += $countServiceForAgent;
-                                      @endphp
-
-                                    <td>{{$countServiceForAgent}}</td>
-                                @endforeach
+                            @foreach(\App\Models\Service::query()->get() as $service)
                                 @php
-                                   $serviceCount = \App\Models\ServiceTransaction::query()->when($from && $to, function ($query) use($from, $to){
-                                            $query->whereDate('created_at', '>=', $from)->whereDate('created_at', '<=', $to);
-                                        })->where('agent_id', $record->id)->count();
-                                   $totalServiceCount +=$serviceCount;
+                                    $countServiceForAgent = \App\Models\ServiceTransaction::query()->when($from && $to, function ($query) use($from, $to){
+                                        $query->whereDate('created_at', '>=', $from)->whereDate('created_at', '<=', $to);
+                                    })->where('service_id', $service->id)->where('agent_id', $record->id)->count();
+                                    $totalServices += $countServiceForAgent;
                                 @endphp
-                                <td>
-                                    {{$serviceCount}}
-                                </td>
 
-                            </tr>
-                        @endforeach
+                                <td>{{$countServiceForAgent}}</td>
+                            @endforeach
+                            @php
+                                $serviceCount = \App\Models\ServiceTransaction::query()->when($from && $to, function ($query) use($from, $to){
+                                         $query->whereDate('created_at', '>=', $from)->whereDate('created_at', '<=', $to);
+                                     })->where('agent_id', $record->id)->count();
+                                $totalServiceCount +=$serviceCount;
+                            @endphp
+                            <td>
+                                {{$serviceCount}}
+                            </td>
+
+                        </tr>
+                    @endforeach
                     </tbody>
 
                     <tfoot>
@@ -168,7 +168,7 @@
                         <td>{{$totalApplicationVisaCount}}</td>
 
 
-                    @foreach(\App\Models\Service::query()->get() as $service)
+                        @foreach(\App\Models\Service::query()->get() as $service)
                             @php
                                 $totalServiceCountForAllAgents = \App\Models\ServiceTransaction::query()
                                     ->where('service_id', $service->id)
@@ -196,76 +196,76 @@
     </div>
 </main>
 @push('scripts')
-@include('livewire.admin.shared.agent_search_script')
+    @include('livewire.admin.shared.agent_search_script')
 
-<script>
-    document.addEventListener('livewire:load', function () {
-        Livewire.on('showApplicationInvoiceModal', function (application) {
-            $('#showApplicationInvoiceModal' + application).modal('show');
+    <script>
+        document.addEventListener('livewire:load', function () {
+            Livewire.on('showApplicationInvoiceModal', function (application) {
+                $('#showApplicationInvoiceModal' + application).modal('show');
+            });
         });
-    });
 
-    document.addEventListener('livewire:load', function () {
-        Livewire.on('showApplicationModal', function (applicationId) {
-            $('#applicationModal' + applicationId).modal('show');
+        document.addEventListener('livewire:load', function () {
+            Livewire.on('showApplicationModal', function (applicationId) {
+                $('#applicationModal' + applicationId).modal('show');
+            });
         });
-    });
-</script>
+    </script>
 
-<script>
-    document.addEventListener('livewire:load', function () {
-        Livewire.on('printTable', function (url) {
+    <script>
+        document.addEventListener('livewire:load', function () {
+            Livewire.on('printTable', function (url) {
                 printPage(url);
+            });
         });
-    });
 
-    function printPage(url) {
-        // Create an iframe element
-        var iframe = document.createElement('iframe');
-        // Set the source URL of the iframe
-        iframe.src = url;
+        function printPage(url) {
+            // Create an iframe element
+            var iframe = document.createElement('iframe');
+            // Set the source URL of the iframe
+            iframe.src = url;
 
-        // Set styles to hide the iframe
-        iframe.style.position = 'absolute';
-        iframe.style.top = '-9999px';
-        iframe.style.left = '-9999px';
-        iframe.style.width = '0';
-        iframe.style.height = '0';
+            // Set styles to hide the iframe
+            iframe.style.position = 'absolute';
+            iframe.style.top = '-9999px';
+            iframe.style.left = '-9999px';
+            iframe.style.width = '0';
+            iframe.style.height = '0';
 
-        // Append the iframe to the document body
-        document.body.appendChild(iframe);
+            // Append the iframe to the document body
+            document.body.appendChild(iframe);
 
-        iframe.onload = function() {
-            try {
-                iframe.contentWindow.print();
-            } catch (error) {
-                // Handle errors
-                console.error('Error printing:', error);
-            } finally {
-                // Remove the iframe after printing or in case of an error
-                console.log('Removing iframe');
-                // document.body.removeChild(iframe);
-            }
-        };
-    }
+            iframe.onload = function() {
+                try {
+                    iframe.contentWindow.print();
+                } catch (error) {
+                    // Handle errors
+                    console.error('Error printing:', error);
+                } finally {
+                    // Remove the iframe after printing or in case of an error
+                    console.log('Removing iframe');
+                    // document.body.removeChild(iframe);
+                }
+            };
+        }
 
-</script>
+    </script>
 
 
-<script>
+    <script>
 
-    document.addEventListener('livewire:load', function () {
-    Livewire.on('show-message', function () {
-        var errorMessage = document.getElementById('error-message');
+        document.addEventListener('livewire:load', function () {
+            Livewire.on('show-message', function () {
+                var errorMessage = document.getElementById('error-message');
 
-        // Show the message
-        errorMessage.style.display = 'block';
+                // Show the message
+                errorMessage.style.display = 'block';
 
-        // Hide the message after 1000 milliseconds (1 second)
-        setTimeout(function () {
-            errorMessage.style.display = 'none';
-        }, 1000);
-    });
-    });
-</script>
+                // Hide the message after 1000 milliseconds (1 second)
+                setTimeout(function () {
+                    errorMessage.style.display = 'none';
+                }, 1000);
+            });
+        });
+    </script>
 @endpush

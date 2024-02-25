@@ -58,7 +58,7 @@
                                     <button class="btn btn-warning" wire:click="recalculateInvoice({{$record->id}})">Re calculate</button>
                                     @include('livewire.admin.invoice.edit', ['invoice' => $record])
 
-                                    <button  style="cursor:pointer;" wire:click="destroy({{$record->id}})" class="btn btn-danger">Delete</button>
+                                    <button  style="cursor:pointer;" wire:click="destroy({{$record->id}})" class="btn btn-danger">Cancelled</button>
                                         <button class="btn btn-primary" wire:click="printData('{{ $record['agent_id'] }}', '{{ $record['from'] }}', '{{ $record['to'] }}')">Print</button>
                                         <button class="btn btn-secondary" wire:click="exportReport('{{ $record['agent_id'] }}', '{{ $record['from'] }}', '{{ $record['to'] }}')">CSV</button>
                                         <button class="btn btn-info" wire:click="toggleShowModal('{{ $record['agent_id'] }}', '{{ $record['from'] }}', '{{ $record['to'] }}')">Email</button>
