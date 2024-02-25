@@ -168,6 +168,12 @@ class Create extends Component
         $this->form['expiry_date'] = null;
         $this->form['travel_agent_id'] =null;
         $this->form['agent_id'] = null;
+        $defaultVisaType = VisaType::query()->where('is_default', 1)->first();
+        $defaultVisaProvider = VisaProvider::query()->where('is_default', 1)->first();
+        $this->form['visa_type_id'] = $defaultVisaType->id;
+        $this->form['visa_provider_id'] = $defaultVisaProvider->id;
+
+
 
     }
 
