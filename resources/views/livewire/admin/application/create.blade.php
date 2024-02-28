@@ -1,14 +1,20 @@
 
 <main class="main-content">
-    <style>
-        li.selected {
-            background: #f6f6f6
-        }
-    </style>
+
     <x-admin.head/>
     @include('livewire.admin.application.popup.blackListPassport')
     @include('livewire.admin.application.popup.expiryPassport')
     @include('livewire.admin.application.popup.passportHasMoreThanOne')
+    <style>
+        .autocomplete-results {
+            z-index: 200;
+            display: none;
+        }
+        .autocomplete-results li.selected {
+            background-color: #007bff;
+            color: #fff;
+        }
+    </style>
     <!--campaign-->
     <div class="border-div">
         <div class="b-btm">
