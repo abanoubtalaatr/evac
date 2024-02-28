@@ -1,9 +1,10 @@
-<style>
-    li.selected {
-        background: #f6f6f6
-    }
-</style>
+
 <main class="main-content">
+    <style>
+        li.selected {
+            background: #f6f6f6
+        }
+    </style>
     <x-admin.head/>
     @include('livewire.admin.application.popup.blackListPassport')
     @include('livewire.admin.application.popup.expiryPassport')

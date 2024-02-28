@@ -89,6 +89,7 @@ class Create extends Component
 
     public function store()
     {
+
         $this->validate();
 
         if($this->checkPassportInBlackList()) {
