@@ -24,7 +24,7 @@ class Revise extends Component
 
     public $passport, $search, $visaTypes, $visaType, $status, $fullName, $referenceNo, $from, $to, $formInvoice,$application;
     protected $listeners = [ 'showApplicationInvoice'];
-    public $showSendEmail, $email, $applicationThatSendByEmail, $agent;
+    public $showSendEmail, $email, $applicationThatSendByEmail, $agent, $form;
 
     public function mount()
     {

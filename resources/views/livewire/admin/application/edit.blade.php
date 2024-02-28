@@ -1,6 +1,16 @@
 
 <main class="main-content">
     <x-admin.head/>
+    <style>
+        .autocomplete-results {
+            z-index: 200;
+            display: none;
+        }
+        .autocomplete-results li.selected {
+            background-color: #007bff;
+            color: #fff;
+        }
+    </style>
     @include('livewire.admin.application.popup.blackListPassport')
     @include('livewire.admin.application.popup.expiryPassport')
     @include('livewire.admin.application.popup.passportHasMoreThanOne')
@@ -28,24 +38,41 @@
                 </div>
                 @error('form.visa_type_id')<p style="color: red;">{{ $message }}</p>@enderror
             </div>
-            <div class="col-6 mt-3">
-                <input type="checkbox" onclick="toggleShowTravelAgent()" @if($isChecked) checked @endif> Show Travel Agent
+{{--            <div class="col-6 mt-3">--}}
+{{--                <input type="checkbox" onclick="toggleShowTravelAgent()" @if($isChecked) checked @endif> Show Travel Agent--}}
 
-                <div class="col-12 form-group my-2 {{$isChecked?'':'hidden'}}" wire:ignore id="travelAgentContainer">
-                    <div class="input-group">
-                        <input
-                            id="agent_search"
-                            type="text"
-                            class="form-control contact-input"
-                            placeholder="Search Travel Agent"
-                            autocomplete="off"
-                            value="{{$agentName}}"
-                        />
-                        <ul class="autocomplete-results list-group position-absolute w-100" style="padding-left: 0px; margin-top: 51px; display: none;z-index: 200">
-                            <!-- Search results will be populated dynamically with jQuery -->
-                        </ul>
+{{--                <div class="col-12 form-group my-2 {{$isChecked?'':'hidden'}}" wire:ignore id="travelAgentContainer">--}}
+{{--                    <div class="input-group">--}}
+{{--                        <input--}}
+{{--                            id="agent_search"--}}
+{{--                            type="text"--}}
+{{--                            class="form-control contact-input"--}}
+{{--                            placeholder="Search Travel Agent"--}}
+{{--                            autocomplete="off"--}}
+{{--                            value="{{$agentName}}"--}}
+{{--                        />--}}
+{{--                        <ul class="autocomplete-results list-group position-absolute w-100" style="padding-left: 0px; margin-top: 51px; display: none;z-index: 200">--}}
+{{--                            <!-- Search results will be populated dynamically with jQuery -->--}}
+{{--                        </ul>--}}
+{{--                    </div>--}}
+{{--                </div>--}}
+                <div class="col-6 mt-3">
+                    <input type="checkbox" id="showTravelAgent" onclick="toggleShowTravelAgent()" tabindex="1" @if($isChecked) checked @endif> Show Travel Agent
+                    <div class="col-12 form-group my-2 {{$isChecked?'':'hidden'}}" wire:ignore id="travelAgentContainer" tabindex="2">
+                        <div class="input-group">
+                            <input
+                                id="agent_search"
+                                type="text"
+                                class="form-control contact-input"
+                                placeholder="Search Travel Agent"
+                                autocomplete="off"
+                                tabindex="3"
+                                value="{{$agentName}}"
+                                autofocus
+                            />
+                            <ul id="list" class="autocomplete-results list-group position-absolute w-100" style="padding-left: 0px; margin-top: 51px;z-index: 200; display: none;"></ul>
+                        </div>
                     </div>
-                </div>
                 @error('form.agent_id')<p class="mt-2" style="color: red;">{{ $message }}</p>@enderror
             </div>
             <div class="col-6">
@@ -221,6 +248,82 @@
                     $('.autocomplete-results').hide();
                 }
             });
+
+            var ul = document.getElementById('list');
+            var liSelected;
+            var index = -1;
+
+            document.addEventListener('keydown', function (event) {
+                var len = ul.getElementsByTagName('li').length - 1;
+                if (event.which === 40) {
+                    index++;
+                    //down
+                    if (liSelected) {
+                        removeClass(liSelected, 'selected');
+                        next = ul.getElementsByTagName('li')[index];
+                        if (typeof next !== undefined && index <= len) {
+                            liSelected = next;
+                        } else {
+                            index = 0;
+                            liSelected = ul.getElementsByTagName('li')[0];
+                        }
+                        addClass(liSelected, 'selected');
+                        console.log(index);
+                    } else {
+                        index = 0;
+                        liSelected = ul.getElementsByTagName('li')[0];
+                        addClass(liSelected, 'selected');
+                    }
+                } else if (event.which === 38) {
+                    //up
+                    if (liSelected) {
+                        removeClass(liSelected, 'selected');
+                        index--;
+                        console.log(index);
+                        next = ul.getElementsByTagName('li')[index];
+                        if (typeof next !== undefined && index >= 0) {
+                            liSelected = next;
+                        } else {
+                            index = len;
+                            liSelected = ul.getElementsByTagName('li')[len];
+                        }
+                        addClass(liSelected, 'selected');
+                    } else {
+                        index = 0;
+                        liSelected = ul.getElementsByTagName('li')[len];
+                        addClass(liSelected, 'selected');
+                    }
+                } else if (event.which === 13) {
+                    // Enter key pressed
+                    if (liSelected) {
+                        var selectedName = liSelected.innerText;
+                        $('#agent_search').val(selectedName);  // Set the selected result in the input field
+
+                        var travelAgentId = liSelected.dataset.id;
+                        // Perform the necessary action with the selected travel agent ID
+                        // e.g., update a hidden input field or trigger a Livewire method
+                    @this.set('form.agent_id', travelAgentId)
+                        // Hide the results container after selecting
+                        $('.autocomplete-results').hide();
+                    }
+                }
+            }, false);
+
+            function removeClass(el, className) {
+                if (el.classList) {
+                    el.classList.remove(className);
+                } else {
+                    el.className = el.className.replace(new RegExp('(^|\\b)' + className.split(' ').join('|') + '(\\b|$)', 'gi'), ' ');
+                }
+            }
+
+            function addClass(el, className) {
+                if (el.classList) {
+                    el.classList.add(className);
+                } else {
+                    el.className += ' ' + className;
+                }
+            }
         });
     </script>
 @endpush
