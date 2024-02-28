@@ -28,7 +28,7 @@ class Create extends Component
     public $search;
     public $application;
     public $visaTypes, $visaProviders, $travelAgents ;
-    public $isChecked = false, $showAlertBlackList = false;
+    public $isChecked = true, $showAlertBlackList = false;
     public $passportNumber;
     public $passportApplications;
     public $numberOfDaysToCheckVisa = 90;
@@ -60,6 +60,7 @@ class Create extends Component
             $this->updateAmount();
         }
         if($defaultVisaProvider){
+
             $this->form['visa_provider_id'] = $defaultVisaProvider->id;
         }
     }
