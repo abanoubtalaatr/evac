@@ -88,9 +88,9 @@ class AgentSalesExport implements FromCollection, WithHeadings
             $dataRows[] = array_merge([
                 'Agent' => $record->name,
                 'Default visa' => $defaultVisaCount,
-                'Previous Bal' =>'$ '. formatCurrency(\App\Helpers\oldBalance($record->id, $totalAmountForAgent, $from, $to)),
-                'New Sales' => '$ '.formatCurrency($totalSalesForApplicationAndServiceTransactions),
-                'Total Amounts' => '$ '.formatCurrency($totalSalesForApplicationAndServiceTransactions +\App\Helpers\oldBalance($record->id, $totalAmountForAgent, $from, $to) ),
+                'Previous Bal' => formatCurrency(\App\Helpers\oldBalance($record->id, $totalAmountForAgent, $from, $to)),
+                'New Sales' => formatCurrency($totalSalesForApplicationAndServiceTransactions),
+                'Total Amounts' => formatCurrency($totalSalesForApplicationAndServiceTransactions +\App\Helpers\oldBalance($record->id, $totalAmountForAgent, $from, $to) ),
             ], $visaCounts, [
                 array_sum($visaCounts) + $defaultVisaCount, // Total Visas
             ], $serviceCounts, [
@@ -131,10 +131,10 @@ class AgentSalesExport implements FromCollection, WithHeadings
 
         $dataRows[] = array_merge([
             'Total',
-            '$ '.formatCurrency($totalDefaultVisaCount),
-            '$ '. formatCurrency($totalPreviousBalForAllAgents),
-            '$ '. formatCurrency($totalNewSalesForAllAgents),
-            '$ '.formatCurrency($totalNewSalesForAllAgents +$totalPreviousBalForAllAgents ),
+            formatCurrency($totalDefaultVisaCount),
+             formatCurrency($totalPreviousBalForAllAgents),
+             formatCurrency($totalNewSalesForAllAgents),
+            formatCurrency($totalNewSalesForAllAgents +$totalPreviousBalForAllAgents ),
         ], $totalVisaCountForAllAgents, [
             array_sum($totalVisaCountForAllAgents) +$totalDefaultVisaCountForAll, // Total Visas
         ], $totalServiceCountForAllAgents, [
