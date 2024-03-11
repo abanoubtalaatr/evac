@@ -289,7 +289,7 @@
                     <tfoot>
                     <tr>
                         <td>Total </td>
-                        <td>{{\App\Helpers\formatCurrency($totalDefaultVisaCount)}}</td>
+                        <td>{{$totalDefaultVisaCount}}</td>
                         <td>{{\App\Helpers\formatCurrency($totalPreviousBalForAllAgents)}}</td>
                         <td>{{\App\Helpers\formatCurrency($totalNewSalesForAllAgents)}}</td>
                         <td>{{\App\Helpers\formatCurrency($totalNewSalesForAllAgents + $totalPreviousBalForAllAgents )}}</td>

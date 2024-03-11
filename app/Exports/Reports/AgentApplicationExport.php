@@ -13,13 +13,17 @@ class AgentApplicationExport implements FromCollection, ShouldAutoSize
 {
     protected $data;
     protected $agent = null;
+    protected $fromDate =null;
+    protected  $toDate  = null;
 
-    public function __construct($data, $agent = null)
+    public function __construct($data, $agent = null, $from, $to)
     {
         $this->data = $data;
         if($agent){
             $this->agent = Agent::query()->find($agent);
         }
+        $this->fromDate = $from;
+        $this->toDate = $to;
     }
 
     public function collection()
@@ -78,64 +82,31 @@ class AgentApplicationExport implements FromCollection, ShouldAutoSize
     public function heading()
     {
         $dataRows[] = [
-            "ID" => "EAVC",
+            "ID" => "EVAC",
             "Description"  => "",
             "Type" => "",
             'Date' => "",
         ];
-        for ($i = 0 ; $i< 1; $i++){
-            $dataRows[] = [
-                "ID" => "",
-                "Description"  => "",
-                "Type" => "",
-                'Date' => "",
-            ];
-        }
-
-        $dataRows[] = [
-            "ID" =>  "Diyarna Center - Zekrit - Lebanon",
-            "Description"  => "",
-            "Type" => "",
-            'Date' => "",
-        ];
-        for ($i = 0 ; $i< 1; $i++){
-            $dataRows[] = [
-                "ID" => "",
-                "Description"  => "",
-                "Type" => "",
-                'Date' => "",
-            ];
-        }
-
+//
         $settings = Setting::query()->first();
 
-        $dataRows[] = [
-            "ID" =>  "Reg No : " . $settings->registration_no,
-            "Description"  => "",
-            "Type" => "",
-            'Date' => "",
-        ];
-        for ($i = 0 ; $i< 1; $i++){
+//        for ($i = 0 ; $i< 1; $i++){
+//            $dataRows[] = [
+//                "ID" => "",
+//                "Description"  => "",
+//                "Type" => "",
+//                'Date' => "",
+//            ];
+//        }
+
+        if($this->fromDate && $this->toDate){
             $dataRows[] = [
-                "ID" => "",
-                "Description"  => "",
+                "ID" =>  "From : " . $this->fromDate,
+                "Description"  => "To : " . $this->toDate,
                 "Type" => "",
                 'Date' => "",
             ];
-        }
-        $dataRows[] = [
-            "ID" =>  "Tel : " . $settings->mobile,
-            "Description"  => "",
-            "Type" => "",
-            'Date' => "",
-        ];
-        for ($i = 0 ; $i< 1; $i++){
-            $dataRows[] = [
-                "ID" => "",
-                "Description"  => "",
-                "Type" => "",
-                'Date' => "",
-            ];
+
         }
 
         if($this->agent){
@@ -145,72 +116,9 @@ class AgentApplicationExport implements FromCollection, ShouldAutoSize
                 "Type" => "",
                 'Date' => "",
             ];
-            for ($i = 0 ; $i< 1; $i++){
-                $dataRows[] = [
-                    "ID" => "",
-                    "Description"  => "",
-                    "Type" => "",
-                    'Date' => "",
-                ];
-            }
-            $dataRows[] = [
-                "ID" =>  "Agent Address : " . $this->agent->address,
-                "Description"  => "",
-                "Type" => "",
-                'Date' => "",
-            ];
-            for ($i = 0 ; $i< 1; $i++){
-                $dataRows[] = [
-                    "ID" => "",
-                    "Description"  => "",
-                    "Type" => "",
-                    'Date' => "",
-                ];
-            }
-            $dataRows[] = [
-                "ID" =>  "Financial No : " . $this->agent->finance_no,
-                "Description"  => "",
-                "Type" => "",
-                'Date' => "",
-            ];
-            for ($i = 0 ; $i< 1; $i++){
-                $dataRows[] = [
-                    "ID" => "",
-                    "Description"  => "",
-                    "Type" => "",
-                    'Date' => "",
-                ];
-            }
-            $dataRows[] = [
-                "ID" =>  "Tel : " . $this->agent->telephone,
-                "Description"  => "",
-                "Type" => "",
-                'Date' => "",
-            ];
-            for ($i = 0 ; $i< 1; $i++){
-                $dataRows[] = [
-                    "ID" => "",
-                    "Description"  => "",
-                    "Type" => "",
-                    'Date' => "",
-                ];
-            }
+
             $dataRows[] = [
                 "ID" =>  "Agent applications ",
-                "Description"  => "",
-                "Type" => "",
-                'Date' => "",
-            ];
-            for ($i = 0 ; $i< 1; $i++){
-                $dataRows[] = [
-                    "ID" => "",
-                    "Description"  => "",
-                    "Type" => "",
-                    'Date' => "",
-                ];
-            }
-            $dataRows[] = [
-                "ID" =>  "Date : " . Carbon::parse(now())->format('Y-m-d'),
                 "Description"  => "",
                 "Type" => "",
                 'Date' => "",

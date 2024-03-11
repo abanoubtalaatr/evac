@@ -14,6 +14,24 @@
             background-color: #007bff;
             color: #fff;
         }
+        .datepicker{
+            display: block;
+            width: 97%;
+            height: calc(1.5em + 0.75rem + 2px);
+            padding: 0.375rem 0.75rem;
+            font-size: 1rem;
+            font-weight: 400;
+            line-height: 1.5;
+            color: #495057;
+            background-color: transparent;
+            background-clip: padding-box;
+            border: 1px solid transparent;
+            border-radius: 0.25rem;
+            transition: border-color .15s ease-in-out, box-shadow .15s ease-in-out;
+        }
+        .input-group-text{
+            width: 3%;
+        }
     </style>
     <!--campaign-->
     <div class="border-div">
@@ -147,7 +165,7 @@
                 <div class="input-group">
                     <input class="form-control" disabled wire:model="form.amount" id="amount">
                     <div class="input-group-append">
-                    <span class="input-group-text bg-warning" id="editIcon" style="cursor: pointer; height: 38px;" onclick="enableInput()">
+                    <span class="input-group-text bg-warning" id="editIcon" style="cursor: pointer; height: 38px;width:100%!important;" onclick="enableInput()">
                         <i class="fas fa-pencil-alt"></i>
                     </span>
                     </div>
@@ -177,6 +195,7 @@
         </div>
     </div>
 </main>
+{{--<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/pikaday/css/pikaday.css">--}}
 <script>
     document.addEventListener('livewire:load', function () {
         Livewire.on('PrintApplication', function (url) {
