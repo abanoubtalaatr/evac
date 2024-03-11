@@ -165,7 +165,7 @@
                 <div class="input-group">
                     <input class="form-control" disabled wire:model="form.amount" id="amount">
                     <div class="input-group-append">
-                    <span class="input-group-text bg-warning" id="editIcon" style="cursor: pointer; height: 38px;" onclick="enableInput()">
+                    <span class="input-group-text bg-warning" id="editIcon" style="cursor: pointer; height: 38px;width:100%!important;" onclick="enableInput()">
                         <i class="fas fa-pencil-alt"></i>
                     </span>
                     </div>
@@ -183,15 +183,7 @@
                 </div>
                 @error('form.created_at')<p style="color: red;">{{ $message }}</p>@enderror
             </div>
-            <hr>
-            <div class=" mb-3 ">
-                <label>Date For test (can use tab or mouse, can not write must choose from calendar) </label>
-                <div class="input-group border bg-white rounded w-100">
-                    <input type="text" class="datepicker"  readonly>
-                    <span class="input-group-text bg-transparent border-0" id="basic-addon1"><i class="fa fa-calendar" aria-hidden="true"></i></span>
-                </div>
-                <input   type="hidden"  class="datepicker-value" name="datepicker-value">
-            </div>
+
 
             <div class="col-12 text-center my-2">
                 <button type="submit" class="btn btn-primary" wire:click="store">Save & Print</button>
@@ -203,7 +195,7 @@
         </div>
     </div>
 </main>
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/pikaday/css/pikaday.css">
+{{--<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/pikaday/css/pikaday.css">--}}
 <script>
     document.addEventListener('livewire:load', function () {
         Livewire.on('PrintApplication', function (url) {
@@ -451,35 +443,3 @@
 
     </style>
 @endpush
-<script src="https://cdn.jsdelivr.net/npm/pikaday/pikaday.js"></script>
-
-<script>
-    const datepickers = document.querySelectorAll('.datepicker');
-
-    datepickers.forEach(function(datepicker) {
-        const datePickerValue = datepicker.nextElementSibling;
-        const datePickerBtn = datePickerValue.nextElementSibling;
-
-        const picker = new Pikaday({
-            field: datepicker,
-            format: 'YYYY-MM-DD',
-            onSelect: function(selectedDate) {
-                const year = selectedDate.getFullYear().toString();
-                if (year.length !== 4) {
-                    alert("Please enter a valid four-digit year.");
-                    this.setDate(null);
-                    datePickerValue.value = '';
-                } else {
-                    const userTimezoneOffset = selectedDate.getTimezoneOffset() * 60000; // Offset in milliseconds
-                    const adjustedDate = new Date(selectedDate.getTime() - userTimezoneOffset);
-                    const formattedDate = adjustedDate.toISOString().split('T')[0];
-                    datePickerValue.value = formattedDate;
-                }
-            }
-        });
-
-        datePickerBtn.addEventListener('click', function() {
-            picker.show();
-        });
-    });
-</script>
