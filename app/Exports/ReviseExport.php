@@ -40,7 +40,7 @@ class ReviseExport implements FromCollection, ShouldAutoSize
                     'ID' => $count++,
                     'Date' => Carbon::parse($application->created_at)->format('Y-m-d'),
                     'REF' => $application->application_ref ,
-                    "NAME" =>   $application->first_name . ' ' . $application->last_name,
+                    "NAME" => strtoupper($application->first_name . ' ' . $application->last_name),
                     'Type' => $application->visaType->name,
                 ];
             }
