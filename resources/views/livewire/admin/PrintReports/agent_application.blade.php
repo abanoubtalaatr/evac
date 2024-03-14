@@ -99,17 +99,14 @@
             @php
                 $agent = \App\Models\Agent::query()->find(request()->agent);
              @endphp
-            @if(request()->fromDate && request()->toDate)
-                <h4>From : {{request()->fromDate}} : to: {{request()->toDate}}</h4>
-            @endif
-            @if($agent)
-                <h4>Agent : {{$agent->name}}</h4>
-                <h4>Financial No: {{$agent->finance_no}}</h4>
-                <h4>Address: {{$agent->address}}</h4>
-                <h4>Tel: {{$agent->telephone}}</h4>
 
+            @if($agent)
+                <h4>Agent applications: {{$agent->name}}</h4>
             @else
                 <button class="" style="padding: 4px;border-radius: 4px;">Direct</button>
+            @endif
+            @if(request()->fromDate && request()->toDate)
+                <h4>From : {{request()->fromDate}} : to: {{request()->toDate}}</h4>
             @endif
 
             @php
@@ -170,26 +167,29 @@
                     <thead>
                     <tr>
                         <th class="text-center" width="5%">#</th>
-                        <th class="text-center" width="40%">@lang('admin.description')</th>
-                        <th class="text-center" width="30%">@lang('admin.type')</th>
-                        <th class="text-center" width="25%">@lang('admin.date')</th>
+                        <th class="text-center" width="30%">Date</th>
+                        <th class="text-center" width="25%">REF</th>
+                        <th class="text-center" width="25%">NAME</th>
+                        <th class="text-center" width="15%">Type</th>
                     </tr>
                     </thead>
                     <tbody>
                     @foreach($data['applications'] as $record)
                         <tr>
-                            <td width="5%">#{{$loop->index + 1}}</td>
-                            <td class='text-center' width="40%">{{$record->application_ref . ' - '. $record->first_name . ' ' . $record->last_name }}(application)</td>
-                            <td class='text-center' width="30%">{{ $record->visaType->name}}</td>
+                            <td class="text-center" width="5%">#{{$loop->index + 1}}</td>
                             <td width="25%" class='text-center'>{{\Illuminate\Support\Carbon::parse($record->created_at)->format('Y-m-d')}}</td>
+                            <td class='text-center' width="40%">{{$record->application_ref  }}</td>
+                            <td class="text-center">{{$record->first_name . ' ' . $record->last_name}}</td>
+                            <td class='text-center' width="30%">{{ $record->visaType->name}}</td>
                         </tr>
                     @endforeach
                     @foreach($data['serviceTransactions'] as $record)
                         <tr>
                             <td width="5%">#{{$loop->index + 1}}</td>
-                            <td class='text-center' width="40%">{{$record->service_ref . ' - '. $record->name . ' - '. $record->surname }} (service)</td>
-                            <td class='text-center' width="30%">{{ $record->service->name}}</td>
                             <td width="25%" class='text-center'>{{\Illuminate\Support\Carbon::parse($record->created_at)->format('Y-m-d')}}</td>
+                            <td class='text-center' width="40%">{{$record->service_ref }} </td>
+                            <td class="text-center">{{ $record->name . ' - '. $record->surname }}</td>
+                            <td class='text-center' width="30%">{{ $record->service->name}}</td>
                         </tr>
                     @endforeach
                     </tbody>

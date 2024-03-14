@@ -3,6 +3,7 @@
 namespace App\Http\Livewire\Admin\Application;
 
 use App\Exports\ReceiptApplicationExport;
+use App\Exports\ReviseExport;
 use App\Http\Livewire\Traits\Admin\Application\DeleteTrait;
 use App\Mail\AgentApplicationsMail;
 use App\Mail\ReceiptApplicationsMail;
@@ -72,6 +73,11 @@ class Revise extends Component
         return Excel::download(new ReceiptApplicationExport($application), 'applicationReceipt.csv');
     }
 
+    public function downloadCSVAll()
+    {
+        $data = $this->getRecords();
+        return Excel::download(new ReviseExport($data), 'revise.csv');
+    }
     public function send()
     {
         if(!empty($this->email)){

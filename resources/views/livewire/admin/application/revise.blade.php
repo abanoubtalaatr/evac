@@ -66,6 +66,13 @@
                     <button wire:click="resetData()"
                             class="btn btn-warning form-control contact-input">@lang('site.reset')</button>
                 </div>
+
+
+                <div class="form-group col-2 mt-4">
+                    <button wire:click="downloadCSVAll()"
+                            class="btn btn-info form-control contact-input">Download CSV</button>
+                </div>
+
             </div>
             @if(count($records))
                 <table class="table-page table">

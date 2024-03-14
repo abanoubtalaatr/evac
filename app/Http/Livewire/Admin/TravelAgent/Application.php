@@ -86,6 +86,7 @@ class Application extends Component
                 ->latest()
                 ->get();
         } else {
+
             if ($this->agent === null || empty($this->agent)) {
                 return ['applications' => [], 'serviceTransactions' => []];
             }
