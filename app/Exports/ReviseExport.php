@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Exports\Reports;
+namespace App\Exports;
 
 use App\Models\Agent;
 use App\Models\Setting;
@@ -8,21 +8,16 @@ use Illuminate\Support\Carbon;
 use Maatwebsite\Excel\Concerns\FromCollection;
 use Maatwebsite\Excel\Concerns\ShouldAutoSize;
 
-class AgentApplicationExport implements FromCollection, ShouldAutoSize
+class ReviseExport implements FromCollection, ShouldAutoSize
 {
     protected $data;
     protected $agent = null;
     protected $fromDate =null;
     protected  $toDate  = null;
 
-    public function __construct($data, $agent = null, $from, $to)
+    public function __construct($data)
     {
         $this->data = $data;
-        if($agent){
-            $this->agent = Agent::query()->find($agent);
-        }
-        $this->fromDate = $from;
-        $this->toDate = $to;
     }
 
     public function collection()
@@ -39,25 +34,17 @@ class AgentApplicationExport implements FromCollection, ShouldAutoSize
         ];
 
         $count =1;
-        foreach ($this->data['applications'] as $application) {
-            $dataRows[] = [
-                'ID' => $count++,
-                'Date' => Carbon::parse($application->created_at)->format('Y-m-d'),
-                'REF' => $application->application_ref ,
-                "NAME" =>   $application->first_name . ' ' . $application->last_name,
-                'Type' => $application->visaType->name,
-            ];
+        foreach ($this->data as $key =>  $visa) {
+            foreach ($visa as $application){
+                $dataRows[] = [
+                    'ID' => $count++,
+                    'Date' => Carbon::parse($application->created_at)->format('Y-m-d'),
+                    'REF' => $application->application_ref ,
+                    "NAME" =>   $application->first_name . ' ' . $application->last_name,
+                    'Type' => $application->visaType->name,
+                ];
+            }
         }
-        foreach ($this->data['serviceTransactions'] as $serviceTransaction) {
-            $dataRows[] = [
-                'ID' => $count++,
-                'Date' => Carbon::parse($serviceTransaction->created_at)->format('Y-m-d'),
-                'REF' =>$serviceTransaction->service_ref ,
-                "NAME" => $serviceTransaction->name .' '.  $serviceTransaction->surname,
-                'Type' => $serviceTransaction->service->name,
-            ];
-        }
-
         return collect($dataRows);
     }
 
@@ -71,16 +58,6 @@ class AgentApplicationExport implements FromCollection, ShouldAutoSize
             $row['Type'],
         ];
     }
-
-//    public function headings(): array
-//    {
-//        return [
-//            'ID',
-//            'Description',
-//            "Type",
-//            'Date',
-//        ];
-//    }
 
     public function heading()
     {

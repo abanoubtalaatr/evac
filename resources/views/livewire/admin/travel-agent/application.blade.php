@@ -42,28 +42,31 @@
                     <thead>
                     <tr>
                         <th class="text-center">#</th>
-                        <th class="text-center" >@lang('admin.description')</th>
-                        <th class="text-center">@lang('admin.type')</th>
-                        <th class="text-center">@lang('admin.date')</th>
+                        <th class="text-center" >Date</th>
+                        <th class="text-center">REF</th>
+                        <th class="text-center">NAME</th>
+                        <th class="text-center">Type</th>
                     </tr>
                     </thead>
                     <tbody>
                     @foreach($records['applications'] as $record)
                         <tr>
-                            <td>#{{$loop->index + 1}}</td>
-                            <td class='text-center'>{{$record->application_ref . ' - '. $record->first_name . ' ' . $record->last_name }}(application)</td>
-                            <td class='text-center'>{{ $record->visaType->name}}</td>
+                            <td class="text-center">#{{$loop->index + 1}}</td>
                             <td class='text-center'><button class="border-0">{{\Illuminate\Support\Carbon::parse($record->created_at)->format('Y-m-d')}}</button></td>
+                            <td class='text-center'>{{$record->application_ref }} </td>
+                            <td class="text-center">{{ $record->first_name . ' ' . $record->last_name }}</td>
+                            <td class='text-center'>{{ $record->visaType->name}}</td>
 
                         </tr>
                     @endforeach
                     @foreach($records['serviceTransactions'] as $record)
                         <tr>
                             <td>#{{$loop->index + 1}}</td>
-                            <td class='text-center'>{{$record->service_ref .' - '. $record->name . ' - '. $record->surname }} (service)</td>
-                            <td class='text-center'>{{ $record->service->name}}</td>
                             <td class='text-center'><button class="border-0">{{\Illuminate\Support\Carbon::parse($record->created_at)->format('Y-m-d')}}</button></td>
 
+                            <td class='text-center'>{{$record->service_ref }} </td>
+                            <td class="text-center">{{ $record->name . ' - '. $record->surname}}</td>
+                            <td class='text-center'>{{ $record->service->name}}</td>
                         </tr>
                     @endforeach
                     </tbody>
