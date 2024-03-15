@@ -27,7 +27,6 @@
             }
 
             .card-header {
-                background-color: #007bff;
                 color: #fff;
                 padding: 15px;
                 border-bottom: 1px solid #ddd;
