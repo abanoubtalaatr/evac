@@ -20,6 +20,11 @@
                             class="btn btn-primary form-control contact-input">Show all</button>
                 </div>
 
+                <div class="form-group col-2 mt-4">
+                    <button wire:click="downloadCSV()"
+                            class="btn btn-info form-control contact-input">Download CSV</button>
+                </div>
+
             </div>
 {{--@dd($records)--}}
             @if(count($records))
