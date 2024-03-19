@@ -15,16 +15,38 @@ class ReviseExport implements FromCollection, ShouldAutoSize
     protected $fromDate =null;
     protected  $toDate  = null;
 
-    public function __construct($data)
+    public function __construct($data, $fromDate, $toDate)
     {
         $this->data = $data;
+        $this->fromDate = $fromDate;
+        $this->toDate = $toDate;
     }
 
     public function collection()
     {
         $dataRows = [];
-        $dataRows = $this->heading();
+//        $dataRows = $this->heading();
 
+        if($this->fromDate && $this->toDate){
+            $dataRows[] = [
+                "ID" =>  "From : " . $this->fromDate,
+                "Date"  => "To : " . $this->toDate,
+                "REF" => "",
+                'NAME' => "",
+                "Type" => "",
+            ];
+
+        }
+
+        for ($i = 0 ; $i< 1; $i++){
+            $dataRows[] = [
+                "ID" =>  "",
+                "Date"  => "",
+                "REF" => "",
+                'NAME' => "",
+                "Type" => "",
+            ];
+        }
         $dataRows [] = [
             "ID" => "ID",
             'Date' => 'Date',
@@ -61,36 +83,14 @@ class ReviseExport implements FromCollection, ShouldAutoSize
 
     public function heading()
     {
-        if($this->agent){
-            $dataRows[] = [
-                "ID" =>  "Agent applications :" .$this->agent->name,
-                "Date"  => "",
-                "REF" => "",
-                'NAME' => "",
-                "Type" => "",
-            ];
 
-        }
-
-        if($this->fromDate && $this->toDate){
-            $dataRows[] = [
-                "ID" =>  "",
-                "Date"  => "",
-                "REF" => "From : " . $this->fromDate,
-                'NAME' => "To : " . $this->toDate,
-                "Type" => "",
-            ];
-
-        }
-        for ($i = 0 ; $i< 1; $i++){
-            $dataRows[] = [
-                "ID" =>  "",
-                "Date"  => "",
-                "REF" => "",
-                'NAME' => "",
-                "Type" => "",
-            ];
-        }
+        $dataRows [] = [
+            "ID" => "",
+            'Date' => '',
+            'REF' => '',
+            'NAME' => 'NAME',
+            "Type" => 'Type'
+        ];
 
         return $dataRows;
     }

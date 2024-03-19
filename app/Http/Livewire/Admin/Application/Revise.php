@@ -76,7 +76,7 @@ class Revise extends Component
     public function downloadCSVAll()
     {
         $data = $this->getRecords();
-        return Excel::download(new ReviseExport($data), 'revise.csv');
+        return Excel::download(new ReviseExport($data, $this->from, $this->to), 'revise.csv');
     }
     public function send()
     {
