@@ -87,6 +87,14 @@
         .table td:nth-child(3) {
             /*width: 33.33%; !* Equal width for each column *!*/
         }
+
+        @media print {
+            td {
+                font-size: 12px;
+                padding:0;
+
+            }
+        }
     </style>
 </head>
 <body>
@@ -166,30 +174,30 @@
                 <table class="table-page table">
                     <thead>
                     <tr>
-                        <th class="text-center" width="5%">#</th>
-                        <th class="text-center" width="30%">Date</th>
-                        <th class="text-center" width="25%">REF</th>
-                        <th class="text-center" width="25%">NAME</th>
-                        <th class="text-center" width="15%">Type</th>
+                        <th class="text-center" >#</th>
+                        <th class="text-center" >Date</th>
+                        <th class="text-center" >REF</th>
+                        <th class="text-center" >NAME</th>
+                        <th class="text-center" >Type</th>
                     </tr>
                     </thead>
                     <tbody>
                     @foreach($data['applications'] as $record)
                         <tr>
-                            <td class="text-center" width="5%">#{{$loop->index + 1}}</td>
-                            <td width="25%" class='text-center'>{{\Illuminate\Support\Carbon::parse($record->created_at)->format('Y-m-d')}}</td>
-                            <td class='text-center' width="40%">{{$record->application_ref  }}</td>
+                            <td class="text-center" >#{{$loop->index + 1}}</td>
+                            <td  class='text-center'>{{\Illuminate\Support\Carbon::parse($record->created_at)->format('Y-m-d')}}</td>
+                            <td class='text-center'>{{$record->application_ref  }}</td>
                             <td class="text-center">{{$record->first_name . ' ' . $record->last_name}}</td>
-                            <td class='text-center' width="30%">{{ $record->visaType->name}}</td>
+                            <td class='text-center' >{{ $record->visaType->name}}</td>
                         </tr>
                     @endforeach
                     @foreach($data['serviceTransactions'] as $record)
                         <tr>
-                            <td width="5%">#{{$loop->index + 1}}</td>
-                            <td width="25%" class='text-center'>{{\Illuminate\Support\Carbon::parse($record->created_at)->format('Y-m-d')}}</td>
-                            <td class='text-center' width="40%">{{$record->service_ref }} </td>
+                            <td >#{{$loop->index + 1}}</td>
+                            <td class='text-center'>{{\Illuminate\Support\Carbon::parse($record->created_at)->format('Y-m-d')}}</td>
+                            <td class='text-center' >{{$record->service_ref }} </td>
                             <td class="text-center">{{ $record->name . ' - '. $record->surname }}</td>
-                            <td class='text-center' width="30%">{{ $record->service->name}}</td>
+                            <td class='text-center' >{{ $record->service->name}}</td>
                         </tr>
                     @endforeach
                     </tbody>
