@@ -95,6 +95,12 @@
 
             }
         }
+
+        td {
+            font-size: 12px;
+            padding:0;
+
+        }
     </style>
 </head>
 <body>
