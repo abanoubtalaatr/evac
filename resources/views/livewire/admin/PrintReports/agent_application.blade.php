@@ -115,12 +115,12 @@
              @endphp
 
             @if($agent)
-                <h4>Agent applications: {{$agent->name}}</h4>
+                <h4 style="font-size: 12px;">Agent applications: {{$agent->name}}</h4>
             @else
-                <button class="" style="padding: 4px;border-radius: 4px;">Direct</button>
+                <button class="" style="padding: 4px;border-radius: 4px; font-size:12px;">Direct</button>
             @endif
             @if(request()->fromDate && request()->toDate)
-                <h4>From : {{request()->fromDate}} : to: {{request()->toDate}}</h4>
+                <h4 style="font-size: 12px;">From : {{request()->fromDate}} : to: {{request()->toDate}}</h4>
             @endif
 
             @php
