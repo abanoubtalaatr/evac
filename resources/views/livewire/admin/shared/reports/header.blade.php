@@ -5,7 +5,7 @@
 
 <div class="my-2 text-center">
     @if($logoPath && file_exists($logoPath))
-        <img width="200" height="200" src="data:image/png;base64,{{ base64_encode(file_get_contents($logoPath)) }}">
+        <img width="50" height="50" src="data:image/png;base64,{{ base64_encode(file_get_contents($logoPath)) }}">
     @endif
 </div>
 
