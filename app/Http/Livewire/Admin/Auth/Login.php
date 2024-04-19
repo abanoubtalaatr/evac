@@ -24,14 +24,17 @@ class Login extends Component
                 session()->flash('in_active_message', trans('site.your_account_not_active'));
                 return redirect()->to(route('admin.login_form'));
             }
-            $admin = Admin::query()->first();
+            $admin = Admin::query()->whereEmail($this->email)->first();
 
             if($admin->roles->count() == 0) {
                 auth('admin')->logout();
                 session()->flash('in_active_message', trans('site.your_account_do_not_have_roles'));
                 return redirect()->to(route('admin.login_form'));
             }
-            $admin->update(['last_login_at' => now()]);
+
+            $admin->last_login_at = now();
+            $admin->save();
+
             return redirect()->to(route('admin.dashboard'));
         } else {
             $this->error_message = __('messages.Wrong_credential');

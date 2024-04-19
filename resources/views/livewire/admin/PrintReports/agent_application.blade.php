@@ -180,11 +180,11 @@
                 <table class="table-page table">
                     <thead>
                     <tr>
-                        <th class="text-center" >#</th>
-                        <th class="text-center" >Date</th>
-                        <th class="text-center" >REF</th>
-                        <th class="text-center" >NAME</th>
-                        <th class="text-center" >Type</th>
+                        <td style="font-size: 12px;" class="text-center" >#</th>
+                        <td class="text-center" >Date</th>
+                        <td class="text-center" >REF</th>
+                        <td class="text-center" >NAME</th>
+                        <td class="text-center" >Type</th>
                     </tr>
                     </thead>
                     <tbody>
