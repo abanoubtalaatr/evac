@@ -4,7 +4,6 @@
     <h3></h3>
     <ul class="notifi-head">
 
-
 {{--        <li class="notifi-li">--}}
 {{--            <a href="{{ LaravelLocalization::getLocalizedURL(--}}
 {{--    app()->getLocale() == 'en' ? 'ar' : 'en',--}}

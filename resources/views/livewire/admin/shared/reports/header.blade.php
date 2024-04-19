@@ -9,10 +9,10 @@
     @endif
 </div>
 
-    <span class="span-block"><strong>Evac</strong></span>
-    <span class="span-block"><strong>{{$settings->address}}</strong> </span>
-    <span class="span-block"><strong>Reg no :{{$settings->registration_no}}</strong></span>
-    <span class="span-block"><strong>Tel : {{$settings->mobile}}</strong></span>
+    <span class="span-block">Evac</span>
+    <span class="span-block">{{$settings->address}} </span>
+    <span class="span-block">Reg no :{{$settings->registration_no}}</span>
+    <span class="span-block">Tel : {{$settings->mobile}}</span>
 {{--    @if(isset($settings->vat_no) && !empty($settings->vat_no))--}}
 {{--        <div>Vat registration : {{$settings->vat_no}}</div>--}}
 {{--    @endif--}}
@@ -20,5 +20,6 @@
     .span-block{
         display: block;
         margin-bottom: 3px;
+        font-size: 12px;
     }
 </style>
