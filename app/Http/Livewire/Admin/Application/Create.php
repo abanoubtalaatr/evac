@@ -24,10 +24,10 @@ class Create extends Component
     public $name;
     public $form;
     public $is_active;
-    public $perPage =10;
+    public $perPage = 10;
     public $search;
     public $application;
-    public $visaTypes, $visaProviders, $travelAgents ;
+    public $visaTypes, $visaProviders, $travelAgents;
     public $isChecked = true, $showAlertBlackList = false;
     public $passportNumber;
     public $passportApplications;
@@ -38,6 +38,8 @@ class Create extends Component
     public $record;
     public $searchResults = [];
     public $page_title;
+    public $expiryDate;
+    public $isExpiryInPast = false;
 
 
 
@@ -51,16 +53,16 @@ class Create extends Component
         $this->travelAgents = Agent::query()->where('is_active', 1)->get();
         $defaultVisaType = VisaType::query()->where('is_default', 1)->first();
         $defaultVisaProvider = VisaProvider::query()->where('is_default', 1)->first();
-        $this->form['payment_method'] ="invoice";
-        $this->form['created_at'] = \Illuminate\Support\Carbon::parse( now())->format('Y-m-d');
-        if($defaultVisaType){
-            $this->defaultVisaTypeId =$defaultVisaType->id;
+        $this->form['payment_method'] = "invoice";
+        $this->form['created_at'] = \Illuminate\Support\Carbon::parse(now())->format('Y-m-d');
+        if ($defaultVisaType) {
+            $this->defaultVisaTypeId = $defaultVisaType->id;
             $this->form['visa_type_id'] = $defaultVisaType->id;
             $this->form['service_fee'] = $defaultVisaType->service_fee;
             $this->form['dubai_fee'] = $defaultVisaType->dubai_fee;
             $this->updateAmount();
         }
-        if($defaultVisaProvider){
+        if ($defaultVisaProvider) {
 
             $this->form['visa_provider_id'] = $defaultVisaProvider->id;
         }
@@ -93,17 +95,17 @@ class Create extends Component
 
         $this->validate();
 
-        if($this->checkPassportInBlackList()) {
+        if ($this->checkPassportInBlackList()) {
             $this->emit('openBlackListModal');
             return;
         }
 
-        if ($this->checkExpiryPassport()){
+        if ($this->checkExpiryPassport()) {
             $this->emit('showExpiryPopup');
             return;
         }
 
-        if($this->checkPassportHasMoreThanOneApplication()) {
+        if ($this->checkPassportHasMoreThanOneApplication()) {
             $this->emit('showMultipleApplicationsPopup');
             return;
         }
@@ -115,14 +117,14 @@ class Create extends Component
         $this->validate();
         $data = $this->form;
 
-        if(isset($this->form['agent_id']) && ($this->form['agent_id'] == 'nr' || $this->form['agent_id'] == 'no_result')) {
+        if (isset($this->form['agent_id']) && ($this->form['agent_id'] == 'nr' || $this->form['agent_id'] == 'no_result')) {
             $this->addError('form.agent_id', 'Must enter a valid agent');
             $this->emit('closePopups');
 
             return;
         }
         $today = Carbon::now()->format('dmY');
-        if(isset($this->form['created_at'])){
+        if (isset($this->form['created_at'])) {
             $today = Carbon::parse($this->form['created_at'])->format('dmY');
         }
 
@@ -133,16 +135,16 @@ class Create extends Component
 
 
         $data['application_ref'] = $applicationReference;
-        if(isset($this->form['agent_id'])) {
+        if (isset($this->form['agent_id'])) {
             $data['travel_agent_id'] = $this->form['agent_id'];
             unset($data['agent_id']);
         }
 
-       $applicant = (new ApplicantService())->create($data);
+        $applicant = (new ApplicantService())->create($data);
 
         $visaType = VisaType::query()->find($this->form['visa_type_id']);
         $data['applicant_id'] = $applicant->id;
-        if(isset($this->form['created_at'])){
+        if (isset($this->form['created_at'])) {
             $data['updated_at']  = $this->form['created_at'];
         }
 
@@ -156,9 +158,7 @@ class Create extends Component
         $this->updateAmount();
         $url = route('admin.applications.print', ['application' => $application->id]);
         $this->emit('PrintApplication', $url);
-                $this->emit('closePopups');
-
-
+        $this->emit('closePopups');
     }
 
     public function resetData()
@@ -168,15 +168,12 @@ class Create extends Component
         $this->form['first_name'] = null;
         $this->form['last_name'] = null;
         $this->form['expiry_date'] = null;
-        $this->form['travel_agent_id'] =null;
+        $this->form['travel_agent_id'] = null;
         $this->form['agent_id'] = null;
         $defaultVisaType = VisaType::query()->where('is_default', 1)->first();
         $defaultVisaProvider = VisaProvider::query()->where('is_default', 1)->first();
         $this->form['visa_type_id'] = $defaultVisaType->id;
         $this->form['visa_provider_id'] = $defaultVisaProvider->id;
-
-
-
     }
 
     public function checkPassportNumber()
@@ -192,15 +189,14 @@ class Create extends Component
             $this->form['expiry_date'] = Carbon::parse($existingPassport->expiry_date)->format('Y-m-d');
             $this->form['first_name'] = $existingPassport->first_name;
             $this->form['last_name'] = $existingPassport->last_name;
-
         } else {
 
             $this->form['passport_no'] = $this->passportNumber;
         }
-
     }
 
-    public function getRules(){
+    public function getRules()
+    {
         return [
             'form.visa_type_id' => 'required|max:500',
             'form.visa_provider_id' => 'required|max:500',
@@ -246,17 +242,16 @@ class Create extends Component
 
         if ($this->form['passport_no'] !== '') {
 
-        $existingPassport = Applicant::where('passport_no', strtolower($this->form['passport_no']))->latest()->first();
+            $existingPassport = Applicant::where('passport_no', strtolower($this->form['passport_no']))->latest()->first();
             if ($existingPassport) {
 
                 $this->form['expiry_date'] = Carbon::parse($existingPassport->passport_expiry)->format('Y-m-d');
                 $this->form['first_name'] = $existingPassport->name;
                 $this->form['last_name'] = $existingPassport->surname;
-
-            }else{
-                $this->form['expiry_date'] =null;
+            } else {
+                $this->form['expiry_date'] = null;
                 $this->form['first_name'] = null;
-                $this->form['last_name']= null;
+                $this->form['last_name'] = null;
             }
         }
     }

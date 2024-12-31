@@ -133,4 +133,5 @@ return [
     "title_invoice" => "Title invoice",
     "total_amount" => "Total amount",
     "service_ref" => "Service ref",
+    'passport_expiry_days' => "Passport expiry",
 ];

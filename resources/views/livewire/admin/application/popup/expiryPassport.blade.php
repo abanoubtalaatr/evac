@@ -12,19 +12,28 @@
 
             </div>
             @php
+
                 $settings = \App\Models\Setting::query()->first();
                 $numberOfExpireDays = 180;
 
-                if ($settings && $settings->no_of_days_to_check_visa) {
-                    $numberOfExpireDays = $settings->no_of_days_to_check_visa;
+                if ($settings && $settings->passport_expiry_days) {
+                    $numberOfExpireDays = $settings->passport_expiry_days;
                 }
             @endphp
             <div class="modal-body">
-                <p class="text-dark">Passport expires is less than {{ $numberOfExpireDays }} days, choose action below.</p>
+                @if ($isExpiryInPast)
+                    <p> You can not add application because this passport exipred already</p>
+                @else
+                    <p class="text-dark">Passport expires is less than {{ $numberOfExpireDays }} days, choose action
+                        below.</p>
+                @endif
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-light" wire:click="resetApplication">Reset application</button>
-                <button type="button" class="btn btn-light" wire:click="save">Accept & continue</button>
+
+                @if (!$isExpiryInPast)
+                    <button type="button" class="btn btn-light" wire:click="save">Accept & continue</button>
+                @endif
             </div>
         </div>
     </div>
