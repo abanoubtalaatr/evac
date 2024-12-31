@@ -24,5 +24,6 @@ return [
     'edit_successfully' => 'تم التعديل بنجاح',
     'create_successfully' => 'تم الاضافة بنجاح',
     'delete_successfully' => 'تم الحذف بنجاح',
+    'no_of_days_to_check_visa' => 'عدد الايام للتحقق من انتهاء الفيزا',
 
 ];
