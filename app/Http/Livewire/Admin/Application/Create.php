@@ -37,6 +37,7 @@ class Create extends Component
     public $showPrint = false;
     public $record;
     public $searchResults = [];
+    public $page_title;
 
 
 
