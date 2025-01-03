@@ -23,18 +23,21 @@ class Edit extends Component
     public $name;
     public $form;
     public $is_active;
-    public $perPage =10;
+    public $perPage = 10;
     public $search;
     public $application;
-    public $visaTypes, $visaProviders, $travelAgents ;
+    public $visaTypes, $visaProviders, $travelAgents;
     public $isChecked = false, $showAlertBlackList = false;
     public $passportNumber = [];
     public $passportApplications;
-    public $numberOfDaysToCheckVisa=90;
+    public $numberOfDaysToCheckVisa = 90;
     public $isEdit = false;
-    public $agentName='';
+    public $agentName = '';
     public $previousPage;
     protected $paginationTheme = 'bootstrap';
+    public $isExpiryInPast = false;
+    public $page_title;
+    public  $expiryDate;
 
     protected $listeners = ['showApplication'];
 
@@ -55,14 +58,13 @@ class Edit extends Component
 
         $this->application = $application;
         $this->page_title = __('admin.applications_edit');
-        if($application->travel_agent_id){
-            $agent= Agent::query()->find($application->travel_agent_id);
-            $this->agentName= $agent->name;
+        if ($application->travel_agent_id) {
+            $agent = Agent::query()->find($application->travel_agent_id);
+            $this->agentName = $agent->name;
             $this->isChecked = true;
             $this->isEdit = true;
         }
         $this->previousPage = url()->previous();
-
     }
 
 
@@ -87,17 +89,17 @@ class Edit extends Component
     {
         $this->validate();
 
-        if($this->checkPassportInBlackList()) {
+        if ($this->checkPassportInBlackList()) {
             $this->emit('openBlackListModal');
             return;
         }
 
-        if ($this->checkExpiryPassport()){
+        if ($this->checkExpiryPassport()) {
             $this->emit('showExpiryPopup');
             return;
         }
 
-        if($this->checkPassportHasMoreThanOneApplication()) {
+        if ($this->checkPassportHasMoreThanOneApplication()) {
             $this->emit('showMultipleApplicationsPopup');
             return;
         }
@@ -109,10 +111,10 @@ class Edit extends Component
     {
         $settings = Setting::query()->first();
         $numberOfDaysToCheckVisa = 90;
-        if($settings) {
+        if ($settings) {
             $numberOfDaysToCheckVisa = $settings->no_of_days_to_check_visa;
         }
-        $this->numberOfDaysToCheckVisa =$numberOfDaysToCheckVisa;
+        $this->numberOfDaysToCheckVisa = $numberOfDaysToCheckVisa;
 
         $previousApplications = Application::where('passport_no', $this->form['passport_no'])
             ->where('created_at', '>', now()->subDays($numberOfDaysToCheckVisa))
@@ -125,14 +127,38 @@ class Edit extends Component
         }
         return false;
     }
-    public function checkExpiryPassport()
+    public function checkExpiryPassport(): bool
     {
         $expiryDateTime = new \DateTime($this->form['expiry_date']);
-        $difference = now()->diff($expiryDateTime)->days;
+        $currentDateTime = now();
 
-        if ($difference < 180) {
+        // Calculate the signed difference in days
+        $difference = $expiryDateTime->getTimestamp() - $currentDateTime->getTimestamp();
+        $daysDifference = (int) floor($difference / 86400); // Convert seconds to days
+
+        $this->expiryDate = $expiryDateTime->format('Y-m-d'); // Save to a public property
+
+        // Default threshold
+        $numberOfExpireDays = 180;
+
+        // Check settings for a custom threshold
+        $settings = Setting::query()->first();
+        if ($settings && $settings->passport_expiry_days) {
+            $numberOfExpireDays = $settings->passport_expiry_days;
+        }
+
+        if ($daysDifference < 0) {
+            $this->isExpiryInPast = true;
+        }
+
+        // Check if the expiry date is in the past
+
+
+        // Check if expiry date is in the past or within the threshold
+        if ($daysDifference < $numberOfExpireDays) {
             return true;
         }
+
         return false;
     }
 
@@ -141,26 +167,26 @@ class Edit extends Component
         $this->validate();
         $data = $this->form;
 
-        if(isset($this->form['agent_id']) && ($this->form['agent_id'] == 'nr' || $this->form['agent_id'] == 'no_result')) {
+        if (isset($this->form['agent_id']) && ($this->form['agent_id'] == 'nr' || $this->form['agent_id'] == 'no_result')) {
             $this->addError('form.agent_id', 'Must enter a valid agent');
             $this->emit('closePopups');
 
             return;
         }
 
-        if(isset($data['agent_id'])) {
+        if (isset($data['agent_id'])) {
             $data['travel_agent_id'] = $data['agent_id'];
             unset($data['agent_id']);
         }
 
-        if(isset($data['agent_id']) && is_null($data['agent_id'])){
+        if (isset($data['agent_id']) && is_null($data['agent_id'])) {
             unset($data['agent_id']);
             $data['travel_agent_id'] = null;
         }
 
         (new ApplicantService())->update($data);
         $this->application->update(Arr::except($data, ['updated_at']));
-        session()->flash('success',__('admin.edit_successfully'));
+        session()->flash('success', __('admin.edit_successfully'));
 
         $this->redirect($this->previousPage);
     }
@@ -169,7 +195,7 @@ class Edit extends Component
     {
         $blackList = BlackListPassport::query()->where('passport_number', $this->form['passport_no'])->first();
 
-        if($blackList) {
+        if ($blackList) {
             return true;
         }
         return false;
@@ -182,15 +208,15 @@ class Edit extends Component
             $this->form['expiry_date'] = Carbon::parse($existingPassport->passport_expiry)->format('Y-m-d');
             $this->form['first_name'] = $existingPassport->name;
             $this->form['last_name'] = $existingPassport->surname;
-
-        }else{
-            $this->form['expiry_date'] =null;
+        } else {
+            $this->form['expiry_date'] = null;
             $this->form['first_name'] = null;
-            $this->form['last_name']= null;
+            $this->form['last_name'] = null;
         }
     }
 
-    public function getRules(){
+    public function getRules()
+    {
         return [
             'form.visa_type_id' => 'required|max:500',
             'form.visa_provider_id' => 'required|max:500',
