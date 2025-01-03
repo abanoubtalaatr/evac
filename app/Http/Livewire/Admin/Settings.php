@@ -22,6 +22,7 @@ class Settings extends Component
         $this->page_title = __('messages.settings');
         $this->settings = Setting::first();
         $this->form = Arr::except($this->settings->toArray(), ['id', 'created_at', 'updated_at']);
+       
         if($this->settings->logo){
             $this->form['logo'] = url('uploads/pics/'. $this->settings->logo);
         }
@@ -50,6 +51,7 @@ class Settings extends Component
             'form.mobile' => 'nullable',
             'form.vat_no' => 'nullable',
             'form.no_of_days_to_check_visa' => 'nullable',
+            'form.passport_expiry_days' => 'nullable',
             'form.vat_rate' => 'nullable|string',
             'form.address' => 'nullable|string',
         ];

@@ -17,6 +17,7 @@ trait ApplicationChecks
         }
         return false;
     }
+
     public function checkExpiryPassport(): bool
     {
         $expiryDateTime = new \DateTime($this->form['expiry_date']);
@@ -26,15 +27,23 @@ trait ApplicationChecks
         $difference = $expiryDateTime->getTimestamp() - $currentDateTime->getTimestamp();
         $daysDifference = (int) floor($difference / 86400); // Convert seconds to days
     
+        $this->expiryDate = $expiryDateTime->format('Y-m-d'); // Save to a public property
+
         // Default threshold
         $numberOfExpireDays = 180;
     
         // Check settings for a custom threshold
         $settings = Setting::query()->first();
-        if ($settings && $settings->no_of_days_to_check_visa) {
-            $numberOfExpireDays = $settings->no_of_days_to_check_visa;
+        if ($settings && $settings->passport_expiry_days) {
+            $numberOfExpireDays = $settings->passport_expiry_days;
         }
-    
+        
+        if($daysDifference < 0){
+            $this->isExpiryInPast = true;
+        }
+
+         // Check if the expiry date is in the past
+
     
         // Check if expiry date is in the past or within the threshold
         if ($daysDifference < $numberOfExpireDays) {
@@ -43,8 +52,7 @@ trait ApplicationChecks
     
         return false;
     }
-    
-    
+
     
 
     public function checkPassportHasMoreThanOneApplication(): bool

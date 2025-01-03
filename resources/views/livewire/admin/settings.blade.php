@@ -132,6 +132,14 @@
                         @error('form.invoice_start') <p class="text-danger">{{$message}}</p> @enderror
                         <hr/>
                     </div>
+                    <div class="col-6">
+                        <label for="">@lang('admin.passport_expiry_days')</label>
+                        <input wire:model='form.passport_expiry_days' placeholder="@lang('admin.passport_expiry_days')"
+                               class="@error('form.passport_expiry_days') is-invalid @enderror form-control contact-input"
+                               type="text"/>
+                        @error('form.passport_expiry_days') <p class="text-danger">{{$message}}</p> @enderror
+                        <hr/>
+                    </div>
                     
                     <div class="col-6">
                         <label for="">@lang('admin.invoice_footer')</label>
