@@ -21,19 +21,26 @@
                 }
             @endphp
             <div class="modal-body">
-                @if ($isExpiryInPast)
-                    <p> You can not add application because this passport exipred already</p>
+                @isset($isExpiryInPast)
+                    @if ($isExpiryInPast)
+                        <p>You cannot add an application because this passport expired already.</p>
+                    @else
+                        <p class="text-dark">Passport expires in less than {{ $numberOfExpireDays ?? 'N/A' }} days, choose
+                            action below.</p>
+                    @endif
                 @else
-                    <p class="text-dark">Passport expires is less than {{ $numberOfExpireDays }} days, choose action
-                        below.</p>
-                @endif
+                    <p class="text-dark">Passport information is not available.</p>
+                @endisset
             </div>
+
             <div class="modal-footer">
                 <button type="button" class="btn btn-light" wire:click="resetApplication">Reset application</button>
 
-                @if (!$isExpiryInPast)
-                    <button type="button" class="btn btn-light" wire:click="save">Accept & continue</button>
-                @endif
+                @isset($isExpiryInPast)
+                    @if (!$isExpiryInPast)
+                        <button type="button" class="btn btn-light" wire:click="save">Accept & continue</button>
+                    @endif
+                @endisset
             </div>
         </div>
     </div>
