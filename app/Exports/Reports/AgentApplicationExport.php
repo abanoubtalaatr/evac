@@ -34,6 +34,7 @@ class AgentApplicationExport implements FromCollection, ShouldAutoSize
             "ID" => "ID",
             'Date' => 'Date',
             'REF' => 'REF',
+            'Passport No' => 'Passport No',
             'NAME' => 'NAME',
             "Type" => 'Type'
         ];
@@ -44,6 +45,7 @@ class AgentApplicationExport implements FromCollection, ShouldAutoSize
                 'ID' => $count++,
                 'Date' => Carbon::parse($application->created_at)->format('Y-m-d'),
                 'REF' => $application->application_ref ,
+                'Passport No' => $application?->passport_no ,
                 "NAME" =>   strtoupper($application->first_name . ' ' . $application->last_name),
                 'Type' => $application->visaType->name,
             ];
@@ -53,6 +55,7 @@ class AgentApplicationExport implements FromCollection, ShouldAutoSize
                 'ID' => $count++,
                 'Date' => Carbon::parse($serviceTransaction->created_at)->format('Y-m-d'),
                 'REF' =>$serviceTransaction->service_ref ,
+                'Passport No' => $application?->passport_no ,
                 "NAME" => strtoupper($serviceTransaction->name .' '.  $serviceTransaction->surname),
                 'Type' => $serviceTransaction->service->name,
             ];
