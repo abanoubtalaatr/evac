@@ -125,6 +125,7 @@ class Application extends Component
 
     public function sendEmail(Request $request)
     {
+        
         $this->validate();
         if(!$this->isDirect && is_null($this->agent) || $this->agent =='no_result') {
             $this->message = "You must choose travel agent";
