@@ -223,21 +223,21 @@
                     <tbody>
                     @foreach($data['applications'] as $record)
                         <tr>
-                            <td class="text-center" >#{{$loop->index + 1}}</td>
-                            <td  class='text-center'>{{\Illuminate\Support\Carbon::parse($record->created_at)->format('Y-m-d')}}</td>
-                            <td class='text-center'>{{$record->application_ref  }}</td>
-                            <td class='text-center'>{{$record?->passport_no  }}</td>
+                            <td class="text-center"style="font-size: 8px" >#{{$loop->index + 1}}</td>
+                            <td  class='text-center' style="font-size: 8px">{{\Illuminate\Support\Carbon::parse($record->created_at)->format('Y-m-d')}}</td>
+                            <td class='text-center' style="font-size: 8px">{{$record->application_ref  }}</td>
+                            <td class='text-center' style="font-size: 8px">{{$record?->passport_no  }}</td>
                             <td class="text-center" style="text-transform: uppercase">{{$record->first_name . ' ' . $record->last_name}}</td>
                             <td class='text-center' style="font-size: 8px">{{ $record->visaType->name}}</td>
                         </tr>
                     @endforeach
                     @foreach($data['serviceTransactions'] as $record)
                         <tr>
-                            <td >#{{$loop->index + 1}}</td>
-                            <td class='text-center'>{{\Illuminate\Support\Carbon::parse($record->created_at)->format('Y-m-d')}}</td>
-                            <td class='text-center' >{{$record->service_ref }} </td>
-                            <td class='text-center'>{{$record?->passport_no  }}</td>
-                            <td class="text-center" style="text-transform: uppercase">{{ $record->name . ' - '. $record->surname }}</td>
+                            <td style="font-size: 8px">#{{$loop->index + 1}}</td>
+                            <td class='text-center' style="font-size: 8px">{{\Illuminate\Support\Carbon::parse($record->created_at)->format('Y-m-d')}}</td>
+                            <td class='text-center' style="font-size: 8px">{{$record->service_ref }} </td>
+                            <td class='text-center' style="font-size: 8px">{{$record?->passport_no  }}</td>
+                            <td class="text-center" style="text-transform: uppercase;font-size: 8px">{{ $record->name . ' - '. $record->surname }}</td>
                             <td class='text-center' style="font-size: 8px" >{{ $record->service->name}}</td>
                         </tr>
                     @endforeach
