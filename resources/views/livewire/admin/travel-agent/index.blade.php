@@ -77,6 +77,10 @@
                                     @if(\App\Helpers\isOwner() && $record->is_visible==0)
                                         <i class="fas fa-eye"></i>
                                     @endif
+                                    <!-- Add this button inside the actions column -->
+<a href="{{ route('admin.travel-agents.visa-pricing', $record->id) }}" class="no-btn">
+    <i class="fas fa-dollar-sign green"></i> Set Visa Prices
+</a>
 
                                 </div>
                             </td>
