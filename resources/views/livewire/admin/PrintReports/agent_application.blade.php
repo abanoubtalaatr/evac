@@ -227,7 +227,7 @@
                             <td  class='text-center' style="font-size: 8px">{{\Illuminate\Support\Carbon::parse($record->created_at)->format('Y-m-d')}}</td>
                             <td class='text-center' style="font-size: 8px">{{$record->application_ref  }}</td>
                             <td class='text-center' style="font-size: 8px">{{$record?->passport_no  }}</td>
-                            <td class="text-center" style="text-transform: uppercase">{{$record->first_name . ' ' . $record->last_name}}</td>
+                            <td class="text-center" style="text-transform: uppercase;fotn-size: 8px">{{$record->first_name . ' ' . $record->last_name}}</td>
                             <td class='text-center' style="font-size: 8px">{{ $record->visaType->name}}</td>
                         </tr>
                     @endforeach
