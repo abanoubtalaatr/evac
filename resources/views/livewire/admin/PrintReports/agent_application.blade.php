@@ -86,13 +86,13 @@
 
         @media print {
             .table-page {
-                font-size: 15px;
+                font-size: 12px;
                 width: 100%;
             }
 
             .table th, .table td {
                 padding: 4px;
-                font-size: 12px;
+                font-size: 5px;
             }
 
             .table {
