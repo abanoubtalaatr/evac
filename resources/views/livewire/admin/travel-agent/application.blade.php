@@ -56,7 +56,7 @@
                             <td class='text-center'><button class="border-0">{{\Illuminate\Support\Carbon::parse($record->created_at)->format('Y-m-d')}}</button></td>
                             <td class='text-center'>{{$record->application_ref }} </td>
                             <td class='text-center'>{{$record?->passport_no }} </td>
-                            <td class="text-center">{{ $record->first_name . ' ' . $record->last_name }}</td>
+                            <td class="text-center " style="text-transform: uppercase">{{ $record->first_name . ' ' . $record->last_name }}</td>
                             <td class='text-center'>{{ $record->visaType->name}}</td>
 
                         </tr>
@@ -68,7 +68,7 @@
 
                             <td class='text-center'>{{$record->service_ref }} </td>
                             <td class='text-center'>{{$record?->passport_no }} </td>
-                            <td class="text-center">{{ $record->name . ' - '. $record->surname}}</td>
+                            <td class="text-center" style="text-transform: uppercase">{{ $record->name . ' - '. $record->surname}}</td>
                             <td class='text-center'>{{ $record->service->name}}</td>
                         </tr>
                     @endforeach

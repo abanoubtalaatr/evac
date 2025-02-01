@@ -11,9 +11,11 @@
             padding: 0;
             background-color: #f4f4f4;
         }
-        .table-responsive{
+
+        .table-responsive {
             overflow: hidden;
         }
+
         main {
             padding: 20px;
         }
@@ -40,8 +42,9 @@
             font-weight: bolder;
             color: black;
         }
-        .border-0{
-            border: none    ;
+
+        .border-0 {
+            border: none;
         }
 
         .card-body {
@@ -72,34 +75,63 @@
         .total-row {
             font-weight: bold;
         }
-        .text-center{
+
+        .text-center {
             text-align: center;
         }
-        .btn-primary{
+
+        .btn-primary {
             background: #0b5ed7;
-        }
-        /* Set a fixed width for each column */
-        .table th:nth-child(1),
-        .table td:nth-child(1),
-        .table th:nth-child(2),
-        .table td:nth-child(2),
-        .table th:nth-child(3),
-        .table td:nth-child(3) {
-            /*width: 33.33%; !* Equal width for each column *!*/
         }
 
         @media print {
-            td {
-                font-size: 12px;
-                padding:0;
+            .table-page {
+                font-size: 15px;
+                width: 100%;
+            }
 
+            .table th, .table td {
+                padding: 4px;
+                font-size: 12px;
+            }
+
+            .table {
+                width: 100%;
+            }
+
+            .table-responsive {
+                overflow: visible;
+            }
+
+            .text-center {
+                text-align: center;
+            }
+
+            .btn-primary, .alert {
+                display: none;
+            }
+
+            .card {
+                box-shadow: none;
+                border: 1px solid #000;
+            }
+
+            .total-row {
+                font-weight: bold;
+            }
+
+            .border-0 {
+                border: none;
+            }
+
+            .row {
+                margin: 0;
             }
         }
 
         td {
             font-size: 12px;
-            padding:0;
-
+            padding: 0;
         }
     </style>
 </head>
@@ -195,7 +227,7 @@
                             <td  class='text-center'>{{\Illuminate\Support\Carbon::parse($record->created_at)->format('Y-m-d')}}</td>
                             <td class='text-center'>{{$record->application_ref  }}</td>
                             <td class='text-center'>{{$record?->passport_no  }}</td>
-                            <td class="text-center">{{$record->first_name . ' ' . $record->last_name}}</td>
+                            <td class="text-center" style="text-transform: uppercase">{{$record->first_name . ' ' . $record->last_name}}</td>
                             <td class='text-center' >{{ $record->visaType->name}}</td>
                         </tr>
                     @endforeach
@@ -205,7 +237,7 @@
                             <td class='text-center'>{{\Illuminate\Support\Carbon::parse($record->created_at)->format('Y-m-d')}}</td>
                             <td class='text-center' >{{$record->service_ref }} </td>
                             <td class='text-center'>{{$record?->passport_no  }}</td>
-                            <td class="text-center">{{ $record->name . ' - '. $record->surname }}</td>
+                            <td class="text-center" style="text-transform: uppercase">{{ $record->name . ' - '. $record->surname }}</td>
                             <td class='text-center' >{{ $record->service->name}}</td>
                         </tr>
                     @endforeach

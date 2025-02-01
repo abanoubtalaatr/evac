@@ -140,6 +140,7 @@ class AgentStatement extends Component
             $totalCrCount = collect($data['payment_received'])->sum('amount');
 
             $data['totalDrCount'] = $totalDrCount;
+            // dd($data);
             $data['totalCrCount'] = $totalCrCount;
 
             $data['data'] = $combinedResults;
