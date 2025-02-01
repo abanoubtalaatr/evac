@@ -228,7 +228,7 @@
                             <td class='text-center'>{{$record->application_ref  }}</td>
                             <td class='text-center'>{{$record?->passport_no  }}</td>
                             <td class="text-center" style="text-transform: uppercase">{{$record->first_name . ' ' . $record->last_name}}</td>
-                            <td class='text-center' >{{ $record->visaType->name}}</td>
+                            <td class='text-center' style="font-size: 8px">{{ $record->visaType->name}}</td>
                         </tr>
                     @endforeach
                     @foreach($data['serviceTransactions'] as $record)
@@ -238,7 +238,7 @@
                             <td class='text-center' >{{$record->service_ref }} </td>
                             <td class='text-center'>{{$record?->passport_no  }}</td>
                             <td class="text-center" style="text-transform: uppercase">{{ $record->name . ' - '. $record->surname }}</td>
-                            <td class='text-center' >{{ $record->service->name}}</td>
+                            <td class='text-center' style="font-size: 8px" >{{ $record->service->name}}</td>
                         </tr>
                     @endforeach
                     </tbody>
