@@ -79,7 +79,7 @@
                                     @endif
                                     <!-- Add this button inside the actions column -->
 <a href="{{ route('admin.travel-agents.visa-pricing', $record->id) }}" class="no-btn">
-    <i class="fas fa-dollar-sign green"></i> Set Visa Prices
+    <i class="mx-4 fas fa-dollar-sign green"></i> 
 </a>
 
                                 </div>

@@ -40,4 +40,8 @@ class Agent extends Model
         return $this->hasMany(Application::class, 'travel_agent_id');
     }
 
+    public function agentVisaPrices()
+    {
+        return $this->hasMany(AgentVisaPrice::class);
+    }
 }

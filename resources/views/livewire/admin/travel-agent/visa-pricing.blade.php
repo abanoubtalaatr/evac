@@ -4,6 +4,11 @@
         <div class="b-btm flex-div-2">
             <h4>Visa Pricing for Agent: {{ $agentName }}</h4>
         </div>
+        @if(session()->has('message'))
+        <div class="alert alert-success">
+            {{ session('message') }}
+        </div>
+        @endif
         <div class="table-page-wrap">
             <div class="table-responsive">
                 <table class="table table-bordered table-striped">
