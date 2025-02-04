@@ -45,7 +45,7 @@ class VisaPricing extends Component
             // Set the default value to Dubai Fee if no agent price exists
             $this->agentPrices[$visaType->id] = [
                 'id' => $agentPrice->id,
-                'price' => $agentPrice->price ?? $visaType->dubai_fee,
+                'price' => $agentPrice->price ?? $visaType->service_fee,
             ];
         }
     }
