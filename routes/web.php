@@ -16,6 +16,7 @@ use App\Http\Controllers\Admin\AuthController as AdminAuthController;
 use App\Http\Controllers\Admin\DashboardController as AdminDashboardController;
 use Illuminate\Http\Request;
 use App\Models\Agent;
+use App\Http\Livewire\Admin\TravelAgent\VisaPricing;
 
 
 
@@ -89,7 +90,9 @@ Route::group([
             Route::get('applications-un-paid', \App\Http\Livewire\Admin\Application\UnPaidApplication::class)->name('applications.un_paid');
             //settings
             Route::get('settings', SettingsIndex::class)->name('settings');
+            
 
+            Route::get('/admin/travel-agents/{agentId}/visa-pricing', VisaPricing::class)->name('travel-agents.visa-pricing');
             //applicant
             Route::get('applicants', \App\Http\Livewire\Admin\Applicant\Index::class)->name('applicants');
 

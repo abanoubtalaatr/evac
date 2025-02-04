@@ -15,7 +15,8 @@ use Carbon\Carbon;
 use Livewire\Component;
 use function App\Helpers\createApplicant;
 use function App\Helpers\vatRate;
-
+use function App\Helpers\getServiceFeePriceAfterNewPriceApplyForAgentOnVisaType;
+use function App\Helpers\calculateAmountAndDubaiFeeAndServiceFee;
 class Create extends Component
 {
     use ValidationTrait;
@@ -40,6 +41,7 @@ class Create extends Component
     public $page_title;
     public $expiryDate;
     public $isExpiryInPast = false;
+    public $applicationId;
 
 
 
@@ -75,14 +77,11 @@ class Create extends Component
 
     public function updateAmount()
     {
-        $vatRate = vatRate($this->form['visa_type_id']);
-        $visaType = VisaType::query()->find($this->form['visa_type_id']);
-        $amount = $visaType->dubai_fee + $visaType->service_fee + $vatRate;
-
-        $this->form['vat'] = $vatRate;
-        $this->form['amount'] = $amount;
-        $this->form['dubai_fee'] = $visaType->dubai_fee;
-        $this->form['service_fee'] = $visaType->service_fee;
+        $data = calculateAmountAndDubaiFeeAndServiceFee(isset($this->form['agent_id'])? $this->form['agent_id']:null, $this->form['visa_type_id']);
+        $this->form['amount'] = $data['amount'];
+        $this->form['service_fee'] = $data['service_fee'];
+        $this->form['dubai_fee'] = $data['dubai_fee'];
+        $this->form['vat'] = $data['vat'];
     }
 
     public function updatedFormVisaTypeId()
@@ -92,8 +91,8 @@ class Create extends Component
 
     public function store()
     {
-
         $this->validate();
+
 
         if ($this->checkPassportInBlackList()) {
             $this->emit('openBlackListModal');
@@ -112,6 +111,7 @@ class Create extends Component
 
         $this->save();
     }
+    
     public function save()
     {
         $this->validate();
@@ -142,13 +142,19 @@ class Create extends Component
 
         $applicant = (new ApplicantService())->create($data);
 
-        $visaType = VisaType::query()->find($this->form['visa_type_id']);
         $data['applicant_id'] = $applicant->id;
         if (isset($this->form['created_at'])) {
             $data['updated_at']  = $this->form['created_at'];
         }
 
+        $dataAfterCalculations = calculateAmountAndDubaiFeeAndServiceFee($this->form['agent_id'], $this->form['visa_type_id']);
+       
+        $data['amount'] = $dataAfterCalculations['amount'];
+        $data['service_fee'] = $dataAfterCalculations['service_fee'];
+        $data['dubai_fee'] = $dataAfterCalculations['dubai_fee'];
+        $data['vat'] = $dataAfterCalculations['vat'];
 
+        
         $application = Application::query()->create($data);
 
         $this->showPrint = true;
@@ -178,7 +184,6 @@ class Create extends Component
 
     public function checkPassportNumber()
     {
-
         // Convert the input passport number to uppercase for case-insensitive search
         $passportNumber = $this->passportNumber;
 
@@ -235,6 +240,10 @@ class Create extends Component
         $this->form['service_fee'] = $newServiceFee;
     }
 
+    public function updatedFormAgentId()
+    {
+        $this->updateAmount();
+    }
     public function updatedFormPassportNo()
     {
 
@@ -253,6 +262,7 @@ class Create extends Component
                 $this->form['first_name'] = null;
                 $this->form['last_name'] = null;
             }
+            $this->updateAmount();
         }
     }
 
@@ -262,6 +272,7 @@ class Create extends Component
         $this->form['travel_agent_id'] = $agentId;
         $agentName = Agent::query()->find($agentId)->name;
         $this->search = ''; // Clear the search input
+        
         $this->emit('agentSelected', $agentId, $agentName);
     }
 

@@ -16,6 +16,7 @@ use Carbon\Carbon;
 use Illuminate\Support\Arr;
 use Livewire\Component;
 use function App\Helpers\vatRate;
+use function App\Helpers\calculateAmountAndDubaiFeeAndServiceFee;
 
 class Edit extends Component
 {
@@ -76,14 +77,12 @@ class Edit extends Component
 
     public function updatedFormVisaTypeId()
     {
-        $vatRate = vatRate($this->form['visa_type_id']);
-        $visaType = VisaType::query()->find($this->form['visa_type_id']);
-        $amount = $visaType->dubai_fee + $visaType->service_fee + $vatRate;
-
-        $this->form['vat'] = $vatRate;
-        $this->form['amount'] = $amount;
-        $this->form['dubai_fee'] = $visaType->dubai_fee;
-        $this->form['service_fee'] = $visaType->service_fee;
+        $dataAfterCalculations = calculateAmountAndDubaiFeeAndServiceFee(isset($this->form['agent_id'])? $this->form['agent_id']:null, $this->form['visa_type_id']);
+       
+        $data['amount'] = $dataAfterCalculations['amount'];
+        $data['service_fee'] = $dataAfterCalculations['service_fee'];
+        $data['dubai_fee'] = $dataAfterCalculations['dubai_fee'];
+        $data['vat'] = $dataAfterCalculations['vat'];
     }
     public function store()
     {
@@ -184,6 +183,14 @@ class Edit extends Component
             $data['travel_agent_id'] = null;
         }
 
+        
+        $dataAfterCalculations = calculateAmountAndDubaiFeeAndServiceFee(isset($this->form['travel_agent_id'])? $this->form['travel_agent_id']:null, $this->form['visa_type_id']);
+       
+        $data['amount'] = $dataAfterCalculations['amount'];
+        $data['service_fee'] = $dataAfterCalculations['service_fee'];
+        $data['dubai_fee'] = $dataAfterCalculations['dubai_fee'];
+        $data['vat'] = $dataAfterCalculations['vat'];
+        
         (new ApplicantService())->update($data);
         $this->application->update(Arr::except($data, ['updated_at']));
         session()->flash('success', __('admin.edit_successfully'));

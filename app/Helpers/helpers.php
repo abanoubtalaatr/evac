@@ -63,8 +63,8 @@ if (!function_exists('displayTextInNavbarForOfficeTime')) {
 
         $lastRow = LastDayInExistDatabase();
 
-        if($lastRow){
-            if($lastRow->day_status == "0"){
+        if ($lastRow) {
+            if ($lastRow->day_status == "0") {
                 $data[] = [
                     'user' => $officeDay->adminCloseDay->name,
                     'prefix' => "Day closed by",
@@ -72,7 +72,7 @@ if (!function_exists('displayTextInNavbarForOfficeTime')) {
                     'time' => $officeDay->end_time,
                 ];
                 return $data;
-            }elseif ($lastRow->day_status == '2'){
+            } elseif ($lastRow->day_status == '2') {
                 $data[] = [
                     'user' => $lastRow->adminRestartDay->name,
                     'prefix' => "Day reopened by",
@@ -80,7 +80,7 @@ if (!function_exists('displayTextInNavbarForOfficeTime')) {
                     'time' => $lastRow->restart_at,
                 ];
                 return $data;
-            }else{
+            } else {
                 $data[] = [
                     'user' => $lastRow->admin->name,
                     'prefix' => "Day open by",
@@ -109,14 +109,38 @@ if (!function_exists('convertNumberToWorldsInUsd')) {
         $i = 0;
         $str = array();
         $words = array(
-            '0' => '', '1' => 'One', '2' => 'Two', '3' => 'Three', '4' => 'Four', '5' => 'Five',
-            '6' => 'Six', '7' => 'Seven', '8' => 'Eight', '9' => 'Nine', '10' => 'Ten',
-            '11' => 'Eleven', '12' => 'Twelve', '13' => 'Thirteen', '14' => 'Fourteen', '15' => 'Fifteen',
-            '16' => 'Sixteen', '17' => 'Seventeen', '18' => 'Eighteen', '19' => 'Nineteen'
+            '0' => '',
+            '1' => 'One',
+            '2' => 'Two',
+            '3' => 'Three',
+            '4' => 'Four',
+            '5' => 'Five',
+            '6' => 'Six',
+            '7' => 'Seven',
+            '8' => 'Eight',
+            '9' => 'Nine',
+            '10' => 'Ten',
+            '11' => 'Eleven',
+            '12' => 'Twelve',
+            '13' => 'Thirteen',
+            '14' => 'Fourteen',
+            '15' => 'Fifteen',
+            '16' => 'Sixteen',
+            '17' => 'Seventeen',
+            '18' => 'Eighteen',
+            '19' => 'Nineteen'
         );
         $words2 = array(
-            '0' => '', '1' => 'Ten', '2' => 'Twenty', '3' => 'Thirty', '4' => 'Forty',
-            '5' => 'Fifty', '6' => 'Sixty', '7' => 'Seventy', '8' => 'Eighty', '9' => 'Ninety'
+            '0' => '',
+            '1' => 'Ten',
+            '2' => 'Twenty',
+            '3' => 'Thirty',
+            '4' => 'Forty',
+            '5' => 'Fifty',
+            '6' => 'Sixty',
+            '7' => 'Seventy',
+            '8' => 'Eighty',
+            '9' => 'Ninety'
         );
         $digits = array('', 'Hundred', 'Thousand', 'Million', 'Billion', 'Trillion');
 
@@ -149,9 +173,8 @@ if (!function_exists('convertNumberToWorldsInUsd')) {
     }
 }
 
-
 if (!function_exists('vatRate')) {
-    function vatRate($visaTypeId)
+    function vatRate($visaTypeId, $amount = null)
     {
         $setting = Setting::query()->first();
 
@@ -159,15 +182,73 @@ if (!function_exists('vatRate')) {
 
         $visaType = VisaType::query()->find($visaTypeId);
 
+        // this amount here will be like service fee
+        if ($amount) {
+            return ($value / 100 * $amount);
+        }
+
         return ($value / 100 * $visaType->service_fee);
     }
 }
 
+if (!function_exists('getServiceFeePriceAfterNewPriceApplyForAgentOnVisaType')) {
+    function getServiceFeePriceAfterNewPriceApplyForAgentOnVisaType($agentId, $visaTypeId)
+    {
+        // i want to check if exist agent
+        // and this agent has visa prices
+        // and if exist get the total and minus the dubai fee, 
+        $visaType = VisaType::query()->find($visaTypeId);
+
+        if ($agentId) {
+            $agent = Agent::query()->find($agentId);
+            if ($agent) {
+                $agentVisaPrices = $agent->agentVisaPrices()->where('visa_type_id', $visaTypeId)->first();
+                if ($agentVisaPrices) {
+                    // this price include dubai fee and services 
+                    $price = $agentVisaPrices->price;
+                    return $price - $visaType->dubai_fee;
+                }
+            }
+        }
+        return 0;
+    }
+}
+
+if (!function_exists('calculateAmountAndDubaiFeeAndServiceFee')) {
+    function calculateAmountAndDubaiFeeAndServiceFee($agentId, $visaTypeId)
+    {
+        $newServiceFee = 0;
+        if(isset($agentId) && isset($visaTypeId) ) {
+            $newServiceFee = getServiceFeePriceAfterNewPriceApplyForAgentOnVisaType($agentId, $visaTypeId);
+        }
+
+        $visaType = VisaType::query()->find($visaTypeId);
+    
+        if ($newServiceFee > 0) {
+            $vatRate = vatRate($visaTypeId, $newServiceFee);
+            $amount = $visaType->dubai_fee + $newServiceFee + $vatRate;
+    
+            $data['amount'] = $amount;
+            $data['service_fee'] = $newServiceFee;
+            $data['dubai_fee'] = $visaType->dubai_fee;
+            $data['vat'] = $vatRate;
+            return $data;
+        }else{
+            $vatRate = vatRate($visaTypeId);
+            $amount = $visaType->dubai_fee + $visaType->service_fee + $vatRate;
+            $data['amount'] = $amount;
+            $data['service_fee'] = $visaType->service_fee;
+            $data['dubai_fee'] = $visaType->dubai_fee;
+            $data['vat'] = $vatRate;
+            return $data;
+        }
+    }
+}
 if (!function_exists('canCloseDay')) {
     function canCloseDay($officeId)
     {
         $newApplications = Application::query()->withoutGlobalScope('visibleApplications')->where('status', 'new')->count();
-        if($newApplications > 0) {
+        if ($newApplications > 0) {
             return false;
         }
         return  true;
@@ -181,14 +262,14 @@ if (!function_exists('formatCurrency')) {
 }
 
 if (!function_exists('recalculateVat')) {
-    function recalculateVat($visaTypeId,$oldAmount,$newAmount, $oldVat)
+    function recalculateVat($visaTypeId, $oldAmount, $newAmount, $oldVat)
     {
         $vatRAte = vatRate($visaTypeId);
         $visaType = VisaType::query()->find($visaTypeId);
-        if($oldAmount != $newAmount) {
-            if(($newAmount - $visaType->dubai_fee) > 0) {
+        if ($oldAmount != $newAmount) {
+            if (($newAmount - $visaType->dubai_fee) > 0) {
                 return $newAmount -  $visaType->dubai_fee * $vatRAte;
-            }else{
+            } else {
                 return 0;
             }
         }
@@ -219,9 +300,9 @@ if (!function_exists('recalculateVatInServiceTransaction')) {
         $vatRate = $value / 100;
 
 
-        if((intval($newAmount) - $dubaiFee) > 0) {
+        if ((intval($newAmount) - $dubaiFee) > 0) {
             return ($newAmount -  $dubaiFee) * $vatRate;
-        }else{
+        } else {
             return 0;
         }
 
@@ -244,7 +325,7 @@ if (!function_exists('vatForServiceFee')) {
 if (!function_exists('isOwner')) {
     function isOwner()
     {
-       return  auth('admin')->user()->is_owner;
+        return  auth('admin')->user()->is_owner;
     }
 }
 
@@ -295,9 +376,9 @@ if (!function_exists('oldBalance')) {
 
         $totalApplicationAmount = 0;
         $totalServiceTransactionsAmount = 0;
-        $totalPayment =0;
+        $totalPayment = 0;
 
-        $totalPayment = totalPayment($agentId,$from, $toDate);
+        $totalPayment = totalPayment($agentId, $from, $toDate);
 
         $totalApplicationAmount += \App\Models\Application::query()
             ->whereDate('created_at', '>=', $fromDate)
@@ -352,55 +433,57 @@ if (!function_exists('totalPayment')) {
 
 
 if (!function_exists('totalAmount')) {
-    function totalAmount($agentId, $fromDate, $toDate ){
+    function totalAmount($agentId, $fromDate, $toDate)
+    {
         $agent = Agent::query()->find($agentId);
         $carbonFrom = \Illuminate\Support\Carbon::parse($fromDate);
         $carbonFrom->subDay();
         $fromDate = '1970-01-01';
-    if($fromDate & $toDate){
+        if ($fromDate & $toDate) {
 
-        $totalAmount = $agent->applications()
-            ->whereDate('created_at', '>=', $fromDate)
-            ->whereDate('created_at', '<=', $toDate)
-            ->sum('service_fee');
+            $totalAmount = $agent->applications()
+                ->whereDate('created_at', '>=', $fromDate)
+                ->whereDate('created_at', '<=', $toDate)
+                ->sum('service_fee');
 
-        $totalAmount += $agent->applications()
-            ->whereDate('created_at', '>=', $fromDate)
-            ->whereDate('created_at', '<=', $toDate)
-            ->sum('dubai_fee');
+            $totalAmount += $agent->applications()
+                ->whereDate('created_at', '>=', $fromDate)
+                ->whereDate('created_at', '<=', $toDate)
+                ->sum('dubai_fee');
 
-        $totalAmount += $agent->applications()
-            ->whereDate('created_at', '>=', $fromDate)
-            ->whereDate('created_at', '<=', $toDate)
-            ->sum('vat');
+            $totalAmount += $agent->applications()
+                ->whereDate('created_at', '>=', $fromDate)
+                ->whereDate('created_at', '<=', $toDate)
+                ->sum('vat');
 
-        $totalAmount += $agent->serviceTransactions()
-            ->whereDate('created_at', '>=', $fromDate)
-            ->whereDate('created_at', '<=', $toDate)
-            ->sum('service_fee');
+            $totalAmount += $agent->serviceTransactions()
+                ->whereDate('created_at', '>=', $fromDate)
+                ->whereDate('created_at', '<=', $toDate)
+                ->sum('service_fee');
 
-        $totalAmount += $agent->serviceTransactions()
-            ->whereDate('created_at', '>=', $fromDate)
-            ->whereDate('created_at', '<=', $toDate)
-            ->sum('dubai_fee');
+            $totalAmount += $agent->serviceTransactions()
+                ->whereDate('created_at', '>=', $fromDate)
+                ->whereDate('created_at', '<=', $toDate)
+                ->sum('dubai_fee');
 
-        $totalAmount += $agent->serviceTransactions()
-            ->whereDate('created_at', '>=', $fromDate)
-            ->whereDate('created_at', '<=', $toDate)
-            ->sum('vat');
+            $totalAmount += $agent->serviceTransactions()
+                ->whereDate('created_at', '>=', $fromDate)
+                ->whereDate('created_at', '<=', $toDate)
+                ->sum('vat');
 
 
-        return $totalAmount;
-    }
-    return 0;
+            return $totalAmount;
+        }
+        return 0;
     }
 }
 
 if (!function_exists('totalAmountBetweenTwoDate')) {
-    function totalAmountBetweenTwoDate($agentId, $fromDate, $toDate ){
+    function totalAmountBetweenTwoDate($agentId, $fromDate, $toDate)
+    {
         $agent = Agent::query()->find($agentId);
 
-        if($fromDate & $toDate){
+        if ($fromDate & $toDate) {
 
             $totalAmount = $agent->applications()
                 ->whereDate('created_at', '>=', $fromDate)

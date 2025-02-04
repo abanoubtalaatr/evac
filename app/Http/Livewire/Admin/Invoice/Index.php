@@ -33,6 +33,9 @@ class Index extends Component
     public $email;
     public $showSendEmail=false;
     public $agentEmailed;
+    public $rowNumber;
+    public $page_title;
+    public $from, $to, $message;
 
     protected $paginationTheme = 'bootstrap';
 
@@ -199,6 +202,7 @@ class Index extends Component
 
     public function getRecords()
     {
+        
         if(isOwner()) {
             if($this->agent && $this->agent !='no_result' ){
                 return \App\Models\AgentInvoice::query()
