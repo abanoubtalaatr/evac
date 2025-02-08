@@ -33,7 +33,7 @@ class Index extends Component
     public $email;
     public $showSendEmail=false;
     public $agentEmailed;
-    public $rowNumber;
+    public $rowNumber=0;
     public $page_title;
     public $from, $to, $message;
 
@@ -202,19 +202,18 @@ class Index extends Component
 
     public function getRecords()
     {
-        
         if(isOwner()) {
             if($this->agent && $this->agent !='no_result' ){
                 return \App\Models\AgentInvoice::query()
                     ->orderBy('agent_id')
                     ->where('agent_id', $this->agent)
-                    ->latest()
+                    ->latest('from')
                     ->paginate(50);
             }
             return \App\Models\AgentInvoice::query()
                 ->orderBy('agent_id')
                 ->where('agent_id', $this->agent)
-                ->latest()
+                ->latest('form')
                 ->paginate(50);
         }else{
             if($this->agent && $this->agent !='no_result' ){
@@ -223,14 +222,14 @@ class Index extends Component
                     ->whereHas('agent', function ($agent){
                         $agent->where('is_visible', 1);
                     })->where('agent_id', $this->agent)
-                    ->latest()
+                    ->latest('from')
                     ->paginate(50);
             }
             return \App\Models\AgentInvoice::query()
                 ->orderBy('agent_id')
                 ->whereHas('agent', function ($agent){
                     $agent->where('is_visible', 1);
-                })->latest()
+                })->latest('from')
                 ->paginate(50);
         }
 
