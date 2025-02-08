@@ -33,6 +33,9 @@ class Index extends Component
     public $email;
     public $showSendEmail=false;
     public $agentEmailed;
+    public $rowNumber=0;
+    public $page_title;
+    public $from, $to, $message;
 
     protected $paginationTheme = 'bootstrap';
 
@@ -210,7 +213,8 @@ class Index extends Component
             return \App\Models\AgentInvoice::query()
                 ->orderBy('agent_id')
                 ->where('agent_id', $this->agent)
-                ->latest('from')
+
+                ->latest('form')
                 ->paginate(50);
         }else{
             if($this->agent && $this->agent !='no_result' ){
