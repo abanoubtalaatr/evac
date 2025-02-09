@@ -35,16 +35,19 @@ class AgentInvoice extends Component
         $goToNextYear = 0,
         $message= null, $agent, $payment_method, $disableSendForAdminsButton= false, $showSaveInvoiceMessage=false;
 
-    public function mount()
-    {
-        $this->page_title = __('admin.agent_invoices');
-        $this->visaTypes = VisaType::query()->get();
-        $this->from = Carbon::now()->startOfWeek()->previous(Carbon::FRIDAY)->format('Y-m-d');
 
-        // Set $this->to to the last day of the week (Saturday)
-        $this->to = Carbon::now()->next(Carbon::THURSDAY)->format('Y-m-d');
-    }
-
+        public function mount()
+        {
+            $this->page_title = __('admin.agent_invoices');
+            $this->visaTypes = VisaType::query()->get();
+        
+            // Get the previous Friday
+            $this->from = Carbon::now()->previous(Carbon::FRIDAY)->format('Y-m-d');
+        
+            // Get the following Thursday (6 days after Friday)
+            $this->to = Carbon::parse($this->from)->addDays(6)->format('Y-m-d');
+        }
+        
     public function updatedAgentId()
     {
         if(!is_null($this->agent)) {
