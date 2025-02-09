@@ -97,11 +97,14 @@ if (!function_exists('displayTextInNavbarForOfficeTime')) {
 if (!function_exists('convertNumberToWorldsInUsd')) {
     function convertNumberToWorldsInUsd($number)
     {
+        $number = (float) str_replace(',', '', $number); // Remove commas and convert to float
+
         if ($number < 0) {
             // If the number is negative, prepend "Minus" and convert the absolute value
             return "Minus " . convertNumberToWorldsInUsd(abs($number));
         }
 
+        // dd($number);
         $decimal = round($number - ($no = floor($number)), 2) * 100;
         $hundred = null;
         $digits_length = strlen($no);
