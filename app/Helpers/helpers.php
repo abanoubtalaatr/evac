@@ -97,11 +97,14 @@ if (!function_exists('displayTextInNavbarForOfficeTime')) {
 if (!function_exists('convertNumberToWorldsInUsd')) {
     function convertNumberToWorldsInUsd($number)
     {
+        $number = (float) str_replace(',', '', $number); // Remove commas and convert to float
+
         if ($number < 0) {
             // If the number is negative, prepend "Minus" and convert the absolute value
             return "Minus " . convertNumberToWorldsInUsd(abs($number));
         }
 
+        // dd($number);
         $decimal = round($number - ($no = floor($number)), 2) * 100;
         $hundred = null;
         $digits_length = strlen($no);
@@ -206,7 +209,7 @@ if (!function_exists('getServiceFeePriceAfterNewPriceApplyForAgentOnVisaType')) 
                 if ($agentVisaPrices) {
                     // this price include dubai fee and services 
                     $price = $agentVisaPrices->price;
-                    return $price - $visaType->dubai_fee;
+                    return $price;
                 }
             }
         }
