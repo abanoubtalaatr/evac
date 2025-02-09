@@ -39,6 +39,7 @@ class Edit extends Component
     public $isExpiryInPast = false;
     public $page_title;
     public  $expiryDate;
+    public $isAmountUpdated = false;
 
     protected $listeners = ['showApplication'];
 
@@ -77,8 +78,9 @@ class Edit extends Component
 
     public function updatedFormVisaTypeId()
     {
-        $dataAfterCalculations = calculateAmountAndDubaiFeeAndServiceFee(isset($this->form['agent_id'])? $this->form['agent_id']:null, $this->form['visa_type_id']);
-       
+        
+        $dataAfterCalculations = calculateAmountAndDubaiFeeAndServiceFee(isset($this->form['travel_agent_id'])? $this->form['travel_agent_id']:null, $this->form['visa_type_id']);
+       $this->form['amount'] = $dataAfterCalculations['amount'];
         $data['amount'] = $dataAfterCalculations['amount'];
         $data['service_fee'] = $dataAfterCalculations['service_fee'];
         $data['dubai_fee'] = $dataAfterCalculations['dubai_fee'];
@@ -160,10 +162,20 @@ class Edit extends Component
 
         return false;
     }
-
+    public function updatedFormAgentId()
+    {
+        $dataAfterCalculations = calculateAmountAndDubaiFeeAndServiceFee(isset($this->form['agent_id'])? $this->form['agent_id']:null, $this->form['visa_type_id']);
+       
+        $this->form['amount']  = $dataAfterCalculations['amount'];
+         $data['amount'] = $dataAfterCalculations['amount'];
+        $data['service_fee'] = $dataAfterCalculations['service_fee'];
+        $data['dubai_fee'] = $dataAfterCalculations['dubai_fee'];
+        $data['vat'] = $dataAfterCalculations['vat'];
+           
+    }
     public function save()
     {
-        $this->validate();
+         $this->validate();
         $data = $this->form;
 
         if (isset($this->form['agent_id']) && ($this->form['agent_id'] == 'nr' || $this->form['agent_id'] == 'no_result')) {
@@ -183,13 +195,14 @@ class Edit extends Component
             $data['travel_agent_id'] = null;
         }
 
-        
-        $dataAfterCalculations = calculateAmountAndDubaiFeeAndServiceFee(isset($this->form['travel_agent_id'])? $this->form['travel_agent_id']:null, $this->form['visa_type_id']);
+        if(!$this->isAmountUpdated){
+            $dataAfterCalculations = calculateAmountAndDubaiFeeAndServiceFee(isset($this->form['agent_id'])? $this->form['agent_id']:null, $this->form['visa_type_id']);
        
-        $data['amount'] = $dataAfterCalculations['amount'];
-        $data['service_fee'] = $dataAfterCalculations['service_fee'];
-        $data['dubai_fee'] = $dataAfterCalculations['dubai_fee'];
-        $data['vat'] = $dataAfterCalculations['vat'];
+            $data['amount'] = $dataAfterCalculations['amount'];
+            $data['service_fee'] = $dataAfterCalculations['service_fee'];
+            $data['dubai_fee'] = $dataAfterCalculations['dubai_fee'];
+            $data['vat'] = $dataAfterCalculations['vat'];
+        }
         
         (new ApplicantService())->update($data);
         $this->application->update(Arr::except($data, ['updated_at']));
@@ -257,6 +270,7 @@ class Edit extends Component
 
     public function updatedFormAmount()
     {
+        $this->isAmountUpdated = true;
         $visaType = VisaType::query()->find($this->form['visa_type_id']);
         $newServiceFee = (new InvoiceService())->recalculateServiceFee($this->form['amount'], $visaType->dubai_fee);
         $this->form['vat'] = (new InvoiceService())->recalculateVat($this->form['amount'], $visaType->dubai_fee);

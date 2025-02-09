@@ -17,6 +17,7 @@ use function App\Helpers\createApplicant;
 use function App\Helpers\vatRate;
 use function App\Helpers\getServiceFeePriceAfterNewPriceApplyForAgentOnVisaType;
 use function App\Helpers\calculateAmountAndDubaiFeeAndServiceFee;
+
 class Create extends Component
 {
     use ValidationTrait;
@@ -42,7 +43,7 @@ class Create extends Component
     public $expiryDate;
     public $isExpiryInPast = false;
     public $applicationId;
-
+    public $isAmountUpdated = false;
 
 
     protected $listeners = ['showApplication'];
@@ -147,14 +148,15 @@ class Create extends Component
             $data['updated_at']  = $this->form['created_at'];
         }
 
-        $dataAfterCalculations = calculateAmountAndDubaiFeeAndServiceFee($this->form['agent_id'], $this->form['visa_type_id']);
+        if(!$this->isAmountUpdated){
+            $dataAfterCalculations = calculateAmountAndDubaiFeeAndServiceFee($this->form['agent_id'], $this->form['visa_type_id']);
        
-        $data['amount'] = $dataAfterCalculations['amount'];
-        $data['service_fee'] = $dataAfterCalculations['service_fee'];
-        $data['dubai_fee'] = $dataAfterCalculations['dubai_fee'];
-        $data['vat'] = $dataAfterCalculations['vat'];
+            $data['amount'] = $dataAfterCalculations['amount'];
+            $data['service_fee'] = $dataAfterCalculations['service_fee'];
+            $data['dubai_fee'] = $dataAfterCalculations['dubai_fee'];
+            $data['vat'] = $dataAfterCalculations['vat'];        
+        }
 
-        
         $application = Application::query()->create($data);
 
         $this->showPrint = true;
@@ -234,6 +236,7 @@ class Create extends Component
 
     public function updatedFormAmount()
     {
+        $this->isAmountUpdated = true;
         $visaType = VisaType::query()->find($this->form['visa_type_id']);
         $newServiceFee = (new InvoiceService())->recalculateServiceFee($this->form['amount'], $visaType->dubai_fee);
         $this->form['vat'] = (new InvoiceService())->recalculateVat($this->form['amount'], $visaType->dubai_fee);
