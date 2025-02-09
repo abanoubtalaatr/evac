@@ -206,7 +206,7 @@ if (!function_exists('getServiceFeePriceAfterNewPriceApplyForAgentOnVisaType')) 
                 if ($agentVisaPrices) {
                     // this price include dubai fee and services 
                     $price = $agentVisaPrices->price;
-                    return $price - $visaType->dubai_fee;
+                    return $price;
                 }
             }
         }
