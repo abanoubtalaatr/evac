@@ -5,7 +5,7 @@
 
 <div class="my-2 text-center">
     @if($logoPath && file_exists($logoPath))
-        <img width="70" height="70" src="data:image/png;base64,{{ base64_encode(file_get_contents($logoPath)) }}">
+        <img width="90" height="90" src="data:image/png;base64,{{ base64_encode(file_get_contents($logoPath)) }}">
     @endif
     @if(isset($showInvoiceTitle))
     <h4 class="text-center">INVOICE</h4>
