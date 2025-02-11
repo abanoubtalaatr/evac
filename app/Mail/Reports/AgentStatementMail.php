@@ -2,11 +2,12 @@
 
 namespace App\Mail\Reports;
 
+use Dompdf\Dompdf;
+use Dompdf\Options;
+use App\Models\Agent;
 use Illuminate\Bus\Queueable;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
-use Dompdf\Dompdf;
-use Dompdf\Options;
 
 class AgentStatementMail extends Mailable
 {
@@ -23,9 +24,14 @@ class AgentStatementMail extends Mailable
 
     public function build()
     {
-        return $this->attachData($this->generatePdf(), 'agent_statement.pdf')
-            ->subject("EVAC" .' - ' . "Agent Statement Report")
-            ->view('emails.TravelAgent.agent-applications-body');
+        $agent = Agent::query()->find($this->agent);
+        $name = $agent ? $agent->name .'_statement.pdf' : 'agent_statement.pdf';
+        $agentReport = $agent ? $agent->name .' Statement': 'Agent Statement Report';
+        return $this->attachData($this->generatePdf(), $name)
+            ->subject("EVAC" .' - ' . $agentReport)
+            ->view('emails.TravelAgent.agent-applications-body', [
+                'agentStatement' => true
+            ]);
 
     }
 

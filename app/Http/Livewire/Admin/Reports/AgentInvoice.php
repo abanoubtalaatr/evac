@@ -30,48 +30,46 @@ class AgentInvoice extends Component
         $agent_id,
         $email,
         $showSendEmail = false,
-        $showSendEmailButton= false,
+        $showSendEmailButton = false,
         $agentEmailed = null,
         $goToNextYear = 0,
-        $message= null, $agent, $payment_method, $disableSendForAdminsButton= false, $showSaveInvoiceMessage=false;
+        $message = null, $agent, $payment_method, $disableSendForAdminsButton = false, $showSaveInvoiceMessage = false;
 
 
-        public function mount()
-        {
-            $this->page_title = __('admin.agent_invoices');
-            $this->visaTypes = VisaType::query()->get();
-        
-            // Get the previous Friday
-            $this->from = Carbon::now()->previous(Carbon::FRIDAY)->format('Y-m-d');
-        
-            // Get the following Thursday (6 days after Friday)
-            $this->to = Carbon::parse($this->from)->addDays(6)->format('Y-m-d');
-        }
-        
+    public function mount()
+    {
+        $this->page_title = __('admin.agent_invoices');
+        $this->visaTypes = VisaType::query()->get();
+
+        // Get the previous Friday
+        $this->from = Carbon::now()->previous(Carbon::FRIDAY)->format('Y-m-d');
+
+        // Get the following Thursday (6 days after Friday)
+        $this->to = Carbon::parse($this->from)->addDays(6)->format('Y-m-d');
+    }
+
     public function updatedAgentId()
     {
-        if(!is_null($this->agent)) {
+        if (!is_null($this->agent)) {
             $this->showSendEmailButton = true;
-        }else{
+        } else {
             $this->showSendEmailButton = false;
         }
     }
     public function nextWeek()
     {
-
         $year = Carbon::parse($this->to)->format('Y');
         $month = Carbon::parse($this->to)->format('m');
         $day = Carbon::parse($this->to)->format('d');
-        $endOfYear = ($year . '-'. '12'. '-'.'31');
+        $endOfYear = ($year . '-' . '12' . '-' . '31');
 
-        if($this->to ==$endOfYear){
+        if ($this->to == $endOfYear) {
             $this->from = Carbon::createFromDate(Carbon::parse($this->from)->addYear()->year, 1, 1)->format('Y-m-d');
             $this->to = Carbon::parse($this->from)->next(Carbon::THURSDAY)->format('Y-m-d');
-        }elseif ($this->isLastThursdayInYear($this->to)){
+        } elseif ($this->isLastThursdayInYear($this->to)) {
             $this->from = Carbon::parse($this->from)->next(Carbon::FRIDAY)->format('Y-m-d');
             $this->to = Carbon::parse($this->to)->endOfYear()->format('Y-m-d');
-
-        } else{
+        } else {
             // Move to the next Friday and Thursday
             $this->from = Carbon::parse($this->from)->next(Carbon::FRIDAY)->format('Y-m-d');
             $this->to = Carbon::parse($this->from)->next(Carbon::THURSDAY)->format('Y-m-d');
@@ -106,12 +104,12 @@ class AgentInvoice extends Component
     }
     public function previousWeek()
     {
-        if($this->isFirstFridayOfYear($this->from)){
+        if ($this->isFirstFridayOfYear($this->from)) {
             $this->from = Carbon::parse($this->from)->startOfYear()->format('Y-m-d');
 
             // Set $this->to to the first Thursday of the current year
             $this->to = Carbon::parse($this->from)->next(Carbon::THURSDAY)->format('Y-m-d');
-        }else{
+        } else {
             // Set $this->from to the previous Friday
             $this->from = Carbon::parse($this->from)->previous(Carbon::FRIDAY)->format('Y-m-d');
 
@@ -129,15 +127,14 @@ class AgentInvoice extends Component
             // Check if $this->to is in the last week of the year
             $isToLastWeek = Carbon::parse($this->to)->weekOfYear === Carbon::parse($this->to)->endOfYear()->weekOfYear;
 
-            if($isFromLastWeek && $isToLastWeek){
+            if ($isFromLastWeek && $isToLastWeek) {
                 $this->to = Carbon::parse($this->to)->endOfYear()->format('Y-m-d');
             }
-
         }
     }
 
 
-    public function toggleShowModal($agent=null)
+    public function toggleShowModal($agent = null)
     {
         $this->email = null;
         $this->showSendEmail = !$this->showSendEmail;
@@ -152,9 +149,9 @@ class AgentInvoice extends Component
         $emails = explode(',', $settings->email);
 
         $data = (new AgentInvoiceService())->getRecords(null, $this->from, $this->to);
-        foreach ($emails as $email){
-            foreach ($data['agents'] as $agent){
-                if(!is_null($agent['agent'])){
+        foreach ($emails as $email) {
+            foreach ($data['agents'] as $agent) {
+                if (!is_null($agent['agent'])) {
                     $request->merge([
                         'agent' => $agent['agent']['id'],
                         'fromDate' => $this->from,
@@ -164,20 +161,19 @@ class AgentInvoice extends Component
                     Mail::to($email)->send(new AgentInvoiceMail($agent['agent']['id'], $this->from, $this->to));
                 }
             }
-
         }
-        $this->disableSendForAdminsButton= false;
+        $this->disableSendForAdminsButton = false;
 
-//        session()->flash('success',"Send Successfully");
-//
-//        return redirect()->to(route('admin.report.agent_invoices'));
+        //        session()->flash('success',"Send Successfully");
+        //
+        //        return redirect()->to(route('admin.report.agent_invoices'));
     }
-    public function saveInvoices($agent=null)
+    public function saveInvoices($agent = null)
     {
 
-        if($agent){
+        if ($agent) {
             $data = (new AgentInvoiceService())->getRecords($agent, $this->from, $this->to);
-        }else{
+        } else {
             $data = (new AgentInvoiceService())->getRecords(null, $this->from, $this->to);
         }
         $fromDate = '1970-01-01';
@@ -228,13 +224,13 @@ class AgentInvoice extends Component
                 $year = substr($this->to, 2, 2);
                 $twoDigitYear = substr($this->to, 2, 2);
 
-// Convert the two-digit year to a full four-digit year
+                // Convert the two-digit year to a full four-digit year
                 $fourDigitYear = Carbon::createFromFormat('y', $twoDigitYear)->year;
 
                 $lastRow = \App\Models\AgentInvoice::query()
                     ->where('last_valid_invoice', 1)
                     ->whereYear('from', $fourDigitYear)
-                    ->orderBy('invoice_title','desc')
+                    ->orderBy('invoice_title', 'desc')
                     ->latest()
                     ->first();
 
@@ -244,7 +240,7 @@ class AgentInvoice extends Component
                     $nextInvoiceNumber = intval(trim(substr($lastRow->invoice_title, 10, 3))) + 1;
 
                     //in case this is a new year not past year
-                    if($year != $lastTwoDigitsOfYear){
+                    if ($year != $lastTwoDigitsOfYear) {
                         $lastTwoDigitsOfYear = $year;
                         $nextInvoiceNumber = 1;
                     }
@@ -280,7 +276,7 @@ class AgentInvoice extends Component
                     ->first();
 
 
-                if($totalAmount > 0){
+                if ($totalAmount > 0) {
                     if (!is_null($rawExistBeforeForAgent)) {
                         $rawExistBeforeForAgent->update([
                             'total_amount' => $totalAmount,
@@ -293,9 +289,9 @@ class AgentInvoice extends Component
 
                         $lastValidInvoice = 1;
 
-                        if($checkAgentIsHidden->is_visible == 0 ){
+                        if ($checkAgentIsHidden->is_visible == 0) {
 
-                            $invoiceTitle = $checkAgentIsHidden->name . ' '. $this->from. ' - ' . $this->to;
+                            $invoiceTitle = $checkAgentIsHidden->name . ' ' . $this->from . ' - ' . $this->to;
                             $lastValidInvoice = 0;
                         }
 
@@ -320,7 +316,7 @@ class AgentInvoice extends Component
 
     public function hideSaveInvoiceMessage()
     {
-        $this->showSaveInvoiceMessage= false;
+        $this->showSaveInvoiceMessage = false;
     }
 
     public function endYear()
@@ -376,25 +372,25 @@ class AgentInvoice extends Component
             ->first();
 
 
-        $url = route('admin.report.print.agent_invoices', ['agent' => $this->agentEmailed,'fromDate' => $this->from,'toDate' => $this->to, 'invoice' => $invoice->id]);
+        $url = route('admin.report.print.agent_invoices', ['agent' => $this->agentEmailed, 'fromDate' => $this->from, 'toDate' => $this->to, 'invoice' => $invoice->id]);
         $this->emit('printTable', $url);
     }
 
-    public function getRecords($export= false, $agent = null, $from = null, $to = null)
+    public function getRecords($export = false, $agent = null, $from = null, $to = null)
     {
 
         $carbonFrom = Carbon::parse($this->from);
         $carbonFrom->subDay();
-        if(!$this->agent && !$this->from && !$this->to){
+        if (!$this->agent && !$this->from && !$this->to) {
             return [];
         }
-        if($export) {
+        if ($export) {
             $agentData = (new AgentInvoiceService())->getAgentData($agent, $from, $to);
             $agentData['agent'] = Agent::query()->find($this->agent); // Add agent_id to the data
             $data['agents'][] = $agentData;
             return $data;
         }
-        return (new AgentInvoiceService())->getRecords($agent, $from,$to);
+        return (new AgentInvoiceService())->getRecords($agent, $from, $to);
     }
 
     protected function getAgentData($agentId, $from, $to)
@@ -449,7 +445,7 @@ class AgentInvoice extends Component
             ->whereDate('to', $this->to)
             ->first();
 
-        if(is_null($this->agentEmailed) || $this->agentEmailed =='no_result') {
+        if (is_null($this->agentEmailed) || $this->agentEmailed == 'no_result') {
             $this->message = "You must choose travel agent";
             return;
         }
@@ -457,25 +453,25 @@ class AgentInvoice extends Component
         $agent = Agent::query()->find($this->agentEmailed);
 
         $request->merge([
-           'agent' => $this->agentEmailed,
-           'fromDate' => $this->from,
-           'toDate' => $this->to,
+            'agent' => $this->agentEmailed,
+            'fromDate' => $this->from,
+            'toDate' => $this->to,
             'invoice' => $invoice->id,
         ]);
 
 
         $emails = explode(',', $this->email);
-        foreach ($emails as $email){
+        foreach ($emails as $email) {
             Mail::to($email)->send(new AgentInvoiceMail($agent, $this->from, $this->to));
         }
         $this->toggleShowModal();
 
-//        $this->agent = null;
-//        return redirect()->to(route('admin.report.agent_invoices'));
+        //        $this->agent = null;
+        //        return redirect()->to(route('admin.report.agent_invoices'));
     }
 
 
-    public function exportReport(Request $request,$id)
+    public function exportReport(Request $request, $id)
     {
         $data = (new AgentInvoiceService())->getRecords($id, $this->from, $this->to);
 
@@ -492,15 +488,17 @@ class AgentInvoice extends Component
             'toDate' => $this->to,
             'invoice' => $invoice->id
         ]);
+        $agent = Agent::query()->find($id);
+        $name = $agent ?  $agent->name.'_invoice.csv' : 'agent_invoice.csv';
 
         $fileExport = (new \App\Exports\Reports\AgentInvoiceExport($data));
-        return Excel::download($fileExport, 'agent_invoice.csv');
+        return Excel::download($fileExport, $name);
     }
 
     public function getRules()
     {
         return [
-          'email' => ['required']
+            'email' => ['required']
         ];
     }
 
@@ -511,7 +509,7 @@ class AgentInvoice extends Component
 
     public function render()
     {
-        $records = $this->getRecords(false,$this->agent, $this->from, $this->to);
+        $records = $this->getRecords(false, $this->agent, $this->from, $this->to);
         return view('livewire.admin.reports.agent-invoice', compact('records'))->layout('layouts.admin');
     }
 }

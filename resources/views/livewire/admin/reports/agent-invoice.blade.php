@@ -92,11 +92,23 @@
                         $totalApplicationAmount =0;
                         $totalForInvoice= 0;
                         $allAmountFromDayOneUntilEndOfInvoice =0;
+                        $oldBalance = 0;
                     @endphp
 
-                    @foreach($records['agents'] as $agent)
+                    @foreach($records['agents'] as $index=> $agent)
                         @if(!is_null($agent['agent']))
-                        <tr>
+                        @if($index != 0)
+                        <tr style="eight: 30px !important;display: block;border: 1px solid transparent;">
+                            <td class="text-center">&nbsp;</td>
+                            <td class="text-center">&nbsp;</td>
+                            <td class="text-center">&nbsp;</td>
+                            <td class="text-center">&nbsp;</td>
+                            <td class="text-center">&nbsp;</td>
+                            <td class="text-center">&nbsp;</td>
+
+                        </tr>
+                        @endif
+                        <tr >
                             <td class="text-uppercase"><strong>{{$agent['agent']['name']}}</strong></td>
                             <td></td>
                             <td></td>
@@ -123,13 +135,15 @@
                                     <td class="text-center">{{ $visa->qty }}</td>
                                     <td class="text-center">{{ \App\Helpers\formatCurrency($visa->total)  }}</td>
                                     <td class="text-center">{{ \App\Helpers\formatCurrency($visa->totalAmount) }}</td>
+                                    <td class="text-center">&nbsp;</td>
                                 </tr>
+                                
                             @endforeach
                         @endif
 
                         {{-- Display Service information --}}
                         @if(isset($agent['services']) && count($agent['services']) > 0)
-                            @foreach($agent['services'] as $service)
+                            @foreach($agent['services'] as $key => $service)
                                 <tr>
                                     @php
                                         $totalAmount += $service->totalAmount;
@@ -139,7 +153,9 @@
                                     <td class="text-center">{{ $service->qty }}</td>
                                     <td class="text-center">{{ \App\Helpers\formatCurrency($service->amount) }}</td>
                                     <td class="text-center">{{ \App\Helpers\formatCurrency($service->totalAmount) }}</td>
+                                    <td class="text-center">&nbsp;</td>
                                 </tr>
+                                <tr></tr>
                             @endforeach
                         @endif
                         @php
@@ -212,6 +228,8 @@
                     </tfooter>
                     </tbody>
                 </table>
+                <p class="text-center">Amount due is {{\App\Helpers\convertNumberToWorldsInUsd($oldBalance+ $totalAmount)}}</p>
+
             @else
                 <div class="row" style="margin-top: 10px">
                     <div class="alert alert-warning">@lang('site.no_data_to_display')</div>
@@ -224,6 +242,16 @@
 @push('scripts')
 @include('livewire.admin.shared.agent_search_script')
 
+<style>
+     td, tfoot, th, thead, tr{
+white-space: nowrap;
+
+    }
+    tr{
+        vertical-align: middle;
+        
+    }
+</style>
 <script>
     document.addEventListener('livewire:load', function () {
         Livewire.on('showApplicationInvoiceModal', function (application) {
