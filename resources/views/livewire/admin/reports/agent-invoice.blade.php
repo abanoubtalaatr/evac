@@ -92,6 +92,7 @@
                         $totalApplicationAmount =0;
                         $totalForInvoice= 0;
                         $allAmountFromDayOneUntilEndOfInvoice =0;
+                        $oldBalance = 0;
                     @endphp
 
                     @foreach($records['agents'] as $index=> $agent)
@@ -227,6 +228,8 @@
                     </tfooter>
                     </tbody>
                 </table>
+                <p class="text-center">Amount due is {{\App\Helpers\convertNumberToWorldsInUsd($oldBalance+ $totalAmount)}}</p>
+
             @else
                 <div class="row" style="margin-top: 10px">
                     <div class="alert alert-warning">@lang('site.no_data_to_display')</div>
