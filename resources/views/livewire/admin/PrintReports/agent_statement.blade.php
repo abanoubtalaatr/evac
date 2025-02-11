@@ -123,7 +123,6 @@
             @php
                 $totalDrCount = 0;
                 $totalCrCount = 0;
-            $outStanding = $records['totalDrCount'] -  $records['totalCrCount'];
 
                 if (\App\Helpers\isOwner()) {
                     if (isset($agent)) {
@@ -185,9 +184,10 @@
 
                 $records['totalDrCount'] = $totalDrCount;
                 $records['totalCrCount'] = $totalCrCount;
+                $outStanding = $records['totalDrCount'] -  $records['totalCrCount'];
 
                 $records['data'] = $combinedResults;
-                $outStanding = $records['totalDrCount'] -  $records['totalCrCount'];
+                
 
 
             @endphp

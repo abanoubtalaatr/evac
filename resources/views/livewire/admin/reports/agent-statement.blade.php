@@ -38,7 +38,13 @@
             @php
             $totalDrCount= 0;
             $totalCrCount = 0;
-            $outStanding = $records['totalDrCount'] -  $records['totalCrCount'];
+            $outStanding =0;
+            if(isset($records)){
+                if(isset($records['totalDrCount']) && isset($records['totalDrCount']) > 0){
+                    $outStanding = $records['totalDrCount'] -  $records['totalCrCount'];
+                }
+
+            }
             
             @endphp
             @if(isset($records) && count($records) > 0)
@@ -107,7 +113,7 @@
 
                     </tbody>
                 </table>
-                <p class="text-center"> Outstanding Balance is {{\App\Helpers\convertNumberToWorldsInUsd($outStanding??0)}}</p>
+                <p class="text-center"> Outstanding Balance is {{\App\Helpers\convertNumberToWorldsInUsd(isset($outStanding) ? $outStanding:0)}}</p>
             @else
                 <div class="row" style="margin-top: 10px">
                     <div class="alert alert-warning">Search by agent</div>
