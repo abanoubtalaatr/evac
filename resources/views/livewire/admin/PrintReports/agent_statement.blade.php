@@ -100,7 +100,7 @@
 <body>
 
 <main>
-    @include('livewire.admin.shared.reports.header')
+    @include('livewire.admin.shared.reports.header', ['showReportsAgentStatement' => true])
     <!--dashboard-->
     <section class="dashboard">
         <div class="row">
@@ -111,18 +111,19 @@
 
            @endphp
         @if($agent)
-                <h4>Agent : {{$agent->name}}</h4>
-                <h4>Financial No: {{$agent->finance_no}}</h4>
+                <span class="span-block">Agent : {{$agent->name}}</span>
+                <span class="span-block">Financial No: {{$agent->finance_no}}</span>
 
             @endif
 
             @if(request()->fromDate && request()->toDate)
-                <h4>From : {{request()->fromDate}} - To : {{request()->toDate}}</h4>
+                <h4>{{request()->fromDate}} -  {{request()->toDate}}</h4>
             @endif
 
             @php
                 $totalDrCount = 0;
                 $totalCrCount = 0;
+            $outStanding = $records['totalDrCount'] -  $records['totalCrCount'];
 
                 if (\App\Helpers\isOwner()) {
                     if (isset($agent)) {
@@ -186,6 +187,8 @@
                 $records['totalCrCount'] = $totalCrCount;
 
                 $records['data'] = $combinedResults;
+                $outStanding = $records['totalDrCount'] -  $records['totalCrCount'];
+
 
             @endphp
 
@@ -193,8 +196,9 @@
                 <table class="table-page table">
                     <thead>
                     <tr>
-                        <th class="text-center">Date</th>
-                        <th class="text-center">@lang('admin.description')</th>
+                        <th class="text-center">Inv No</th>
+                        <th class="text-center">From</th>
+                        <th class="text-center">To</th>
                         <th class="text-center">Db.</th>
                         <th class="text-center">Cr.</th>
 
@@ -205,8 +209,10 @@
                     @foreach($records['data'] as $record)
                         @if($record instanceof \App\Models\AgentInvoice)
                             <tr>
-                                <td class="text-center">{{$record['from'] . ' - ' . $record['to']}}</td>
-                                <td class =text-center>{{$record->invoice_title}}</td>
+                                <td>{{$record['invoice_title']}}</td>
+                                <td class="text-center">{{$record['from']}}</td>
+                                <td class="text-center">{{$record['to']}}</td>
+                                
                                 @php
                                     $totalDrCount += $record->total_amount;
                                 @endphp
@@ -216,6 +222,7 @@
                         @else
                             <tr>
                                 <td class="text-center">{{\Illuminate\Support\Carbon::parse($record->created_at)->format('Y-m-d')}}</td>
+                               <td></td>
                                 <td class='text-center'>Payment received</td>
                                 <td class="text-center"></td>
                                 <td class="text-center">{{\App\Helpers\formatCurrency($record->amount)}}</td>
@@ -244,11 +251,19 @@
 
                     </tbody>
                 </table>
+                <p class="text-center"> Outstanding Balance is {{\App\Helpers\convertNumberToWorldsInUsd($outStanding??0)}}</p>
+
             @endif
       </div>
     </section>
     @include('livewire.admin.shared.reports.footer')
-
+    <style>
+        .span-block{
+            display: block;
+            margin-bottom: 3px;
+            font-size: 12px;
+        }
+    </style>
 </main>
 
 </body>

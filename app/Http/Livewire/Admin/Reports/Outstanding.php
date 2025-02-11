@@ -31,6 +31,7 @@ class Outstanding extends Component
 
     public function mount()
     {
+        
         $this->page_title = __('admin.outstanding');
     }
 
@@ -114,12 +115,15 @@ class Outstanding extends Component
 
             $totalUnPaidBal += $totalUnPaidForEveryAgent;
 
-            $totalSalesByAgent[] = [
-                'agent_id' => $agent->id,
-                'agent_name' => $agent->name,
-                'total_sales' => $totalSales,
-                'un_paid_bail' => $totalSales - $paidBal,
-            ];
+            if(($totalSales - $paidBal) > 0){
+                $totalSalesByAgent[] = [
+                    'agent_id' => $agent->id,
+                    'agent_name' => $agent->name,
+                    'total_sales' => $totalSales,
+                    'un_paid_bail' => $totalSales - $paidBal,
+                ];
+            }
+            
         }
         $dataDirect = DB::table(DB::raw('(SELECT name, surname, vat, service_fee, dubai_fee FROM service_transactions WHERE status != "deleted" AND agent_id IS NULL
                     UNION ALL
@@ -146,11 +150,14 @@ class Outstanding extends Component
                 ->where('payment_method', 'invoice')
                 ->sum(DB::raw('service_fee + vat + dubai_fee'));
 
-            $data['directs'][] = [
-                'name' => $item->name . ' ' . $item->surname,
-                'total' => $item->total_combined_fee,
-                'un_paid' => $unpaidAmount,
-            ];
+            if($unpaidAmount > 0){
+                $data['directs'][] = [
+                    'name' => $item->name . ' ' . $item->surname,
+                    'total' => $item->total_combined_fee,
+                    'un_paid' => $unpaidAmount,
+                ];
+                    
+            }
 
             $totalDirectSales += $item->total_combined_fee;
             $totalUnPaidBalDirect += $unpaidAmount;

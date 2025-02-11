@@ -2,16 +2,9 @@
 
 namespace App\Http\Livewire\Admin\Reports;
 
-use App\Exports\Reports\AgentApplicationExport;
-use App\Mail\AgentApplicationsMail;
-use App\Mail\Reports\AgentInvoiceMail;
 use App\Mail\Reports\AgentStatementMail;
 use App\Models\Agent;
-use App\Models\Application;
 use App\Models\PaymentTransaction;
-use App\Models\Service;
-use App\Models\ServiceTransaction;
-use App\Models\Setting;
 use App\Models\VisaType;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
@@ -182,10 +175,9 @@ class AgentStatement extends Component
     public function exportReport()
     {
         $fileExport = (new \App\Exports\Reports\AgentStatementExport($this->getRecords(), $this->agent));
-//        $this->agent = null;
-//        $this->from = null;
-//        $this->to = null;
-        return Excel::download($fileExport, 'agent_statement.csv');
+        $agent = Agent::query()->find($this->agent);
+        $name = $agent ?  $agent->name.'.csv' : 'agent_statement.csv';
+        return Excel::download($fileExport, $name);
     }
 
     public function getRules()

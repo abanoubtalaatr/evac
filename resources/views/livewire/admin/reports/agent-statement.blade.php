@@ -38,14 +38,17 @@
             @php
             $totalDrCount= 0;
             $totalCrCount = 0;
-
+            $outStanding = $records['totalDrCount'] -  $records['totalCrCount'];
+            
             @endphp
             @if(isset($records) && count($records) > 0)
                 <table class="table-page table">
                     <thead>
                     <tr>
-                        <th class="text-center">Date</th>
-                        <th class="text-center">@lang('admin.description')</th>
+                        <th class="text-center">Inv No</th>
+                        <th class="text-center">From</th>
+                        <th class="text-center">To</th>
+                        {{-- <th class="text-center">@lang('admin.description')</th> --}}
                         <th class="text-center">Db.</th>
                         <th class="text-center">Cr.</th>
 
@@ -54,11 +57,14 @@
                     <tbody>
 
                     @foreach($records['data'] as $record)
+                    
                         @if($record instanceof \App\Models\AgentInvoice)
 
                             <tr>
-                                <td class="text-center">{{$record['from'] . ' - ' . $record['to']}}</td>
-                                <td class="text-center">{{$record->invoice_title}}</td>
+                                <td class="text-center">{{$record['invoice_title']}}</td>
+                                <td class="text-center">{{$record['from'] }}</td>
+                                <td class="text-center"> {{ $record['to']}}</td>
+                                
                                 @php
                                     $totalDrCount += $record->total_amount;
                                 @endphp
@@ -67,7 +73,9 @@
                             </tr>
                         @else
                             <tr>
+                                
                                 <td class="text-center">{{\Illuminate\Support\Carbon::parse($record->created_at)->format('Y-m-d')}}</td>
+                                <td></td>
                                 <td class='text-center'>Payment received</td>
                                 <td class="text-center"></td>
                                 <td class="text-center">{{\App\Helpers\formatCurrency($record->amount)}}</td>
@@ -99,6 +107,7 @@
 
                     </tbody>
                 </table>
+                <p class="text-center"> Outstanding Balance is {{\App\Helpers\convertNumberToWorldsInUsd($outStanding??0)}}</p>
             @else
                 <div class="row" style="margin-top: 10px">
                     <div class="alert alert-warning">Search by agent</div>

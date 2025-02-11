@@ -44,7 +44,7 @@
                         <th class="text-center">#</th>
                         <th class="text-center" >Date</th>
                         <th class="text-center">REF</th>
-                        <th class="text-center">Passport No</th>
+                        <th class="text-center">PASSPORT NO</th>
                         <th class="text-center">NAME</th>
                         <th class="text-center">Type</th>
                     </tr>
@@ -55,7 +55,7 @@
                             <td class="text-center">#{{$loop->index + 1}}</td>
                             <td class='text-center'><button class="border-0">{{\Illuminate\Support\Carbon::parse($record->created_at)->format('Y-m-d')}}</button></td>
                             <td class='text-center'>{{$record->application_ref }} </td>
-                            <td class='text-center'>{{$record?->passport_no }} </td>
+                            <td class='text-center' style="text-transform: capitalize">{{$record?->passport_no }} </td>
                             <td class="text-center " style="text-transform: uppercase">{{ $record->first_name . ' ' . $record->last_name }}</td>
                             <td class='text-center'>{{ $record->visaType->name}}</td>
 
