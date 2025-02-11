@@ -108,6 +108,7 @@
 
     <!--dashboard-->
     <section class="dashboard">
+        <h4 class="text-center">INVOICE</h4>
         <div class="row">
 
            @php

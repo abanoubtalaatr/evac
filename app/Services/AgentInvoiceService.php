@@ -20,6 +20,7 @@ class AgentInvoiceService
             $agentData = $this->getAgentData($agent, $fromDate, $toDate);
             $agentData['agent'] = Agent::query()->find($agent); // Add agent_id to the data
             $data['agents'][] = $agentData;
+            
             return $data;
         } else{
             // Display data for all agents with applications this week or service transactions
@@ -62,7 +63,10 @@ class AgentInvoiceService
 
             $visa->qty = $applications->count();
             $visa->totalAmount = $totalAmount; // Assign total amount to the visa
-            $data['visas'][] = $visa;
+            if($totalAmount > 0){
+                $data['visas'][] = $visa;    
+            }
+            
         }
 
         $services = Service::query()->get();
@@ -92,7 +96,10 @@ class AgentInvoiceService
 
             $service->qty = $serviceTransactions->count();
             $service->totalAmount = $totalAmount; // Assign total amount to the service
-            $data['services'][] = $service;
+            if($totalAmount > 0){
+                $data['services'][] = $service;    
+            }
+            
         }
 
         return $data;
