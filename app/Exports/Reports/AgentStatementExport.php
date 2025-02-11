@@ -1,7 +1,6 @@
 <?php
 
 namespace App\Exports\Reports;
-
 use App\Models\Agent;
 use App\Models\PaymentTransaction;
 use App\Models\Setting;
@@ -20,10 +19,10 @@ class AgentStatementExport implements FromCollection
     protected $data;
     protected $agent = null;
 
-    public function __construct($data, $agent = null)
+    public function __construct($data, $agent=null)
     {
         $this->data = $data;
-        if ($agent) {
+        if($agent){
             $this->agent = Agent::query()->find($agent);
         }
     }
@@ -32,98 +31,85 @@ class AgentStatementExport implements FromCollection
     {
         $dataRows = [];
 
-        $rowCount = 1;
+        $rowCount =1;
         $totalCrCount = 0;
         $totalDbCount = 0;
 
         $dataRows = $this->heading();
-        if (isset($this->data['data'])) {
-            foreach ($this->data['data'] as $item) {
-                if ($item instanceof \App\Models\AgentInvoice) {
+        if(isset($this->data['data'])){
+            foreach ($this->data['data'] as $item){
+                if( $item instanceof \App\Models\AgentInvoice){
                     $totalDbCount += $item->total_amount;
 
                     $dataRows[] = [
-                        'Inv No' => $item->invoice_title,
-                        'from' => $item->form,
-                        'to' => $item->to,
+                        'Date' => Carbon::parse($item->created_at)->format('Y-m-d'),
+                        'Description' => $item->invoice_title,
                         'Db' => "$" . formatCurrency($item->total_amount),
                         'Cr' => '',
                     ];
-                } else {
+                }else{
                     $totalCrCount += $item->amount;
 
                     $dataRows[] = [
-                        'Inv No' => Carbon::parse($item->created_at)->format('Y-m-d'),
-                        'from' => $item->form,
-                        'Description' => "Payment received",
+                        'Date' => Carbon::parse($item->created_at)->format('Y-m-d'),
+                        'Description' =>"Payment received",
                         'Db' => "$" . formatCurrency($item->amount),
                         'Cr' => '',
                     ];
                 }
+
             }
         }
 
         $dataRows[] = [
-            'Inv No' => '',
-            'from' => '',
-            'to' => '',
+            'Date' => '',
+            'Description' => '',
             'Db' => '',
             'Cr' => '',
         ];
 
         $dataRows[] = [
-            'Inv No' => '',
-            'from' => '',
-            'to' => '',
+            'Date' => '',
+            'Description' => '',
             'Db' => '',
             'Cr' => '',
         ];
         $dataRows[] = [
-            'Inv No' => '',
-            'from' => '',
-            'to' => 'Totals',
+            'Date' => '',
+            'Description' => 'Totals',
             'Db' => '$' . formatCurrency($totalDbCount),
             'Cr' => "$ " . formatCurrency($totalCrCount),
         ];
 
         $dataRows[] = [
-
-            'Inv No' => '',
-            'from' => '',
-            'to' => 'Outstanding bal',
+            'Date' => '',
+            'Description' => 'Outstanding bal',
             'Db' => "$ " . formatCurrency($totalDbCount -  $totalCrCount),
-            'Cr' => "$ " . '',
-
+            'Cr' => '',
         ];
 
-        for ($i = 0; $i < 1; $i++) {
+        for($i =0 ; $i < 1; $i++){
             $dataRows[] = [
-                'Inv No' => '',
-                'from' => '',
-                'to' => '',
-                'Db' => '',
-                'Cr' => '',
+                'Date' => '',
+                'Description' => "",
+                'Db' => "",
+                'Cr' => "",
             ];
         }
         $dataRows[] = [
-
-            'Inv No' => "Amount due in words : " . convertNumberToWorldsInUsd(formatCurrency($totalDbCount)),
-                'from' => '',
-                'to' => '',
-                'Db' => '',
-                'Cr' => '',
+            'Date' => "Amount due in words : " . convertNumberToWorldsInUsd(formatCurrency($totalDbCount)) ,
+            'Description' => '',
+            'Db' => '',
+            'Cr' => '',
         ];
 
 
         $settings = Setting::query()->first();
         $dataRows[] = [
-            
-
-            'Inv No' => $settings->invoice_footer,
-                'from' => '',
-                'to' => '',
-                'Db' => '',
-                'Cr' => '',
+            'Date' =>  $settings->invoice_footer,
+            'Description' => '',
+            'Db' => '',
+            'Cr' => '',
         ];
         return collect($dataRows);
     }
@@ -131,221 +117,185 @@ class AgentStatementExport implements FromCollection
     public function headings(): array
     {
         return [
-            'Inv No' => '',
-            'from' => '',
-            'to' => '',
-            'Db' => '',
-            'Cr' => '',
+            'Date',
+            'Description',
+            'Db',
+            'Cr',
         ];
     }
 
     public function heading()
     {
         $dataRows[] = [
-            'Inv No' => 'EVAC',
-            'from' => '',
-            'to' => '',
-            'Db' => '',
-            'Cr' => '',
+            'Date' => "EVAC",
+            'Description' => "",
+            'Db' => "",
+            'Cr' => "",
         ];
-        for ($i = 0; $i < 1; $i++) {
+        for ($i = 0 ; $i< 1; $i++){
             $dataRows[] = [
-                'Inv No' => '',
-                'from' => '',
-                'to' => '',
-                'Db' => '',
-                'Cr' => '',
+                'Date' => "",
+                'Description' => "",
+                'Db' => "",
+                'Cr' => "",
             ];
         }
 
         $dataRows[] = [
-
-            'Inv No' => 'Diyarna Center - Zekrit - Lebanon',
-            'from' => '',
-            'to' => '',
-            'Db' => '',
-            'Cr' => '',
+            'Date' => "Diyarna Center - Zekrit - Lebanon",
+            'Description' => "",
+            'Db' => "",
+            'Cr' => "",
         ];
-        for ($i = 0; $i < 1; $i++) {
+        for ($i = 0 ; $i< 1; $i++){
             $dataRows[] = [
-                'Inv No' => '',
-                'from' => '',
-                'to' => '',
-                'Db' => '',
-                'Cr' => '',
+                'Date' => "",
+                'Description' => "",
+                'Db' => "",
+                'Cr' => "",
             ];
         }
 
         $settings = Setting::query()->first();
 
         $dataRows[] = [
-
-            "Reg No : " . $settings->registration_no,
-            'from' => '',
-            'to' => '',
-            'Db' => '',
-            'Cr' => '',
+            'Date' => "Reg No : " . $settings->registration_no,
+            'Description' => "",
+            'Db' => "",
+            'Cr' => "",
         ];
-        for ($i = 0; $i < 1; $i++) {
+        for ($i = 0 ; $i< 1; $i++){
             $dataRows[] = [
-                'Inv No' => '',
-                'from' => '',
-                'to' => '',
-                'Db' => '',
-                'Cr' => '',
+                'Date' => "",
+                'Description' => "",
+                'Db' => "",
+                'Cr' => "",
             ];
         }
         $dataRows[] = [
-
-            'Inv No' => "Tel : " . $settings->mobile,
-            'from' => '',
-            'to' => '',
-            'Db' => '',
-            'Cr' => '',
+            'Date' => "Tel : " . $settings->mobile,
+            'Description' => "",
+            'Db' => "",
+            'Cr' => "",
         ];
-        for ($i = 0; $i < 1; $i++) {
+        for ($i = 0 ; $i< 1; $i++){
             $dataRows[] = [
-                'Inv No' => "",
-                'from' => '',
-                'to' => '',
-                'Db' => '',
-                'Cr' => '',
+                'Date' => "",
+                'Description' => "",
+                'Db' => "",
+                'Cr' => "",
             ];
         }
 
-        if ($this->agent) {
+        if($this->agent){
             $dataRows[] = [
-
-                'Inv No' =>  "Agent : " . $this->agent->name,
-                'from' => '',
-                'to' => '',
-                'Db' => '',
-                'Cr' => '',
+                'Date' => "Agent : " . $this->agent->name,
+                'Description' => "",
+                'Db' => "",
+                'Cr' => "",
             ];
-            for ($i = 0; $i < 1; $i++) {
+            for ($i = 0 ; $i< 1; $i++){
                 $dataRows[] = [
-                    'Inv No' =>  "",
-                    'from' => '',
-                    'to' => '',
-                    'Db' => '',
-                    'Cr' => '',
+                    'Date' => "",
+                    'Description' => "",
+                    'Db' => "",
+                    'Cr' => "",
                 ];
             }
             $dataRows[] = [
-
-
-                'Inv No' =>  "Agent AdDbess : " . $this->agent->adDbess,
-                'from' => '',
-                'to' => '',
-                'Db' => '',
-                'Cr' => '',
+                'Date' => "Agent AdDbess : " . $this->agent->adDbess,
+                'Description' => "",
+                'Db' => "",
+                'Cr' => "",
             ];
-            for ($i = 0; $i < 1; $i++) {
+            for ($i = 0 ; $i< 1; $i++){
                 $dataRows[] = [
-                    'Inv No' =>  "",
-                    'from' => '',
-                    'to' => '',
-                    'Db' => '',
-                    'Cr' => '',
+                    'Date' => "",
+                    'Description' => "",
+                    'Db' => "",
+                    'Cr' => "",
                 ];
             }
             $dataRows[] = [
-
-
-                'Inv No' => "Financial No : " . $this->agent->financial_no,
-                'from' => '',
-                'to' => '',
-                'Db' => '',
-                'Cr' => '',
+                'Date' => "Financial No : " . $this->agent->financial_no,
+                'Description' => "",
+                'Db' => "",
+                'Cr' => "",
             ];
-            for ($i = 0; $i < 1; $i++) {
+            for ($i = 0 ; $i< 1; $i++){
                 $dataRows[] = [
-
-                    'Inv No' => "",
-                    'from' => '',
-                    'to' => '',
-                    'Db' => '',
-                    'Cr' => '',
+                    'Date' => "",
+                    'Description' => "",
+                    'Db' => "",
+                    'Cr' => "",
                 ];
             }
             $dataRows[] = [
-
-
-                'Inv No' => "Tel : " . $this->agent->telephone,
-                'from' => '',
-                'to' => '',
-                'Db' => '',
-                'Cr' => '',
+                'Date' => "Tel : " . $this->agent->telephone,
+                'Description' => "",
+                'Db' => "",
+                'Cr' => "",
             ];
-            for ($i = 0; $i < 1; $i++) {
+            for ($i = 0 ; $i< 1; $i++){
                 $dataRows[] = [
-
-                    'Inv No' => "",
-                    'from' => '',
-                    'to' => '',
-                    'Db' => '',
-                    'Cr' => '',
+                    'Date' => "",
+                    'Description' => "",
+                    'Db' => "",
+                    'Cr' => "",
                 ];
             }
             $dataRows[] = [
-
-                'Inv No' => "Agent statement",
-                'from' => '',
-                'to' => '',
-                'Db' => '',
-                'Cr' => '',
+                'Date' => "Agent statement",
+                'Description' => "",
+                'Db' => "",
+                'Cr' => "",
             ];
 
-            for ($i = 0; $i < 1; $i++) {
+            for ($i = 0 ; $i< 1; $i++){
                 $dataRows[] = [
-                    'Inv No' => "",
-                    'from' => '',
-                    'to' => '',
-                    'Db' => '',
-                    'Cr' => '',
+                    'Date' => "",
+                    'Description' => "",
+                    'Db' => "",
+                    'Cr' => "",
                 ];
             }
             $dataRows[] = [
-                'Inv No' => "Account no : " . $this->agent->account_no,
-                'from' => '',
-                'to' => '',
-                'Db' => '',
-                'Cr' => '',
+                'Date' => "Account no : ". $this->agent->account_no,
+                'Description' => "",
+                'Db' => "",
+                'Cr' => "",
             ];
-            for ($i = 0; $i < 1; $i++) {
+            for ($i = 0 ; $i< 1; $i++){
                 $dataRows[] = [
-                    'Inv No' => "",
-                    'from' => '',
-                    'to' => '',
-                    'Db' => '',
-                    'Cr' => '',
+                    'Date' => "",
+                    'Description' => "",
+                    'Db' => "",
+                    'Cr' => "",
                 ];
             }
             $dataRows[] = [
-
-                'Inv No' => "Date : " . Carbon::parse(now())->format('Y-m-d'),
-                'from' => '',
-                'to' => '',
-                'Db' => '',
-                'Cr' => '',
+                'Date' => "Date : " . Carbon::parse(now())->format('Y-m-d'),
+                'Description' => "",
+                'Db' => "",
+                'Cr' => "",
             ];
-            for ($i = 0; $i < 1; $i++) {
+            for ($i = 0 ; $i< 1; $i++){
                 $dataRows[] = [
-                    'Inv No' => "",
-                    'from' => '',
-                    'to' => '',
-                    'Db' => '',
-                    'Cr' => '',
+                    'Date' => "",
+                    'Description' => "",
+                    'Db' => "",
+                    'Cr' => "",
                 ];
             }
+
         }
         $dataRows[] = [
-            'Inv No' => "Date",
-            'from' => '',
-            'to' => '',
-            'Db' => '',
-            'Cr' => '',
+            'Date' => "Date",
+            'Description' => "Description",
+            'Db' => "Db",
+            'Cr' => "Cr",
         ];
         return $dataRows;
     }
+
 }
