@@ -7,6 +7,9 @@
     @if($logoPath && file_exists($logoPath))
         <img width="70" height="70" src="data:image/png;base64,{{ base64_encode(file_get_contents($logoPath)) }}">
     @endif
+    @if(isset($showInvoiceTitle))
+    <h4 class="text-center">INVOICE</h4>
+    @endif
 </div>
 
     <span class="span-block">Evac</span>

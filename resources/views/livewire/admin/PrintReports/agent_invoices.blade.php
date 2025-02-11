@@ -104,11 +104,11 @@
 <body>
 
 <main>
-    @include('livewire.admin.shared.reports.header')
+    @include('livewire.admin.shared.reports.header', ['showInvoiceTitle' => true])
 
     <!--dashboard-->
     <section class="dashboard">
-        <h4 class="text-center">INVOICE</h4>
+        
         <div class="row">
 
            @php
