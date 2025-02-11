@@ -26,7 +26,9 @@ class AgentInvoiceMail extends Mailable
         $name = $this->agent ? $this->agent->name.'_invoice.pdf':"agent_invoice.pdf";
         return $this->attachData($this->generatePdf(), $name)
             ->subject("EVAC - "  . $name. " Invoice")
-            ->view('emails.TravelAgent.agent-applications-body');
+            ->view('emails.TravelAgent.agent-applications-body',[
+                'agentInvoice' => true
+            ]);
 
     }
 

@@ -9,7 +9,7 @@
     <br>
     <span style="margin-bottom: 10px">
         @if(isset($agentStatement))
-        Kindly find attached your statement of account till date.
+        Kindly find attached your statement of account.
 
         @elseif(isset($agentInvoice))
         Kindly find attached invoice.
