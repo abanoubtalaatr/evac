@@ -161,7 +161,7 @@
                         $totalAmount = 0;
                         $totalApplicationAmount =0;
                         $totalServiceTransactionsAmount =0;
-                        $displayTotalGrandInWords = 0;
+                        $oldBalance = 0;
                     @endphp
 
 
@@ -174,7 +174,7 @@
                                     <tr>
                                         @php
                                             $totalAmount += $visa->totalAmount;
-                                            $displayTotalGrandInWords +=$totalAmount;
+                                            
                                         @endphp
                                         <td class="text-center">#{{ $rowsCount++ }}</td>
                                         <td class="text-center">{{ $visa->name }}</td>
@@ -273,7 +273,7 @@
 
                     </tbody>
                 </table>
-                <p class="text-center">{{\App\Helpers\convertNumberToWorldsInUsd($totalAmount)}}</p>
+                <p class="text-center">{{\App\Helpers\convertNumberToWorldsInUsd($oldBalance+ $totalAmount)}}</p>
             @else
                 <div class="row" style="margin-top: 10px">
                     <div class="alert alert-warning">@lang('site.no_data_to_display')</div>
