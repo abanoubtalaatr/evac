@@ -29,36 +29,29 @@ class AgentStatementExport implements FromCollection, WithHeadings
 
         // Add static header information
         $dataRows[] = ["EVAC", "", "", "", ""];
-        $dataRows[] = ["", "", "", "", ""]; // Empty row for spacing
         $dataRows[] = ["Diyarna Center - Zekrit - Lebanon", "", "", "", ""];
-        $dataRows[] = ["", "", "", "", ""]; // Empty row for spacing
+        
 
         $settings = Setting::query()->first();
         $dataRows[] = ["Reg No: " . $settings->registration_no, "", "", "", ""];
-        $dataRows[] = ["", "", "", "", ""]; // Empty row for spacing
         $dataRows[] = ["Tel: " . $settings->mobile, "", "", "", ""];
         $dataRows[] = ["", "", "", "", ""]; // Empty row for spacing
 
         if ($this->agent) {
             $dataRows[] = ["Agent: " . $this->agent->name, "", "", "", ""];
-            $dataRows[] = ["", "", "", "", ""]; // Empty row for spacing
             $dataRows[] = ["Agent Address: " . $this->agent->address, "", "", "", ""];
-            $dataRows[] = ["", "", "", "", ""]; // Empty row for spacing
             $dataRows[] = ["Financial No: " . $this->agent->financial_no, "", "", "", ""];
-            $dataRows[] = ["", "", "", "", ""]; // Empty row for spacing
             $dataRows[] = ["Tel: " . $this->agent->telephone, "", "", "", ""];
             $dataRows[] = ["", "", "", "", ""]; // Empty row for spacing
             $dataRows[] = ["Agent Statement", "", "", "", ""];
-            $dataRows[] = ["", "", "", "", ""]; // Empty row for spacing
             $dataRows[] = ["Account No: " . $this->agent->account_no, "", "", "", ""];
-            $dataRows[] = ["", "", "", "", ""]; // Empty row for spacing
             $dataRows[] = ["Date: " . Carbon::parse(now())->format('Y-m-d'), "", "", "", ""];
-            $dataRows[] = ["", "", "", "", ""]; // Empty row for spacing
+          
         }
 
         // Add the main table headings
         $dataRows[] = $this->headings();
-
+        $dataRows[] = ["Inv no", "From", "To", "db", "Cr"]; // Empty row for spacing
         // Add data rows
         $totalDrCount = 0;
         $totalCrCount = 0;
@@ -89,9 +82,6 @@ class AgentStatementExport implements FromCollection, WithHeadings
             }
         }
 
-        // Add empty rows for spacing
-        $dataRows[] = ["", "", "", "", ""];
-        $dataRows[] = ["", "", "", "", ""];
 
         // Add totals row
         $dataRows[] = [
@@ -113,7 +103,7 @@ class AgentStatementExport implements FromCollection, WithHeadings
 
         // Add amount due in words
         $dataRows[] = [
-            "Amount due in words: " . convertNumberToWorldsInUsd(formatCurrency($totalDrCount)),
+            "Amount due in words: " . convertNumberToWorldsInUsd($totalDrCount - $totalCrCount),
             "",
             "",
             "",

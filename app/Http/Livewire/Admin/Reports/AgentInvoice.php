@@ -489,7 +489,7 @@ class AgentInvoice extends Component
             'invoice' => $invoice->id
         ]);
         $agent = Agent::query()->find($id);
-        $name = $agent ?  $agent->name.'.csv' : 'agent_invoice.csv';
+        $name = $agent ?  $agent->name.'_invoice.csv' : 'agent_invoice.csv';
 
         $fileExport = (new \App\Exports\Reports\AgentInvoiceExport($data));
         return Excel::download($fileExport, $name);

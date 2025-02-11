@@ -176,7 +176,7 @@ class AgentStatement extends Component
     {
         $fileExport = (new \App\Exports\Reports\AgentStatementExport($this->getRecords(), $this->agent));
         $agent = Agent::query()->find($this->agent);
-        $name = $agent ?  $agent->name.'.csv' : 'agent_statement.csv';
+        $name = $agent ?  $agent->name.'_statement.csv' : 'agent_statement.csv';
         return Excel::download($fileExport, $name);
     }
 
