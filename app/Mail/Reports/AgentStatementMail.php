@@ -28,7 +28,7 @@ class AgentStatementMail extends Mailable
         $name = $agent ? $agent->name .'.pdf' : 'agent_statement.pdf';
         $agentReport = $agent ? $agent->name .' Report': 'Agent Statement Report';
         return $this->attachData($this->generatePdf(), $name)
-            ->subject("EVAC" .' - ' . $name)
+            ->subject("EVAC" .' - ' . $agentReport)
             ->view('emails.TravelAgent.agent-applications-body');
 
     }

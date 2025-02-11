@@ -104,7 +104,7 @@
     <!--dashboard-->
     <section class="dashboard">
         <div class="row">
-            <h4>Date : {{\Illuminate\Support\Carbon::today()->format('Y-m-d')}}</h4>
+            <span class="span-block">Date : {{\Illuminate\Support\Carbon::today()->format('Y-m-d')}}</span>
 
            @php
            $agent = \App\Models\Agent::query()->find(request()->agent);
@@ -112,12 +112,12 @@
            @endphp
         @if($agent)
                 <span class="span-block">Agent : {{$agent->name}}</span>
-                <span class="span-block">Financial No: {{$agent->finance_no}}</span>
+                <span class="span-block mb-3">Financial No: {{$agent->finance_no}}</span>
 
             @endif
 
             @if(request()->fromDate && request()->toDate)
-                <h4>{{request()->fromDate}} -  {{request()->toDate}}</h4>
+                {{-- <h4>{{request()->fromDate}} -  {{request()->toDate}}</h4> --}}
             @endif
 
             @php
@@ -193,7 +193,7 @@
             @endphp
 
         @if(isset($records) && count($records) > 0)
-                <table class="table-page table">
+                <table class="table-page table mt-3">
                     <thead>
                     <tr>
                         <th class="text-center">Inv No</th>

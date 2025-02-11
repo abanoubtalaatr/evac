@@ -161,7 +161,7 @@ class AgentStatement extends Component
 
         $emails = explode(',', $this->email);
         foreach ($emails as $email){
-            Mail::to($email)->send(new AgentStatementMail($agent, $this->from, $this->to));
+            Mail::to($email)->send(new AgentStatementMail($agent->id, $this->from, $this->to));
         }
 
         $this->email = null;

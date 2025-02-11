@@ -226,7 +226,7 @@
                             <td class="text-center"style="font-size: 8px" >#{{$loop->index + 1}}</td>
                             <td  class='text-center' style="font-size: 8px">{{\Illuminate\Support\Carbon::parse($record->created_at)->format('Y-m-d')}}</td>
                             <td class='text-center' style="font-size: 8px">{{$record->application_ref  }}</td>
-                            <td class='text-center' style="font-size: 8px" style="text-transform: capitalize">{{$record?->passport_no  }}</td>
+                            <td class='text-center' style="font-size: 8px" style="text-transform: uppercase">{{$record?->passport_no  }}</td>
                             <td class="text-center" style="text-transform: uppercase;fotn-size: 8px">{{$record->first_name . ' ' . $record->last_name}}</td>
                             <td class='text-center' style="font-size: 8px">{{ $record->visaType->name}}</td>
                         </tr>
@@ -236,7 +236,7 @@
                             <td style="font-size: 8px">#{{$loop->index + 1}}</td>
                             <td class='text-center' style="font-size: 8px">{{\Illuminate\Support\Carbon::parse($record->created_at)->format('Y-m-d')}}</td>
                             <td class='text-center' style="font-size: 8px">{{$record->service_ref }} </td>
-                            <td class='text-center' style="font-size: 8px" style="text-transform: capitalize">{{$record?->passport_no  }}</td>
+                            <td class='text-center' style="font-size: 8px" style="text-transform: uppercase">{{$record?->passport_no  }}</td>
                             <td class="text-center" style="text-transform: uppercase;font-size: 8px">{{ $record->name . ' - '. $record->surname }}</td>
                             <td class='text-center' style="font-size: 8px" >{{ $record->service->name}}</td>
                         </tr>
