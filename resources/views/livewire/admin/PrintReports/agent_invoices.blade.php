@@ -128,7 +128,7 @@
             <strong class="span-block">INV No: {{$invoice? $invoice->invoice_title:""}}</strong>
 
             @if(request()->fromDate && request()->toDate)
-                <h4>From : {{request()->fromDate}} - To : {{request()->toDate}}</h4>
+                <h4>Period of sales from : {{request()->fromDate}} - To : {{request()->toDate}}</h4>
             @endif
             <br>
             @php
@@ -161,6 +161,7 @@
                         $totalAmount = 0;
                         $totalApplicationAmount =0;
                         $totalServiceTransactionsAmount =0;
+                        $displayTotalGrandInWords = 0;
                     @endphp
 
 
@@ -173,6 +174,7 @@
                                     <tr>
                                         @php
                                             $totalAmount += $visa->totalAmount;
+                                            $displayTotalGrandInWords +=$totalAmount;
                                         @endphp
                                         <td class="text-center">#{{ $rowsCount++ }}</td>
                                         <td class="text-center">{{ $visa->name }}</td>
@@ -266,10 +268,12 @@
                         <td class="text-center"><strong>$ {{ \App\Helpers\formatCurrency($oldBalance + $totalAmount) }}</strong></td>
                         <td></td>
                     </tr>
+                    
                     </tfoot>
 
                     </tbody>
                 </table>
+                <p class="text-center">{{\App\Helpers\convertNumberToWorldsInUsd($totalAmount)}}</p>
             @else
                 <div class="row" style="margin-top: 10px">
                     <div class="alert alert-warning">@lang('site.no_data_to_display')</div>
