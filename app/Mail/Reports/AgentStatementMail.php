@@ -25,11 +25,13 @@ class AgentStatementMail extends Mailable
     public function build()
     {
         $agent = Agent::query()->find($this->agent);
-        $name = $agent ? $agent->name .'_invoice.pdf' : 'agent_statement.pdf';
-        $agentReport = $agent ? $agent->name .' Report': 'Agent Statement Report';
+        $name = $agent ? $agent->name .'_statement.pdf' : 'agent_statement.pdf';
+        $agentReport = $agent ? $agent->name .' Statement': 'Agent Statement Report';
         return $this->attachData($this->generatePdf(), $name)
             ->subject("EVAC" .' - ' . $agentReport)
-            ->view('emails.TravelAgent.agent-applications-body');
+            ->view('emails.TravelAgent.agent-applications-body', [
+                'agentStatement' => true
+            ]);
 
     }
 
