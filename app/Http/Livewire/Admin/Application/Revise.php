@@ -81,6 +81,7 @@ class Revise extends Component
     public function send()
     {
         if(!empty($this->email)){
+            
             Mail::to($this->email)->send(new ReceiptApplicationsMail($this->applicationThatSendByEmail));
             $this->email = null;
             $this->showSendEmail = !$this->showSendEmail;

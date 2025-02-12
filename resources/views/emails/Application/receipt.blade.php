@@ -49,7 +49,7 @@
             <div>Passport No: {{$application->passport_no}} </div>
         </div>
         <div>Visa fees  : {{\App\Helpers\formatCurrency($application->visaType->dubai_fee)}}</div>
-        <div>Service fees  : {{\App\Helpers\formatCurrency($application->visaType->service_fee)}}</div>
+        <div>Service fees  : {{\App\Helpers\formatCurrency($application->service_fee)}}</div>
         @if($application->vat > 0 )
             <div>
                 <span>VAT  {{$settings->vat_rate}}  : {{$application->vat}}  </span>
