@@ -138,6 +138,7 @@ class AgentStatement extends Component
 
             $data['data'] = $combinedResults;
         }
+        
         return $data;
     }
 

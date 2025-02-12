@@ -81,8 +81,9 @@
                             <tr>
                                 
                                 <td class="text-center">{{\Illuminate\Support\Carbon::parse($record->created_at)->format('Y-m-d')}}</td>
+                                <td class='text-center'>Payment received @if($record->note) <span>- Note : {{$record->note}} </span> @endif</td>
+
                                 <td></td>
-                                <td class='text-center'>Payment received</td>
                                 <td class="text-center"></td>
                                 <td class="text-center">{{\App\Helpers\formatCurrency($record->amount)}}</td>
                                 @php
