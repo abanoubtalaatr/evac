@@ -3,10 +3,11 @@
 namespace App\Services;
 
 use App\Models\Agent;
-use App\Models\Application;
 use App\Models\Service;
-use App\Models\ServiceTransaction;
 use App\Models\VisaType;
+use App\Models\Application;
+use App\Models\AgentVisaPrice;
+use App\Models\ServiceTransaction;
 
 class AgentInvoiceService
 {
@@ -50,19 +51,28 @@ class AgentInvoiceService
             $applications = $applications->get();
 
             $totalAmount = 0; // Initialize total amount variable
+            $totalVat = 0;
 
             foreach ($applications as $application) {
                 // Assuming these fields exist, adjust them based on your actual fields
                 $serviceFee = $application->service_fee ?? 0;
                 $dubaiFee = $application->dubai_fee ?? 0;
                 $vat = $application->vat ?? 0;
+                $totalVat = $vat;
 
                 // Calculate the total amount for each application
-                $totalAmount += $serviceFee + $dubaiFee + $vat;
+                $totalAmount += $serviceFee + $dubaiFee;
             }
 
             $visa->qty = $applications->count();
             $visa->totalAmount = $totalAmount; // Assign total amount to the visa
+            $visa->totalVat = $totalVat;
+            
+            $visaPrice = AgentVisaPrice::where("agent_id", $agentId)->where('visa_type_id', $visa->id)->first();
+            if($visaPrice){
+                $visa->total = $visaPrice->price;
+            }
+            
             if($totalAmount > 0){
                 $data['visas'][] = $visa;    
             }
@@ -143,5 +153,6 @@ class AgentInvoiceService
 
         return $data;
     }
+    
 
 }

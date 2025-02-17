@@ -60,6 +60,11 @@
         <div class="mt-2">
             <p>{{$settings->invoice_footer}}</p>
         </div>
+        @if(\App\Helpers\isExistVat())
+        <div class="mt-2">
+            <strong> Vat Reg {{$settings->registration_no}}</strong>
+        </div>
+        @endif
     </div>
 
 </div>

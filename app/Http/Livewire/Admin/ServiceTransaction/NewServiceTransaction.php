@@ -27,13 +27,13 @@ class NewServiceTransaction extends Component
     use WithPagination;
     use ValidationTrait;
 
-    public $name, $surname, $agent,$service,$from,$to, $passport;
+    public $name, $surname, $agent, $service, $from, $to, $passport;
     public $form;
     public $is_active;
-    public $perPage =10;
+    public $perPage = 10;
     public $services, $agents;
     public $serviceTransaction, $formInvoice;
-    public $status = "new", $showSendEmail,$serviceTransactionThatSendByEmail, $email;
+    public $status = "new", $showSendEmail, $serviceTransactionThatSendByEmail, $email;
 
     protected $paginationTheme = 'bootstrap';
     public $showModal = false;
@@ -43,13 +43,12 @@ class NewServiceTransaction extends Component
     {
         $this->page_title = __('admin.new_service_transactions');
         $this->services = Service::query()->get();
-        if(isOwner()){
+        if (isOwner()) {
             $this->agents = Agent::query()->isActive()->orderBy('name')->get();
-        }else{
+        } else {
             $this->agents = Agent::owner()->isActive()->orderBy('name')->get();
-
         }
-        if(!$this->serviceTransaction){
+        if (!$this->serviceTransaction) {
             $this->form['payment_method'] = 'invoice';
         }
 
@@ -58,7 +57,7 @@ class NewServiceTransaction extends Component
 
     public function updatedFormServiceId()
     {
-        if(isset($this->form['service_id']) && !empty($this->form['service_id'])){
+        if (isset($this->form['service_id']) && !empty($this->form['service_id'])) {
             $service = Service::query()->find($this->form['service_id']);
             $setting = Setting::query()->first();
 
@@ -79,9 +78,9 @@ class NewServiceTransaction extends Component
         return Excel::download(new ReceiptServiceTransactionExport($application), 'serviceReceipt.csv');
     }
 
-    public function send($id= null)
+    public function send($id = null)
     {
-        if(!empty($this->email)){
+        if (!empty($this->email)) {
             Mail::to($this->email)->send(new ReceiptServiceTransactionMail($this->serviceTransactionThatSendByEmail));
             $this->email = null;
             $this->showSendEmail = !$this->showSendEmail;
@@ -98,10 +97,9 @@ class NewServiceTransaction extends Component
     public function hideCreateModal()
     {
         return redirect()->to(route('admin.service_transactions.new'));
-
     }
 
-    public function toggleShowModal($id =null)
+    public function toggleShowModal($id = null)
     {
         $this->serviceTransactionThatSendByEmail = ServiceTransaction::withoutGlobalScope('excludeDeleted')->find($id);
         $this->showSendEmail = !$this->showSendEmail;
@@ -114,34 +112,32 @@ class NewServiceTransaction extends Component
 
     public function updatedFormAmount()
     {
-        if(isset($this->form['service_id'])) {
+        if (isset($this->form['service_id'])) {
             $service = Service::query()->find($this->form['service_id']);
             $vat = (new InvoiceService())->recalculateVat($this->form['amount'], $service->dubai_fee);
             $serviceFee = (new InvoiceService())->recalculateServiceFee($this->form['amount'], $service->dubai_fee);
-$total = $this->form['vat'] + $this->form['service_fee']+ $service->dubai_fee;
+            $total = $this->form['vat'] + $this->form['service_fee'] + $service->dubai_fee;
 
-            if( $total!= $this->form['amount']){
+            if ($total != $this->form['amount']) {
 
                 $this->form['vat'] = $vat;
                 $this->form['service_fee'] = $service->service_fee;
-                $this->form['dubai_fee'] = $this->form['amount'] - ($service->service_fee + $vat);
-
+                $this->form['dubai_fee'] = intval($this->form['amount']) - ($service->service_fee + $vat);
             }
         }
     }
     public function updateAmount()
     {
-        if(isset($this->form['service_id'])) {
+        if (isset($this->form['service_id'])) {
             $service = Service::query()->find($this->form['service_id']);
             $vat = (new InvoiceService())->recalculateVat($this->form['amount'], $service->dubai_fee);
             $serviceFee = (new InvoiceService())->recalculateServiceFee($this->form['amount'], $service->dubai_fee);
 
-            $this->form['amount'] = $this->form['vat'] + $this->form['service_fee']+ $service->dubai_fee;
+            $this->form['amount'] = $this->form['vat'] + $this->form['service_fee'] + $service->dubai_fee;
 
             $this->form['vat'] = $vat;
             $this->form['service_fee'] = $service->service_fee;
             $this->form['dubai_fee'] = $this->form['amount'] - ($service->service_fee - $vat);
-
         }
     }
     public function updatedFormPassportNo()
@@ -151,7 +147,7 @@ $total = $this->form['vat'] + $this->form['service_fee']+ $service->dubai_fee;
             if ($applicant) {
                 $this->form['name'] = $applicant->name;
                 $this->form['surname'] = $applicant->surname;
-            }else{
+            } else {
                 $this->form['name'] = null;
                 $this->form['surname'] = null;
             }
@@ -193,10 +189,9 @@ $total = $this->form['vat'] + $this->form['service_fee']+ $service->dubai_fee;
         ]);
 
 
-        session()->flash('success',__('admin.edit_successfully'));
+        session()->flash('success', __('admin.edit_successfully'));
 
         return redirect()->to(route('admin.service_transactions.new'));
-
     }
     public function resetData()
     {
@@ -251,7 +246,7 @@ $total = $this->form['vat'] + $this->form['service_fee']+ $service->dubai_fee;
         return $query->latest()->paginate(50);
     }
 
-    public function unDestroy( $serviceTransaction)
+    public function unDestroy($serviceTransaction)
     {
         $serviceTransaction = ServiceTransaction::query()->withoutGlobalScope('excludeDeleted')->find($serviceTransaction);
 
@@ -261,13 +256,13 @@ $total = $this->form['vat'] + $this->form['service_fee']+ $service->dubai_fee;
     public function update()
     {
         $this->validate();
-        $data = Arr::except($this->form,['id', 'updated_at']);
+        $data = Arr::except($this->form, ['id', 'updated_at']);
 
 
         ServiceTransaction::query()->withoutGlobalScope('excludeDeleted')->find($this->form['id'])->update($this->form);
 
         $this->form = [];
-        session()->flash('success',__('admin.edit_successfully'));
+        session()->flash('success', __('admin.edit_successfully'));
 
         return redirect()->to(route('admin.service_transactions.new'));
     }
@@ -275,10 +270,10 @@ $total = $this->form['vat'] + $this->form['service_fee']+ $service->dubai_fee;
     public function store()
     {
         $this->validate();
-// Assuming $today is already defined in your code as the current date in ddmmyyyy format
+        // Assuming $today is already defined in your code as the current date in ddmmyyyy format
         $today = date('dmY');
 
-        if(isset($this->form['created_at'])){
+        if (isset($this->form['created_at'])) {
             $today = Carbon::parse($this->form['created_at'])->format('dmY');
         }
 
@@ -294,27 +289,28 @@ $total = $this->form['vat'] + $this->form['service_fee']+ $service->dubai_fee;
         $service = Service::query()->find($this->form['service_id']);
 
 
-        if (!isset($this->form['service_fee'])){
+        if (!isset($this->form['service_fee'])) {
             $this->form['service_fee'] = $service->service_fee;
         }
 
-        $this->form['status']=  "new";
-//        if(isset($this->from['created_at'])){
-//            $this->from['updated_at'] = $this->from['created_at'];
-//        }
+        $this->form['status'] =  "new";
+        //        if(isset($this->from['created_at'])){
+        //            $this->from['updated_at'] = $this->from['created_at'];
+        //        }
 
 
         ServiceTransaction::query()->create($this->form);
 
-        session()->flash('success',__('admin.create_successfully'));
+        session()->flash('success', __('admin.create_successfully'));
 
         return redirect()->to(route('admin.service_transactions.new'));
     }
 
 
-    public function getRules(){
+    public function getRules()
+    {
         return [
-            'form.service_id'=>['required'],
+            'form.service_id' => ['required'],
             'form.agent_id' => ['nullable'],
             'form.passport_no' => ['nullable'],
             'form.name' => ['required', 'string'],

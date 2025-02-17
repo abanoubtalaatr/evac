@@ -176,9 +176,11 @@ class AgentInvoice extends Component
         } else {
             $data = (new AgentInvoiceService())->getRecords(null, $this->from, $this->to);
         }
+        
         $fromDate = '1970-01-01';
 
         foreach ($data['agents'] as $row) {
+            
             $totalAmount = 0;
             if (!is_null($row['agent'])) {
                 $settings = Setting::query()->first();
@@ -206,12 +208,14 @@ class AgentInvoice extends Component
                 $totalForInvoice = 0;
 
                 foreach ($totalAmountFromDayOneUntilEndOfInvoice['visas'] as $visa) {
+                    
                     $totalForInvoice += $visa->totalAmount;
                 }
                 foreach ($totalAmountFromDayOneUntilEndOfInvoice['services'] as $service) {
                     $totalForInvoice += $service->totalAmount;
                 }
                 foreach ($getTotalAmount['visas'] as $visa) {
+
                     $totalAmount += $visa->totalAmount;
                 }
                 foreach ($getTotalAmount['services'] as $service) {
@@ -509,6 +513,7 @@ class AgentInvoice extends Component
 
     public function render()
     {
+        
         $records = $this->getRecords(false, $this->agent, $this->from, $this->to);
         return view('livewire.admin.reports.agent-invoice', compact('records'))->layout('layouts.admin');
     }

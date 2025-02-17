@@ -15,6 +15,8 @@ use Maatwebsite\Excel\Events\BeforeSheet;
 use PhpOffice\PhpSpreadsheet\Worksheet\Worksheet;
 use function App\Helpers\convertNumberToWorldsInUsd;
 use function App\Helpers\formatCurrency;
+use function App\Helpers\isExistVat;
+use function App\Helpers\valueOfVat;
 
 class AgentInvoiceExport implements FromCollection
 {
@@ -32,9 +34,7 @@ class AgentInvoiceExport implements FromCollection
 
         $rowCount =1;
         $totalAmount = 0;
-        $totalApplicationAmount= 0;
-        $totalServiceTransactionsAmount = 0;
-        $totalPayment =0;
+        $totalVat = 0;
         $this->agent = Agent::query()->find($this->data['agents'][0]['agent']['id']);
 
 
@@ -51,8 +51,19 @@ class AgentInvoiceExport implements FromCollection
                     'Unit price' =>'$ '. formatCurrency($visa->total),
                     'Amount' =>"$ ".  formatCurrency($visa->totalAmount),
                 ];
+                $totalVat += $visa->totalVat;
             $totalAmount += $visa->totalAmount;
             }
+        }
+        if(isExistVat()){
+            $dataRows[] = [
+                'Item #' => '',
+                'Description' => 'Vat ' . valueOfVat() . ' %',
+                'Qty' => '',
+                'Unit price' =>'',
+                'Amount' =>"$ ".  $totalVat,
+            ];
+    
         }
 
         if(isset($this->data['agents'][0]['services'])){

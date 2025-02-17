@@ -96,7 +96,7 @@
                 </div>
                 @if($application->vat > 0 )
                     <div>
-                    <span>VAT  : $ {{$settings->vat_rate}}  : {{\App\Helpers\formatCurrency($application->vat)}}  </span>
+                    <span>VAT  :  {{$settings->vat_rate}}  : $ {{\App\Helpers\formatCurrency($application->vat)}}  </span>
                     </div>
                 @endif
             </div>
@@ -113,6 +113,11 @@
         <div class="text-start">
             <strong> {{$settings->invoice_footer}}</strong>
         </div>
+        @if(\App\Helpers\isExistVat())
+        <div class="text-start">
+            <strong> Vat Reg {{$settings->registration_no}}</strong>
+        </div>
+        @endif
     </div>
 
 </div>
