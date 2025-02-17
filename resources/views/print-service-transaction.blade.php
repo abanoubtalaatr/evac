@@ -65,7 +65,7 @@
 
         @if(\App\Helpers\isExistVat())
         <div class="text-start">
-            <strong> Vat Reg {{$settings->registration_no}}</strong>
+            <strong> Vat Reg {{\App\Helpers\registrationNumber()}}</strong>
         </div>
         @endif
 

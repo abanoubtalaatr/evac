@@ -62,7 +62,7 @@
         </div>
         @if(\App\Helpers\isExistVat())
         <div class="mt-2">
-            <strong> Vat Reg {{$settings->registration_no}}</strong>
+            <strong> Vat Reg {{\App\Helpers\registrationNumber()}}</strong>
         </div>
         @endif
     </div>

@@ -566,6 +566,7 @@ if(!function_exists('registrationNumber')){
     function registrationNumber()
     {
         $setting = Setting::query()->first();
-        return $setting->registration_no;
+        
+        return $setting->vat_no;
     }
 }
