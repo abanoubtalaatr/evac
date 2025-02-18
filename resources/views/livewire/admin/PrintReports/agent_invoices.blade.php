@@ -157,7 +157,7 @@
                     $totalAmount = 0;
                     $totalGrand = 0;
                     $totalPayment = 0;
-                    $totalVat =0;
+                    $totalVat = 0;
 
                 @endphp
                 @if (isset($data['agents'][0]['visas']) && count($data['agents'][0]['visas']) > 0)
@@ -166,8 +166,9 @@
                             <tr>
                                 <th class="text-center">Item #</th>
                                 <th class="text-center">@lang('admin.description')</th>
-                                <th class="text-center">Unit Price</th>
                                 <th class="text-center">Qty</th>
+                                <th class="text-center">Unit Price</th>
+                                
                                 <th class="text-center">Amount</th>
 
                             </tr>
@@ -194,7 +195,7 @@
                                         @php
                                             $totalAmount += $visa->totalAmount;
                                             $grandTotal += $totalAmount;
-                                            $totalVat +=$visa->totalVat; 
+                                            $totalVat += $visa->totalVat;
 
                                         @endphp
                                         <td class="text-center">#{{ $rowsCount++ }}</td>
@@ -206,23 +207,23 @@
                                         </td>
                                     </tr>
                                     @if ($key === count($data['agents'][0]['visas']) - 1)
-                                    @if (\App\Helpers\isExistVat())
-                                        <tr>
+                                        @if (\App\Helpers\isExistVat())
+                                            <tr>
 
-                                            <td class="text-center">&nbsp;</td>
-                                            <td class="text-center">Vat {{ \App\Helpers\valueOfVat() }} % </td>
-                                            <td class="text-center">&nbsp;</td>
-                                            <td class="text-center">&nbsp;</td>
-                                            <td class="text-center">{{ $totalVat }}</td>
-                                        </tr>
+                                                <td class="text-center">&nbsp;</td>
+                                                <td class="text-center">Vat {{ \App\Helpers\valueOfVat() }} % </td>
+                                                <td class="text-center">&nbsp;</td>
+                                                <td class="text-center">&nbsp;</td>
+                                                <td class="text-center">{{ $totalVat }}</td>
+                                            </tr>
+                                        @endif
                                     @endif
-                                @endif
                                 @endforeach
                             @endif
 
                             {{-- Display Service information --}}
                             @if (isset($data['agents'][0]['services']) && count($data['agents'][0]['services']) > 0)
-                                @foreach ($data['agents'][0]['services'] as $service)
+                                @foreach ($data['agents'][0]['services'] as $key=> $service)
                                     <tr>
                                         @php
                                             $totalAmount += $service->totalAmount;
@@ -235,6 +236,18 @@
                                         <td class="text-center">
                                             {{ \App\Helpers\formatCurrency($service->totalAmount) }}</td>
                                     </tr>
+                                    @if ($key === count($data['agents'][0]['services']) - 1)
+                                    @if (\App\Helpers\isExistVat())
+                                        <tr>
+
+                                            <td class="text-center">&nbsp;</td>
+                                            <td class="text-center">Vat {{ \App\Helpers\valueOfVat() }} % </td>
+                                            <td class="text-center">&nbsp;</td>
+                                            <td class="text-center">&nbsp;</td>
+                                            <td class="text-center">{{ $totalVat }}</td>
+                                        </tr>
+                                    @endif
+                                @endif
                                 @endforeach
                             @endif
 

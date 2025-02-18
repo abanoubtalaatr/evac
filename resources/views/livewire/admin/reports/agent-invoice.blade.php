@@ -73,6 +73,7 @@
                 $totalGrand = 0;
                 $totalPayment = 0;
                 $totalVat = 0;
+                $totalVatSerivce = 0;
             @endphp
             @if (isset($records['agents']) && count($records['agents']) > 0)
                 <table class="table-page table">
@@ -97,7 +98,9 @@
                             $totalForInvoice = 0;
                             $allAmountFromDayOneUntilEndOfInvoice = 0;
                             $oldBalance = 0;
-                            
+                            $totalVatService = 0;
+                            $subTotal =0;
+
                         @endphp
 
                         @foreach ($records['agents'] as $index => $agent)
@@ -137,6 +140,7 @@
                                             @php
                                                 $totalAmount += $visa->totalAmount;
                                                 $totalVat += $visa->totalVat;
+                                                $subTotal += $visa->totalAmount; 
                                             @endphp
                                             <td class="text-center">#{{ $rowsCount++ }}</td>
                                             <td class="text-center">{{ $visa->name }}</td>
@@ -146,19 +150,6 @@
                                                 {{ \App\Helpers\formatCurrency($visa->totalAmount) }}</td>
                                             <td class="text-center">&nbsp;</td>
                                         </tr>
-
-                                        @if ($key === count($agent['visas']) - 1)
-                                            @if (\App\Helpers\isExistVat())
-                                                <tr>
-
-                                                    <td class="text-center">&nbsp;</td>
-                                                    <td class="text-center">Vat {{ \App\Helpers\valueOfVat() }} % </td>
-                                                    <td class="text-center">&nbsp;</td>
-                                                    <td class="text-center">&nbsp;</td>
-                                                    <td class="text-center">{{ $totalVat }}</td>
-                                                </tr>
-                                            @endif
-                                        @endif
                                     @endforeach
                                 @endif
 
@@ -168,14 +159,17 @@
                                         <tr>
                                             @php
                                                 $totalAmount += $service->totalAmount;
+                                                $totalVatService += $service->totalVatService;
+                                                $subTotal += $service->service_fee + $service->dubai_fee ;
                                             @endphp
                                             <td class="text-center">#{{ $rowsCount++ }}</td>
                                             <td class="text-center">{{ $service->name }}</td>
                                             <td class="text-center">{{ $service->qty }}</td>
-                                            <td class="text-center">{{ \App\Helpers\formatCurrency($service->amount) }}
+                                            <td class="text-center">{{ $service->service_fee + $service->dubai_fee }}
                                             </td>
                                             <td class="text-center">
-                                                {{ \App\Helpers\formatCurrency($service->totalAmount) }}</td>
+                                                {{ \App\Helpers\formatCurrency($service->service_fee + $service->dubai_fee) }}
+                                            </td>
                                             <td class="text-center">&nbsp;</td>
                                         </tr>
                                         <tr></tr>
@@ -213,8 +207,6 @@
 
                             $oldBalance = $totalForInvoice - $allAmountFromDayOneUntilEndOfInvoice;
 
-                            //                       $oldBalance = ($rawBalance < 0) ? -$rawBalance : $rawBalance;
-
                         @endphp
                         {{-- Display total --}}
                         <tr>
@@ -227,20 +219,41 @@
                         </tr>
                         <tfooter>
                             <tr>
-                                <td></td>
-                                <td></td>
+
+                                <td class="text-center">&nbsp;</td>
+                                <td class="text-center">Subtotal :  </td>
+                                <td class="text-center">&nbsp;</td>
+                                <td class="text-center">&nbsp;</td>
+                                <td class="text-center">{{ $subTotal}}</td>
+                            </tr>
+                            @if (\App\Helpers\isExistVat())
+                                <tr>
+
+                                    <td class="text-center">&nbsp;</td>
+                                    <td class="text-center">Vat {{ \App\Helpers\valueOfVat() }} % </td>
+                                    <td class="text-center">&nbsp;</td>
+                                    <td class="text-center">&nbsp;</td>
+                                    <td class="text-center">{{ $totalVatService + $totalVat }}</td>
+                                </tr>
+                            @endif
+                            <tr>
                                 <td></td>
                                 <td class="text-center"><strong>Total USD</strong></td>
+                                <td></td>
+                                <td></td>
+                                
                                 <td class="text-center"><strong>$
-                                        {{ \App\Helpers\formatCurrency($totalAmount) }}</strong></td>
+                                        {{ \App\Helpers\formatCurrency($subTotal + $totalVatService + $totalVat) }}</strong></td>
                                 <td></td>
                             </tr>
+
                             <tr>
 
                                 <td></td>
-                                <td></td>
-                                <td></td>
                                 <td class="text-center"><strong>Old balance</strong></td>
+                                <td></td>
+                                <td></td>
+                                
                                 <td class="text-center"><strong>$
                                         {{ \App\Helpers\formatCurrency($oldBalance) }}</strong></td>
                                 <td></td>
@@ -248,9 +261,10 @@
                             <tr>
 
                                 <td></td>
-                                <td></td>
-                                <td></td>
                                 <td class="text-center"><strong>Grand total </strong></td>
+                                <td></td>
+                                <td></td>
+                                
                                 <td class="text-center"><strong>$
                                         {{ \App\Helpers\formatCurrency($oldBalance + $totalAmount) }}</strong></td>
                                 <td></td>

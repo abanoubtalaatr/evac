@@ -172,7 +172,7 @@ if (!function_exists('convertNumberToWorldsInUsd')) {
         $points = ($decimal) ?
             " & " . ($words2[floor($decimal / 10)] . " " . $words[$decimal % 10]) . " Cents" : '';
 
-        return $result . " dollars " . $points . ' only';
+        return $result . " USD " . $points . ' ONLY';
     }
 }
 

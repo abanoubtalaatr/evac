@@ -52,13 +52,14 @@ class AgentInvoiceService
 
             $totalAmount = 0; // Initialize total amount variable
             $totalVat = 0;
+            
 
             foreach ($applications as $application) {
                 // Assuming these fields exist, adjust them based on your actual fields
                 $serviceFee = $application->service_fee ?? 0;
                 $dubaiFee = $application->dubai_fee ?? 0;
                 $vat = $application->vat ?? 0;
-                $totalVat = $vat;
+                $totalVat += $vat;
 
                 // Calculate the total amount for each application
                 $totalAmount += $serviceFee + $dubaiFee;
@@ -95,10 +96,10 @@ class AgentInvoiceService
             $serviceTransactions = $serviceTransactions->get();
 
             $totalAmount = 0; // Initialize total amount variable
-
+            $totalVatService =0;
             foreach ($serviceTransactions as $transaction) {
                 // Assuming these fields exist, adjust them based on your actual fields
-                $amount = $transaction->amount ?? 0;
+                $amount = $transaction->amount;
 
                 // Calculate the total amount for each service transaction
                 $totalAmount += $amount;
@@ -106,7 +107,13 @@ class AgentInvoiceService
 
             $service->qty = $serviceTransactions->count();
             $service->totalAmount = $totalAmount; // Assign total amount to the service
+            $service->totalVatService = $totalVatService;
+            $service->service_fee = $service->service_fee;
+            // $service->total = $amount;
             if($totalAmount > 0){
+                if($service->id==5){
+                    // dd($service);
+                }
                 $data['services'][] = $service;    
             }
             
