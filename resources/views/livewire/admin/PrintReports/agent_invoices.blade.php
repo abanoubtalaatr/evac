@@ -388,7 +388,7 @@
                                     <td></td>
 
                                     <td class="text-center"><strong>$
-                                            {{ \App\Helpers\formatCurrency($oldBalance + $totalAmount) }}</strong></td>
+                                            {{ \App\Helpers\formatCurrency($oldBalance + $subTotal + $data['agents'][0]['totalVat']) }}</strong></td>
 
                                 </tr>
                             </tfooter>

@@ -199,6 +199,7 @@ class AgentInvoice extends Component
                     $this->to
                 );
 
+                
                 $allAmountFromDayOneUntilEndOfInvoice = PaymentTransaction::query()
                     ->where('agent_id', $row['agent']['id'])
                     ->whereDate('created_at', '>=', $fromDate)
@@ -286,7 +287,7 @@ class AgentInvoice extends Component
                             'total_amount' => $totalAmount,
                             'payment_received' => $allAmountFromDayOneUntilEndOfInvoice,
                             'old_balance' => $oldBalance,
-                            'grand_total' => $totalAmount + $oldBalance,
+                            'grand_total' => $totalAmount + $getTotalAmount['totalVat'] + $oldBalance,
                         ]);
                     } else {
                         $checkAgentIsHidden = Agent::query()->find($row['agent']['id']);
@@ -309,7 +310,7 @@ class AgentInvoice extends Component
                             'total_amount' => $totalAmount,
                             'payment_received' => $allAmountFromDayOneUntilEndOfInvoice,
                             'old_balance' => $oldBalance,
-                            'grand_total' => $totalAmount + $oldBalance
+                            'grand_total' => $totalAmount +  $getTotalAmount['totalVat']+ $oldBalance
                         ]);
                     }
                 }
