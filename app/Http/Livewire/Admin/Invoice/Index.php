@@ -180,7 +180,7 @@ class Index extends Component
             'total_amount' => $totalAmount,
             'payment_received' => $paymentForAgent,
             'old_balance' => $oldBalance,
-            'grand_total' => $totalAmount + $oldBalance
+            'grand_total' => $totalAmount + $totalAmountFromDayOneUntilEndOfInvoice['totalVat'] + $oldBalance
         ]);
 
         session()->flash('success',__('Recalculate successfully'));
