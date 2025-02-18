@@ -101,19 +101,22 @@ class AgentInvoiceService
             $serviceTransactions = $serviceTransactions->get();
 
             $totalAmount = 0; // Initialize total amount variable
-            $totalVatService = 0;
+            $totalTransactionAmount = 0;
             foreach ($serviceTransactions as $transaction) {
+                
                 // Assuming these fields exist, adjust them based on your actual fields
-                $amount = $transaction->amount;
+                $amount = $transaction->service_fee + $transaction->dubai_fee;;
 
                 // Calculate the total amount for each service transaction
                 $totalAmount += $amount;
+                
+                
             }
 
             $service->qty = $serviceTransactions->count();
-            $service->totalAmount = $totalAmount; // Assign total amount to the service
-            $service->totalVatService = $totalVatService;
-            $service->service_fee = $service->service_fee;
+            $service->totalAmount = $totalAmount ;
+        
+            
             // $service->total = $amount;
             if ($totalAmount > 0) {
                 if (\App\Helpers\isExistVat()) {
