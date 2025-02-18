@@ -87,15 +87,7 @@
         }
 
         /* Set a fixed width for each column */
-        .table th:nth-child(1),
-        .table td:nth-child(1),
-        .table th:nth-child(2),
-        .table td:nth-child(2),
-        .table th:nth-child(3),
-        .table td:nth-child(3) {
-            width: 33.33%;
-            /* Equal width for each column */
-        }
+      
 
         table {
             width: 100%;
@@ -111,6 +103,70 @@
             display: block;
             margin-bottom: 3px;
         }
+        /* Basic Table Styling */
+.table {
+  width: 100%;
+  margin-bottom: 1rem;
+  background-color: transparent;
+  border-collapse: collapse; /* Ensures borders between cells are collapsed */
+}
+
+/* Border for Table */
+.table-bordered {
+  border: 1px solid #dee2e6; /* Light gray border */
+}
+
+.table-bordered th,
+.table-bordered td {
+  border: 1px solid #dee2e6; /* Apply border to cells */
+  padding: 0.75rem; /* Padding inside each cell */
+  text-align: left; /* Align text to the left */
+}
+
+/* Table header styling */
+.table th {
+  background-color: #f8f9fa; /* Light background for header */
+  color: #495057; /* Dark text color */
+  font-weight: bold;
+}
+
+/* Table row alternating color */
+.table tbody tr:nth-child(odd) {
+  background-color: #f2f2f2; /* Light gray for odd rows */
+}
+
+.table tbody tr:nth-child(even) {
+  background-color: #ffffff; /* White for even rows */
+}
+
+/* Optional: Pagination Style */
+.table-page {
+  display: flex;
+  justify-content: center;
+  margin-top: 1rem;
+}
+
+.table-page a {
+  padding: 0.5rem 1rem;
+  margin: 0 0.25rem;
+  border: 1px solid #dee2e6;
+  background-color: #f8f9fa;
+  color: #007bff;
+  text-decoration: none;
+  border-radius: 0.25rem;
+}
+
+.table-page a:hover {
+  background-color: #007bff;
+  color: #fff;
+}
+
+.table-page a.active {
+  background-color: #007bff;
+  color: #fff;
+  border-color: #007bff;
+}
+
     </style>
 </head>
 
@@ -150,6 +206,7 @@
                         request()->fromDate,
                         request()->toDate,
                     );
+                    
                 @endphp
 
                 @php
@@ -158,10 +215,11 @@
                     $totalGrand = 0;
                     $totalPayment = 0;
                     $totalVat = 0;
+                    $subTotal =0;
 
                 @endphp
                 @if (isset($data['agents'][0]['visas']) && count($data['agents'][0]['visas']) > 0)
-                    <table width="100%" cellpadding="0" cellspacing="0" align="center">
+                    <table width="100%" cellpadding="0" cellspacing="0" align="center" class=" table table-bordered">
                         <thead>
                             <tr>
                                 <th class="text-center">Item #</th>
@@ -170,7 +228,6 @@
                                 <th class="text-center">Unit Price</th>
                                 
                                 <th class="text-center">Amount</th>
-
                             </tr>
                         </thead>
                         <tbody>
@@ -181,6 +238,7 @@
                                 $totalApplicationAmount = 0;
                                 $totalServiceTransactionsAmount = 0;
                                 $oldBalance = 0;
+                                
                             @endphp
 
 
@@ -190,24 +248,22 @@
                                 @php
                                     $grandTotal = 0;
                                 @endphp
-                                @foreach ($data['agents'][0]['visas'] as $key => $visa)
-                                    <tr>
-                                        @php
-                                            $totalAmount += $visa->totalAmount;
-                                            $grandTotal += $totalAmount;
-                                            $totalVat += $visa->totalVat;
-
-                                        @endphp
-                                        <td class="text-center">#{{ $rowsCount++ }}</td>
-                                        <td class="text-center">{{ $visa->name }}</td>
-                                        <td class="text-center">{{ \App\Helpers\formatCurrency($visa->total) }}</td>
-                                        <td class="text-center">{{ $visa->qty }}</td>
-
-                                        <td class="text-center">{{ \App\Helpers\formatCurrency($visa->totalAmount) }}
-                                        </td>
-                                    </tr>
-                                   
-                                @endforeach
+                              @foreach ($data['agents'][0]['visas'] as $key => $visa)
+                              <tr>
+                                  @php
+                                      $totalAmount += $visa->totalAmount;
+                                      $totalVat += $visa->totalVat;
+                                      $subTotal += $visa->totalAmount; 
+                                  @endphp
+                                  <td class="text-center">#{{ $rowsCount++ }}</td>
+                                  <td class="text-center">{{ $visa->name }}</td>
+                                  <td class="text-center">{{ $visa->qty }}</td>
+                                  <td class="text-center">{{ \App\Helpers\formatCurrency($visa->total) }}</td>
+                                  <td class="text-center">
+                                      {{ \App\Helpers\formatCurrency($visa->totalAmount) }}</td>
+                                  <td class="text-center">&nbsp;</td>
+                              </tr>
+                          @endforeach
                             @endif
 
                             {{-- Display Service information --}}
@@ -216,14 +272,13 @@
                                     <tr>
                                         @php
                                             $totalAmount += $service->totalAmount;
+                                            $subTotal += $service->service_fee + $service->dubai_fee;
                                         @endphp
                                         <td class="text-center">#{{ $rowsCount++ }}</td>
                                         <td class="text-center">{{ $service->name }}</td>
-                                        <td class="text-center">{{ $service->qty }}</td>
-                                        <td class="text-center">{{ \App\Helpers\formatCurrency($service->amount) }}
-                                        </td>
-                                        <td class="text-center">
-                                            {{ \App\Helpers\formatCurrency($service->totalAmount) }}</td>
+                                        <td class="">{{ $service->qty }}</td>
+                                        <td class="text-center">{{ \App\Helpers\formatCurrency($service->amount) }}</td>
+                                        <td class="text-center">{{ \App\Helpers\formatCurrency($service->totalAmount) }}</td>
                                     </tr>
                                     
                                 @endforeach
@@ -269,7 +324,6 @@
                                 <td></td>
                                 <td></td>
                                 <td></td>
-                                <td></td>
                             </tr>
                             <tfooter>
                                 <tr>
@@ -287,17 +341,17 @@
                                         <td class="text-center">Vat {{ \App\Helpers\valueOfVat() }} % </td>
                                         <td class="text-center">&nbsp;</td>
                                         <td class="text-center">&nbsp;</td>
-                                        <td class="text-center">{{ $data['totalVat'] }}</td>
+                                        <td class="text-center">{{ $data['agents'][0]['totalVat'] }}</td>
                                     </tr>
                                 @endif
                                 <tr>
                                     <td></td>
                                     <td class="text-center"><strong>Total USD</strong></td>
                                     <td></td>
-                                    <td></td>
+                                    
                                     
                                     <td class="text-center"><strong>$
-                                            {{ \App\Helpers\formatCurrency($subTotal + $totalVatService + $totalVat) }}</strong></td>
+                                            {{ \App\Helpers\formatCurrency($subTotal  +$data['agents'][0]['totalVat'] ) }}</strong></td>
                                     <td></td>
                                 </tr>
     
@@ -310,7 +364,7 @@
                                     
                                     <td class="text-center"><strong>$
                                             {{ \App\Helpers\formatCurrency($oldBalance) }}</strong></td>
-                                    <td></td>
+                                    
                                 </tr>
                                 <tr>
     
@@ -321,7 +375,7 @@
                                     
                                     <td class="text-center"><strong>$
                                             {{ \App\Helpers\formatCurrency($oldBalance + $totalAmount) }}</strong></td>
-                                    <td></td>
+                                    
                                 </tr>
                             </tfooter>
 
