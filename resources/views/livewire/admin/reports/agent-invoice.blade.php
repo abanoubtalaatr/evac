@@ -117,7 +117,7 @@
                                     </tr>
                                 @endif --}}
                                 <tr>
-                                    <td class="text-uppercase"><strong>{{ $agent['agent']['name'] }}</strong></td>
+                                    <td class="text-uppercase text-center"><strong>{{ $agent['agent']['name'] }}</strong></td>
                                     <td></td>
                                     <td></td>
                                     <td></td>
