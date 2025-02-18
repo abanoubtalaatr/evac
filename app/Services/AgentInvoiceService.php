@@ -155,14 +155,19 @@ class AgentInvoiceService
         }
 
         $allAgents = $agentsWithApplications->merge($agentsWithServiceTransactions)->unique();
-
+    $totalVat = 0;
         // Fetch data for each agent
         foreach ($allAgents as $agentId) {
             $agentData = $this->getAgentData($agentId, $from, $to);
+        
             $agentData['agent'] = Agent::query()->find($agentId); // Add agent_id to the data
             $data['agents'][] = $agentData;
+            if(isset($agentData['totalVat'])){
+                $totalVat += $agentData['totalVat']; 
+            }
         }
-
+        $data['totalVat'] = $totalVat;
+// dd($data);
         return $data;
     }
 }

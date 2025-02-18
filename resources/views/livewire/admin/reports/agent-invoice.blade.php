@@ -233,7 +233,7 @@
                                     <td class="text-center">Vat {{ \App\Helpers\valueOfVat() }} % </td>
                                     <td class="text-center">&nbsp;</td>
                                     <td class="text-center">&nbsp;</td>
-                                    <td class="text-center">{{ $agent['totalVat'] }}</td>
+                                    <td class="text-center">{{ $records['totalVat'] }}</td>
                                 </tr>
                             @endif
                             <tr>
