@@ -76,7 +76,7 @@
                 $totalVatSerivce = 0;
             @endphp
             @if (isset($records['agents']) && count($records['agents']) > 0)
-                <table class="table-page table">
+                <table class="table-page table table-bordered">
                     <thead>
                         <tr>
                             <th class="text-center">Item #</th>
@@ -208,72 +208,12 @@
                             $oldBalance = $totalForInvoice - $allAmountFromDayOneUntilEndOfInvoice;
 
                         @endphp
-                        {{-- Display total --}}
-                        <tr>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                        </tr>
-                        <tfooter>
-                            <tr>
-
-                                <td class="text-center">&nbsp;</td>
-                                <td class="text-center">Subtotal :  </td>
-                                <td class="text-center">&nbsp;</td>
-                                <td class="text-center">&nbsp;</td>
-                                <td class="text-center">{{ $subTotal}}</td>
-                            </tr>
-                            @if (\App\Helpers\isExistVat())
-                                <tr>
-
-                                    <td class="text-center">&nbsp;</td>
-                                    <td class="text-center">Vat {{ \App\Helpers\valueOfVat() }} % </td>
-                                    <td class="text-center">&nbsp;</td>
-                                    <td class="text-center">&nbsp;</td>
-                                    <td class="text-center">{{ $records['totalVat'] }}</td>
-                                </tr>
-                            @endif
-                            <tr>
-                                <td></td>
-                                <td class="text-center"><strong>Total USD</strong></td>
-                                <td></td>
-                                <td></td>
-                                
-                                <td class="text-center"><strong>$
-                                        {{ \App\Helpers\formatCurrency($subTotal + $totalVatService + $totalVat) }}</strong></td>
-                                <td></td>
-                            </tr>
-
-                            <tr>
-
-                                <td></td>
-                                <td class="text-center"><strong>Old balance</strong></td>
-                                <td></td>
-                                <td></td>
-                                
-                                <td class="text-center"><strong>$
-                                        {{ \App\Helpers\formatCurrency($oldBalance) }}</strong></td>
-                                <td></td>
-                            </tr>
-                            <tr>
-
-                                <td></td>
-                                <td class="text-center"><strong>Grand total </strong></td>
-                                <td></td>
-                                <td></td>
-                                
-                                <td class="text-center"><strong>$
-                                        {{ \App\Helpers\formatCurrency($oldBalance + $totalAmount) }}</strong></td>
-                                <td></td>
-                            </tr>
-                        </tfooter>
+                        
+                        
                     </tbody>
                 </table>
-                <p class="text-center">Amount due is
-                    {{ \App\Helpers\convertNumberToWorldsInUsd($oldBalance + $totalAmount) }}</p>
+                {{-- <p class="text-center">Amount due is
+                    {{ \App\Helpers\convertNumberToWorldsInUsd($oldBalance + $totalAmount) }}</p> --}}
             @else
                 <div class="row" style="margin-top: 10px">
                     <div class="alert alert-warning">@lang('site.no_data_to_display')</div>

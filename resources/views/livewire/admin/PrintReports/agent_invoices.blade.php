@@ -206,18 +206,7 @@
                                         <td class="text-center">{{ \App\Helpers\formatCurrency($visa->totalAmount) }}
                                         </td>
                                     </tr>
-                                    @if ($key === count($data['agents'][0]['visas']) - 1)
-                                        @if (\App\Helpers\isExistVat())
-                                            <tr>
-
-                                                <td class="text-center">&nbsp;</td>
-                                                <td class="text-center">Vat {{ \App\Helpers\valueOfVat() }} % </td>
-                                                <td class="text-center">&nbsp;</td>
-                                                <td class="text-center">&nbsp;</td>
-                                                <td class="text-center">{{ $totalVat }}</td>
-                                            </tr>
-                                        @endif
-                                    @endif
+                                   
                                 @endforeach
                             @endif
 
@@ -236,18 +225,7 @@
                                         <td class="text-center">
                                             {{ \App\Helpers\formatCurrency($service->totalAmount) }}</td>
                                     </tr>
-                                    @if ($key === count($data['agents'][0]['services']) - 1)
-                                    @if (\App\Helpers\isExistVat())
-                                        <tr>
-
-                                            <td class="text-center">&nbsp;</td>
-                                            <td class="text-center">Vat {{ \App\Helpers\valueOfVat() }} % </td>
-                                            <td class="text-center">&nbsp;</td>
-                                            <td class="text-center">&nbsp;</td>
-                                            <td class="text-center">{{ $totalVat }}</td>
-                                        </tr>
-                                    @endif
-                                @endif
+                                    
                                 @endforeach
                             @endif
 
@@ -293,36 +271,59 @@
                                 <td></td>
                                 <td></td>
                             </tr>
-                        <tfoot>
-                            <tr>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                                <td class="text-center"><strong>Total USD</strong></td>
-                                <td class="text-center"><strong>$
-                                        {{ \App\Helpers\formatCurrency($totalAmount) }}</strong></td>
-                                <td></td>
-                            </tr>
-                            <tr>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                                <td class="text-center"><strong>Old balance</strong></td>
-                                <td class="text-center"><strong>$
-                                        {{ \App\Helpers\formatCurrency($oldBalance) }}</strong></td>
-                                <td></td>
-                            </tr>
-                            <tr>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                                <td class="text-center"><strong>Grand total </strong></td>
-                                <td class="text-center"><strong>$
-                                        {{ \App\Helpers\formatCurrency($oldBalance + $totalAmount) }}</strong></td>
-                                <td></td>
-                            </tr>
-
-                        </tfoot>
+                            <tfooter>
+                                <tr>
+    
+                                    <td class="text-center">&nbsp;</td>
+                                    <td class="text-center">Subtotal :  </td>
+                                    <td class="text-center">&nbsp;</td>
+                                    <td class="text-center">&nbsp;</td>
+                                    <td class="text-center">{{ $subTotal}}</td>
+                                </tr>
+                                @if (\App\Helpers\isExistVat())
+                                    <tr>
+    
+                                        <td class="text-center">&nbsp;</td>
+                                        <td class="text-center">Vat {{ \App\Helpers\valueOfVat() }} % </td>
+                                        <td class="text-center">&nbsp;</td>
+                                        <td class="text-center">&nbsp;</td>
+                                        <td class="text-center">{{ $data['totalVat'] }}</td>
+                                    </tr>
+                                @endif
+                                <tr>
+                                    <td></td>
+                                    <td class="text-center"><strong>Total USD</strong></td>
+                                    <td></td>
+                                    <td></td>
+                                    
+                                    <td class="text-center"><strong>$
+                                            {{ \App\Helpers\formatCurrency($subTotal + $totalVatService + $totalVat) }}</strong></td>
+                                    <td></td>
+                                </tr>
+    
+                                <tr>
+    
+                                    <td></td>
+                                    <td class="text-center"><strong>Old balance</strong></td>
+                                    <td></td>
+                                    <td></td>
+                                    
+                                    <td class="text-center"><strong>$
+                                            {{ \App\Helpers\formatCurrency($oldBalance) }}</strong></td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+    
+                                    <td></td>
+                                    <td class="text-center"><strong>Grand total </strong></td>
+                                    <td></td>
+                                    <td></td>
+                                    
+                                    <td class="text-center"><strong>$
+                                            {{ \App\Helpers\formatCurrency($oldBalance + $totalAmount) }}</strong></td>
+                                    <td></td>
+                                </tr>
+                            </tfooter>
 
                         </tbody>
                     </table>
