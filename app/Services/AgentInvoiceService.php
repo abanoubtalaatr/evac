@@ -36,7 +36,7 @@ class AgentInvoiceService
         $data = ['visas' => [], 'services' => []];
 
         $visas = VisaType::query()->get();
-
+        $totalVat = 0;
         foreach ($visas as $visa) {
             $applications = Application::query()
                 ->where('visa_type_id', $visa->id)
@@ -50,7 +50,7 @@ class AgentInvoiceService
             $applications = $applications->get();
 
             $totalAmount = 0; // Initialize total amount variable
-            $totalVat = 0;
+            
 
 
             foreach ($applications as $application) {
