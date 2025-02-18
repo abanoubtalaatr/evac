@@ -65,7 +65,7 @@
                         class="btn btn-primary form-control contact-input">@lang('site.reset')</button>
                 </div>
             </div>
-            <hr class="form_wrapper">
+            {{-- <hr class="form_wrapper"> --}}
 
             @php
                 $rowsCount = 1;
