@@ -307,7 +307,7 @@ class AgentInvoice extends Component
                             'from' => $this->from,
                             'to' => $this->to,
                             'last_valid_invoice' => $lastValidInvoice,
-                            'total_amount' => $totalAmount,
+                            'total_amount' => $totalAmount + $getTotalAmount['totalVat'],
                             'payment_received' => $allAmountFromDayOneUntilEndOfInvoice,
                             'old_balance' => $oldBalance,
                             'grand_total' => $totalAmount +  $getTotalAmount['totalVat']+ $oldBalance

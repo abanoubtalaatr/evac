@@ -177,7 +177,7 @@ class Index extends Component
         $oldBalance = $totalForInvoice - $allAmountFromDayOneUntilEndOfInvoice - $totalAmount;
 
         $invoice->update([
-            'total_amount' => $totalAmount,
+            'total_amount' => $totalAmount + $totalAmountFromDayOneUntilEndOfInvoice['totalVat'],
             'payment_received' => $paymentForAgent,
             'old_balance' => $oldBalance,
             'grand_total' => $totalAmount + $totalAmountFromDayOneUntilEndOfInvoice['totalVat'] + $oldBalance
