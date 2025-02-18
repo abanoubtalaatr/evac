@@ -310,6 +310,7 @@
                                             $fromDate,
                                             $carbonFrom->format('Y-m-d'),
                                         );
+                                        
 
                                         $allAmountFromDayOneUntilEndOfInvoice = \App\Models\PaymentTransaction::query()
                                             ->where('agent_id', $agent['agent']['id'])
@@ -317,6 +318,7 @@
                                             ->whereDate('created_at', '<=', request()->toDate)
                                             ->sum('amount');
 
+                                            
                                         foreach ($totalAmountFromDayOneUntilEndOfInvoice['visas'] as $visa) {
                                             $totalForInvoice += $visa->totalAmount;
                                         }
@@ -328,7 +330,7 @@
                                 }
                             @endphp
                             @php
-                                $oldBalance = $totalForInvoice - $allAmountFromDayOneUntilEndOfInvoice;
+                                $oldBalance = ($totalForInvoice + $totalAmountFromDayOneUntilEndOfInvoice['totalVat']) - $allAmountFromDayOneUntilEndOfInvoice;
                             @endphp
 
                             <tr>
