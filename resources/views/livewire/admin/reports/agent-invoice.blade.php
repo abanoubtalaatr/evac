@@ -105,7 +105,7 @@
 
                         @foreach ($records['agents'] as $index => $agent)
                             @if (!is_null($agent['agent']))
-                                @if ($index != 0)
+                                {{-- @if ($index != 0)
                                     <tr style="eight: 30px !important;display: block;border: 1px solid transparent;">
                                         <td class="text-center">&nbsp;</td>
                                         <td class="text-center">&nbsp;</td>
@@ -115,7 +115,7 @@
                                         <td class="text-center">&nbsp;</td>
 
                                     </tr>
-                                @endif
+                                @endif --}}
                                 <tr>
                                     <td class="text-uppercase"><strong>{{ $agent['agent']['name'] }}</strong></td>
                                     <td></td>
