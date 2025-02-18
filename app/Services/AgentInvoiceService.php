@@ -72,6 +72,8 @@ class AgentInvoiceService
             $visaPrice = AgentVisaPrice::where("agent_id", $agentId)->where('visa_type_id', $visa->id)->first();
             if($visaPrice){
                 $visa->total = $visaPrice->price + $visa->dubai_fee;
+            }else{
+                $visa->total = $visa->dubai_fee + $visa->service_fee;
             }
             
             if($totalAmount > 0){
