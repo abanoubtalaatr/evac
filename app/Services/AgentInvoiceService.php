@@ -11,22 +11,21 @@ use App\Models\ServiceTransaction;
 
 class AgentInvoiceService
 {
-    public function getRecords($agent, $fromDate,$toDate)
+    public function getRecords($agent, $fromDate, $toDate)
     {
-        if(!$agent && !$fromDate && !$toDate){
+        if (!$agent && !$fromDate && !$toDate) {
             return [];
         }
 
-        if ($agent && !is_null($agent) && $agent !='no_result') {
+        if ($agent && !is_null($agent) && $agent != 'no_result') {
             $agentData = $this->getAgentData($agent, $fromDate, $toDate);
             $agentData['agent'] = Agent::query()->find($agent); // Add agent_id to the data
             $data['agents'][] = $agentData;
-            
+
             return $data;
-        } else{
+        } else {
             // Display data for all agents with applications this week or service transactions
             return  $this->getAllAgentsData($fromDate, $toDate);
-
         }
 
         return [];
@@ -52,14 +51,13 @@ class AgentInvoiceService
 
             $totalAmount = 0; // Initialize total amount variable
             $totalVat = 0;
-            
+
 
             foreach ($applications as $application) {
                 // Assuming these fields exist, adjust them based on your actual fields
                 $serviceFee = $application->service_fee ?? 0;
                 $dubaiFee = $application->dubai_fee ?? 0;
                 $vat = $application->vat ?? 0;
-                $totalVat += $vat;
 
                 // Calculate the total amount for each application
                 $totalAmount += $serviceFee + $dubaiFee;
@@ -67,19 +65,24 @@ class AgentInvoiceService
 
             $visa->qty = $applications->count();
             $visa->totalAmount = $totalAmount; // Assign total amount to the visa
-            $visa->totalVat = $totalVat;
-            
+
+
             $visaPrice = AgentVisaPrice::where("agent_id", $agentId)->where('visa_type_id', $visa->id)->first();
-            if($visaPrice){
+            if ($visaPrice) {
                 $visa->total = $visaPrice->price + $visa->dubai_fee;
-            }else{
+                if (\App\Helpers\isExistVat()) {
+                    $totalVat += $visa->qty * (\App\Helpers\valueOfVat() / 100) * $visaPrice->price;
+                }
+            } else {
                 $visa->total = $visa->dubai_fee + $visa->service_fee;
+                if (\App\Helpers\isExistVat()) {
+                    $totalVat += $visa->qty * (\App\Helpers\valueOfVat() / 100) * $visa->service_fee;
+                }
             }
-            
-            if($totalAmount > 0){
-                $data['visas'][] = $visa;    
+
+            if ($totalAmount > 0) {
+                $data['visas'][] = $visa;
             }
-            
         }
 
         $services = Service::query()->get();
@@ -98,7 +101,7 @@ class AgentInvoiceService
             $serviceTransactions = $serviceTransactions->get();
 
             $totalAmount = 0; // Initialize total amount variable
-            $totalVatService =0;
+            $totalVatService = 0;
             foreach ($serviceTransactions as $transaction) {
                 // Assuming these fields exist, adjust them based on your actual fields
                 $amount = $transaction->amount;
@@ -112,15 +115,15 @@ class AgentInvoiceService
             $service->totalVatService = $totalVatService;
             $service->service_fee = $service->service_fee;
             // $service->total = $amount;
-            if($totalAmount > 0){
-                if($service->id==5){
-                    // dd($service);
+            if ($totalAmount > 0) {
+                if (\App\Helpers\isExistVat()) {
+                    $totalVat += $service->qty * (\App\Helpers\valueOfVat() / 100) * $service->service_fee;
                 }
-                $data['services'][] = $service;    
+                $data['services'][] = $service;
             }
-            
         }
-
+        $data['totalVat'] = $totalVat;
+        
         return $data;
     }
 
@@ -129,7 +132,7 @@ class AgentInvoiceService
         $data = ['agents' => []];
 
         // Get all agents with applications this week
-        if($from && $to){
+        if ($from && $to) {
             $agentsWithApplications = Application::whereDate('created_at', '>=', $from)
                 ->whereDate('created_at', '<=', $to)
                 ->pluck('travel_agent_id')
@@ -142,7 +145,7 @@ class AgentInvoiceService
                 ->whereDate('created_at', '<=', $to)
                 ->pluck('agent_id')
                 ->unique();
-        }else{
+        } else {
 
             $agentsWithApplications = Application::pluck('travel_agent_id')->unique();
 
@@ -162,6 +165,4 @@ class AgentInvoiceService
 
         return $data;
     }
-    
-
 }
