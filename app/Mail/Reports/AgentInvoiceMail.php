@@ -38,6 +38,7 @@ class AgentInvoiceMail extends Mailable
         $options->set('isHtml5ParserEnabled', true);
         $options->set('isPhpEnabled', true);
         $options->set('defaultFont', 'Arial');
+        $options->set('isRemoteEnabled', true); // Enable remote resources if needed
 
         $invoice = \App\Models\AgentInvoice::query()
             ->where('agent_id', $this->agent->id)
@@ -55,7 +56,6 @@ class AgentInvoiceMail extends Mailable
 
         // Load HTML to Dompdf
         $dompdf->loadHtml($html);
-        // Set paper size
         $dompdf->setPaper('A4', 'portrait');
 
         // Render PDF

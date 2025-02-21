@@ -7,18 +7,14 @@
     <title>{{ $title ?? 'Report' }}</title>
     <style>
         body {
-            font-family: 'Arial', sans-serif;
+            font-family: Arial, sans-serif;
             margin: 0;
-            padding: 0;
+            padding: 20px;
             background-color: #f4f4f4;
         }
 
-        .table-responsive {
-            overflow: hidden;
-        }
-
         main {
-            padding: 20px;
+            width: 100%;
         }
 
         .card {
@@ -40,32 +36,27 @@
         .card-title {
             margin: 0;
             font-size: 1.25rem;
-            font-weight: bolder;
+            font-weight: bold;
             color: black;
-        }
-
-        .border-0 {
-            border: none;
         }
 
         .card-body {
             padding: 15px;
         }
 
-        /* Table Styling */
+        /* Simplified Table Styling */
         .table {
             width: 100%;
-            margin-bottom: 0;
-            background-color: #fff;
             border-collapse: collapse;
+            background-color: #fff;
         }
 
         .table th,
         .table td {
-            padding: 12px;
-            text-align: center; /* Centralized text for consistency */
-            border-bottom: 1px solid #ddd;
-            vertical-align: middle; /* Align content vertically */
+            border: 1px solid #dee2e6;
+            padding: 10px;
+            text-align: center;
+            vertical-align: middle;
         }
 
         .table th {
@@ -73,65 +64,6 @@
             font-weight: bold;
         }
 
-        .table tbody tr:hover {
-            background-color: #f5f5f5;
-        }
-
-        .total-row {
-            font-weight: bold;
-        }
-
-        .text-center {
-            text-align: center;
-        }
-
-        .btn-primary {
-            background: #0b5ed7;
-        }
-
-        /* Define min/max widths for table columns */
-        .table th:nth-child(1),
-        .table td:nth-child(1) { /* Item # */
-            min-width: 50px;
-            max-width: 50px;
-        }
-
-        .table th:nth-child(2),
-        .table td:nth-child(2) { /* Description */
-            min-width: 200px;
-            max-width: 250px;
-            word-wrap: break-word; /* Ensure long text wraps */
-        }
-
-        .table th:nth-child(3),
-        .table td:nth-child(3) { /* Qty */
-            min-width: 60px;
-            max-width: 60px;
-        }
-
-        .table th:nth-child(4),
-        .table td:nth-child(4) { /* Unit Price */
-            min-width: 100px;
-            max-width: 120px;
-        }
-
-        .table th:nth-child(5),
-        .table td:nth-child(5) { /* Amount */
-            min-width: 100px;
-            max-width: 120px;
-        }
-
-        /* Bordered Table */
-        .table-bordered {
-            border: 1px solid #dee2e6;
-        }
-
-        .table-bordered th,
-        .table-bordered td {
-            border: 1px solid #dee2e6;
-        }
-
-        /* Alternating Row Colors */
         .table tbody tr:nth-child(odd) {
             background-color: #f2f2f2;
         }
@@ -141,14 +73,18 @@
         }
 
         /* Footer Styling */
-        tfooter tr td {
+        tfoot td {
             border: 1px solid #dee2e6;
-            padding: 12px;
+            padding: 10px;
         }
 
         .span-block {
             display: block;
-            margin-bottom: 3px;
+            margin-bottom: 5px;
+        }
+
+        .text-center {
+            text-align: center;
         }
     </style>
 </head>
@@ -165,7 +101,7 @@
                     $invoice = \App\Models\AgentInvoice::query()->find(request()->invoice);
                 @endphp
                 @if ($agent)
-                    <div class="mt-4" style="margin-bottom: 10px; margin-top: 10px;">
+                    <div style="margin-bottom: 10px; margin-top: 10px;">
                         <strong class="span-block">Agent: {{ $agent->name }}</strong>
                         <strong class="span-block">Agent address: {{ $agent->address }}</strong>
                         <strong class="span-block">Tel: {{ $agent->telephone }}</strong>
@@ -188,14 +124,14 @@
                 @endphp
 
                 @if (isset($data['agents'][0]['visas']) && count($data['agents'][0]['visas']) > 0)
-                    <table class="table table-bordered">
+                    <table class="table" style="width: 100%;">
                         <thead>
                             <tr>
-                                <th>Item #</th>
-                                <th>@lang('admin.description')</th>
-                                <th>Qty</th>
-                                <th>Unit Price</th>
-                                <th>Amount</th>
+                                <th style="width: 10%;">Item #</th>
+                                <th style="width: 40%;">@lang('admin.description')</th>
+                                <th style="width: 10%;">Qty</th>
+                                <th style="width: 20%;">Unit Price</th>
+                                <th style="width: 20%;">Amount</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -277,7 +213,7 @@
                                 <td colspan="5"></td>
                             </tr>
                         </tbody>
-                        <tfooter>
+                        <tfoot>
                             <tr>
                                 <td></td>
                                 <td>Subtotal:</td>
@@ -315,12 +251,12 @@
                                 <td></td>
                                 <td><strong>${{ \App\Helpers\formatCurrency($oldBalance + $subTotal + $data['agents'][0]['totalVat']) }}</strong></td>
                             </tr>
-                        </tfooter>
+                        </tfoot>
                     </table>
                     <p class="text-center">Amount due is {{ \App\Helpers\convertNumberToWorldsInUsd($oldBalance + $totalAmount) }}</p>
                 @else
                     <div class="row" style="margin-top: 10px">
-                        <div class="alert alert-warning">@lang('site.no_data_to_display')</div>
+                        <div class="alert alert-warning" style="width: 100%; padding: 10px;">@lang('site.no_data_to_display')</div>
                     </div>
                 @endif
             </div>
