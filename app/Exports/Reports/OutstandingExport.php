@@ -68,15 +68,18 @@ class OutstandingExport implements FromCollection, WithHeadings, ShouldAutoSize,
             'Total sales' =>'Total sales',
             'UnPaid Bal'  => 'UnPaid Bal',
         ];
-        foreach ($this->data['directs'] as  $agent){
-            $dataRows[] = [
-                '#' => $key+1,
-                'Type' => 'Direct',
-                'Name' => $agent['name'],
-                'Total sales' => '$ ' .  formatCurrency($agent['total']),
-                'UnPaid Bal' =>'$ ' . formatCurrency($agent['un_paid'])
-            ];
+        if(isset($this->data['directs'])){
+            foreach ($this->data['directs'] as  $agent){
+                $dataRows[] = [
+                    '#' => $key+1,
+                    'Type' => 'Direct',
+                    'Name' => $agent['name'],
+                    'Total sales' => '$ ' .  formatCurrency($agent['total']),
+                    'UnPaid Bal' =>'$ ' . formatCurrency($agent['un_paid'])
+                ];
+            }
         }
+        
         $dataRows[] = [
 
             '#' => '',
