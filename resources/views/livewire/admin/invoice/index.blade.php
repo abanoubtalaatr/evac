@@ -37,6 +37,7 @@
 
                         <th class="text-center">@lang('admin.title_invoice')</th>
                         <th class="text-center">@lang('admin.total_amount')</th>
+                        <th class="text-center">VAT</th>
                         <th>@lang('site.actions')</th>
                     </tr>
                     </thead>
@@ -50,7 +51,7 @@
 
                             <td class='text-center'>{{$record->invoice_title}}</td>
                             <td class='text-center'>{{\App\Helpers\formatCurrency($record->total_amount)}}</td>
-
+                            <td class='text-center'>{{\App\Helpers\formatCurrency($record->vat)}}</td>
                             <td>
                                 <div class="actions">
                                     <a style="cursor:pointer;" wire:click="showInvoice({{$record->id}})" class="no-btn"><i

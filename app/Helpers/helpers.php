@@ -172,7 +172,7 @@ if (!function_exists('convertNumberToWorldsInUsd')) {
         $points = ($decimal) ?
             " & " . ($words2[floor($decimal / 10)] . " " . $words[$decimal % 10]) . " Cents" : '';
 
-        return $result . " dollars " . $points . ' only';
+        return $result . " USD " . $points . ' ONLY';
     }
 }
 
@@ -221,22 +221,22 @@ if (!function_exists('calculateAmountAndDubaiFeeAndServiceFee')) {
     function calculateAmountAndDubaiFeeAndServiceFee($agentId, $visaTypeId)
     {
         $newServiceFee = 0;
-        if(isset($agentId) && isset($visaTypeId) ) {
+        if (isset($agentId) && isset($visaTypeId)) {
             $newServiceFee = getServiceFeePriceAfterNewPriceApplyForAgentOnVisaType($agentId, $visaTypeId);
         }
 
         $visaType = VisaType::query()->find($visaTypeId);
-    
+
         if ($newServiceFee > 0) {
             $vatRate = vatRate($visaTypeId, $newServiceFee);
             $amount = $visaType->dubai_fee + $newServiceFee + $vatRate;
-    
+
             $data['amount'] = $amount;
             $data['service_fee'] = $newServiceFee;
             $data['dubai_fee'] = $visaType->dubai_fee;
             $data['vat'] = $vatRate;
             return $data;
-        }else{
+        } else {
             $vatRate = vatRate($visaTypeId);
             $amount = $visaType->dubai_fee + $visaType->service_fee + $vatRate;
             $data['amount'] = $amount;
@@ -522,5 +522,51 @@ if (!function_exists('totalAmountBetweenTwoDate')) {
             return $totalAmount;
         }
         return 0;
+    }
+}
+
+if (!function_exists('getNewTotalOfVisaAfterNewServiceFee')) {
+    function getNewTotalOfVisaAfterNewServiceFee($agent, $visa)
+    {
+        if ($agent) {
+            $visaPrice = $agent->agentVisaPrices()->where('visa_type_id', $visa->id)->first();
+            if ($visa) {
+                return $visaPrice->price  + $visa->dubai_fee;
+            }
+            return $visa->total;
+        }
+        return $visa->total;
+    }
+}
+
+if(!function_exists('isExistVat')){
+    function isExistVat()
+    {
+        $setting = Setting::query()->first();
+
+        $value = (int) filter_var($setting->vat_rate, FILTER_SANITIZE_NUMBER_INT);
+
+        if($value > 0){
+            return true;
+        }
+        return false;
+    }
+}
+
+if(!function_exists('valueOfVat')){
+    function valueOfVat()
+    {
+        $setting = Setting::query()->first();
+
+        return (int) filter_var($setting->vat_rate, FILTER_SANITIZE_NUMBER_INT);
+    }
+}
+
+if(!function_exists('registrationNumber')){
+    function registrationNumber()
+    {
+        $setting = Setting::query()->first();
+        
+        return $setting->vat_no;
     }
 }

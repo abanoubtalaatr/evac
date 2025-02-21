@@ -1,9 +1,10 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{{$title ?? 'Report'}}</title>
+    <title>{{ $title ?? 'Report' }}</title>
     <style>
         body {
             font-family: 'Arial', sans-serif;
@@ -11,9 +12,11 @@
             padding: 0;
             background-color: #f4f4f4;
         }
-        .table-responsive{
+
+        .table-responsive {
             overflow: hidden;
         }
+
         main {
             padding: 20px;
         }
@@ -40,8 +43,9 @@
             font-weight: bolder;
             color: black;
         }
-        .border-0{
-            border: none    ;
+
+        .border-0 {
+            border: none;
         }
 
         .card-body {
@@ -55,7 +59,8 @@
             border-collapse: collapse;
         }
 
-        .table th, .table td {
+        .table th,
+        .table td {
             padding: 12px;
             text-align: left;
             border-bottom: 1px solid #ddd;
@@ -72,203 +77,217 @@
         .total-row {
             font-weight: bold;
         }
-        .text-center{
+
+        .text-center {
             text-align: center;
         }
-        .btn-primary{
+
+        .btn-primary {
             background: #0b5ed7;
-        }
-        /* Set a fixed width for each column */
-        .table th:nth-child(1),
-        .table td:nth-child(1),
-        .table th:nth-child(2),
-        .table td:nth-child(2),
-        .table th:nth-child(3),
-        .table td:nth-child(3) {
-            width: 33.33%; /* Equal width for each column */
         }
     </style>
 </head>
+
 <body>
 
-<main>
-    @include('livewire.admin.shared.reports.header')
-    <!--dashboard-->
-    <section class="dashboard">
-        <div class="row">
+    <main>
+        @include('livewire.admin.shared.reports.header')
+        <!--dashboard-->
+        <section class="dashboard">
+            <div class="row">
 
-            @if(request()->fromDate && request()->toDate)
-                <h4>From : {{request()->fromDate}} - To : {{request()->toDate}}</h4>
-            @endif
-@php
-$totalInvoices =0;
-$totalCash =0;
-//dd(request()->all());
-    $fromDate = request()->fromDate;
-            $toDate = request()->toDate;
-            $data['applications']['invoices'] = \App\Models\Application::query()
-                ->where('payment_method', 'invoice')
-                ->where('travel_agent_id', null)
-->when($fromDate && $toDate, function ($query) use ($fromDate, $toDate) {
-                $query->whereDate('created_at', '>=', $fromDate)->whereDate('created_at', '<=', $toDate);
-            })                ->get();
-            $data['applications']['cashes'] = \App\Models\Application::query()
-                ->where('payment_method', 'cash')
-                ->where('travel_agent_id', null)
-->when($fromDate && $toDate, function ($query) use ($fromDate, $toDate) {
-                $query->whereDate('created_at', '>=', $fromDate)->whereDate('created_at', '<=', $toDate);
-            })                ->get();
+                @if (request()->fromDate && request()->toDate)
+                    <h4>From : {{ request()->fromDate }} - To : {{ request()->toDate }}</h4>
+                @endif
+                @php
+                    $totalInvoices = 0;
+                    $totalCash = 0;
+                    //dd(request()->all());
+                    $fromDate = request()->fromDate;
+                    $toDate = request()->toDate;
+                    $data['applications']['invoices'] = \App\Models\Application::query()
+                        ->where('payment_method', 'invoice')
+                        ->where('travel_agent_id', null)
+                        ->when($fromDate && $toDate, function ($query) use ($fromDate, $toDate) {
+                            $query->whereDate('created_at', '>=', $fromDate)->whereDate('created_at', '<=', $toDate);
+                        })
+                        ->get();
+                    $data['applications']['cashes'] = \App\Models\Application::query()
+                        ->where('payment_method', 'cash')
+                        ->where('travel_agent_id', null)
+                        ->when($fromDate && $toDate, function ($query) use ($fromDate, $toDate) {
+                            $query->whereDate('created_at', '>=', $fromDate)->whereDate('created_at', '<=', $toDate);
+                        })
+                        ->get();
 
-            $data['serviceTransactions']['invoices'] = \App\Models\ServiceTransaction::query()
-                ->where('agent_id', null)
-                ->where('payment_method', 'invoice')
-->when($fromDate && $toDate, function ($query) use ($fromDate, $toDate) {
-                $query->whereDate('created_at', '>=', $fromDate)->whereDate('created_at', '<=', $toDate);
-            })                ->get();
+                    $data['serviceTransactions']['invoices'] = \App\Models\ServiceTransaction::query()
+                        ->where('agent_id', null)
+                        ->where('payment_method', 'invoice')
+                        ->when($fromDate && $toDate, function ($query) use ($fromDate, $toDate) {
+                            $query->whereDate('created_at', '>=', $fromDate)->whereDate('created_at', '<=', $toDate);
+                        })
+                        ->get();
 
-            $data['serviceTransactions']['cashes'] =  \App\Models\ServiceTransaction::query()
-                ->where('agent_id', null)
-                ->where('payment_method', 'cash')
-->when($fromDate && $toDate, function ($query) use ($fromDate, $toDate) {
-                $query->whereDate('created_at', '>=', $fromDate)->whereDate('created_at', '<=', $toDate);
-            })                ->get();
+                    $data['serviceTransactions']['cashes'] = \App\Models\ServiceTransaction::query()
+                        ->where('agent_id', null)
+                        ->where('payment_method', 'cash')
+                        ->when($fromDate && $toDate, function ($query) use ($fromDate, $toDate) {
+                            $query->whereDate('created_at', '>=', $fromDate)->whereDate('created_at', '<=', $toDate);
+                        })
+                        ->get();
 
- @endphp
-            @if(count($data['applications']['invoices']) || count($data['serviceTransactions']['cashes']) || count($data['serviceTransactions']['invoices']))
-                    <table class="table-page table">
-                    <thead>
-                    <tr>
-                        <th class="text-center">#</th>
-                        <th class="text-center" >@lang('admin.date')</th>
-                        <th class="text-center">@lang('admin.application_name')</th>
-                        <th class="text-center">@lang('admin.amount')</th>
-                        <th class="text-center">@lang('admin.payment')</th>
-                        <th class="text-center">@lang('admin.type')</th>
-
-                    </tr>
-                    </thead>
-                    <tbody>
-                    @foreach($data['applications']['invoices'] as $record)
-                        @php
-                            $totalInvoices += $record->amount;
-                        @endphp
-                        <tr>
-                            <td>#{{$loop->index + 1}}</td>
-                            <td class='text-center'>{{\Illuminate\Support\Carbon::parse($record->created_at)->format('Y-m-d') }}</td>
-                            <td class='text-center'>{{ $record->first_name . ' '. $record->last_name.  ' - ' . $record->passport_no}}</td>
-                            <td class='text-center'>{{\App\Helpers\formatCurrency($record->amount)}}</td>
-                            <td class='text-center'>{{$record->payment_method}}</td>
-                            <td class='text-center'>{{$record->visaType->name}}</td>
-                        </tr>
-                    @endforeach
-                    @foreach($data['serviceTransactions']['invoices'] as $record)
-                        @php
-                            $totalInvoices += $record->amount;
-                        @endphp
-                        <tr>
-
-                            <td>#{{$loop->index + 1}}</td>
-                            <td class='text-center'>{{\Illuminate\Support\Carbon::parse($record->created_at)->format('Y-m-d') }}</td>
-                            <td class='text-center'>{{ $record->name . ' '. $record->surname.  ' - ' . $record->passport_no}}</td>
-                            <td class='text-center'>{{\App\Helpers\formatCurrency($record->amount)}}</td>
-                            <td class='text-center'>{{$record->payment_method}}</td>
-                            <td class='text-center'>{{$record->service->name}}</td>
-                        </tr>
-                    @endforeach
-                    <tr>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                    </tr>
-                    </tbody>
-                        <tfoot>
-
-                        <tr>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td> Total invoices : {{\App\Helpers\formatCurrency($totalInvoices)}}</td>
-                            <td></td>
-
-                        </tr>
-                        </tfoot>
-                </table>
-
+                @endphp
+                @if (count($data['applications']['invoices']) ||
+                        count($data['serviceTransactions']['cashes']) ||
+                        count($data['serviceTransactions']['invoices']))
                     <table class="table-page table">
                         <thead>
-                        <tr>
-                            <th class="text-center">#</th>
-                            <th class="text-center" >@lang('admin.date')</th>
-                            <th class="text-center">@lang('admin.application_name')</th>
-                            <th class="text-center">@lang('admin.amount')</th>
-                            <th class="text-center">@lang('admin.payment')</th>
-                            <th class="text-center">@lang('admin.type')</th>
+                            <tr>
+                                <th class="text-center">#</th>
+                                <th class="text-center">@lang('admin.date')</th>
+                                <th class="text-center">@lang('admin.application_name')</th>
+                                <th class="text-center">@lang('admin.amount')</th>
+                                <th class="text-center">@lang('admin.payment')</th>
+                                <th class="text-center">@lang('admin.type')</th>
 
-                        </tr>
+                            </tr>
                         </thead>
                         <tbody>
+                            @foreach ($data['applications']['invoices'] as $record)
+                                @php
+                                    $totalInvoices += $record->amount;
+                                @endphp
+                                <tr>
+                                    <td>#{{ $loop->index + 1 }}</td>
+                                    <td class='text-center'>
+                                        {{ \Illuminate\Support\Carbon::parse($record->created_at)->format('Y-m-d') }}
+                                    </td>
+                                    <td class='text-center'>
+                                        {{ $record->first_name . ' ' . $record->last_name . ' - ' . $record->passport_no }}
+                                    </td>
+                                    <td class='text-center'>{{ \App\Helpers\formatCurrency($record->amount) }}</td>
+                                    <td class='text-center'>{{ $record->payment_method }}</td>
+                                    <td class='text-center'>{{ $record->visaType->name }}</td>
+                                </tr>
+                            @endforeach
+                            @foreach ($data['serviceTransactions']['invoices'] as $record)
+                                @php
+                                    $totalInvoices += $record->amount;
+                                @endphp
+                                <tr>
 
-                        <tr>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                        </tr>
-                        @foreach($data['applications']['cashes'] as $record)
+                                    <td>#{{ $loop->index + 1 }}</td>
+                                    <td class='text-center'>
+                                        {{ \Illuminate\Support\Carbon::parse($record->created_at)->format('Y-m-d') }}
+                                    </td>
+                                    <td class='text-center'>
+                                        {{ $record->name . ' ' . $record->surname . ' - ' . $record->passport_no }}</td>
+                                    <td class='text-center'>{{ \App\Helpers\formatCurrency($record->amount) }}</td>
+                                    <td class='text-center'>{{ $record->payment_method }}</td>
+                                    <td class='text-center'>{{ $record->service->name }}</td>
+                                </tr>
+                            @endforeach
                             <tr>
-                                @php
-                                    $totalCash += $record->amount;
-                                @endphp
-                                <td>#{{$loop->index + 1}}</td>
-                                <td class='text-center'>{{\Illuminate\Support\Carbon::parse($record->created_at)->format('Y-m-d') }}</td>
-                                <td class='text-center'>{{ $record->first_name . ' '. $record->last_name.  ' - ' . $record->passport_no}}</td>
-                                <td class='text-center'>{{\App\Helpers\formatCurrency($record->amount)}}</td>
-                                <td class='text-center'>{{$record->payment_method}}</td>
-                                <td class='text-center'>{{$record->visaType->name}}</td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
                             </tr>
-                        @endforeach
-                        @foreach($data['serviceTransactions']['cashes'] as $record)
-                            <tr>
-                                @php
-                                    $totalCash += $record->amount;
-                                @endphp
-                                <td>#{{$loop->index + 1}}</td>
-                                <td class='text-center'>{{\Illuminate\Support\Carbon::parse($record->created_at)->format('Y-m-d') }}</td>
-                                <td class='text-center'>{{ $record->name . ' '. $record->surname.  ' - ' . $record->passport_no}}</td>
-                                <td class='text-center'>{{\App\Helpers\formatCurrency($record->amount)}}</td>
-                                <td class='text-center'>{{$record->payment_method}}</td>
-                                <td class='text-center'>{{$record->service->name}}</td>
-                            </tr>
-                        @endforeach
                         </tbody>
                         <tfoot>
 
-                        <tr>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td> Total Cash : {{\App\Helpers\formatCurrency($totalCash)}}</td>
-                            <td></td>
+                            <tr>
+                                <td></td>
+                                <td></td>
+                                <td>Total invoices  </td>
+                                <td>  {{ \App\Helpers\formatCurrency($totalInvoices) }}</td>
+                                <td></td>
 
-                        </tr>
+                            </tr>
                         </tfoot>
                     </table>
 
-                @else
-                <div class="row" style='margin-top:10px'>
-                    <div class="alert alert-warning">@lang('site.no_data_to_display')</div>
-                </div>
-            @endif
-        </div>
-    </section>
-    @include('livewire.admin.shared.reports.footer')
+                    <table class="table-page table">
+                        <thead>
+                            <tr>
+                                <th class="text-center">#</th>
+                                <th class="text-center">@lang('admin.date')</th>
+                                <th class="text-center">@lang('admin.application_name')</th>
+                                <th class="text-center">@lang('admin.amount')</th>
+                                <th class="text-center">@lang('admin.payment')</th>
+                                <th class="text-center">@lang('admin.type')</th>
 
-</main>
+                            </tr>
+                        </thead>
+                        <tbody>
+
+                            <tr>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                            </tr>
+                            @foreach ($data['applications']['cashes'] as $record)
+                                <tr>
+                                    @php
+                                        $totalCash += $record->amount;
+                                    @endphp
+                                    <td>#{{ $loop->index + 1 }}</td>
+                                    <td class='text-center'>
+                                        {{ \Illuminate\Support\Carbon::parse($record->created_at)->format('Y-m-d') }}
+                                    </td>
+                                    <td class='text-center'>
+                                        {{ $record->first_name . ' ' . $record->last_name . ' - ' . $record->passport_no }}
+                                    </td>
+                                    <td class='text-center'>{{ \App\Helpers\formatCurrency($record->amount) }}</td>
+                                    <td class='text-center'>{{ $record->payment_method }}</td>
+                                    <td class='text-center'>{{ $record->visaType->name }}</td>
+                                </tr>
+                            @endforeach
+                            @foreach ($data['serviceTransactions']['cashes'] as $record)
+                                <tr>
+                                    @php
+                                        $totalCash += $record->amount;
+                                    @endphp
+                                    <td>#{{ $loop->index + 1 }}</td>
+                                    <td class='text-center'>
+                                        {{ \Illuminate\Support\Carbon::parse($record->created_at)->format('Y-m-d') }}
+                                    </td>
+                                    <td class='text-center'>
+                                        {{ $record->name . ' ' . $record->surname . ' - ' . $record->passport_no }}</td>
+                                    <td class='text-center'>{{ \App\Helpers\formatCurrency($record->amount) }}</td>
+                                    <td class='text-center'>{{ $record->payment_method }}</td>
+                                    <td class='text-center'>{{ $record->service->name }}</td>
+                                </tr>
+                            @endforeach
+                        </tbody>
+                        <tfoot>
+
+                            <tr>
+                                <td></td>
+                                <td></td>
+                                <td>Total Cash </td>
+                                <td>  {{ \App\Helpers\formatCurrency($totalCash) }}</td>
+                                <td></td>
+
+                            </tr>
+                        </tfoot>
+                    </table>
+                @else
+                    <div class="row" style='margin-top:10px'>
+                        <div class="alert alert-warning">@lang('site.no_data_to_display')</div>
+                    </div>
+                @endif
+            </div>
+        </section>
+        @include('livewire.admin.shared.reports.footer')
+
+    </main>
 
 </body>
+
 </html>

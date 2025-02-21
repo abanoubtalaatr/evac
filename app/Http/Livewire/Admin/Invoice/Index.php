@@ -131,8 +131,13 @@ class Index extends Component
             'invoice' => $invoice->id
         ]);
 
+        $agent = Agent::find($id);
+        $name= 'agent_INVOICE.csv';
+        if($agent){
+            $name = $agent->name ."_INVOICE.csv";
+        }
         $fileExport = (new \App\Exports\Reports\AgentInvoiceExport($data));
-        return Excel::download($fileExport, 'agent_invoice.csv');
+        return Excel::download($fileExport, $name);
     }
 
     public function recalculateInvoice($id)
@@ -177,10 +182,11 @@ class Index extends Component
         $oldBalance = $totalForInvoice - $allAmountFromDayOneUntilEndOfInvoice - $totalAmount;
 
         $invoice->update([
-            'total_amount' => $totalAmount,
+            'total_amount' => $totalAmount + $totalAmountFromDayOneUntilEndOfInvoice['totalVat'],
             'payment_received' => $paymentForAgent,
             'old_balance' => $oldBalance,
-            'grand_total' => $totalAmount + $oldBalance
+            'grand_total' => $totalAmount + $totalAmountFromDayOneUntilEndOfInvoice['totalVat'] + $oldBalance,
+            'vat' => $totalAmountFromDayOneUntilEndOfInvoice['totalVat'],
         ]);
 
         session()->flash('success',__('Recalculate successfully'));

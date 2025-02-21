@@ -23,8 +23,8 @@ class AgentStatement extends Component
         $agent_id,
         $email,
         $showSendEmail = false,
-        $showSendEmailButton= false,
-        $message= null, $agent, $payment_method, $disableSendForAdminsButton= false;
+        $showSendEmailButton = false,
+        $message = null, $agent, $payment_method, $disableSendForAdminsButton = false;
 
     public function mount()
     {
@@ -34,9 +34,9 @@ class AgentStatement extends Component
 
     public function updatedAgentId()
     {
-        if(!is_null($this->agent)) {
+        if (!is_null($this->agent)) {
             $this->showSendEmailButton = true;
-        }else{
+        } else {
             $this->showSendEmailButton = false;
         }
     }
@@ -54,7 +54,7 @@ class AgentStatement extends Component
     }
     public function printData()
     {
-        $url = route('admin.report.print.agent_statement', ['agent' => $this->agent,'fromDate' => $this->from,'toDate' => $this->to]);
+        $url = route('admin.report.print.agent_statement', ['agent' => $this->agent, 'fromDate' => $this->from, 'toDate' => $this->to]);
         $this->emit('printTable', $url);
     }
 
@@ -68,8 +68,8 @@ class AgentStatement extends Component
 
                 // Add date range filters if provided
                 if ($this->from && $this->to) {
-                    $invoiceQuery->whereDate('created_at', '>=', $this->from)
-                        ->whereDate('created_at', '<=', $this->to);
+                    $invoiceQuery->whereDate('from', '>=', $this->from)
+                        ->whereDate('to', '<=', $this->to);
                     $paymentQuery->whereDate('created_at', '>=', $this->from)
                         ->whereDate('created_at', '<=', $this->to);
                 }
@@ -92,8 +92,8 @@ class AgentStatement extends Component
 
                 // Add date range filters if provided
                 if ($this->from && $this->to) {
-                    $invoiceQuery->whereDate('created_at', '>=', $this->from)
-                        ->whereDate('created_at', '<=', $this->to);
+                    $invoiceQuery->whereDate('from', '>=', $this->from)
+                        ->whereDate('to', '<=', $this->to);
                     $paymentQuery->whereDate('created_at', '>=', $this->from)
                         ->whereDate('created_at', '<=', $this->to);
                 }
@@ -103,9 +103,9 @@ class AgentStatement extends Component
             }
         }
 
-        if($data){
+        if ($data) {
 
-// Combine and order the results
+            // Combine and order the results
             $combinedResults = collect($data['invoices'])
                 ->merge($data['payment_received'])
                 ->sortBy(function ($item) {
@@ -115,10 +115,10 @@ class AgentStatement extends Component
                 ->values()
                 ->all();
 
-// Calculate the total sum of total_amount from invoices
+            // Calculate the total sum of total_amount from invoices
             $totalDrCount = collect($data['invoices'])->sum('total_amount');
 
-// Calculate the total sum of amount from payment_received
+            // Calculate the total sum of amount from payment_received
             $totalCrCount = collect($data['payment_received'])->sum('amount');
 
             $data['combined_results'] = $combinedResults;
@@ -126,10 +126,10 @@ class AgentStatement extends Component
             $data['totalCrCount'] = $totalCrCount;
 
 
-// Calculate the total sum of total_amount from invoices
+            // Calculate the total sum of total_amount from invoices
             $totalDrCount = collect($data['invoices'])->sum('total_amount');
 
-// Calculate the total sum of amount from payment_received
+            // Calculate the total sum of amount from payment_received
             $totalCrCount = collect($data['payment_received'])->sum('amount');
 
             $data['totalDrCount'] = $totalDrCount;
@@ -138,7 +138,7 @@ class AgentStatement extends Component
 
             $data['data'] = $combinedResults;
         }
-        
+
         return $data;
     }
 
@@ -147,7 +147,7 @@ class AgentStatement extends Component
     {
         $this->validate();
 
-        if(is_null($this->agent) || $this->agent =='no_result') {
+        if (is_null($this->agent) || $this->agent == 'no_result') {
             $this->message = "You must choose travel agent";
             return;
         }
@@ -155,21 +155,21 @@ class AgentStatement extends Component
         $agent = Agent::query()->find($this->agent);
 
         $request->merge([
-           'agent' => $this->agent,
-           'fromDate' => $this->from,
-           'toDate' => $this->to,
+            'agent' => $this->agent,
+            'fromDate' => $this->from,
+            'toDate' => $this->to,
         ]);
 
         $emails = explode(',', $this->email);
-        foreach ($emails as $email){
+        foreach ($emails as $email) {
             Mail::to($email)->send(new AgentStatementMail($agent->id, $this->from, $this->to));
         }
 
         $this->email = null;
         $this->message = null;
-//        $this->agent = null;
+        //        $this->agent = null;
         $this->toggleShowModal();
-//        return redirect()->to(route('admin.report.agent_statement'));
+        //        return redirect()->to(route('admin.report.agent_statement'));
     }
 
 
@@ -177,14 +177,14 @@ class AgentStatement extends Component
     {
         $fileExport = (new \App\Exports\Reports\AgentStatementExport($this->getRecords(), $this->agent));
         $agent = Agent::query()->find($this->agent);
-        $name = $agent ?  $agent->name.'_statement.csv' : 'agent_statement.csv';
+        $name = $agent ?  $agent->name . '_statement.csv' : 'agent_statement.csv';
         return Excel::download($fileExport, $name);
     }
 
     public function getRules()
     {
         return [
-          'email' => ['required']
+            'email' => ['required']
         ];
     }
 

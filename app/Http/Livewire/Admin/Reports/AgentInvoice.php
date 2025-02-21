@@ -176,9 +176,11 @@ class AgentInvoice extends Component
         } else {
             $data = (new AgentInvoiceService())->getRecords(null, $this->from, $this->to);
         }
+        
         $fromDate = '1970-01-01';
 
         foreach ($data['agents'] as $row) {
+            
             $totalAmount = 0;
             if (!is_null($row['agent'])) {
                 $settings = Setting::query()->first();
@@ -197,6 +199,7 @@ class AgentInvoice extends Component
                     $this->to
                 );
 
+                
                 $allAmountFromDayOneUntilEndOfInvoice = PaymentTransaction::query()
                     ->where('agent_id', $row['agent']['id'])
                     ->whereDate('created_at', '>=', $fromDate)
@@ -212,6 +215,7 @@ class AgentInvoice extends Component
                     $totalForInvoice += $service->totalAmount;
                 }
                 foreach ($getTotalAmount['visas'] as $visa) {
+
                     $totalAmount += $visa->totalAmount;
                 }
                 foreach ($getTotalAmount['services'] as $service) {
@@ -234,6 +238,10 @@ class AgentInvoice extends Component
                     ->latest()
                     ->first();
 
+                    // علشان اجيب اخر فاتوره 
+                    // واجيب 
+                    // title 
+                    // وازود عليه رقم 
                 if ($lastRow) {
 
                     $lastTwoDigitsOfYear = intval(trim(substr($lastRow->invoice_title, 4, 3)));
@@ -279,10 +287,11 @@ class AgentInvoice extends Component
                 if ($totalAmount > 0) {
                     if (!is_null($rawExistBeforeForAgent)) {
                         $rawExistBeforeForAgent->update([
-                            'total_amount' => $totalAmount,
+                            'total_amount' => $totalAmount + $getTotalAmount['totalVat'],
                             'payment_received' => $allAmountFromDayOneUntilEndOfInvoice,
                             'old_balance' => $oldBalance,
-                            'grand_total' => $totalAmount + $oldBalance,
+                            'grand_total' => $totalAmount + $getTotalAmount['totalVat'] + $oldBalance,
+                            'vat' => $getTotalAmount['totalVat']
                         ]);
                     } else {
                         $checkAgentIsHidden = Agent::query()->find($row['agent']['id']);
@@ -302,10 +311,11 @@ class AgentInvoice extends Component
                             'from' => $this->from,
                             'to' => $this->to,
                             'last_valid_invoice' => $lastValidInvoice,
-                            'total_amount' => $totalAmount,
+                            'total_amount' => $totalAmount + $getTotalAmount['totalVat'],
                             'payment_received' => $allAmountFromDayOneUntilEndOfInvoice,
                             'old_balance' => $oldBalance,
-                            'grand_total' => $totalAmount + $oldBalance
+                            'grand_total' => $totalAmount +  $getTotalAmount['totalVat']+ $oldBalance,
+                            'vat' => $getTotalAmount['totalVat']
                         ]);
                     }
                 }
@@ -509,6 +519,7 @@ class AgentInvoice extends Component
 
     public function render()
     {
+        
         $records = $this->getRecords(false, $this->agent, $this->from, $this->to);
         return view('livewire.admin.reports.agent-invoice', compact('records'))->layout('layouts.admin');
     }

@@ -1,21 +1,20 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{{$title ?? 'Report'}}</title>
+    <title>{{ $title ?? 'Report' }}</title>
     <style>
         body {
-            font-family: 'Arial', sans-serif;
+            font-family: Arial, sans-serif;
             margin: 0;
-            padding: 0;
+            padding: 20px;
             background-color: #f4f4f4;
         }
-        .table-responsive{
-            overflow: hidden;
-        }
+
         main {
-            padding: 20px;
+            width: 100%;
         }
 
         .card {
@@ -37,253 +36,233 @@
         .card-title {
             margin: 0;
             font-size: 1.25rem;
-            font-weight: bolder;
+            font-weight: bold;
             color: black;
-        }
-        .border-0{
-            border: none    ;
         }
 
         .card-body {
             padding: 15px;
         }
 
+        /* Simplified Table Styling */
         .table {
             width: 100%;
-            margin-bottom: 0;
-            background-color: #fff;
             border-collapse: collapse;
+            background-color: #fff;
         }
 
-        .table th, .table td {
-            padding: 12px;
-            text-align: left;
-            border-bottom: 1px solid #ddd;
+        .table th,
+        .table td {
+            border: 1px solid #dee2e6;
+            padding: 10px;
+            text-align: center;
+            vertical-align: middle;
         }
 
         .table th {
             background-color: #f8f9fa;
-        }
-
-        .table tbody tr:hover {
-            background-color: #f5f5f5;
-        }
-
-        .total-row {
             font-weight: bold;
         }
-        .text-center{
+
+        .table tbody tr:nth-child(odd) {
+            background-color: #f2f2f2;
+        }
+
+        .table tbody tr:nth-child(even) {
+            background-color: #ffffff;
+        }
+
+        /* Footer Styling */
+        tfoot td {
+            border: 1px solid #dee2e6;
+            padding: 10px;
+        }
+
+        .span-block {
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        .text-center {
             text-align: center;
         }
-        .btn-primary{
-            background: #0b5ed7;
-        }
-        /* Set a fixed width for each column */
-        .table th:nth-child(1),
-        .table td:nth-child(1),
-        .table th:nth-child(2),
-        .table td:nth-child(2),
-        .table th:nth-child(3),
-        .table td:nth-child(3) {
-            width: 33.33%; /* Equal width for each column */
-        }
-        table {
-            width: 100%;
-        }
-
-        th, td {
-            width: auto; /* or specify widths in pixels */
-        }
-        .span-block{
-            display: block;
-            margin-bottom: 3px;
-        }
-
     </style>
 </head>
+
 <body>
+    <main>
+        @include('livewire.admin.shared.reports.header', ['showInvoiceTitle' => true])
 
-<main>
-    @include('livewire.admin.shared.reports.header', ['showInvoiceTitle' => true])
+        <!-- Dashboard -->
+        <section class="dashboard">
+            <div class="row">
+                @php
+                    $agent = \App\Models\Agent::query()->find(request()->agent);
+                    $invoice = \App\Models\AgentInvoice::query()->find(request()->invoice);
+                @endphp
+                @if ($agent)
+                    <div style="margin-bottom: 10px; margin-top: 10px;">
+                        <strong class="span-block">Agent: {{ $agent->name }}</strong>
+                        <strong class="span-block">Agent address: {{ $agent->address }}</strong>
+                        <strong class="span-block">Tel: {{ $agent->telephone }}</strong>
+                        <strong class="span-block">Account No: {{ $agent->account_number }}</strong>
+                    </div>
+                @endif
+                <strong class="span-block">INV No: {{ $invoice ? $invoice->invoice_title : '' }}</strong>
 
-    <!--dashboard-->
-    <section class="dashboard">
-        
-        <div class="row">
+                @if (request()->fromDate && request()->toDate)
+                    <h4>Period of sales from: {{ request()->fromDate }} - To: {{ request()->toDate }}</h4>
+                @endif
+                <br>
 
-           @php
-           $agent = \App\Models\Agent::query()->find(request()->agent);
-           $invoice = \App\Models\AgentInvoice::query()->find(request()->invoice);
-           @endphp
-        @if($agent)
-            <div class="mt-4" style="margin-bottom: 10px;margin-top: 10px;">
-                <strong class="span-block">Agent : {{$agent->name}}</strong>
-                <strong class="span-block">Agent address: {{$agent->address}}</strong>
+                @php
+                    $data = (new \App\Services\AgentInvoiceService())->getRecords(
+                        request()->agent,
+                        request()->fromDate,
+                        request()->toDate,
+                    );
+                @endphp
 
-                <strong class="span-block">Tel : {{$agent->telephone}}</strong>
-                <strong class="span-block">Account No: {{$agent->account_number}}</strong>
-            </div>
-            @endif
-{{--            <strong class="span-block">Date : {{\Illuminate\Support\Carbon::today()->format('Y-m-d')}}</strong>--}}
-            <strong class="span-block">INV No: {{$invoice? $invoice->invoice_title:""}}</strong>
-
-            @if(request()->fromDate && request()->toDate)
-                <h4>Period of sales from : {{request()->fromDate}} - To : {{request()->toDate}}</h4>
-            @endif
-            <br>
-            @php
-                $data = (new \App\Services\AgentInvoiceService())->getRecords(request()->agent, request()->fromDate, request()->toDate);
-            @endphp
-
-            @php
-                $rowsCount= 1;
-                $totalAmount = 0;
-                $totalGrand = 0;
-                $totalPayment = 0;
-
-            @endphp
-            @if(isset($data['agents'][0]['visas']) && count($data['agents'][0]['visas']) > 0)
-                <table  width="100%" cellpadding="0" cellspacing="0" align="center" >
-                    <thead>
-                    <tr>
-                        <th class="text-center">Item #</th>
-                        <th class="text-center">@lang('admin.description')</th>
-                        <th class="text-center">Qty</th>
-                        <th class="text-center">Unit Price</th>
-                        <th class="text-center">Amount</th>
-
-                    </tr>
-                    </thead>
-                    <tbody>
-
-                    @php
-                        $rowsCount = 1;
-                        $totalAmount = 0;
-                        $totalApplicationAmount =0;
-                        $totalServiceTransactionsAmount =0;
-                        $oldBalance = 0;
-                    @endphp
-
-
+                @if (isset($data['agents'][0]['visas']) && count($data['agents'][0]['visas']) > 0)
+                    <table class="table" style="width: 100%;">
+                        <thead>
+                            <tr>
+                                <th style="width: 10%;">Item #</th>
+                                <th style="width: 40%;">@lang('admin.description')</th>
+                                <th style="width: 10%;">Qty</th>
+                                <th style="width: 20%;">Unit Price</th>
+                                <th style="width: 20%;">Amount</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @php
+                                $rowsCount = 1;
+                                $totalAmount = 0;
+                                $totalVat = 0;
+                                $subTotal = 0;
+                            @endphp
 
                             {{-- Display Visa information --}}
-                            @if(isset($data['agents'][0]['visas']) && count($data['agents'][0]['visas']) > 0)
-
-                                @foreach($data['agents'][0]['visas'] as $visa)
-
+                            @if (isset($data['agents'][0]['visas']) && count($data['agents'][0]['visas']) > 0)
+                                @foreach ($data['agents'][0]['visas'] as $visa)
                                     <tr>
                                         @php
                                             $totalAmount += $visa->totalAmount;
-                                            
+                                            $totalVat += $visa->totalVat;
+                                            $subTotal += $visa->totalAmount;
                                         @endphp
-                                        <td class="text-center">#{{ $rowsCount++ }}</td>
-                                        <td class="text-center">{{ $visa->name }}</td>
-                                        <td class="text-center">{{ $visa->qty }}</td>
-                                        <td class="text-center">{{ \App\Helpers\formatCurrency($visa->total) }}</td>
-                                        <td class="text-center">{{ \App\Helpers\formatCurrency($visa->totalAmount) }}</td>
+                                        <td>#{{ $rowsCount++ }}</td>
+                                        <td>{{ $visa->name }}</td>
+                                        <td>{{ $visa->qty }}</td>
+                                        <td>{{ \App\Helpers\formatCurrency($visa->total) }}</td>
+                                        <td>{{ \App\Helpers\formatCurrency($visa->totalAmount) }}</td>
                                     </tr>
                                 @endforeach
                             @endif
 
                             {{-- Display Service information --}}
-                            @if(isset($data['agents'][0]['services']) && count($data['agents'][0]['services']) > 0)
-                                @foreach($data['agents'][0]['services'] as $service)
-
+                            @if (isset($data['agents'][0]['services']) && count($data['agents'][0]['services']) > 0)
+                                @foreach ($data['agents'][0]['services'] as $service)
                                     <tr>
                                         @php
                                             $totalAmount += $service->totalAmount;
+                                            $subTotal += $service->qty * ($service->service_fee + $service->dubai_fee);
                                         @endphp
-                                        <td class="text-center">#{{ $rowsCount++ }}</td>
-                                        <td class="text-center">{{ $service->name }}</td>
-                                        <td class="text-center">{{ $service->qty }}</td>
-                                        <td class="text-center">{{ \App\Helpers\formatCurrency($service->amount) }}</td>
-                                        <td class="text-center">{{ \App\Helpers\formatCurrency($service->totalAmount) }}</td>
+                                        <td>#{{ $rowsCount++ }}</td>
+                                        <td>{{ $service->name }}</td>
+                                        <td>{{ $service->qty }}</td>
+                                        <td>{{ $service->service_fee + $service->dubai_fee }}</td>
+                                        <td>{{ \App\Helpers\formatCurrency($service->qty * ($service->service_fee + $service->dubai_fee)) }}</td>
                                     </tr>
                                 @endforeach
                             @endif
 
-                    @php
-                        $allAmountFromDayOneUntilEndOfInvoice =0;
-                        $totalForInvoice = 0;
-                        foreach ($data['agents'] as $agent) {
-                            if (!is_null($agent['agent'])){
-                                $carbonFrom = \Illuminate\Support\Carbon::parse(request()->fromDate);
-                                $carbonFrom->subDay();
-                                $fromDate = '1970-01-01';
-                                $totalAmountFromDayOneUntilEndOfInvoice = (new \App\Services\AgentInvoiceService())->getAgentData(
-                                    $agent['agent']['id'],
-                                    $fromDate,
-                                    $carbonFrom->format('Y-m-d'));
+                            @php
+                                $allAmountFromDayOneUntilEndOfInvoice = 0;
+                                $totalForInvoice = 0;
+                                foreach ($data['agents'] as $agent) {
+                                    if (!is_null($agent['agent'])) {
+                                        $carbonFrom = \Illuminate\Support\Carbon::parse(request()->fromDate);
+                                        $carbonFrom->subDay();
+                                        $fromDate = '1970-01-01';
+                                        $totalAmountFromDayOneUntilEndOfInvoice = (new \App\Services\AgentInvoiceService())->getAgentData(
+                                            $agent['agent']['id'],
+                                            $fromDate,
+                                            $carbonFrom->format('Y-m-d'),
+                                        );
 
-                                $allAmountFromDayOneUntilEndOfInvoice = \App\Models\PaymentTransaction::query()
-                                ->where('agent_id', $agent['agent']['id'])
-                                ->whereDate('created_at', '>=', $fromDate)
-                                ->whereDate('created_at', '<=', request()->toDate)
-                                ->sum('amount');
+                                        $allAmountFromDayOneUntilEndOfInvoice = \App\Models\PaymentTransaction::query()
+                                            ->where('agent_id', $agent['agent']['id'])
+                                            ->whereDate('created_at', '>=', $fromDate)
+                                            ->whereDate('created_at', '<=', request()->toDate)
+                                            ->sum('amount');
 
-                                foreach ($totalAmountFromDayOneUntilEndOfInvoice['visas'] as $visa) {
-                                    $totalForInvoice += $visa->totalAmount;
+                                        foreach ($totalAmountFromDayOneUntilEndOfInvoice['visas'] as $visa) {
+                                            $totalForInvoice += $visa->totalAmount;
+                                        }
+
+                                        foreach ($totalAmountFromDayOneUntilEndOfInvoice['services'] as $service) {
+                                            $totalForInvoice += $service->totalAmount;
+                                        }
+                                    }
                                 }
+                                $oldBalance = ($totalForInvoice + $totalAmountFromDayOneUntilEndOfInvoice['totalVat']) - $allAmountFromDayOneUntilEndOfInvoice;
+                            @endphp
 
-                                foreach ($totalAmountFromDayOneUntilEndOfInvoice['services'] as $service) {
-                                    $totalForInvoice += $service->totalAmount;
-                                }
-                            }
-                        }
-                    @endphp
-                    @php
-                        $oldBalance = $totalForInvoice - $allAmountFromDayOneUntilEndOfInvoice;
-                    @endphp
-
-                    <tr>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                    </tr>
-                    <tfoot>
-                    <tr>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td class="text-center"><strong>Total USD</strong></td>
-                        <td class="text-center"><strong>$ {{ \App\Helpers\formatCurrency($totalAmount) }}</strong></td>
-                        <td></td>
-                    </tr>
-                    <tr>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td class="text-center"><strong>Old balance</strong></td>
-                        <td class="text-center"><strong>$ {{ \App\Helpers\formatCurrency($oldBalance) }}</strong></td>
-                        <td></td>
-                    </tr>
-                    <tr>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td class="text-center"><strong>Grand total </strong></td>
-                        <td class="text-center"><strong>$ {{ \App\Helpers\formatCurrency($oldBalance + $totalAmount) }}</strong></td>
-                        <td></td>
-                    </tr>
-                    
-                    </tfoot>
-
-                    </tbody>
-                </table>
-                <p class="text-center">Amount due is {{\App\Helpers\convertNumberToWorldsInUsd($oldBalance+ $totalAmount)}}</p>
-            @else
-                <div class="row" style="margin-top: 10px">
-                    <div class="alert alert-warning">@lang('site.no_data_to_display')</div>
-                </div>
-            @endif
-      </div>
-    </section>
-    @include('livewire.admin.shared.reports.footer')
-
-</main>
-
+                            <tr>
+                                <td colspan="5"></td>
+                            </tr>
+                        </tbody>
+                        <tfoot>
+                            <tr>
+                                <td></td>
+                                <td>Subtotal:</td>
+                                <td></td>
+                                <td></td>
+                                <td>{{ $subTotal }}</td>
+                            </tr>
+                            @if (\App\Helpers\isExistVat())
+                                <tr>
+                                    <td></td>
+                                    <td>Vat {{ \App\Helpers\valueOfVat() }} %</td>
+                                    <td></td>
+                                    <td></td>
+                                    <td>{{ $data['agents'][0]['totalVat'] }}</td>
+                                </tr>
+                            @endif
+                            <tr>
+                                <td></td>
+                                <td><strong>Total USD</strong></td>
+                                <td></td>
+                                <td></td>
+                                <td><strong>${{ \App\Helpers\formatCurrency($subTotal + $data['agents'][0]['totalVat']) }}</strong></td>
+                            </tr>
+                            <tr>
+                                <td></td>
+                                <td><strong>Old balance</strong></td>
+                                <td></td>
+                                <td></td>
+                                <td><strong>${{ \App\Helpers\formatCurrency($oldBalance) }}</strong></td>
+                            </tr>
+                            <tr>
+                                <td></td>
+                                <td><strong>Grand total</strong></td>
+                                <td></td>
+                                <td></td>
+                                <td><strong>${{ \App\Helpers\formatCurrency($oldBalance + $subTotal + $data['agents'][0]['totalVat']) }}</strong></td>
+                            </tr>
+                        </tfoot>
+                    </table>
+                    <p class="text-center">Amount due is {{ \App\Helpers\convertNumberToWorldsInUsd($oldBalance + $subTotal + $data['agents'][0]['totalVat']) }}</p>
+                @else
+                    <div class="row" style="margin-top: 10px">
+                        <div class="alert alert-warning" style="width: 100%; padding: 10px;">@lang('site.no_data_to_display')</div>
+                    </div>
+                @endif
+            </div>
+        </section>
+        @include('livewire.admin.shared.reports.footer')
+    </main>
 </body>
+
 </html>

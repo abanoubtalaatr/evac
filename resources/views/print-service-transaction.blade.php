@@ -52,7 +52,7 @@
         @endphp
         <div> Amount : $ {{\App\Helpers\formatCurrency($total - $serviceTransaction->vat)}} USD ({{$serviceTransaction->payment_method =='invoice' ? "Unpaid" : "Paid"}})</div>
         @if($serviceTransaction->vat >0)
-            <div>VAT  : $ {{\App\Helpers\formatCurrency($serviceTransaction->vat)}} </div>
+            <span>VAT  :  {{$settings->vat_rate}}  : $ {{\App\Helpers\formatCurrency($serviceTransaction->vat)}}  </span>
         @endif
 
         <div> Total Amount : $ {{\App\Helpers\formatCurrency($total)}} USD </div>
@@ -62,6 +62,12 @@
         <div class="text-start">
             <strong>{{$settings->invoice_footer}}</strong>
         </div>
+
+        @if(\App\Helpers\isExistVat())
+        <div class="text-start">
+            <strong> Vat Reg {{\App\Helpers\registrationNumber()}}</strong>
+        </div>
+        @endif
 
     </div>
 
