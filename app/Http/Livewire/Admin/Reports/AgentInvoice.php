@@ -209,7 +209,6 @@ class AgentInvoice extends Component
                 $totalForInvoice = 0;
 
                 foreach ($totalAmountFromDayOneUntilEndOfInvoice['visas'] as $visa) {
-                    
                     $totalForInvoice += $visa->totalAmount;
                 }
                 foreach ($totalAmountFromDayOneUntilEndOfInvoice['services'] as $service) {
@@ -239,6 +238,10 @@ class AgentInvoice extends Component
                     ->latest()
                     ->first();
 
+                    // علشان اجيب اخر فاتوره 
+                    // واجيب 
+                    // title 
+                    // وازود عليه رقم 
                 if ($lastRow) {
 
                     $lastTwoDigitsOfYear = intval(trim(substr($lastRow->invoice_title, 4, 3)));
@@ -288,6 +291,7 @@ class AgentInvoice extends Component
                             'payment_received' => $allAmountFromDayOneUntilEndOfInvoice,
                             'old_balance' => $oldBalance,
                             'grand_total' => $totalAmount + $getTotalAmount['totalVat'] + $oldBalance,
+                            'vat' => $getTotalAmount['totalVat']
                         ]);
                     } else {
                         $checkAgentIsHidden = Agent::query()->find($row['agent']['id']);
@@ -310,7 +314,8 @@ class AgentInvoice extends Component
                             'total_amount' => $totalAmount + $getTotalAmount['totalVat'],
                             'payment_received' => $allAmountFromDayOneUntilEndOfInvoice,
                             'old_balance' => $oldBalance,
-                            'grand_total' => $totalAmount +  $getTotalAmount['totalVat']+ $oldBalance
+                            'grand_total' => $totalAmount +  $getTotalAmount['totalVat']+ $oldBalance,
+                            'vat' => $getTotalAmount['totalVat']
                         ]);
                     }
                 }

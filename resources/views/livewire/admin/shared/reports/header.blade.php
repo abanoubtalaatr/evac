@@ -11,7 +11,8 @@
     <h4 class="text-center">INVOICE</h4>
     @endif
     @if(isset($showReportsAgentStatement))
-    <h4 class="text-center">STATEMENT {{ \Carbon\Carbon::now()->format('d M Y') }}</h4>
+    {{-- <h4 class="text-center">STATEMENT {{ \Carbon\Carbon::now()->format('d M Y') }}</h4> --}}
+    <h4 class="text-center">STATEMENT </h4>
 
     @endif
 </div>

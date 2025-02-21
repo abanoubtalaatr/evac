@@ -53,58 +53,34 @@
         }
 
         .table {
-            width: 100%;
-            margin-bottom: 0;
-            background-color: #fff;
-            border-collapse: collapse;
-        }
+    width: 100%;
+    table-layout: fixed; /* Ensures equal spacing */
+    border-collapse: collapse;
+}
 
-        .table th,
-        .table td {
-            padding: 12px;
-            text-align: left;
-            border-bottom: 1px solid #ddd;
-        }
+.table th,
+.table td {
+    padding: 12px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+    word-wrap: break-word; /* Ensures text wraps */
+    overflow-wrap: break-word;
+    text-overflow: ellipsis;
+    white-space: nowrap; /* Optional: Prevents wrapping */
+}
 
-        .table th {
-            background-color: #f8f9fa;
-        }
+.table th:nth-child(1),
+.table td:nth-child(1) { width: 15%; } /* Adjust width percentages */
+.table th:nth-child(2),
+.table td:nth-child(2) { width: 20%; }
+.table th:nth-child(3),
+.table td:nth-child(3) { width: 20%; }
+.table th:nth-child(4),
+.table td:nth-child(4) { width: 15%; }
+.table th:nth-child(5),
+.table td:nth-child(5) { width: 15%; }
 
-        .table tbody tr:hover {
-            background-color: #f5f5f5;
-        }
 
-        .total-row {
-            font-weight: bold;
-        }
-
-        .text-center {
-            text-align: center;
-        }
-
-        .btn-primary {
-            background: #0b5ed7;
-        }
-
-        /* Set a fixed width for each column */
-        .table th:nth-child(1),
-        .table td:nth-child(1),
-        .table th:nth-child(2),
-        .table td:nth-child(2),
-        .table th:nth-child(3),
-        .table td:nth-child(3) {
-            /*width: 33.33%; !* Equal width for each column *!*/
-        }
-
-        table {
-            width: 100%;
-        }
-
-        th,
-        td {
-            width: auto;
-            /* or specify widths in pixels */
-        }
     </style>
 </head>
 
@@ -142,8 +118,8 @@
                             // Add date range filters if provided
                             if (request()->fromDate && request()->toDate) {
                                 $invoiceQuery
-                                    ->whereDate('created_at', '>=', request()->fromDate)
-                                    ->whereDate('created_at', '<=', request()->toDate);
+                                    ->whereDate('from', '>=', request()->fromDate)
+                                    ->whereDate('to', '<=', request()->toDate);
                                 $paymentQuery
                                     ->whereDate('created_at', '>=', request()->fromDate)
                                     ->whereDate('created_at', '<=', request()->toDate);
@@ -168,8 +144,8 @@
                             // Add date range filters if provided
                             if (request()->fromDate && request()->toDate) {
                                 $invoiceQuery
-                                    ->whereDate('created_at', '>=', request()->fromDate)
-                                    ->whereDate('created_at', '<=', request()->toDate);
+                                    ->whereDate('from', '>=', request()->fromDate)
+                                    ->whereDate('to', '<=', request()->toDate);
                                 $paymentQuery
                                     ->whereDate('created_at', '>=', request()->fromDate)
                                     ->whereDate('created_at', '<=', request()->toDate);
@@ -204,68 +180,76 @@
 
                 @endphp
 
-@if (isset($records) && count($records) > 0)
-<table class="table-page table mt-3">
-    <thead>
-        <tr>
-            <th class="text-center">Inv No</th>
-            <th class="">From</th>
-            <th class="">To</th>
-            <th class="text-center">Db.</th>
-            <th class="text-center">Cr.</th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach ($records['data'] as $record)
-            @if ($record instanceof \App\Models\AgentInvoice)
-                <tr>
-                    <td>{{ $record['invoice_title'] }}</td>
-                    <td class="text-center">{{ $record['from'] }}</td>
-                    <td class="text-center">{{ $record['to'] }}</td>
-                    @php
-                        $totalDrCount += $record->total_amount;
-                    @endphp
-                    <td class="text-center">{{ \App\Helpers\formatCurrency($record->total_amount) }}</td>
-                    <td></td>
-                </tr>
-            @else
-            <tr>
-                                
-                <td class="text-center">{{\Illuminate\Support\Carbon::parse($record->created_at)->format('Y-m-d')}}</td>
-                <td class='text-center'>Payment received @if($record->note) <span>- Note : {{$record->note}} </span> @endif</td>
+                @if (isset($records) && count($records) > 0)
+                    <table class="table-page table mt-3">
+                        <thead>
+                            <tr>
+                                <th class="">Inv No</th>
+                                <th class="">From</th>
+                                <th class="">To</th>
+                                <th class="text-center">Db.</th>
+                                <th class="text-center">Cr.</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach ($records['data'] as $record)
+                                @if ($record instanceof \App\Models\AgentInvoice)
+                                    <tr>
+                                        <td>{{ $record['invoice_title'] }}</td>
+                                        <td class="text-center">{{ $record['from'] }}</td>
+                                        <td class="text-center">{{ $record['to'] }}</td>
+                                        @php
+                                            $totalDrCount += $record->total_amount;
+                                        @endphp
+                                        <td class="text-center">{{ \App\Helpers\formatCurrency($record->total_amount) }}
+                                        </td>
+                                        <td></td>
+                                    </tr>
+                                @else
+                                    <tr>
 
-                <td></td>
-                <td class="text-center"></td>
-                <td class="text-center">{{\App\Helpers\formatCurrency($record->amount)}}</td>
-                @php
-                    $totalCrCount += $record->amount;
-                @endphp
-            </tr>
-            @endif
-        @endforeach
+                                        <td class="text-center">
+                                            {{ \Illuminate\Support\Carbon::parse($record->created_at)->format('Y-m-d') }}
+                                        </td>
+                                        <td class='text-center'>Payment received @if ($record->note)
+                                                <span>- Note : {{ $record->note }} </span>
+                                            @endif
+                                        </td>
 
-        <tr>
-            <td></td>
-            <td class="text-center">Totals</td>
-            <td></td>
-            <td class="text-center">{{ \App\Helpers\formatCurrency($records['totalDrCount']) }}</td>
-            <td class="text-center">{{ \App\Helpers\formatCurrency($records['totalCrCount']) }}</td>
-        </tr>
-        <tr>
-            <td></td>
-            <td class="text-center"><strong>Outstanding bal</strong></td>
-            <td></td>
-            <td class="text-center">
-                {{ \App\Helpers\formatCurrency($records['totalDrCount'] - $records['totalCrCount']) }}
-            </td>
-            <td></td>
-        </tr>
-    </tbody>
-</table>
-<p class="text-center">
-    Outstanding Balance is {{ \App\Helpers\convertNumberToWorldsInUsd($outStanding ?? 0) }}
-</p>
-@endif
+                                        <td></td>
+                                        <td class="text-center"></td>
+                                        <td class="text-center">{{ \App\Helpers\formatCurrency($record->amount) }}</td>
+                                        @php
+                                            $totalCrCount += $record->amount;
+                                        @endphp
+                                    </tr>
+                                @endif
+                            @endforeach
+
+                            <tr>
+                                <td></td>
+                                <td class="text-center">Totals</td>
+                                <td></td>
+                                <td class="text-center">{{ \App\Helpers\formatCurrency($records['totalDrCount']) }}
+                                </td>
+                                <td class="text-center">{{ \App\Helpers\formatCurrency($records['totalCrCount']) }}
+                                </td>
+                            </tr>
+                            <tr>
+                                <td></td>
+                                <td class="text-center"><strong>Outstanding bal</strong></td>
+                                <td></td>
+                                <td class="text-center">
+                                    {{ \App\Helpers\formatCurrency($records['totalDrCount'] - $records['totalCrCount']) }}
+                                </td>
+                                <td></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <p class="text-center">
+                        Outstanding Balance is {{ \App\Helpers\convertNumberToWorldsInUsd($outStanding ?? 0) }}
+                    </p>
+                @endif
 
             </div>
         </section>

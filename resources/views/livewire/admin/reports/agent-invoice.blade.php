@@ -159,7 +159,7 @@
                                         <tr>
                                             @php
                                                 $totalAmount += $service->totalAmount;
-                                                $subTotal += $service->service_fee + $service->dubai_fee ;
+                                                $subTotal += $service->qty *($service->service_fee + $service->dubai_fee);
                                             @endphp
                                             <td class="text-center">#{{ $rowsCount++ }}</td>
                                             <td class="text-center">{{ $service->name }}</td>
