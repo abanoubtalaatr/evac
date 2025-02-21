@@ -23,13 +23,12 @@ class AgentInvoiceMail extends Mailable
 
     public function build()
     {
-        $name = $this->agent ? $this->agent->name.'_INVOICE.pdf':"agent_INVOICE.pdf";
+        $name = $this->agent ? $this->agent->name . '_INVOICE.pdf' : 'agent_INVOICE.pdf';
         return $this->attachData($this->generatePdf(), $name)
-            ->subject("EVAC - "  . $name. " INVOICE")
-            ->view('emails.TravelAgent.agent-applications-body',[
+            ->subject("EVAC - " . $name . " INVOICE")
+            ->view('emails.TravelAgent.agent-applications-body', [
                 'agentInvoice' => true
             ]);
-
     }
 
     private function generatePdf()
@@ -38,6 +37,7 @@ class AgentInvoiceMail extends Mailable
         $options = new Options();
         $options->set('isHtml5ParserEnabled', true);
         $options->set('isPhpEnabled', true);
+        $options->set('defaultFont', 'Arial');
 
         $invoice = \App\Models\AgentInvoice::query()
             ->where('agent_id', $this->agent->id)
@@ -46,27 +46,22 @@ class AgentInvoiceMail extends Mailable
             ->first();
 
         $dompdf = new Dompdf($options);
-        // Load HTML con
         $html = view('livewire.admin.PrintReports.agent_invoices')->with([
             'from' => $this->fromDate,
             'toDate' => $this->toDate,
             'agent' => $this->agent,
-            'invoice' => $invoice->id
-
+            'invoice' => $invoice
         ])->render();
-
 
         // Load HTML to Dompdf
         $dompdf->loadHtml($html);
         // Set paper size
         $dompdf->setPaper('A4', 'portrait');
 
-        // Render PDF (first pass to get total pages)
+        // Render PDF
         $dompdf->render();
 
-        // Output the generated PDF (second pass to generate final PDF with correct page count)
-        $output = $dompdf->output();
-
-        return $output;
+        // Output the generated PDF
+        return $dompdf->output();
     }
 }
