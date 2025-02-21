@@ -74,8 +74,7 @@ class AgentStatementExport implements FromCollection, WithHeadings
                     $dataRows[] = [
                         Carbon::parse($item->created_at)->format('Y-m-d'),
                         "",
-                        "Payment received " . ' ' . $item->note? "- Note : $item->note":"",
-                        "",
+                        "Payment received " . ' ' . !empty($item->note) ? " - Note : $item->note" : "",                        "",
                         "$" . formatCurrency($item->amount),
                     ];
                 }
