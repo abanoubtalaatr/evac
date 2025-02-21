@@ -253,7 +253,7 @@
                             </tr>
                         </tfoot>
                     </table>
-                    <p class="text-center">Amount due is {{ \App\Helpers\convertNumberToWorldsInUsd($oldBalance + $totalAmount) }}</p>
+                    <p class="text-center">Amount due is {{ \App\Helpers\convertNumberToWorldsInUsd($oldBalance + $subTotal + $data['agents'][0]['totalVat']) }}</p>
                 @else
                     <div class="row" style="margin-top: 10px">
                         <div class="alert alert-warning" style="width: 100%; padding: 10px;">@lang('site.no_data_to_display')</div>
