@@ -287,7 +287,7 @@ class AgentInvoice extends Component
                 if ($totalAmount > 0) {
                     if (!is_null($rawExistBeforeForAgent)) {
                         $rawExistBeforeForAgent->update([
-                            'total_amount' => $totalAmount,
+                            'total_amount' => $totalAmount + $getTotalAmount['totalVat'],
                             'payment_received' => $allAmountFromDayOneUntilEndOfInvoice,
                             'old_balance' => $oldBalance,
                             'grand_total' => $totalAmount + $getTotalAmount['totalVat'] + $oldBalance,
