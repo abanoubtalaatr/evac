@@ -131,8 +131,13 @@ class Index extends Component
             'invoice' => $invoice->id
         ]);
 
+        $agent = Agent::find($id);
+        $name= 'agent_INVOICE.csv';
+        if($agent){
+            $name = $agent->name ."_INVOICE.csv";
+        }
         $fileExport = (new \App\Exports\Reports\AgentInvoiceExport($data));
-        return Excel::download($fileExport, 'agent_invoice.csv');
+        return Excel::download($fileExport, $name);
     }
 
     public function recalculateInvoice($id)
