@@ -121,7 +121,7 @@
             $logoPath = $settings->logo ? public_path('uploads/pics/' . $settings->logo) : null;
         @endphp
         @if ($logoPath && file_exists($logoPath))
-            <div>
+            <div style="text-align: center">
                 <img width="220" height="200"
                     src="data:image/png;base64,{{ base64_encode(file_get_contents($logoPath)) }}">
             </div>
