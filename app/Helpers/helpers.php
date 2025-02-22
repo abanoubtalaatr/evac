@@ -236,6 +236,7 @@ if (!function_exists('calculateAmountAndDubaiFeeAndServiceFee')) {
             $data['service_fee'] = $newServiceFee;
             $data['dubai_fee'] = $visaType->dubai_fee;
             $data['vat'] = $vatRate;
+            return $data;
         }
         elseif ((float)$newServiceFee > 0 ) {
 
