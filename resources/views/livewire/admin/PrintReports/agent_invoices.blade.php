@@ -5,113 +5,48 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{{ $title ?? 'Report' }}</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 20px;
-            background-color: #f4f4f4;
-        }
-
-        main {
-            width: 100%;
-        }
-
-        .card {
-            background-color: #fff;
-            border: 1px solid #ddd;
-            border-radius: 8px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            margin-bottom: 20px;
-        }
-
-        .card-header {
-            background-color: #007bff;
-            color: #fff;
-            padding: 15px;
-            border-bottom: 1px solid #ddd;
-            border-radius: 8px 8px 0 0;
-        }
-
-        .card-title {
-            margin: 0;
-            font-size: 1.25rem;
-            font-weight: bold;
-            color: black;
-        }
-
-        .card-body {
-            padding: 15px;
-        }
-
-        /* Simplified Table Styling */
-        .table {
-            width: 100%;
-            border-collapse: collapse;
-            background-color: #fff;
-        }
-
-        .table th,
-        .table td {
-            border: 1px solid #dee2e6;
-            padding: 10px;
-            text-align: center;
-            vertical-align: middle;
-        }
-
-        .table th {
-            background-color: #f8f9fa;
-            font-weight: bold;
-        }
-
-        .table tbody tr:nth-child(odd) {
-            background-color: #f2f2f2;
-        }
-
-        .table tbody tr:nth-child(even) {
-            background-color: #ffffff;
-        }
-
-        /* Footer Styling */
-        tfoot td {
-            border: 1px solid #dee2e6;
-            padding: 10px;
-        }
-
-        .span-block {
-            display: block;
-            margin-bottom: 5px;
-        }
-
-        .text-center {
-            text-align: center;
-        }
-    </style>
 </head>
 
-<body>
-    <main>
-        @include('livewire.admin.shared.reports.header', ['showInvoiceTitle' => true])
+<body style="font-family: Arial, sans-serif; margin: 0; padding: 20px; background-color: #f4f4f4;">
+    <main style="width: 100%;">
+        @php
+            $settings = \App\Models\Setting::query()->first();
+            $logoPath = $settings->logo ? public_path('uploads/pics/' . $settings->logo) : null;
+        @endphp
+        @if ($logoPath && file_exists($logoPath))
+            <div style="text-align: center;">
+                <img width="220" height="200"
+                    src="data:image/png;base64,{{ base64_encode(file_get_contents($logoPath)) }}"
+                    style="max-width: 220px; height: auto;">
+            </div>
+        @endif
+        <h5 style="text-align: center;">INVOICE</h5>
 
-        <!-- Dashboard -->
-        <section class="dashboard">
-            <div class="row">
+        <div style="display: flex; width: 100%; flex-wrap: wrap;">
+
+            <div style="margin-bottom: 10px">
                 @php
                     $agent = \App\Models\Agent::query()->find(request()->agent);
                     $invoice = \App\Models\AgentInvoice::query()->find(request()->invoice);
                 @endphp
                 @if ($agent)
-                    <div style="margin-bottom: 10px; margin-top: 10px;">
-                        <strong class="span-block">Agent: {{ $agent->name }}</strong>
-                        <strong class="span-block">Agent address: {{ $agent->address }}</strong>
-                        <strong class="span-block">Tel: {{ $agent->telephone }}</strong>
-                        <strong class="span-block">Account No: {{ $agent->account_number }}</strong>
-                    </div>
+                    <strong style="display: block; margin-bottom: 5px;">Agent: {{ $agent->name }}</strong>
+                    <strong style="display: block; margin-bottom: 5px;">Agent address: {{ $agent->address }}</strong>
+                    <strong style="display: block; margin-bottom: 5px;">Tel: {{ $agent->telephone }}</strong>
+                    <strong style="display: block; margin-bottom: 5px;">Account No:
+                        {{ $agent->account_number }}</strong>
                 @endif
-                <strong class="span-block">INV No: {{ $invoice ? $invoice->invoice_title : '' }}</strong>
+                <strong style="display: block; margin-bottom: 5px;">INV No:
+                    {{ $invoice ? $invoice->invoice_title : '' }}</strong>
+            </div>
+        </div>
 
+        <!-- Dashboard -->
+        <section style="width: 100%;">
+            <div style="display: flex; width: 100%; flex-wrap: wrap;">
                 @if (request()->fromDate && request()->toDate)
-                    <h4>Period of sales from: {{ request()->fromDate }} - To: {{ request()->toDate }}</h4>
+                    <h4 style="margin: 0;">Period of sales from: {{ request()->fromDate }} - To: {{ request()->toDate }}
+                    </h4>
                 @endif
                 <br>
 
@@ -124,14 +59,24 @@
                 @endphp
 
                 @if (isset($data['agents'][0]['visas']) && count($data['agents'][0]['visas']) > 0)
-                    <table class="table" style="width: 100%;">
+                    <table style="width: 100%; border-collapse: collapse; background-color: #fff;">
                         <thead>
                             <tr>
-                                <th style="width: 10%;">Item #</th>
-                                <th style="width: 40%;">@lang('admin.description')</th>
-                                <th style="width: 10%;">Qty</th>
-                                <th style="width: 20%;">Unit Price</th>
-                                <th style="width: 20%;">Amount</th>
+                                <th
+                                    style="width: 10%; border: 1px solid #dee2e6; padding: 8px; text-align: center; vertical-align: middle; background-color: #f8f9fa; font-weight: bold;">
+                                    Item #</th>
+                                <th
+                                    style="width: 40%; border: 1px solid #dee2e6; padding: 8px; text-align: center; vertical-align: middle; background-color: #f8f9fa; font-weight: bold;">
+                                    @lang('admin.description')</th>
+                                <th
+                                    style="width: 10%; border: 1px solid #dee2e6; padding: 8px; text-align: center; vertical-align: middle; background-color: #f8f9fa; font-weight: bold;">
+                                    Qty</th>
+                                <th
+                                    style="width: 20%; border: 1px solid #dee2e6; padding: 8px; text-align: center; vertical-align: middle; background-color: #f8f9fa; font-weight: bold;">
+                                    Unit Price</th>
+                                <th
+                                    style="width: 20%; border: 1px solid #dee2e6; padding: 8px; text-align: center; vertical-align: middle; background-color: #f8f9fa; font-weight: bold;">
+                                    Amount</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -142,37 +87,58 @@
                                 $subTotal = 0;
                             @endphp
 
-                            {{-- Display Visa information --}}
                             @if (isset($data['agents'][0]['visas']) && count($data['agents'][0]['visas']) > 0)
                                 @foreach ($data['agents'][0]['visas'] as $visa)
-                                    <tr>
+                                    <tr
+                                        style="@if ($rowsCount % 2 == 0) background-color: #ffffff; @else background-color: #f2f2f2; @endif">
                                         @php
                                             $totalAmount += $visa->totalAmount;
                                             $totalVat += $visa->totalVat;
                                             $subTotal += $visa->totalAmount;
                                         @endphp
-                                        <td>#{{ $rowsCount++ }}</td>
-                                        <td>{{ $visa->name }}</td>
-                                        <td>{{ $visa->qty }}</td>
-                                        <td>{{ \App\Helpers\formatCurrency($visa->total) }}</td>
-                                        <td>{{ \App\Helpers\formatCurrency($visa->totalAmount) }}</td>
+                                        <td
+                                            style="border: 1px solid #dee2e6; padding: 8px; text-align: center; vertical-align: middle;">
+                                            #{{ $rowsCount++ }}</td>
+                                        <td
+                                            style="border: 1px solid #dee2e6; padding: 8px; text-align: center; vertical-align: middle;">
+                                            {{ $visa->name }}</td>
+                                        <td
+                                            style="border: 1px solid #dee2e6; padding: 8px; text-align: center; vertical-align: middle;">
+                                            {{ $visa->qty }}</td>
+                                        <td
+                                            style="border: 1px solid #dee2e6; padding: 8px; text-align: center; vertical-align: middle;">
+                                            {{ \App\Helpers\formatCurrency($visa->total) }}</td>
+                                        <td
+                                            style="border: 1px solid #dee2e6; padding: 8px; text-align: center; vertical-align: middle;">
+                                            {{ \App\Helpers\formatCurrency($visa->totalAmount) }}</td>
                                     </tr>
                                 @endforeach
                             @endif
 
-                            {{-- Display Service information --}}
                             @if (isset($data['agents'][0]['services']) && count($data['agents'][0]['services']) > 0)
                                 @foreach ($data['agents'][0]['services'] as $service)
-                                    <tr>
+                                    <tr
+                                        style="@if ($rowsCount % 2 == 0) background-color: #ffffff; @else background-color: #f2f2f2; @endif">
                                         @php
                                             $totalAmount += $service->totalAmount;
                                             $subTotal += $service->qty * ($service->service_fee + $service->dubai_fee);
                                         @endphp
-                                        <td>#{{ $rowsCount++ }}</td>
-                                        <td>{{ $service->name }}</td>
-                                        <td>{{ $service->qty }}</td>
-                                        <td>{{ $service->service_fee + $service->dubai_fee }}</td>
-                                        <td>{{ \App\Helpers\formatCurrency($service->qty * ($service->service_fee + $service->dubai_fee)) }}</td>
+                                        <td
+                                            style="border: 1px solid #dee2e6; padding: 8px; text-align: center; vertical-align: middle;">
+                                            #{{ $rowsCount++ }}</td>
+                                        <td
+                                            style="border: 1px solid #dee2e6; padding: 8px; text-align: center; vertical-align: middle;">
+                                            {{ $service->name }}</td>
+                                        <td
+                                            style="border: 1px solid #dee2e6; padding: 8px; text-align: center; vertical-align: middle;">
+                                            {{ $service->qty }}</td>
+                                        <td
+                                            style="border: 1px solid #dee2e6; padding: 8px; text-align: center; vertical-align: middle;">
+                                            {{ $service->service_fee + $service->dubai_fee }}</td>
+                                        <td
+                                            style="border: 1px solid #dee2e6; padding: 8px; text-align: center; vertical-align: middle;">
+                                            {{ \App\Helpers\formatCurrency($service->qty * ($service->service_fee + $service->dubai_fee)) }}
+                                        </td>
                                     </tr>
                                 @endforeach
                             @endif
@@ -206,62 +172,91 @@
                                         }
                                     }
                                 }
-                                $oldBalance = ($totalForInvoice + $totalAmountFromDayOneUntilEndOfInvoice['totalVat']) - $allAmountFromDayOneUntilEndOfInvoice;
+                                $oldBalance =
+                                    $totalForInvoice +
+                                    $totalAmountFromDayOneUntilEndOfInvoice['totalVat'] -
+                                    $allAmountFromDayOneUntilEndOfInvoice;
                             @endphp
 
                             <tr>
-                                <td colspan="5"></td>
+                                <td colspan="5" style="border: 1px solid #dee2e6; padding: 8px;"></td>
                             </tr>
                         </tbody>
                         <tfoot>
                             <tr>
-                                <td></td>
-                                <td>Subtotal:</td>
-                                <td></td>
-                                <td></td>
-                                <td>{{ $subTotal }}</td>
+                                <td style="border: 1px solid #dee2e6; padding: 8px;"></td>
+
+                                <td style="border: 1px solid #dee2e6; padding: 8px;"></td>
+                                <td style="border: 1px solid #dee2e6; padding: 8px;"></td>
+                                <td style="border: 1px solid #dee2e6; padding: 8px;">Subtotal:</td>
+                                <td style="border: 1px solid #dee2e6; padding: 8px;">{{ $subTotal }}</td>
                             </tr>
                             @if (\App\Helpers\isExistVat())
                                 <tr>
-                                    <td></td>
-                                    <td>Vat {{ \App\Helpers\valueOfVat() }} %</td>
-                                    <td></td>
-                                    <td></td>
-                                    <td>{{ $data['agents'][0]['totalVat'] }}</td>
+                                    <td style="border: 1px solid #dee2e6; padding: 8px;"></td>
+
+                                    <td style="border: 1px solid #dee2e6; padding: 8px;"></td>
+                                    <td style="border: 1px solid #dee2e6; padding: 8px;"></td>
+                                    <td style="border: 1px solid #dee2e6; padding: 8px;">Vat
+                                        {{ \App\Helpers\valueOfVat() }} %</td>
+                                    <td style="border: 1px solid #dee2e6; padding: 8px;">
+                                        {{ $data['agents'][0]['totalVat'] }}</td>
                                 </tr>
                             @endif
                             <tr>
-                                <td></td>
-                                <td><strong>Total USD</strong></td>
-                                <td></td>
-                                <td></td>
-                                <td><strong>${{ \App\Helpers\formatCurrency($subTotal + $data['agents'][0]['totalVat']) }}</strong></td>
+                                <td style="border: 1px solid #dee2e6; padding: 8px;"></td>
+
+                                <td style="border: 1px solid #dee2e6; padding: 8px;"></td>
+                                <td style="border: 1px solid #dee2e6; padding: 8px;"></td>
+                                <td style="border: 1px solid #dee2e6; padding: 8px;"><strong>Total USD</strong></td>
+                                <td style="border: 1px solid #dee2e6; padding: 8px;">
+                                    <strong>${{ \App\Helpers\formatCurrency($subTotal + $data['agents'][0]['totalVat']) }}</strong>
+                                </td>
                             </tr>
                             <tr>
-                                <td></td>
-                                <td><strong>Old balance</strong></td>
-                                <td></td>
-                                <td></td>
-                                <td><strong>${{ \App\Helpers\formatCurrency($oldBalance) }}</strong></td>
+                                <td style="border: 1px solid #dee2e6; padding: 8px;"></td>
+
+                                <td style="border: 1px solid #dee2e6; padding: 8px;"></td>
+                                <td style="border: 1px solid #dee2e6; padding: 8px;"></td>
+                                <td style="border: 1px solid #dee2e6; padding: 8px;"><strong>Old balance</strong></td>
+                                <td style="border: 1px solid #dee2e6; padding: 8px;">
+                                    <strong>${{ \App\Helpers\formatCurrency($oldBalance) }}</strong></td>
                             </tr>
                             <tr>
-                                <td></td>
-                                <td><strong>Grand total</strong></td>
-                                <td></td>
-                                <td></td>
-                                <td><strong>${{ \App\Helpers\formatCurrency($oldBalance + $subTotal + $data['agents'][0]['totalVat']) }}</strong></td>
+                                <td style="border: 1px solid #dee2e6; padding: 8px;"></td>
+
+                                <td style="border: 1px solid #dee2e6; padding: 8px;"></td>
+                                <td style="border: 1px solid #dee2e6; padding: 8px;"></td>
+                                <td style="border: 1px solid #dee2e6; padding: 8px;"><strong>Grand total</strong></td>
+                                <td style="border: 1px solid #dee2e6; padding: 8px;">
+                                    <strong>${{ \App\Helpers\formatCurrency($oldBalance + $subTotal + $data['agents'][0]['totalVat']) }}</strong>
+                                </td>
                             </tr>
                         </tfoot>
                     </table>
-                    <p class="text-center">Amount due is {{ \App\Helpers\convertNumberToWorldsInUsd($oldBalance + $subTotal + $data['agents'][0]['totalVat']) }}</p>
+                    <p style="text-align: center;">Amount due is
+                        {{ \App\Helpers\convertNumberToWorldsInUsd($oldBalance + $subTotal + $data['agents'][0]['totalVat']) }}
+                    </p>
                 @else
-                    <div class="row" style="margin-top: 10px">
-                        <div class="alert alert-warning" style="width: 100%; padding: 10px;">@lang('site.no_data_to_display')</div>
+                    <div style="display: flex; width: 100%; flex-wrap: wrap; margin-top: 10px;">
+                        <div
+                            style="width: 100%; padding: 8px; background-color: #fff3cd; border: 1px solid #ffeeba; color: #856404;">
+                            @lang('site.no_data_to_display')</div>
                     </div>
                 @endif
             </div>
         </section>
-        @include('livewire.admin.shared.reports.footer')
+
+        @include('livewire.admin.shared.reports.footer', ['agentInvoices' => true])
+        <div style="margin-top: 20px">
+            @if (\App\Helpers\isExistVat())
+            <span class="span-block">VAT Reg: {{ \App\Helpers\registrationNumber() }}</span>
+            @endif
+            <span class="span-block">Evac</span>
+            <span class="span-block">{{ $settings->address }} </span>
+            <span class="span-block">Reg no :{{ $settings->registration_no }}</span>
+            <span class="span-block">Tel : {{ $settings->mobile }}</span>
+        </div>
     </main>
 </body>
 
