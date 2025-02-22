@@ -24,7 +24,9 @@ class AgentInvoiceMail extends Mailable
     public function build()
     {
         $name = $this->agent ? $this->agent->name . '_INVOICE.pdf' : 'agent_INVOICE.pdf';
-        return $this->attachData($this->generatePdf(), $name)
+        return $this->attachData($this->generatePdf(), $name, [
+            'mime' => 'application/pdf',
+        ])
             ->subject("EVAC - " . $name . " INVOICE")
             ->view('emails.TravelAgent.agent-applications-body', [
                 'agentInvoice' => true
@@ -33,12 +35,11 @@ class AgentInvoiceMail extends Mailable
 
     private function generatePdf()
     {
-        // Configure Dompdf
         $options = new Options();
         $options->set('isHtml5ParserEnabled', true);
         $options->set('isPhpEnabled', true);
         $options->set('defaultFont', 'Arial');
-        $options->set('isRemoteEnabled', true); // Enable remote resources if needed
+        $options->set('isRemoteEnabled', true);
 
         $invoice = \App\Models\AgentInvoice::query()
             ->where('agent_id', $this->agent->id)
@@ -48,20 +49,19 @@ class AgentInvoiceMail extends Mailable
 
         $dompdf = new Dompdf($options);
         $html = view('livewire.admin.PrintReports.agent_invoices')->with([
-            'from' => $this->fromDate,
+            'agentId' => $this->agent->id,
+            'invoiceId' => $invoice ? $invoice->id : null,
+            'fromDate' => $this->fromDate,
             'toDate' => $this->toDate,
-            'agent' => $this->agent,
-            'invoice' => $invoice
         ])->render();
 
-        // Load HTML to Dompdf
         $dompdf->loadHtml($html);
         $dompdf->setPaper('A4', 'portrait');
-
-        // Render PDF
         $dompdf->render();
 
-        // Output the generated PDF
+        // Optional: Save for debugging
+        // file_put_contents('test.pdf', $dompdf->output());
+
         return $dompdf->output();
     }
 }
