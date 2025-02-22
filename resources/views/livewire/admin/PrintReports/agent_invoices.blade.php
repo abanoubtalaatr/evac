@@ -130,10 +130,10 @@
 
         <div class="row">
 
-            <div class="col-75 ">
+            <div class="col-75 " style="width: 75%;box-sizing: border-box;padding: 10px;">
                 @include('livewire.admin.shared.reports.header', ['showInvoiceTitle' => true])
             </div>
-            <div class="col-25">
+            <div class="col-25" style="width: 25%;box-sizing: border-box;padding: 10px;">
                 @php
                     $agent = \App\Models\Agent::query()->find(request()->agent);
                     $invoice = \App\Models\AgentInvoice::query()->find(request()->invoice);
