@@ -24,9 +24,7 @@ class AgentInvoiceMail extends Mailable
     public function build()
     {
         $name = $this->agent ? $this->agent->name . '_INVOICE.pdf' : 'agent_INVOICE.pdf';
-        return $this->attachData($this->generatePdf(), $name, [
-            'mime' => 'application/pdf',
-        ])
+        return $this->attachData($this->generatePdf(), $name)
             ->subject("EVAC - " . $name . " INVOICE")
             ->view('emails.TravelAgent.agent-applications-body', [
                 'agentInvoice' => true
@@ -35,11 +33,12 @@ class AgentInvoiceMail extends Mailable
 
     private function generatePdf()
     {
+        // Configure Dompdf
         $options = new Options();
         $options->set('isHtml5ParserEnabled', true);
         $options->set('isPhpEnabled', true);
         $options->set('defaultFont', 'Arial');
-        $options->set('isRemoteEnabled', true);
+        $options->set('isRemoteEnabled', true); // Enable remote resources if needed
 
         $invoice = \App\Models\AgentInvoice::query()
             ->where('agent_id', $this->agent->id)
@@ -47,30 +46,22 @@ class AgentInvoiceMail extends Mailable
             ->whereDate('to', $this->toDate)
             ->first();
 
-        // Mock header data (replace with actual data from your app)
-        $headerData = [
-            'company_name' => 'EVAC Company',
-            'address' => '123 Business St, City, Country',
-            'telephone' => '+1 234 567 890',
-        ];
-
         $dompdf = new Dompdf($options);
         $html = view('livewire.admin.PrintReports.agent_invoices')->with([
-            'agent' => $this->agent, // Pass full agent object
-            'invoice' => $invoice,   // Pass full invoice object
-            'fromDate' => $this->fromDate,
+            'from' => $this->fromDate,
             'toDate' => $this->toDate,
-            'headerData' => $headerData, // Pass header data
-            'showInvoiceTitle' => true,
+            'agent' => $this->agent,
+            'invoice' => $invoice
         ])->render();
 
+        // Load HTML to Dompdf
         $dompdf->loadHtml($html);
         $dompdf->setPaper('A4', 'portrait');
+
+        // Render PDF
         $dompdf->render();
 
-        // Debug: Save PDF locally
-        // file_put_contents('test.pdf', $dompdf->output());
-
+        // Output the generated PDF
         return $dompdf->output();
     }
 }
