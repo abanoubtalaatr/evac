@@ -63,19 +63,19 @@
                         <thead>
                             <tr>
                                 <th
-                                    style="width: 10%; border: 1px solid #dee2e6; padding: 10px; text-align: center; vertical-align: middle; background-color: #f8f9fa; font-weight: bold;">
+                                    style="width: 10%; border: 1px solid #dee2e6; padding: 8px; text-align: center; vertical-align: middle; background-color: #f8f9fa; font-weight: bold;">
                                     Item #</th>
                                 <th
-                                    style="width: 40%; border: 1px solid #dee2e6; padding: 10px; text-align: center; vertical-align: middle; background-color: #f8f9fa; font-weight: bold;">
+                                    style="width: 40%; border: 1px solid #dee2e6; padding: 8px; text-align: center; vertical-align: middle; background-color: #f8f9fa; font-weight: bold;">
                                     @lang('admin.description')</th>
                                 <th
-                                    style="width: 10%; border: 1px solid #dee2e6; padding: 10px; text-align: center; vertical-align: middle; background-color: #f8f9fa; font-weight: bold;">
+                                    style="width: 10%; border: 1px solid #dee2e6; padding: 8px; text-align: center; vertical-align: middle; background-color: #f8f9fa; font-weight: bold;">
                                     Qty</th>
                                 <th
-                                    style="width: 20%; border: 1px solid #dee2e6; padding: 10px; text-align: center; vertical-align: middle; background-color: #f8f9fa; font-weight: bold;">
+                                    style="width: 20%; border: 1px solid #dee2e6; padding: 8px; text-align: center; vertical-align: middle; background-color: #f8f9fa; font-weight: bold;">
                                     Unit Price</th>
                                 <th
-                                    style="width: 20%; border: 1px solid #dee2e6; padding: 10px; text-align: center; vertical-align: middle; background-color: #f8f9fa; font-weight: bold;">
+                                    style="width: 20%; border: 1px solid #dee2e6; padding: 8px; text-align: center; vertical-align: middle; background-color: #f8f9fa; font-weight: bold;">
                                     Amount</th>
                             </tr>
                         </thead>
@@ -97,19 +97,19 @@
                                             $subTotal += $visa->totalAmount;
                                         @endphp
                                         <td
-                                            style="border: 1px solid #dee2e6; padding: 10px; text-align: center; vertical-align: middle;">
+                                            style="border: 1px solid #dee2e6; padding: 8px; text-align: center; vertical-align: middle;">
                                             #{{ $rowsCount++ }}</td>
                                         <td
-                                            style="border: 1px solid #dee2e6; padding: 10px; text-align: center; vertical-align: middle;">
+                                            style="border: 1px solid #dee2e6; padding: 8px; text-align: center; vertical-align: middle;">
                                             {{ $visa->name }}</td>
                                         <td
-                                            style="border: 1px solid #dee2e6; padding: 10px; text-align: center; vertical-align: middle;">
+                                            style="border: 1px solid #dee2e6; padding: 8px; text-align: center; vertical-align: middle;">
                                             {{ $visa->qty }}</td>
                                         <td
-                                            style="border: 1px solid #dee2e6; padding: 10px; text-align: center; vertical-align: middle;">
+                                            style="border: 1px solid #dee2e6; padding: 8px; text-align: center; vertical-align: middle;">
                                             {{ \App\Helpers\formatCurrency($visa->total) }}</td>
                                         <td
-                                            style="border: 1px solid #dee2e6; padding: 10px; text-align: center; vertical-align: middle;">
+                                            style="border: 1px solid #dee2e6; padding: 8px; text-align: center; vertical-align: middle;">
                                             {{ \App\Helpers\formatCurrency($visa->totalAmount) }}</td>
                                     </tr>
                                 @endforeach
@@ -124,19 +124,19 @@
                                             $subTotal += $service->qty * ($service->service_fee + $service->dubai_fee);
                                         @endphp
                                         <td
-                                            style="border: 1px solid #dee2e6; padding: 10px; text-align: center; vertical-align: middle;">
+                                            style="border: 1px solid #dee2e6; padding: 8px; text-align: center; vertical-align: middle;">
                                             #{{ $rowsCount++ }}</td>
                                         <td
-                                            style="border: 1px solid #dee2e6; padding: 10px; text-align: center; vertical-align: middle;">
+                                            style="border: 1px solid #dee2e6; padding: 8px; text-align: center; vertical-align: middle;">
                                             {{ $service->name }}</td>
                                         <td
-                                            style="border: 1px solid #dee2e6; padding: 10px; text-align: center; vertical-align: middle;">
+                                            style="border: 1px solid #dee2e6; padding: 8px; text-align: center; vertical-align: middle;">
                                             {{ $service->qty }}</td>
                                         <td
-                                            style="border: 1px solid #dee2e6; padding: 10px; text-align: center; vertical-align: middle;">
+                                            style="border: 1px solid #dee2e6; padding: 8px; text-align: center; vertical-align: middle;">
                                             {{ $service->service_fee + $service->dubai_fee }}</td>
                                         <td
-                                            style="border: 1px solid #dee2e6; padding: 10px; text-align: center; vertical-align: middle;">
+                                            style="border: 1px solid #dee2e6; padding: 8px; text-align: center; vertical-align: middle;">
                                             {{ \App\Helpers\formatCurrency($service->qty * ($service->service_fee + $service->dubai_fee)) }}
                                         </td>
                                     </tr>
@@ -179,56 +179,56 @@
                             @endphp
 
                             <tr>
-                                <td colspan="5" style="border: 1px solid #dee2e6; padding: 10px;"></td>
+                                <td colspan="5" style="border: 1px solid #dee2e6; padding: 8px;"></td>
                             </tr>
                         </tbody>
                         <tfoot>
                             <tr>
-                                <td style="border: 1px solid #dee2e6; padding: 10px;"></td>
+                                <td style="border: 1px solid #dee2e6; padding: 8px;"></td>
 
-                                <td style="border: 1px solid #dee2e6; padding: 10px;"></td>
-                                <td style="border: 1px solid #dee2e6; padding: 10px;"></td>
-                                <td style="border: 1px solid #dee2e6; padding: 10px;">Subtotal:</td>
-                                <td style="border: 1px solid #dee2e6; padding: 10px;">{{ $subTotal }}</td>
+                                <td style="border: 1px solid #dee2e6; padding: 8px;"></td>
+                                <td style="border: 1px solid #dee2e6; padding: 8px;"></td>
+                                <td style="border: 1px solid #dee2e6; padding: 8px;">Subtotal:</td>
+                                <td style="border: 1px solid #dee2e6; padding: 8px;">{{ $subTotal }}</td>
                             </tr>
                             @if (\App\Helpers\isExistVat())
                                 <tr>
-                                    <td style="border: 1px solid #dee2e6; padding: 10px;"></td>
+                                    <td style="border: 1px solid #dee2e6; padding: 8px;"></td>
 
-                                    <td style="border: 1px solid #dee2e6; padding: 10px;"></td>
-                                    <td style="border: 1px solid #dee2e6; padding: 10px;"></td>
-                                    <td style="border: 1px solid #dee2e6; padding: 10px;">Vat
+                                    <td style="border: 1px solid #dee2e6; padding: 8px;"></td>
+                                    <td style="border: 1px solid #dee2e6; padding: 8px;"></td>
+                                    <td style="border: 1px solid #dee2e6; padding: 8px;">Vat
                                         {{ \App\Helpers\valueOfVat() }} %</td>
-                                    <td style="border: 1px solid #dee2e6; padding: 10px;">
+                                    <td style="border: 1px solid #dee2e6; padding: 8px;">
                                         {{ $data['agents'][0]['totalVat'] }}</td>
                                 </tr>
                             @endif
                             <tr>
-                                <td style="border: 1px solid #dee2e6; padding: 10px;"></td>
+                                <td style="border: 1px solid #dee2e6; padding: 8px;"></td>
 
-                                <td style="border: 1px solid #dee2e6; padding: 10px;"></td>
-                                <td style="border: 1px solid #dee2e6; padding: 10px;"></td>
-                                <td style="border: 1px solid #dee2e6; padding: 10px;"><strong>Total USD</strong></td>
-                                <td style="border: 1px solid #dee2e6; padding: 10px;">
+                                <td style="border: 1px solid #dee2e6; padding: 8px;"></td>
+                                <td style="border: 1px solid #dee2e6; padding: 8px;"></td>
+                                <td style="border: 1px solid #dee2e6; padding: 8px;"><strong>Total USD</strong></td>
+                                <td style="border: 1px solid #dee2e6; padding: 8px;">
                                     <strong>${{ \App\Helpers\formatCurrency($subTotal + $data['agents'][0]['totalVat']) }}</strong>
                                 </td>
                             </tr>
                             <tr>
-                                <td style="border: 1px solid #dee2e6; padding: 10px;"></td>
+                                <td style="border: 1px solid #dee2e6; padding: 8px;"></td>
 
-                                <td style="border: 1px solid #dee2e6; padding: 10px;"></td>
-                                <td style="border: 1px solid #dee2e6; padding: 10px;"></td>
-                                <td style="border: 1px solid #dee2e6; padding: 10px;"><strong>Old balance</strong></td>
-                                <td style="border: 1px solid #dee2e6; padding: 10px;">
+                                <td style="border: 1px solid #dee2e6; padding: 8px;"></td>
+                                <td style="border: 1px solid #dee2e6; padding: 8px;"></td>
+                                <td style="border: 1px solid #dee2e6; padding: 8px;"><strong>Old balance</strong></td>
+                                <td style="border: 1px solid #dee2e6; padding: 8px;">
                                     <strong>${{ \App\Helpers\formatCurrency($oldBalance) }}</strong></td>
                             </tr>
                             <tr>
-                                <td style="border: 1px solid #dee2e6; padding: 10px;"></td>
+                                <td style="border: 1px solid #dee2e6; padding: 8px;"></td>
 
-                                <td style="border: 1px solid #dee2e6; padding: 10px;"></td>
-                                <td style="border: 1px solid #dee2e6; padding: 10px;"></td>
-                                <td style="border: 1px solid #dee2e6; padding: 10px;"><strong>Grand total</strong></td>
-                                <td style="border: 1px solid #dee2e6; padding: 10px;">
+                                <td style="border: 1px solid #dee2e6; padding: 8px;"></td>
+                                <td style="border: 1px solid #dee2e6; padding: 8px;"></td>
+                                <td style="border: 1px solid #dee2e6; padding: 8px;"><strong>Grand total</strong></td>
+                                <td style="border: 1px solid #dee2e6; padding: 8px;">
                                     <strong>${{ \App\Helpers\formatCurrency($oldBalance + $subTotal + $data['agents'][0]['totalVat']) }}</strong>
                                 </td>
                             </tr>
@@ -240,7 +240,7 @@
                 @else
                     <div style="display: flex; width: 100%; flex-wrap: wrap; margin-top: 10px;">
                         <div
-                            style="width: 100%; padding: 10px; background-color: #fff3cd; border: 1px solid #ffeeba; color: #856404;">
+                            style="width: 100%; padding: 8px; background-color: #fff3cd; border: 1px solid #ffeeba; color: #856404;">
                             @lang('site.no_data_to_display')</div>
                     </div>
                 @endif
