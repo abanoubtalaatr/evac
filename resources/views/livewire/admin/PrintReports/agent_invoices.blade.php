@@ -69,7 +69,6 @@
         .text-center {
             text-align: center;
         }
-        /* Float-based layout for Dompdf compatibility */
         .row {
             width: 100%;
             overflow: hidden;
@@ -91,19 +90,20 @@
 <body>
     <main>
         @php
-            // Logo logic for both contexts
+            // Logo logic
             $settings = \App\Models\Setting::query()->first();
             $logoPath = $settings->logo ? public_path('uploads/pics/' . $settings->logo) : null;
             $logoBase64 = ($logoPath && file_exists($logoPath)) ? 'data:image/png;base64,' . base64_encode(file_get_contents($logoPath)) : null;
 
-            // Use passed variables if available (email), otherwise fallback to request (print)
+            // Use passed variables or fallback to request
             $agentId = isset($agentId) ? $agentId : request()->input('agent');
             $invoiceId = isset($invoiceId) ? $invoiceId : request()->input('invoice');
             $fromDate = isset($fromDate) ? $fromDate : request()->input('fromDate');
             $toDate = isset($toDate) ? $toDate : request()->input('toDate');
 
-            $agent = \App\Models\Agent::query()->find($agentId);
-            $invoice = \App\Models\AgentInvoice::query()->find($invoiceId);
+            // Ensure agent and invoice are resolved
+            $agent = isset($agent) ? $agent : \App\Models\Agent::query()->find($agentId);
+            $invoice = isset($invoice) ? $invoice : \App\Models\AgentInvoice::query()->find($invoiceId);
         @endphp
         @if ($logoBase64)
             <div style="text-align: center;">
@@ -114,7 +114,20 @@
 
         <div class="row">
             <div class="col-75">
-                @include('livewire.admin.shared.reports.header', ['showInvoiceTitle' => true])
+                @if (isset($headerData))
+                    <!-- Static header data for email context -->
+                    <div style="text-align: left;">
+                        <strong class="span-block">{{ $headerData['company_name'] ?? 'Company Name' }}</strong>
+                        <strong class="span-block">{{ $headerData['address'] ?? 'Company Address' }}</strong>
+                        <strong class="span-block">Tel: {{ $headerData['telephone'] ?? 'Company Telephone' }}</strong>
+                        @if (isset($showInvoiceTitle) && $showInvoiceTitle)
+                            <strong class="span-block">Invoice</strong>
+                        @endif
+                    </div>
+                @else
+                    <!-- For print context, fallback to include -->
+                    @include('livewire.admin.shared.reports.header', ['showInvoiceTitle' => true])
+                @endif
             </div>
             <div class="col-25">
                 @if ($agent)

@@ -47,19 +47,28 @@ class AgentInvoiceMail extends Mailable
             ->whereDate('to', $this->toDate)
             ->first();
 
+        // Mock header data (replace with actual data from your app)
+        $headerData = [
+            'company_name' => 'EVAC Company',
+            'address' => '123 Business St, City, Country',
+            'telephone' => '+1 234 567 890',
+        ];
+
         $dompdf = new Dompdf($options);
         $html = view('livewire.admin.PrintReports.agent_invoices')->with([
-            'agentId' => $this->agent->id,
-            'invoiceId' => $invoice ? $invoice->id : null,
+            'agent' => $this->agent, // Pass full agent object
+            'invoice' => $invoice,   // Pass full invoice object
             'fromDate' => $this->fromDate,
             'toDate' => $this->toDate,
+            'headerData' => $headerData, // Pass header data
+            'showInvoiceTitle' => true,
         ])->render();
 
         $dompdf->loadHtml($html);
         $dompdf->setPaper('A4', 'portrait');
         $dompdf->render();
 
-        // Optional: Save for debugging
+        // Debug: Save PDF locally
         // file_put_contents('test.pdf', $dompdf->output());
 
         return $dompdf->output();
