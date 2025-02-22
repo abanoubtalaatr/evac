@@ -22,18 +22,18 @@
             <div style="width: 75%; box-sizing: border-box; padding: 10px;">
                 @include('livewire.admin.shared.reports.header', ['showInvoiceTitle' => true])
             </div>
-            <div style="width: 25%; box-sizing: border-box; padding: 10px; background-color: #ffffff; border: 1px solid #dee2e6;">
+            <div style="width: 25%; box-sizing: border-box; padding: 10px;">
                 @php
                     $agent = \App\Models\Agent::query()->find(request()->agent);
                     $invoice = \App\Models\AgentInvoice::query()->find(request()->invoice);
                 @endphp
                 @if ($agent)
-                    <strong style="display: block; margin-bottom: 5px; font-family: Arial, sans-serif; font-size: 14px; color: #333333;">Agent: {{ $agent->name }}</strong>
-                    <strong style="display: block; margin-bottom: 5px; font-family: Arial, sans-serif; font-size: 14px; color: #333333;">Agent address: {{ $agent->address }}</strong>
-                    <strong style="display: block; margin-bottom: 5px; font-family: Arial, sans-serif; font-size: 14px; color: #333333;">Tel: {{ $agent->telephone }}</strong>
-                    <strong style="display: block; margin-bottom: 5px; font-family: Arial, sans-serif; font-size: 14px; color: #333333;">Account No: {{ $agent->account_number }}</strong>
+                    <strong style="display: block; margin-bottom: 5px;">Agent: {{ $agent->name }}</strong>
+                    <strong style="display: block; margin-bottom: 5px;">Agent address: {{ $agent->address }}</strong>
+                    <strong style="display: block; margin-bottom: 5px;">Tel: {{ $agent->telephone }}</strong>
+                    <strong style="display: block; margin-bottom: 5px;">Account No: {{ $agent->account_number }}</strong>
                 @endif
-                <strong style="display: block; margin-bottom: 5px; font-family: Arial, sans-serif; font-size: 14px; color: #333333;">INV No: {{ $invoice ? $invoice->invoice_title : '' }}</strong>
+                <strong style="display: block; margin-bottom: 5px;">INV No: {{ $invoice ? $invoice->invoice_title : '' }}</strong>
             </div>
         </div>
 
