@@ -14,10 +14,21 @@
             <div class="row mt-2">
                 <div class="col-md-6 d-flex flex-column gap-2">
                     <label class="form-label text-muted">
-                        Enter the new service fee will apply on all agents
+                        Enter the new service fee that will apply to all agents
                     </label>
                     <input type="number" wire:model.defer="serviceFee" class="form-control">
-                    <button wire:click="saveAgentPrices" class="btn btn-primary text-uppercase">
+                    
+                    <!-- Dropdown for visa types -->
+                    <label class="form-label text-muted mt-2">Select Visa Type</label>
+                    <select wire:model.defer="visa_type_id" class="form-control border " style="border: 1px solid !important">
+                        <option value="" >Select Visa Type</option>
+                        
+                        @foreach ($visaTypes as $visa)
+                            <option value="{{ $visa->id }}">{{ $visa->name }}</option>
+                        @endforeach
+                    </select>
+                    
+                    <button wire:click="saveAgentPrices" class="btn btn-primary text-uppercase mt-3">
                         Save Agent Prices
                     </button>
                 </div>

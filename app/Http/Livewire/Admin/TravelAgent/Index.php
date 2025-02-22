@@ -29,9 +29,13 @@ class Index extends Component
 
     protected $listeners = ['showAgent'];
     public $serviceFee =null;
+    public $visaTypes = [];
+    public $visa_type_id = null;
 
     public function mount()
     {
+        $this->visaTypes = VisaType::all();
+
         $this->page_title = __('admin.agents');
     }
 
@@ -148,35 +152,41 @@ class Index extends Component
         ];
     }
     public function saveAgentPrices()
-    {
-        if ($this->serviceFee) {
-            $visas = VisaType::all();
-            $agents = Agent::all(); // Retrieve agents once instead of inside the loop
+{
+    if ($this->serviceFee && $this->visa_type_id) {
+        $agents = Agent::all();  // Retrieve agents once instead of inside the loop
     
-            foreach ($visas as $visa) {
-                foreach ($agents as $agent) {
-                    
-                    AgentVisaPrice::updateOrCreate(
-                        [
-                            'agent_id' => $agent->id,
-                            'visa_type_id' => $visa->id
-                        ],
-                        [
-                            'price' => $this->serviceFee
-                        ]
-                    );
-                }
-            }
-    
-            session()->flash('success', __('admin.edit_successfully'));
-            return redirect()->to(route('admin.travel_agents'));
+        foreach ($agents as $agent) {
+            // Use updateOrCreate to update or create the agent price for the selected visa type
+            AgentVisaPrice::updateOrCreate(
+                [
+                    'agent_id' => $agent->id,
+                    'visa_type_id' => $this->visa_type_id
+                ],
+                [
+                    'price' => $this->serviceFee
+                ]
+            );
         }
-    }
-    
 
-    public function render()
-    {
-        $records = $this->getRecords();
-        return view('livewire.admin.travel-agent.index',  compact('records'))->layout('layouts.admin');
+        session()->flash('success', __('admin.edit_successfully'));
+
+        // Reload the page after saving
+        return redirect()->to(route('admin.travel_agents'));
+    } else {
+        session()->flash('error', __('Please select a valid visa type and enter a valid price.'));
     }
+}
+
+public function render()
+{
+    $records = $this->getRecords(); // Get your agents or other records
+    return view('livewire.admin.travel-agent.index', [
+        'visaTypes' => $this->visaTypes,  // Pass visaTypes to the view
+        'records' => $records             // Pass records (agents or other data) to the view
+    ])->layout('layouts.admin');
+}
+
+
+    
 }
