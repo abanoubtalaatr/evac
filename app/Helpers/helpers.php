@@ -212,6 +212,7 @@ if (!function_exists('getServiceFeePriceAfterNewPriceApplyForAgentOnVisaType')) 
                     return $price;
                 }
             }
+            return 0;
         }
         return 0;
     }
@@ -226,8 +227,10 @@ if (!function_exists('calculateAmountAndDubaiFeeAndServiceFee')) {
         }
 
         $visaType = VisaType::query()->find($visaTypeId);
+        
+        
+        if ((float)$newServiceFee > 0 || (float)$newServiceFee ==0) {
 
-        if ($newServiceFee > 0) {
             $vatRate = vatRate($visaTypeId, $newServiceFee);
             $amount = $visaType->dubai_fee + $newServiceFee + $vatRate;
 

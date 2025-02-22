@@ -86,30 +86,67 @@
         .text-center {
             text-align: center;
         }
+
+        /* Custom Row and Column Styling */
+        .row {
+            display: flex;
+            width: 100%;
+            flex-wrap: wrap;
+        }
+
+        .col-half {
+            width: 50%;
+            box-sizing: border-box;
+            padding: 10px;
+        }
+        .col-75 {
+            width: 75%;
+            box-sizing: border-box;
+            padding: 10px;
+        }
+        .col-25 {
+            width: 25%;
+            box-sizing: border-box;
+            padding: 10px;
+        }
     </style>
 </head>
 
 <body>
     <main>
-        @include('livewire.admin.shared.reports.header', ['showInvoiceTitle' => true])
+        @php
+            $settings = \App\Models\Setting::query()->first();
+            $logoPath = $settings->logo ? public_path('uploads/pics/' . $settings->logo) : null;
+        @endphp
+        @if ($logoPath && file_exists($logoPath))
+        <img width="220" height="200" src="data:image/png;base64,{{ base64_encode(file_get_contents($logoPath)) }}">
+       @endif
+        <h4 class="text-center">INVOICE</h4>
 
-        <!-- Dashboard -->
-        <section class="dashboard">
-            <div class="row">
+        <div class="row">
+
+            <div class="col-75 " >
+                @include('livewire.admin.shared.reports.header', ['showInvoiceTitle' => true])
+            </div>
+            <div class="col-25">
                 @php
                     $agent = \App\Models\Agent::query()->find(request()->agent);
                     $invoice = \App\Models\AgentInvoice::query()->find(request()->invoice);
                 @endphp
                 @if ($agent)
-                    <div style="margin-bottom: 10px; margin-top: 10px;">
                         <strong class="span-block">Agent: {{ $agent->name }}</strong>
                         <strong class="span-block">Agent address: {{ $agent->address }}</strong>
                         <strong class="span-block">Tel: {{ $agent->telephone }}</strong>
                         <strong class="span-block">Account No: {{ $agent->account_number }}</strong>
-                    </div>
+                    
                 @endif
                 <strong class="span-block">INV No: {{ $invoice ? $invoice->invoice_title : '' }}</strong>
+            </div>
+        </div>
 
+        <!-- Dashboard -->
+        <section class="dashboard">
+            <div class="row">
                 @if (request()->fromDate && request()->toDate)
                     <h4>Period of sales from: {{ request()->fromDate }} - To: {{ request()->toDate }}</h4>
                 @endif
@@ -172,7 +209,8 @@
                                         <td>{{ $service->name }}</td>
                                         <td>{{ $service->qty }}</td>
                                         <td>{{ $service->service_fee + $service->dubai_fee }}</td>
-                                        <td>{{ \App\Helpers\formatCurrency($service->qty * ($service->service_fee + $service->dubai_fee)) }}</td>
+                                        <td>{{ \App\Helpers\formatCurrency($service->qty * ($service->service_fee + $service->dubai_fee)) }}
+                                        </td>
                                     </tr>
                                 @endforeach
                             @endif
@@ -206,7 +244,10 @@
                                         }
                                     }
                                 }
-                                $oldBalance = ($totalForInvoice + $totalAmountFromDayOneUntilEndOfInvoice['totalVat']) - $allAmountFromDayOneUntilEndOfInvoice;
+                                $oldBalance =
+                                    $totalForInvoice +
+                                    $totalAmountFromDayOneUntilEndOfInvoice['totalVat'] -
+                                    $allAmountFromDayOneUntilEndOfInvoice;
                             @endphp
 
                             <tr>
@@ -235,7 +276,8 @@
                                 <td><strong>Total USD</strong></td>
                                 <td></td>
                                 <td></td>
-                                <td><strong>${{ \App\Helpers\formatCurrency($subTotal + $data['agents'][0]['totalVat']) }}</strong></td>
+                                <td><strong>${{ \App\Helpers\formatCurrency($subTotal + $data['agents'][0]['totalVat']) }}</strong>
+                                </td>
                             </tr>
                             <tr>
                                 <td></td>
@@ -249,11 +291,14 @@
                                 <td><strong>Grand total</strong></td>
                                 <td></td>
                                 <td></td>
-                                <td><strong>${{ \App\Helpers\formatCurrency($oldBalance + $subTotal + $data['agents'][0]['totalVat']) }}</strong></td>
+                                <td><strong>${{ \App\Helpers\formatCurrency($oldBalance + $subTotal + $data['agents'][0]['totalVat']) }}</strong>
+                                </td>
                             </tr>
                         </tfoot>
                     </table>
-                    <p class="text-center">Amount due is {{ \App\Helpers\convertNumberToWorldsInUsd($oldBalance + $subTotal + $data['agents'][0]['totalVat']) }}</p>
+                    <p class="text-center">Amount due is
+                        {{ \App\Helpers\convertNumberToWorldsInUsd($oldBalance + $subTotal + $data['agents'][0]['totalVat']) }}
+                    </p>
                 @else
                     <div class="row" style="margin-top: 10px">
                         <div class="alert alert-warning" style="width: 100%; padding: 10px;">@lang('site.no_data_to_display')</div>
