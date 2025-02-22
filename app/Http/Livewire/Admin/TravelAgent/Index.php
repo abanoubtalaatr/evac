@@ -2,14 +2,16 @@
 
 namespace App\Http\Livewire\Admin\TravelAgent;
 
+use App\Models\Agent;
+use Livewire\Component;
+use App\Models\VisaType;
+use Illuminate\Support\Arr;
+use Illuminate\Http\Request;
+use Livewire\WithPagination;
+use App\Models\AgentVisaPrice;
+use App\Services\Application\CSVService;
 use App\Exports\ReceiptApplicationExport;
 use App\Http\Livewire\Traits\ValidationTrait;
-use App\Models\Agent;
-use App\Services\Application\CSVService;
-use Illuminate\Http\Request;
-use Illuminate\Support\Arr;
-use Livewire\Component;
-use Livewire\WithPagination;
 
 class Index extends Component
 {
@@ -26,6 +28,7 @@ class Index extends Component
     protected $paginationTheme = 'bootstrap';
 
     protected $listeners = ['showAgent'];
+    public $serviceFee =null;
 
     public function mount()
     {
@@ -144,6 +147,32 @@ class Index extends Component
             'form.account_number' => ['required'],
         ];
     }
+    public function saveAgentPrices()
+    {
+        if ($this->serviceFee) {
+            $visas = VisaType::all();
+            $agents = Agent::all(); // Retrieve agents once instead of inside the loop
+    
+            foreach ($visas as $visa) {
+                foreach ($agents as $agent) {
+                    
+                    AgentVisaPrice::updateOrCreate(
+                        [
+                            'agent_id' => $agent->id,
+                            'visa_type_id' => $visa->id
+                        ],
+                        [
+                            'price' => $this->serviceFee
+                        ]
+                    );
+                }
+            }
+    
+            session()->flash('success', __('admin.edit_successfully'));
+            return redirect()->to(route('admin.travel_agents'));
+        }
+    }
+    
 
     public function render()
     {
