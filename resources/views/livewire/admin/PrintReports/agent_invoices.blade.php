@@ -128,7 +128,7 @@
         @endif
         <h4 class="text-center">INVOICE</h4>
 
-        <div class="row">
+        <div class="row" style="width: 100%">
 
             <div class="col-75 " style="width: 75%;box-sizing: border-box;padding: 10px;">
                 @include('livewire.admin.shared.reports.header', ['showInvoiceTitle' => true])
