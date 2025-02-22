@@ -222,11 +222,21 @@ if (!function_exists('calculateAmountAndDubaiFeeAndServiceFee')) {
     function calculateAmountAndDubaiFeeAndServiceFee($agentId, $visaTypeId)
     {
         $newServiceFee = 0;
+        $visaType = VisaType::query()->find($visaTypeId);
+
+        if(!$agentId){
+            $vatRate = vatRate($visaTypeId, $visaType->service_fee);
+            $data['amount'] = $visaType->service_fee + $visaType->dubai_fee;
+            $data['service_fee'] = $visaType->service_fee;
+            $data['dubai_fee'] = $visaType->dubai_fee;
+            $data['vat'] = $vatRate;
+            
+            return $data;
+        }
         if (isset($agentId) && isset($visaTypeId)) {
             $newServiceFee = getServiceFeePriceAfterNewPriceApplyForAgentOnVisaType($agentId, $visaTypeId);
         }
 
-        $visaType = VisaType::query()->find($visaTypeId);
         
         if((float)$newServiceFee == 0){
             $vatRate = 0;
