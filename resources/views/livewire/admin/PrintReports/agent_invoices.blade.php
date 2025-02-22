@@ -99,11 +99,13 @@
             box-sizing: border-box;
             padding: 10px;
         }
+
         .col-75 {
             width: 75%;
             box-sizing: border-box;
             padding: 10px;
         }
+
         .col-25 {
             width: 25%;
             box-sizing: border-box;
@@ -119,16 +121,16 @@
             $logoPath = $settings->logo ? public_path('uploads/pics/' . $settings->logo) : null;
         @endphp
         @if ($logoPath && file_exists($logoPath))
-        <div>
-            <img width="220" height="200" src="data:image/png;base64,{{ base64_encode(file_get_contents($logoPath)) }}">
-        </div>
-      
-       @endif
+            <div>
+                <img width="220" height="200"
+                    src="data:image/png;base64,{{ base64_encode(file_get_contents($logoPath)) }}">
+            </div>
+        @endif
         <h4 class="text-center">INVOICE</h4>
 
         <div class="row">
 
-            <div class="col-75 " >
+            <div class="col-75 ">
                 @include('livewire.admin.shared.reports.header', ['showInvoiceTitle' => true])
             </div>
             <div class="col-25">
@@ -137,11 +139,10 @@
                     $invoice = \App\Models\AgentInvoice::query()->find(request()->invoice);
                 @endphp
                 @if ($agent)
-                        <strong class="span-block">Agent: {{ $agent->name }}</strong>
-                        <strong class="span-block">Agent address: {{ $agent->address }}</strong>
-                        <strong class="span-block">Tel: {{ $agent->telephone }}</strong>
-                        <strong class="span-block">Account No: {{ $agent->account_number }}</strong>
-                    
+                    <strong class="span-block">Agent: {{ $agent->name }}</strong>
+                    <strong class="span-block">Agent address: {{ $agent->address }}</strong>
+                    <strong class="span-block">Tel: {{ $agent->telephone }}</strong>
+                    <strong class="span-block">Account No: {{ $agent->account_number }}</strong>
                 @endif
                 <strong class="span-block">INV No: {{ $invoice ? $invoice->invoice_title : '' }}</strong>
             </div>
