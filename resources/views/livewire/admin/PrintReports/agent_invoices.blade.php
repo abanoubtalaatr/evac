@@ -119,7 +119,10 @@
             $logoPath = $settings->logo ? public_path('uploads/pics/' . $settings->logo) : null;
         @endphp
         @if ($logoPath && file_exists($logoPath))
-        <img width="220" height="200" src="data:image/png;base64,{{ base64_encode(file_get_contents($logoPath)) }}">
+        <div style="text-align: center">
+            <img width="220" height="200" src="data:image/png;base64,{{ base64_encode(file_get_contents($logoPath)) }}">
+        </div>
+      
        @endif
         <h4 class="text-center">INVOICE</h4>
 
