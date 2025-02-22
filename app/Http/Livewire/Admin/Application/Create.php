@@ -78,6 +78,7 @@ class Create extends Component
 
     public function updateAmount()
     {
+        // dd($this->form);
         $data = calculateAmountAndDubaiFeeAndServiceFee(isset($this->form['agent_id'])? $this->form['agent_id']:null, $this->form['visa_type_id']);
         $this->form['amount'] = $data['amount'];
         $this->form['service_fee'] = $data['service_fee'];
@@ -245,7 +246,8 @@ class Create extends Component
 
     public function updatedFormAgentId()
     {
-        $this->updateAmount();
+        
+        return $this->updateAmount();
     }
     public function updatedFormPassportNo()
     {

@@ -229,13 +229,14 @@ if (!function_exists('calculateAmountAndDubaiFeeAndServiceFee')) {
         $visaType = VisaType::query()->find($visaTypeId);
         
         if((float)$newServiceFee == 0){
-            $vatRate = vatRate($visaTypeId, 0);
+            $vatRate = 0;
             $amount = $visaType->dubai_fee + 0 + $vatRate;
 
             $data['amount'] = $amount;
             $data['service_fee'] = $newServiceFee;
             $data['dubai_fee'] = $visaType->dubai_fee;
             $data['vat'] = $vatRate;
+            
             return $data;
         }
         elseif ((float)$newServiceFee > 0 ) {
