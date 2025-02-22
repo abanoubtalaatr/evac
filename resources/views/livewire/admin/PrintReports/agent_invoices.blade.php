@@ -19,10 +19,8 @@
         <h4 style="text-align: center;">INVOICE</h4>
 
         <div style="display: flex; width: 100%; flex-wrap: wrap;">
-            <div style="width: 75%; box-sizing: border-box; padding: 10px;">
-                @include('livewire.admin.shared.reports.header', ['showInvoiceTitle' => true])
-            </div>
-            <div style="width: 25%; box-sizing: border-box; padding: 10px;">
+        
+            <div style="margin-bottom: 10px">
                 @php
                     $agent = \App\Models\Agent::query()->find(request()->agent);
                     $invoice = \App\Models\AgentInvoice::query()->find(request()->invoice);
@@ -144,39 +142,44 @@
                         <tfoot>
                             <tr>
                                 <td style="border: 1px solid #dee2e6; padding: 10px;"></td>
+                                
+                                <td style="border: 1px solid #dee2e6; padding: 10px;"></td>
+                                <td style="border: 1px solid #dee2e6; padding: 10px;"></td>
                                 <td style="border: 1px solid #dee2e6; padding: 10px;">Subtotal:</td>
-                                <td style="border: 1px solid #dee2e6; padding: 10px;"></td>
-                                <td style="border: 1px solid #dee2e6; padding: 10px;"></td>
                                 <td style="border: 1px solid #dee2e6; padding: 10px;">{{ $subTotal }}</td>
                             </tr>
                             @if (\App\Helpers\isExistVat())
                                 <tr>
                                     <td style="border: 1px solid #dee2e6; padding: 10px;"></td>
+                                    
+                                    <td style="border: 1px solid #dee2e6; padding: 10px;"></td>
+                                    <td style="border: 1px solid #dee2e6; padding: 10px;"></td>
                                     <td style="border: 1px solid #dee2e6; padding: 10px;">Vat {{ \App\Helpers\valueOfVat() }} %</td>
-                                    <td style="border: 1px solid #dee2e6; padding: 10px;"></td>
-                                    <td style="border: 1px solid #dee2e6; padding: 10px;"></td>
                                     <td style="border: 1px solid #dee2e6; padding: 10px;">{{ $data['agents'][0]['totalVat'] }}</td>
                                 </tr>
                             @endif
                             <tr>
                                 <td style="border: 1px solid #dee2e6; padding: 10px;"></td>
+                                
+                                <td style="border: 1px solid #dee2e6; padding: 10px;"></td>
+                                <td style="border: 1px solid #dee2e6; padding: 10px;"></td>
                                 <td style="border: 1px solid #dee2e6; padding: 10px;"><strong>Total USD</strong></td>
-                                <td style="border: 1px solid #dee2e6; padding: 10px;"></td>
-                                <td style="border: 1px solid #dee2e6; padding: 10px;"></td>
                                 <td style="border: 1px solid #dee2e6; padding: 10px;"><strong>${{ \App\Helpers\formatCurrency($subTotal + $data['agents'][0]['totalVat']) }}</strong></td>
                             </tr>
                             <tr>
                                 <td style="border: 1px solid #dee2e6; padding: 10px;"></td>
+                                
+                                <td style="border: 1px solid #dee2e6; padding: 10px;"></td>
+                                <td style="border: 1px solid #dee2e6; padding: 10px;"></td>
                                 <td style="border: 1px solid #dee2e6; padding: 10px;"><strong>Old balance</strong></td>
-                                <td style="border: 1px solid #dee2e6; padding: 10px;"></td>
-                                <td style="border: 1px solid #dee2e6; padding: 10px;"></td>
                                 <td style="border: 1px solid #dee2e6; padding: 10px;"><strong>${{ \App\Helpers\formatCurrency($oldBalance) }}</strong></td>
                             </tr>
                             <tr>
                                 <td style="border: 1px solid #dee2e6; padding: 10px;"></td>
+                                
+                                <td style="border: 1px solid #dee2e6; padding: 10px;"></td>
+                                <td style="border: 1px solid #dee2e6; padding: 10px;"></td>
                                 <td style="border: 1px solid #dee2e6; padding: 10px;"><strong>Grand total</strong></td>
-                                <td style="border: 1px solid #dee2e6; padding: 10px;"></td>
-                                <td style="border: 1px solid #dee2e6; padding: 10px;"></td>
                                 <td style="border: 1px solid #dee2e6; padding: 10px;"><strong>${{ \App\Helpers\formatCurrency($oldBalance + $subTotal + $data['agents'][0]['totalVat']) }}</strong></td>
                             </tr>
                         </tfoot>
@@ -189,7 +192,15 @@
                 @endif
             </div>
         </section>
+
         @include('livewire.admin.shared.reports.footer')
+        <div style="margin-top: 40px">
+
+<span class="span-block">Evac</span>
+<span class="span-block">{{ $settings->address }} </span>
+<span class="span-block">Reg no :{{ $settings->registration_no }}</span>
+<span class="span-block">Tel : {{ $settings->mobile }}</span>
+        </div>
     </main>
 </body>
 </html>
