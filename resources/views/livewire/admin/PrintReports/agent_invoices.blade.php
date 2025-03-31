@@ -56,9 +56,10 @@
                         request()->fromDate,
                         request()->toDate,
                     );
+
                 @endphp
 
-                @if (isset($data['agents'][0]['visas']) && count($data['agents'][0]['visas']) > 0)
+                @if ((isset($data['agents'][0]['visas']) && count($data['agents'][0]['visas']) > 0) || ($data['agents'][0]['services']) > 0)
                     <table style="width: 100%; border-collapse: collapse; background-color: #fff;">
                         <thead>
                             <tr>
@@ -86,6 +87,7 @@
                                 $totalVat = 0;
                                 $subTotal = 0;
                             @endphp
+
 
                             @if (isset($data['agents'][0]['visas']) && count($data['agents'][0]['visas']) > 0)
                                 @foreach ($data['agents'][0]['visas'] as $visa)
@@ -121,7 +123,7 @@
                                         style="@if ($rowsCount % 2 == 0) background-color: #ffffff; @else background-color: #f2f2f2; @endif">
                                         @php
                                             $totalAmount += $service->totalAmount;
-                                            $subTotal += $service->qty * ($service->service_fee + $service->dubai_fee);
+                                            $subTotal += $service->amount;
                                         @endphp
                                         <td
                                             style="border: 1px solid #dee2e6; padding: 8px; text-align: center; vertical-align: middle;">
@@ -137,7 +139,7 @@
                                             {{ $service->service_fee + $service->dubai_fee }}</td>
                                         <td
                                             style="border: 1px solid #dee2e6; padding: 8px; text-align: center; vertical-align: middle;">
-                                            {{ \App\Helpers\formatCurrency($service->qty * ($service->service_fee + $service->dubai_fee)) }}
+                                            {{ \App\Helpers\formatCurrency($service->amount) }}
                                         </td>
                                     </tr>
                                 @endforeach

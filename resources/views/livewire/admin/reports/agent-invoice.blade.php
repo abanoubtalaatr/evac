@@ -159,15 +159,17 @@
                                         <tr>
                                             @php
                                                 $totalAmount += $service->totalAmount;
-                                                $subTotal += $service->qty *($service->service_fee + $service->dubai_fee);
+                                                $subTotal += $service->amount;
                                             @endphp
                                             <td class="text-center">#{{ $rowsCount++ }}</td>
-                                            <td class="text-center">{{ $service->name }}</td>
+                                            <td class="text-center" id='show_transactions_for_this_service_for_this_agent'>
+                                                {{ $service->name }}
+                                            </td>
                                             <td class="text-center">{{ $service->qty }}</td>
                                             <td class="text-center">{{ $service->service_fee + $service->dubai_fee }}
                                             </td>
                                             <td class="text-center">
-                                                {{ \App\Helpers\formatCurrency($service->qty *($service->service_fee + $service->dubai_fee)) }}
+                                                {{ \App\Helpers\formatCurrency($service->amount) }}
                                             </td>
                                             <td class="text-center">&nbsp;</td>
                                         </tr>

@@ -60,15 +60,16 @@ class AgentInvoiceExport implements FromCollection
         // Add Service Data
         if (isset($this->data['agents'][0]['services'])) {
             foreach ($this->data['agents'][0]['services'] as $service) {
+                
                 $dataRows[] = [
                     'Item #' => $rowCount++,
                     'Description' => $service->name,
                     'Qty' => $service->qty,
                     'Unit price' => '$ ' . formatCurrency($service->service_fee + $service->dubai_fee),
-                    'Amount' => '$ ' . formatCurrency($service->qty * ($service->service_fee + $service->dubai_fee)),
+                    'Amount' => '$ ' . formatCurrency($service->amount),
                 ];
-                $totalAmount += $service->qty * ($service->service_fee + $service->dubai_fee);
-                $subTotal += $service->qty * ($service->service_fee + $service->dubai_fee);
+                $totalAmount += $service->amount;
+                $subTotal += $service->amount;
             }
         }
 

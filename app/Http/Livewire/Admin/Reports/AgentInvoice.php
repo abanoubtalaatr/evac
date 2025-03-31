@@ -415,7 +415,7 @@ class AgentInvoice extends Component
                 ->where('travel_agent_id', $agentId);
 
             if ($from && $to) {
-                $applications->whereBetween('created_at', [$from, $to . ' 23:59:59']);
+                $applications->whereBetween('created_at', [$from, $to . '23:59:59']);
             }
 
             $applications = $applications->get(); // Assign the results to the variable
@@ -432,7 +432,7 @@ class AgentInvoice extends Component
                 ->where('service_id', $service->id);
 
             if ($from && $to) {
-                $serviceTransactions->whereBetween('created_at', [$from, $to . ' 23:59:59']);
+                $serviceTransactions->whereBetween('created_at', [$from, $to . '23:59:59']);
             }
 
             $serviceTransactions = $serviceTransactions->get(); // Assign the results to the variable
@@ -517,6 +517,7 @@ class AgentInvoice extends Component
         return redirect()->to(route('admin.report.agent_invoices'));
     }
 
+    
     public function render()
     {
         
