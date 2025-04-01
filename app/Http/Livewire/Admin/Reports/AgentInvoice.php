@@ -219,7 +219,7 @@ class AgentInvoice extends Component
                     $totalAmount += $visa->totalAmount;
                 }
                 foreach ($getTotalAmount['services'] as $service) {
-                    $totalAmount += $service->serviceTotal;
+                    $totalAmount += $service->totalAmount;
                 }
 
 
