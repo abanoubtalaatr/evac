@@ -121,8 +121,9 @@ class NewServiceTransaction extends Component
             if ($total != $this->form['amount']) {
 
                 $this->form['vat'] = $vat;
-                $this->form['service_fee'] = $service->service_fee;
-                $this->form['dubai_fee'] = intval($this->form['amount']) - ($service->service_fee + $vat);
+                $this->form['service_fee'] = $serviceFee;
+                $this->form['dubai_fee'] = $service->dubai_fee;
+                
             }
         }
     }
@@ -132,12 +133,15 @@ class NewServiceTransaction extends Component
             $service = Service::query()->find($this->form['service_id']);
             $vat = (new InvoiceService())->recalculateVat($this->form['amount'], $service->dubai_fee);
             $serviceFee = (new InvoiceService())->recalculateServiceFee($this->form['amount'], $service->dubai_fee);
+            $total = $this->form['vat'] + $this->form['service_fee'] + $service->dubai_fee;
 
-            $this->form['amount'] = $this->form['vat'] + $this->form['service_fee'] + $service->dubai_fee;
+            if ($total != $this->form['amount']) {
 
-            $this->form['vat'] = $vat;
-            $this->form['service_fee'] = $service->service_fee;
-            $this->form['dubai_fee'] = $this->form['amount'] - ($service->service_fee - $vat);
+                $this->form['vat'] = $vat;
+                $this->form['service_fee'] = $serviceFee;
+                $this->form['dubai_fee'] = $service->dubai_fee;
+                
+            }
         }
     }
     public function updatedFormPassportNo()

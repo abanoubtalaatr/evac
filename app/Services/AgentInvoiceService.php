@@ -114,7 +114,8 @@ class AgentInvoiceService
             }
 
             $service->qty = $serviceTransactions->count();
-            $service->totalAmount = $totalAmount ;
+            $service->totalAmount = $totalAmount;
+            
             // amount should be the service transaction for this service sum amount 
             $service->amount = $serviceTransactions->sum('amount');
         
@@ -122,10 +123,13 @@ class AgentInvoiceService
             // $service->total = $amount;
             if ($totalAmount > 0) {
                 if (\App\Helpers\isExistVat()) {
+
                     $totalVat +=  (\App\Helpers\valueOfVat() / 100) * $service->amount;
+                    $service->serviceTotal = $totalAmount - (\App\Helpers\valueOfVat() / 100) * $service->amount;
                 }
                 $data['services'][] = $service;
             }
+            
         }
         $data['totalVat'] = $totalVat;
         
