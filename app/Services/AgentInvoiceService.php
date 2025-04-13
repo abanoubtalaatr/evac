@@ -115,7 +115,7 @@ class AgentInvoiceService
             }
 
             $service->qty = $serviceTransactions->count();
-            $service->totalAmount = $totalAmount;
+            $service->totalAmount = $totalAmount ;
             // amount should be the service transaction for this service sum amount 
             $service->amount = $serviceTransactions->sum('amount');
 
@@ -126,7 +126,9 @@ class AgentInvoiceService
                     $totalVat +=  $serviceTransactions->sum('vat');
                     $serviceVat +=  $serviceTransactions->sum('vat');
                 }
+                $service->serviceVat = $serviceVat;
                 $data['services'][] = $service;
+                
             }
         }
         $data['totalVat'] = $totalVat;

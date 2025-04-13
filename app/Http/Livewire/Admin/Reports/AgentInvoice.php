@@ -507,7 +507,7 @@ class AgentInvoice extends Component
 
     public function getRules()
     {
-        return [
+        return [    
             'email' => ['required']
         ];
     }

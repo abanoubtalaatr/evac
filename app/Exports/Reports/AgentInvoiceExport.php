@@ -52,7 +52,7 @@ class AgentInvoiceExport implements FromCollection
                 ];
                 $totalVat += $visa->totalVat;
                 $totalAmount += $visa->totalAmount;
-                $subTotal += $visa->totalAmount;
+                $subTotal += $visa->totalAmount  ;
             }
         }
 
@@ -69,8 +69,8 @@ class AgentInvoiceExport implements FromCollection
                     'Amount' => '$ ' . formatCurrency($service->amount),
                 ];
                 
-                $totalAmount += $service->amount - $service->serviceVat;
-                $subTotal += $service->amount;
+                $totalAmount += $service->amount ;
+                $subTotal += $service->amount -  $service->serviceVat;
             }
             
         }

@@ -119,11 +119,12 @@
 
                             @if (isset($data['agents'][0]['services']) && count($data['agents'][0]['services']) > 0)
                                 @foreach ($data['agents'][0]['services'] as $service)
+                                    
                                     <tr
                                         style="@if ($rowsCount % 2 == 0) background-color: #ffffff; @else background-color: #f2f2f2; @endif">
                                         @php
                                             $totalAmount += $service->totalAmount;
-                                            $subTotal += $service->amount;
+                                            $subTotal += $service->amount - $service->serviceVat;
                                         @endphp
                                         <td
                                             style="border: 1px solid #dee2e6; padding: 8px; text-align: center; vertical-align: middle;">
@@ -212,7 +213,7 @@
                                 <td style="border: 1px solid #dee2e6; padding: 8px;"></td>
                                 <td style="border: 1px solid #dee2e6; padding: 8px;"><strong>Total USD</strong></td>
                                 <td style="border: 1px solid #dee2e6; padding: 8px;">
-                                    <strong>${{ \App\Helpers\formatCurrency($subTotal + $data['agents'][0]['totalVat'] -  $data['agents'][0]['serviceVat']) }}</strong>
+                                    <strong>${{ \App\Helpers\formatCurrency($subTotal + $data['agents'][0]['totalVat']) }}</strong>
                                 </td>
                             </tr>
                             <tr>
