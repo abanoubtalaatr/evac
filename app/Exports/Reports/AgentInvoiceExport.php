@@ -69,7 +69,7 @@ class AgentInvoiceExport implements FromCollection
                     'Amount' => '$ ' . formatCurrency($service->amount),
                 ];
                 
-                $totalAmount += $service->amount ;
+                $totalAmount += $service->amount-  $service->serviceVat;
                 $subTotal += $service->amount -  $service->serviceVat;
             }
             
