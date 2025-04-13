@@ -46,7 +46,7 @@
             Direct
         @endif
         @php
-            $total = $serviceTransaction->service_fee + $serviceTransaction->dubai_fee + $serviceTransaction->vat;
+            $total = $serviceTransaction->amount ;
         @endphp
         <div> Amount : $ {{\App\Helpers\formatCurrency($total - $serviceTransaction->vat)}} USD ({{$serviceTransaction->payment_method =='invoice' ? "UnPaid" :"Paid"}})</div>
         @if($serviceTransaction->vat > 0 )

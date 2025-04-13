@@ -72,9 +72,9 @@
                                 <td class="text-center"> {{ $record['to']}}</td>
                                 
                                 @php
-                                    $totalDrCount += $record->total_amount;
+                                    $totalDrCount += $record->total_amount - $record->vat;
                                 @endphp
-                                <td class="text-center">{{\App\Helpers\formatCurrency($record->total_amount)}}</td>
+                                <td class="text-center">{{\App\Helpers\formatCurrency($record->total_amount - $record->vat)}}</td>
                                 <td></td>
                             </tr>
                         @else

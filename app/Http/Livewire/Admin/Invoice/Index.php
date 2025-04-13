@@ -196,6 +196,8 @@ class Index extends Component
     {
         $this->invoice = \App\Models\AgentInvoice::query()->find($id);
         $this->form = $this->invoice->toArray();
+        $this->form['total_amount'] = $this->form['total_amount'] - ($this->form['vat'] + $this->form['vat']);
+        $this->form['old_balance'] = $this->form['old_balance'] - $this->form['vat'];
         $this->form['created_at'] = Carbon::parse($this->invoice->created_at)->format('Y-m-d');
         $this->emit("showInvoiceModal", $id);
     }

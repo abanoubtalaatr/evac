@@ -86,7 +86,7 @@ class Outstanding extends Component
         $totalUnPaidBal = 0;
 
         foreach ($agents->get() as $agent) {
-            $paidBal = $agent->paymentTransactions->sum('amount');
+            $paidBal = $agent->paymentTransactions->sum('amount') ;
 
             $applicationSum = $agent->applications()
                     ->sum('vat') +
@@ -97,11 +97,7 @@ class Outstanding extends Component
 
             // Sum for serviceTransactions
             $serviceTransactionSum = $agent->serviceTransactions()->where('status', '!=', 'deleted')
-                    ->sum('vat') +
-                $agent->serviceTransactions()->where('status', '!=', 'deleted')
-                    ->sum('dubai_fee') +
-                $agent->serviceTransactions()->where('status', '!=', 'deleted')
-                    ->sum('service_fee');
+                    ->sum('amount') - $agent->serviceTransactions()->where('status', '!=', 'deleted')->sum('vat');
 
             $totalSales = $applicationSum + $serviceTransactionSum;
 
@@ -148,7 +144,12 @@ class Outstanding extends Component
                 ->where('status', '!=', 'deleted')
                 ->whereNull('agent_id')
                 ->where('payment_method', 'invoice')
-                ->sum(DB::raw('service_fee + vat + dubai_fee'));
+                ->sum(DB::raw('amount')) - ServiceTransaction::where('name', $item->name)
+                ->where('surname', $item->surname)
+                ->where('status', '!=', 'deleted')
+                ->whereNull('agent_id')
+                ->where('payment_method', 'invoice')
+                ->sum(DB::raw('vat'));
 
             if($unpaidAmount > 0){
                 $data['directs'][] = [

@@ -116,7 +116,7 @@ class AgentStatement extends Component
                 ->all();
 
             // Calculate the total sum of total_amount from invoices
-            $totalDrCount = collect($data['invoices'])->sum('total_amount');
+            $totalDrCount = collect($data['invoices'])->sum('total_amount') - collect($data['invoices'])->sum('vat');
 
             // Calculate the total sum of amount from payment_received
             $totalCrCount = collect($data['payment_received'])->sum('amount');
@@ -127,7 +127,7 @@ class AgentStatement extends Component
 
 
             // Calculate the total sum of total_amount from invoices
-            $totalDrCount = collect($data['invoices'])->sum('total_amount');
+            $totalDrCount = collect($data['invoices'])->sum('total_amount') - collect($data['invoices'])->sum('vat');
 
             // Calculate the total sum of amount from payment_received
             $totalCrCount = collect($data['payment_received'])->sum('amount');
