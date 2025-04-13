@@ -37,6 +37,7 @@ class AgentInvoiceService
 
         $visas = VisaType::query()->get();
         $totalVat = 0;
+        $serviceVat = 0;
         foreach ($visas as $visa) {
             $applications = Application::query()
                 ->where('visa_type_id', $visa->id)
@@ -123,12 +124,13 @@ class AgentInvoiceService
             if ($totalAmount > 0) {
                 if (\App\Helpers\isExistVat()) {
                     $totalVat +=  $serviceTransactions->sum('vat');
+                    $serviceVat +=  $serviceTransactions->sum('vat');
                 }
                 $data['services'][] = $service;
             }
         }
         $data['totalVat'] = $totalVat;
-        
+        $data['serviceVat']  = $serviceVat;
         return $data;
     }
 

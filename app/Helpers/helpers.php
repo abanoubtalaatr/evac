@@ -537,10 +537,10 @@ if (!function_exists('totalAmountBetweenTwoDate')) {
                 ->whereDate('created_at', '<=', $toDate)
                 ->sum('dubai_fee');
 
-            $totalAmount += $agent->serviceTransactions()
-                ->whereDate('created_at', '>=', $fromDate)
-                ->whereDate('created_at', '<=', $toDate)
-                ->sum('vat');
+            // $totalAmount += $agent->serviceTransactions()
+            //     ->whereDate('created_at', '>=', $fromDate)
+            //     ->whereDate('created_at', '<=', $toDate)
+            //     ->sum('vat');
 
             return $totalAmount;
         }

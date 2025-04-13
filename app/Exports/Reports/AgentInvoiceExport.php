@@ -68,9 +68,11 @@ class AgentInvoiceExport implements FromCollection
                     'Unit price' => '$ ' . formatCurrency($service->service_fee + $service->dubai_fee),
                     'Amount' => '$ ' . formatCurrency($service->amount),
                 ];
-                $totalAmount += $service->amount;
+                
+                $totalAmount += $service->amount - $service->serviceVat;
                 $subTotal += $service->amount;
             }
+            
         }
 
         $dataRows[] = [
@@ -140,7 +142,7 @@ class AgentInvoiceExport implements FromCollection
             'Description' => 'Total USD',
             'Qty' => "",
             'Unit price' => '',
-            'Amount' => '$ ' . formatCurrency($totalAmount + $this->data['agents'][0]['totalVat']),
+            'Amount' => '$ ' . formatCurrency($totalAmount + $this->data['agents'][0]['totalVat'] - $this->data['agents'][0]['serviceVat']),
         ];
 
         $dataRows[] = [

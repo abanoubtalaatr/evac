@@ -212,7 +212,7 @@
                                 <td style="border: 1px solid #dee2e6; padding: 8px;"></td>
                                 <td style="border: 1px solid #dee2e6; padding: 8px;"><strong>Total USD</strong></td>
                                 <td style="border: 1px solid #dee2e6; padding: 8px;">
-                                    <strong>${{ \App\Helpers\formatCurrency($subTotal + $data['agents'][0]['totalVat']) }}</strong>
+                                    <strong>${{ \App\Helpers\formatCurrency($subTotal + $data['agents'][0]['totalVat'] -  $data['agents'][0]['serviceVat']) }}</strong>
                                 </td>
                             </tr>
                             <tr>
