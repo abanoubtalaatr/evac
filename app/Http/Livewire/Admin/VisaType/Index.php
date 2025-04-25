@@ -90,19 +90,17 @@ class Index extends Component
         {
             $agents = Agent::all();
 
-            foreach($agents as $agent)
-            {
-                $agentVisaPrice = AgentVisaPrice::where('agent_id', $agent->id)->where('visa_type_id')->first();
-                if($agentVisaPrice){
-                    continue;
-                }
-                AgentVisaPrice::create([
-                    'visa_type_id' => $visa->id,
-                    'agent_id' => $agent->id,
-                    'price' => $visa->service_fee
-                ]);
-            }
-               
+            foreach ($agents as $agent) {
+                AgentVisaPrice::updateOrCreate(
+                    [
+                        'agent_id' => $agent->id,
+                        'visa_type_id' => $visa->id
+                    ],
+                    [
+                        'price' => $visa->service_fee
+                    ]
+                );
+            }               
         }
         session()->flash('success',__('admin.edit_successfully'));
 
