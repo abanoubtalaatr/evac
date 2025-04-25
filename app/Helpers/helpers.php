@@ -236,6 +236,7 @@ if (!function_exists('calculateAmountAndDubaiFeeAndServiceFee')) {
         if (isset($agentId) && isset($visaTypeId)) {
             $newServiceFee = getServiceFeePriceAfterNewPriceApplyForAgentOnVisaType($agentId, $visaTypeId);
         }
+        
 
         
         if((float)$newServiceFee == 0){
