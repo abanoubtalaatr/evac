@@ -2,13 +2,14 @@
 
 namespace App\Http\Livewire\Admin\VisaType;
 
-use App\Http\Livewire\Traits\ValidationTrait;
 use App\Models\Agent;
-use App\Models\VisaProvider;
+use Livewire\Component;
 use App\Models\VisaType;
 use Illuminate\Support\Arr;
-use Livewire\Component;
+use App\Models\VisaProvider;
 use Livewire\WithPagination;
+use App\Models\AgentVisaPrice;
+use App\Http\Livewire\Traits\ValidationTrait;
 
 class Index extends Component
 {
@@ -83,6 +84,26 @@ class Index extends Component
         VisaType::query()->find($this->form['id'])->update($data);
 
         $this->form = [];
+        $visas = VisaType::all();
+
+        foreach($visas as $visa)
+        {
+            $agents = Agent::all();
+
+            foreach($agents as $agent)
+            {
+                $agentVisaPrice = AgentVisaPrice::where('agent_id', $agent->id)->where('visa_type_id')->first();
+                if($agentVisaPrice){
+                    continue;
+                }
+                AgentVisaPrice::create([
+                    'visa_type_id' => $visa->id,
+                    'agent_id' => $agent->id,
+                    'price' => $visa->service_fee
+                ]);
+            }
+               
+        }
         session()->flash('success',__('admin.edit_successfully'));
 
         return redirect()->to(route('admin.visa_types'));
@@ -96,6 +117,27 @@ class Index extends Component
 
         if(VisaType::query()->count() == 1){
             $visaType->update(['is_default' => 1]);
+        }
+
+        $visas = VisaType::all();
+
+        foreach($visas as $visa)
+        {
+            $agents = Agent::all();
+
+            foreach($agents as $agent)
+            {
+                $agentVisaPrice = AgentVisaPrice::where('agent_id', $agent->id)->where('visa_type_id')->first();
+                if($agentVisaPrice){
+                    continue;
+                }
+                AgentVisaPrice::create([
+                    'visa_type_id' => $visa->id,
+                    'agent_id' => $agent->id,
+                    'price' => $visa->service_fee
+                ]);
+            }
+               
         }
 
         session()->flash('success',__('admin.create_successfully'));
