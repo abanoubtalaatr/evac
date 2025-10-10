@@ -270,7 +270,7 @@ return [
     'profile' => 'Profile',
     'send_reset_password_code' => 'Send reset password code',
     'enter_code_we_sent_to_your_email' => 'Enter the code sent to your email',
-    'enter_code' => 'Enter code',
+    'enter_code' => 'Enter the code we sent to your email',
     'new_password' => 'New password',
     'activate' => 'Activate',
     'a_new_verification_code_was_sent_to_your_mobile' => 'A new verification code was sent to you',

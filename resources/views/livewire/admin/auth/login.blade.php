@@ -44,7 +44,7 @@
 {{--                            <input type="checkbox "><span class="slider"></span>--}}
 {{--                        </label>--}}
                         </div>
-{{--                        <a class="red" href="{{route('admin.forgot_password')}}">@lang('site.i_forgot_my_password')</a>--}}
+                       <a class="red" href="{{route('admin.forgot_password')}}">@lang('site.i_forgot_my_password')</a>
                         <div class="login-btns">
                             <button type='button' wire:click='attempt' class="button btn-red full">@lang('messages.Login')</button>
                         </div>
