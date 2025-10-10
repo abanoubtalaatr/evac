@@ -238,7 +238,7 @@
                     <div style="display: flex; width: 100%; flex-wrap: wrap; margin-top: 10px;">
                         <div
                             style="width: 100%; padding: 8px; background-color: #fff3cd; border: 1px solid #ffeeba; color: #856404;">
-                            'abanoub</div>
+                            No data to display</div>
                     </div>
                 @endif
             </div>
