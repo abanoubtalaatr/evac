@@ -51,14 +51,11 @@
                 <br>
 
                 @php
-                    $data = (new \App\Services\AgentInvoiceService())->getRecords(
-                        request()->agent,
-                        request()->fromDate,
-                        request()->toDate,
-                    );
+                    $data = (new \App\Services\AgentInvoiceService())->getRecords(request()->agent,request()->fromDate,request()->toDate);
+                    
                 @endphp
 
-                @if (isset($data['agents'][0]['visas']) && count($data['agents'][0]['visas']) > 0)
+                @if ((isset($data['agents'][0]['visas']) && count($data['agents'][0]['visas']) > 0) || isset($data['agents'][0]['services']) && count($data['agents'][0]['services']) > 0 )
                     <table style="width: 100%; border-collapse: collapse; background-color: #fff;">
                         <thead>
                             <tr>
@@ -241,7 +238,7 @@
                     <div style="display: flex; width: 100%; flex-wrap: wrap; margin-top: 10px;">
                         <div
                             style="width: 100%; padding: 8px; background-color: #fff3cd; border: 1px solid #ffeeba; color: #856404;">
-                            @lang('site.no_data_to_display')</div>
+                            'abanoub</div>
                     </div>
                 @endif
             </div>
